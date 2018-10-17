@@ -7,7 +7,7 @@
 # authors: JK
 #
 
-mtQuotNorm = function(
+mt_pre_norm_quot = function(
   D,                 # SummarizedExperiment input
   vars=1:dim(X)[2],  # vars: index vector of variables of be used, default: all
   NAerror=F,         # NAerrors: throw error for NA's or just ignore?
@@ -42,7 +42,13 @@ mtQuotNorm = function(
   #Y = t(apply(X,1,  function(s) s /  d) )
   rownames(Y) = rownames(X)
   
+  # add status information
+  call = match.call()
+  metadata(D)$preprocess %<>% 
+    add_to_list(list(txt=sprintf('quotient normalization'), call=call))
+  
   # return
   assay(D) = t(Y)
   D
+  
 }
