@@ -24,6 +24,15 @@ get_sample_anno <- function(D, strarg, requireFactor=F) {
   v
 }
 
+# returns data frame as samples X variables, merges all sample annotations, and adds sample rownames as "primary" field
+format_se_samplewise <- function(se){
+  cbind(colData(se),
+        t(assay(se))) %>%
+    as.data.frame() %>%
+    rownames_to_column("primary")
+}
+
+
 # like match.call(), but also returns default values
 match.call.defaults <- function(...) {
   call <- evalq(match.call(expand.dots = FALSE), parent.frame(1))
