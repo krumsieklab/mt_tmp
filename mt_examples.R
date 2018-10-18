@@ -5,12 +5,10 @@ l=list.files(path=codes.makepath("packages/metabotools"),pattern="*.R$",full.nam
 l=l[!grepl('*examples*',l)]
 lapply(l, function(x){source(x,echo=F,verbose=F)})
 
-source(codes.makepath('R/data/parseMetabolonFile.R'))
-
 
 #### run ----
-D = parseMetabolonFile(codes.makepath("packages/metabotools/sampledata.xlsx"),"OrigScale",sumexp = T) %>% 
-  # mt_plots_sampleboxplot() %>% 
+D <- mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>%
+  mt_plots_sampleboxplot(colorby="Group") %>% 
   mt_pre_filtermiss(metMax=0.2) %>%
   mt_pre_filtermiss(sampleMax=0.1) %>%
   mt_pre_trans_log() %>% 
