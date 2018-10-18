@@ -9,6 +9,7 @@
 library(readxl)
 library(stringr)
 library(SummarizedExperiment)
+library(tidyverse)
 
 mt_files_load_metabolon <- function(
   file,           # Metabolon xls file
@@ -34,13 +35,13 @@ mt_files_load_metabolon <- function(
   overlmet = overl[2]
   overlsamp = overl[1]
   
-  
   # extract metabolite information
-  result$metinfo = raw[(imetheader+1):imetlast, 1:isampheader]
-  colnames(result$metinfo) = raw[imetheader, 1:isampheader]
-  rownames(result$metinfo) = c()
+  result$metinfo <- read_excel(path=file, sheet=sheet, col_names = T,
+                               range = cell_limits(ul = c(imetheader, 1),
+                                                   lr = c(imetlast  , isampheader)))
+  result$metinfo <- as.data.frame(result$metinfo)
   # fix last one
-  colnames(result$metinfo)[dim(result$metinfo)[2]] = overlmet
+  colnames(result$metinfo)[ncol(result$metinfo)] = overlmet
   # also add Metabolon ID in M00000 format
   result$metinfo$COMP_IDstr = sapply(sprintf('%05d',as.numeric(result$metinfo$COMP_ID)), function(x)paste0('M',x))
   
@@ -49,12 +50,12 @@ mt_files_load_metabolon <- function(
   #colnames(result$sampleinfo) = as.list(raw[1:imetheader-1,isampheader])[[1]] # dirty hack, had something to do with the output format of read_excel
   colnames(result$sampleinfo) = c(as.vector(as.matrix(raw[1:imetheader-1,isampheader])),overlsamp) # dirty hack, had something to do with the output format of read_excel
   rownames(result$sampleinfo) = c()
-  
-  
+  result$sampleinfo %<>% mutate_all(parse_guess)
+    
   # extract data
-  d=t(raw[(imetheader+1):imetlast, (isampheader+1):isamplast])
-  result$data = as.data.frame(apply(d,2, as.numeric))
-  
+  result$data <- t(raw[(imetheader+1):imetlast, (isampheader+1):isamplast]) 
+  result$data <- as.data.frame(apply(result$data,2, as.numeric))
+    
   # as column names, use "BIOCHEMICAL", if available
   if ("BIOCHEMICAL" %in% colnames(result$metinfo)) {
     colnames(result$data) = result$metinfo$BIOCHEMICAL
@@ -97,7 +98,9 @@ mt_files_load_metabolon <- function(
   # return SummarizedExperiment
   
   # add display name
-  result$metinfo$name = result$metinfo$BIOCHEMICAL
+  result$metinfo$name   <- result$metinfo$BIOCHEMICAL
+  # fix variable names  
+  colnames(result$data) <- result$metinfo$COMP_IDstr
   # generate summarized experiment
   SummarizedExperiment(assay    = t(result$data),
                        colData  = result$sampleinfo,
