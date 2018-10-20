@@ -19,10 +19,14 @@ mt_pre_trans_exp <- function(
   assay(D) = base^(assay(D))
   
   # add status information
-  call = match.call()
-  metadata(D)$preprocess %<>% 
-    add_to_list(list(txt=sprintf('exp, base %d', base), call=call))
-  
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf('exp, base %d', base),
+    )
+ 
+   
   # return
   D
   

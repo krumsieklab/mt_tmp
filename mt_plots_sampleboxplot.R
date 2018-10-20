@@ -24,7 +24,7 @@ mt_plots_sampleboxplot <- function(
   D,         # SummarizedExperiment input
   title="",  # title of boxplot
   legend=T,  # keep legend?  [could be removed]
-  ylabel =   # y axis label "Metabolite concentrations"
+  ylabel = "Metabolite concentrations",  # y axis label
   ...        # additional arguments directly passed to aes() of ggplot
 ) {
   
@@ -33,7 +33,7 @@ mt_plots_sampleboxplot <- function(
   
   # generate ggplot
   p <- D %>%
-    format_se_samplewise() %>%
+    mti_format_se_samplewise() %>%
     gather(metab, value, one_of(rownames(D))) %>%
     ggplot(aes(x = primary, y = value, ...)) +
     geom_boxplot()
@@ -41,55 +41,18 @@ mt_plots_sampleboxplot <- function(
   
   # remove legend?
   if (!legend) p = p + theme(legend.position="none")
-
-  # add to metadata plots and return
-  metadata(D)$plots %<>% add_to_list(p)
-  D
-
   
-  #### OLD code
-  # # sample names with fixed order
-  # X = t(assay(D))
-  # samplenames=fixorder(rownames(X))
-  # 
-  # # prepare for ggplotting
-  # if (is.na(colorby)) {
-  #   # no coloring
-  #   Xe = cbind(X, data.frame(samplenames=samplenames))
-  #   dfmolten = melt(Xe, id.vars=c("samplenames"))
-  # } else {
-  #   # with coloring
-  #   Xe = cbind(X, data.frame(groups=get_sample_anno(D,colorby,requireFactor=T), samplenames=samplenames))
-  #   dfmolten = melt(Xe, id.vars=c("groups","samplenames"))
-  # }
-  # 
-  # # determine ylim
-  # stats = sapply(apply(X, 1, boxplot.stats), function(x)x$stats)
-  # minv = min(stats[1,])
-  # maxv = max(stats[5,])
-  # r = maxv-minv
-  # ylim = c(minv-r/50,maxv+r/50)
-  # 
-  # # grouped by run
-  # if (is.na(colorby)) {
-  #   p<-ggplot(data = dfmolten, aes(x=samplenames, y=value)) +
-  #     geom_boxplot(outlier.shape = NA) 
-  # } else {
-  #   p<-ggplot(data = dfmolten, aes(x=samplenames, y=value)) +
-  #     geom_boxplot(aes(fill=groups),outlier.shape = NA) 
-  # }
-  # # visuals
-  # p <- p + coord_cartesian(ylim=ylim) +
-  #   ggtitle(title) +
-  #   xlab("samples") +
-  #   ylab(ylabel) +
-  #   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  #   theme(legend.title=element_blank())
-  # # remove legend?
-  # if (!legend) p = p + theme(legend.position="none")
-  # 
-  # # add to metadata plots and return
-  # metadata(D)$plots %<>% add_to_list(p)
-  # D
-  # 
+  # add status information & plot
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf("sample boxplot, aes: %s", mti_dots_to_str(...)),
+      output = p
+    )
+  
+  # return
+  D
+  
+  
 }

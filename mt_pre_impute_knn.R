@@ -22,9 +22,13 @@ mt_pre_impute_knn <- function(D, methods="knn.obs.euc.sel", K=10, verbose=F) {
   assay(D) = imputeKNN(assay(D), methods=methods, K=K, verbose=verbose)
   
   # add status information
-  call = match.call()
-  metadata(D)$preprocess %<>% 
-    add_to_list(list(txt='imputed via KNN', call=call))
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = 'imputed via KNN',
+      logshort = 'impute KNN'
+    )
   
   # return
   D

@@ -21,10 +21,14 @@ mt_pre_trans_scale <- function(
   assay(D) = t(scale(t(assay(D)),center=center,scale=scale))
   
   # add status information
-  call = match.call()
-  metadata(D)$preprocess %<>% 
-    add_to_list(list(txt=sprintf('scaled, center=%d, scale=%d', center, scale), call=call))
-  
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf('scaled, center=%d, scale=%d', center, scale),
+      logshort = 'scaled'
+    )
+
   # return
   D
   

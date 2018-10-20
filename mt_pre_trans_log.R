@@ -19,14 +19,12 @@ mt_pre_trans_log <- function(
   assay(D) = log(assay(D))
   
   # add status information
-  call = match.call()
-  metadata(D)$preprocess %<>% 
-    add_to_list(list(
-      type='log',
-      label=sprintf("log%d",base),
-      log=sprintf("log%d",base), 
-      call=call
-      ))
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf("log%d", base)
+    )
   
   # return
   D

@@ -43,9 +43,12 @@ mt_pre_norm_quot = function(
   rownames(Y) = rownames(X)
   
   # add status information
-  call = match.call()
-  metadata(D)$preprocess %<>% 
-    add_to_list(list(txt=sprintf('quotient normalization'), call=call))
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = 'quotient normalization'
+    )
   
   # return
   assay(D) = t(Y)

@@ -12,6 +12,8 @@ mt_pre_batch_median = function(
   batchvar
 ) {
   
+  stop("NONFUNCTIONAL right now")
+  
   # validate and extract arguments
   stopifnot("SummarizedExperiment" %in% class(D))
   X = t(assay(D))

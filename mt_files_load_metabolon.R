@@ -3,7 +3,7 @@
 # Read Metabolon-format files.
 #
 # last update: 2018-10-18
-# authors: JK
+# authors: JK, JZ
 
 
 library(readxl)
@@ -102,10 +102,22 @@ mt_files_load_metabolon <- function(
   # fix variable names  
   colnames(result$data) <- result$metinfo$COMP_IDstr
   # generate summarized experiment
-  SummarizedExperiment(assay    = t(result$data),
+  D <- SummarizedExperiment(assay    = t(result$data),
                        colData  = result$sampleinfo,
                        rowData  = result$metinfo,
                        metadata = list(sessionInfo=sessionInfo(), parseInfo=result$info))
+  
+  # add status information
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf("loaded Metabolon file: %s", basename(file))
+    )
+  
+  # return
+  D
+  
 }
 
 

@@ -8,6 +8,8 @@
 # authors: JK
 #
 
+# todo: document output
+
 # dependencies
 library(tidyverse)
 library(magrittr)
@@ -31,18 +33,32 @@ mt_pre_filtermiss <- function(
     metKeep = apply(is.na(assay(D)),1,sum)/ncol(D) <= metMax
     D=D[metKeep,]
     # add status information
-    metadata(D)$preprocess %<>% 
-      add_to_list(list(txt=sprintf('metabolites filtered, %d%%, %d of %d removed', metMax*100,sum(!metKeep),length(metKeep)),call=match.call(), op="filter",dir="met",cutoff=metMax,kept=as.vector(metKeep)))
+    funargs <- mti_funargs()
+    metadata(D)$results %<>% 
+      mti_generate_result(
+        funargs = funargs,
+        logtxt = sprintf('metabolites filtered, %d%%, %d of %d removed', metMax*100,sum(!metKeep),length(metKeep)),
+        logshort = sprintf("filter met %d%%", metMax*100),
+        output = list(kept=as.vector(metKeep))
+      )
+  
   } else {
     
     # sample
     sampleKeep = apply(is.na(assay(D)),2,sum)/nrow(D) <= sampleMax
     D=D[,sampleKeep]
-    # add status information
-    metadata(D)$preprocess %<>% 
-      add_to_list(list(txt=sprintf('samples filtered, %d%%, %d of %d removed', sampleMax*100,sum(!sampleKeep),length(sampleKeep)), call=match.call(), op="filter",dir="samples",cutoff=sampleMax,kept=as.vector(sampleKeep)))
     
-  }
+    # add status information
+    funargs <- mti_funargs()
+    metadata(D)$results %<>% 
+      mti_generate_result(
+        funargs = funargs,
+        logtxt = sprintf('samples filtered, %d%%, %d of %d removed', sampleMax*100,sum(!sampleKeep),length(sampleKeep)),
+        logshort = sprintf("filter samples %d%%", sampleMax*100),
+        output = list(kept=as.vector(sampleKeep))
+      )
+    
+   }
   # return
   D
 }
