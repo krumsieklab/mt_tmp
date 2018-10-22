@@ -8,10 +8,11 @@ l=l[!grepl('*examples*',l)]
 lapply(l, function(x){source(x,echo=F,verbose=F)})
 
 
+
+
 #### run ----
 mt_logging(console=T) 
 D <- 
-  
   mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>%
   mt_plots_sampleboxplot() %>%
   mt_pre_filtermiss(metMax=0.2) %>%
@@ -20,7 +21,9 @@ D <-
   mt_pre_norm_quot() %>%
   mt_pre_impute_knn() %>%
   mt_plots_sampleboxplot(color=Group) %>%
-  mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK)
+  mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>% 
+  mt_stats_univ_glm(formula = num1 ~ M + num2)
+
 
 
 
@@ -36,5 +39,11 @@ sapply(pl,plot)
 pdf("output.pdf")
 sapply(pl, plot)
 dev.off()
+
+
+
+#### show statistics ----
+
+
 
 
