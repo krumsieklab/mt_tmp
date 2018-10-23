@@ -22,7 +22,16 @@ D <-
   mt_pre_impute_knn() %>%
   mt_plots_sampleboxplot(color=Group) %>%
   mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>% 
-  mt_stats_univ_glm(formula = num1 ~ M + num2)
+  mt_stats_univ_glm(formula = num1 ~ M + num2) %>%
+  mt_plots_boxplot(stat              = 10,
+                   x                  = Group,
+                   fill               = Group,
+                   correct_confounder = ~BRADFORD_PROTEIN + BATCH_MOCK,
+                   metab_filter       = p.value < 0.05 & !is.na(SUPER_PATHWAY),  
+                   metab_sort         = p.value,
+                   annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
+                   rows               = 2,
+                   cols               = 2)
 
 
 
