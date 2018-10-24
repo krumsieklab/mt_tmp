@@ -1,7 +1,7 @@
 
 
 #### source all files except myself... ugly but works for now ----
-zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- function(){lst<-ls(envir=.GlobalEnv); lst<-lst[!(lst %in% c("zap","sysdiab.makepath","store","restore","debugstore"))]; rm(list=lst, envir=.GlobalEnv) }
+zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- function(){lst<-ls(envir=.GlobalEnv); lst<-lst[!(lst %in% c("zap","codes.makepath","store","restore","debugstore"))]; rm(list=lst, envir=.GlobalEnv) }
 
 l=list.files(path=codes.makepath("packages/metabotools"),pattern="*.R$",full.names=T)
 l=l[!grepl('*examples*',l)]
@@ -22,7 +22,7 @@ D <-
   mt_pre_impute_knn() %>%
   mt_plots_sampleboxplot(color=Group) %>%
   mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>% 
-  mt_stats_univ_glm(formula = num1 ~ M + num2)
+  mt_stats_univ_lm(formula =  ~ num1 + num2)
 
 
 
