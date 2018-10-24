@@ -46,7 +46,7 @@ mt_plots_PCA <- function(
     mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("PCA, aes: %s", mti_dots_to_str(...)),
-      output = p
+      output = list(p)
     )
   
   # return

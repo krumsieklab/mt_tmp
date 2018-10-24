@@ -99,6 +99,12 @@ mti_res_get_toplevel <- function(D,str){metadata(D)$results[sapply(sapply(metada
 mti_res_get_pre_entries  <- function(D){mti_res_get_toplevel(D,"pre")}
 # extracts all plotting $results entries
 mti_res_get_plot_entries <- function(D){mti_res_get_toplevel(D,"plots")}
+# extracts all plotting $results entries
+mti_res_get_plot_entries <- function(D){mti_res_get_toplevel(D,"stats")}
 # extract plots only, not entire $results structure
-mti_res_get_plots <- function(D){sapply(mti_res_get_toplevel(D,"plots"),'[[','output',simplify=F)}
+mti_res_get_plots <- function(D,unlist=T){
+  l=sapply(mti_res_get_toplevel(D,"plots"),'[[','output',simplify=F)
+  if(unlist) l <- unlist(l,recursive=F)
+  l
+}
 

@@ -19,7 +19,8 @@ require(formula.tools)
 mt_stats_univ_lm <- function(
   D,              # SummarizedExperiment input
   formula,        # formula defining statistical model, see above.
-  compname = ''   # [optional] name of comparison
+  compname = '',  # [optional] name of comparison,
+  samplefilter
 ) {
   
   # validate arguments
@@ -28,14 +29,23 @@ mt_stats_univ_lm <- function(
   # merge data with sample info
   Ds <- D %>% mti_format_se_samplewise() 
   
-  # validate formula
-  if (!is.null(lhs(formula))) stop("Left-hand side of formula must be empty")
-  model.matrix(formula,Ds) # will crash sort of meaningfully if variables don't exist
+  ## FILTER METABOLITES
+  if(!missing(samplefilter)) {
+    filter_q <- enquo(samplefilter)
+    Ds <- Ds %>%
+      filter(!!filter_q) %>% droplevels()
+    # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
+    # did we leave 0 rows?
+    if (nrow(Ds)==0) stop("Filtering left 0 rows")
+    if (nrow(Ds)==ncol(D)) warning('filtering did not filter out any samples')
+  }
+
   # save outcome variable
   outvar <- attr(terms(formula),"term.labels")[1]
+  if(!(outvar %in% colnames(Ds))) stop(sprintf("column %s does not exist in data",outvar))
   
   # handle factor outcomes
-  v = colData(D)[[outvar]]
+  v = Ds[[outvar]]
   termsuff = ''
   if (is.character(v) || is.factor(v)) {
     # convert from string
@@ -46,6 +56,10 @@ mt_stats_univ_lm <- function(
     termsuff = levels(v)[2]
   }
 
+  # validate formula
+  if (!is.null(lhs(formula))) stop("Left-hand side of formula must be empty")
+  model.matrix(formula,Ds) # will crash sort of meaningfully if variables don't exist
+  
   
   # iterate over data matrix, run tests
   X = t(assay(D))

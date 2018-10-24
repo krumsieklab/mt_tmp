@@ -48,7 +48,7 @@ mt_plots_sampleboxplot <- function(
     mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("sample boxplot, aes: %s", mti_dots_to_str(...)),
-      output = p
+      output = list(p)
     )
   
   # return

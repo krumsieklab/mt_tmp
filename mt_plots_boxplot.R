@@ -31,8 +31,8 @@ mt_plots_boxplot <- function(D,
                             ...){
     x <- enquo(x)
     
-    if(missing(D) | ! D %of% "SummarizedExperiment")
-       stop("D must be a SummarizedExperiment object")
+    stopifnot("SummarizedExperiment" %in% class(D))
+    
 
     ## CONFOUNDER
     if(!missing(correct_confounder)){
@@ -49,9 +49,9 @@ mt_plots_boxplot <- function(D,
     if(!missing(stat)){
         if(length(metadata(D)$results) < stat)
             stop("stat element not in results list")
-        if("stats" %!in% metadata(D)$results[[stat]]$fun)
+        if((!"stats" %in% metadata(D)$results[[stat]]$fun))
             stop("element ", stat, " not a 'stat' object")
-        if("var" %!in% colnames(metadata(D)$results[[stat]]$output))
+        if((!"var" %in% colnames(metadata(D)$results[[stat]]$output)))
             stop("stat object must have column 'var'")
         stat <- metadata(D)$result[[stat]]$output %>%
                           inner_join(rd, by = "var")
