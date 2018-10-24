@@ -19,7 +19,7 @@ require(formula.tools)
 mt_stats_univ_lm <- function(
   D,              # SummarizedExperiment input
   formula,        # formula defining statistical model, see above.
-  compname = '',  # [optional] name of comparison,
+  name = '',  # [optional] name of comparison,
   samplefilter
 ) {
   
@@ -78,8 +78,8 @@ mt_stats_univ_lm <- function(
 
   # set attributes
   attr(tab, 'formula') <- formula
-  attr(tab, 'name') <- compname
-  attr(tab, "lstobj") <- models
+  attr(tab, 'name')    <- name
+  attr(tab, "lstobj")  <- models
   
   
   # add status information & results
