@@ -19,8 +19,8 @@
 #' @return SummarizedExperiment with boxplots in metadata(D)$results
 #' @export mt_plot_boxplot
 mt_plots_boxplot <- function(D,
-                            stat,
                             x = "x",
+                            statname,
                             correct_confounder,
                             metab_filter = p.value < 0.05,
                             metab_sort   = p.value,
@@ -29,14 +29,14 @@ mt_plots_boxplot <- function(D,
                             rows,
                             cols,
                             ...){
-    x <- enquo(x)
-    
+
     stopifnot("SummarizedExperiment" %in% class(D))
+    x <- enquo(x)
     
 
     ## CONFOUNDER
     if(!missing(correct_confounder)){
-        message("correcting for ", correct_confounder)
+        logmsg(glue::glue("correcting for {correct_confounder}"))
         D <- mti_correctConfounder(D, correct_confounder)
     }
     
@@ -46,15 +46,9 @@ mt_plots_boxplot <- function(D,
         mutate(var = rownames(D))
     
     ## stat
-    if(!missing(stat)){
-        if(length(metadata(D)$results) < stat)
-            stop("stat element not in results list")
-        if((!"stats" %in% metadata(D)$results[[stat]]$fun))
-            stop("element ", stat, " not a 'stat' object")
-        if((!"var" %in% colnames(metadata(D)$results[[stat]]$output)))
-            stop("stat object must have column 'var'")
-        stat <- metadata(D)$result[[stat]]$output %>%
-                          inner_join(rd, by = "var")
+    if(!missing(statname)){
+        stat <- mti_get_stat_by_name(D, statname) %>%
+            inner_join(rd, by = "var")
     }else{
         stat <- rd
     }
@@ -64,15 +58,17 @@ mt_plots_boxplot <- function(D,
         metab_filter_q <- enquo(metab_filter)
         stat <- stat %>%
             filter(!!metab_filter_q)
-        message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
+        logmsg(glue::glue("filter metabolites: {metab_filter_q} [{nrow(stat)} remaining]"))
     }
     
     ## SORT METABOLITES
     if(!missing(metab_sort)){
         metab_sort_q <- enquo(metab_sort)
         stat <- stat %>%
-            arrange(!!metab_sort_q)
-        message("sorted metabolites: ", metab_sort_q)
+            arrange(!!metab_sort_q) %>%
+            ## sort according to stat
+            mutate(name = factor(name, levels = unique(name)))
+        logmsg(glue::glue("sorted metabolites: {metab_sort_q}"))
     }
 
     ## CREATE PLOT
@@ -81,10 +77,6 @@ mt_plots_boxplot <- function(D,
         gather(var, value, one_of(rownames(D))) %>%
         ## add metabolite names
         inner_join(stat, by = "var") %>% 
-        ## sort according to stat
-        mutate(var = factor(var, levels = stat$var)) %>%
-        arrange(var) %>%
-        mutate(name = factor(name, levels = unique(name))) %>%
         ## do plot
         ggplot() +
         geom_boxplot(aes(x = !!x, y = value, ...), outlier.shape = ifelse(jitter, NA, 19)) +
@@ -112,10 +104,10 @@ mt_plots_boxplot <- function(D,
         p_perpage <- cols*rows
         pages     <- ceiling(p_plots / p_perpage)
         ## CREATE PAGES
-        message("split ", p_plots, " plots to ", pages, " pages with ", rows, " rows and ", cols, "  cols")
+        logmsg(glue::glue("split {p_plots} plots to {pages} pages with {rows} rows and {cols}  cols"))
         p <- map(1:pages, ~ p + ggforce::facet_wrap_paginate(~name, scales = "free_y", nrow = rows, ncol  = cols, page = .x))
     }else{
-        p <- list(p + facet_wrap(~name, scales = "free_y"))
+        p <- list(p + facet_wrap(.~name, scales = "free_y"))
     }
     
     ## add status information & plot

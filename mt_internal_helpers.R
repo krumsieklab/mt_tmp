@@ -5,6 +5,33 @@
 # last update: 2018-10-11
 # authors: JK
 #
+mti_get_stat_by_name <- function(D, name){
+    stopifnot("SummarizedExperiment" %in% class(D))
+
+    if(! ("results" %in% names(metadata(D))))
+        stop("no results element found in D")
+
+    stats <- mti_res_get_stats_entries(D)
+    
+    if(length(stats) == 0)
+        stop("no stats element found in D")
+    
+    names  <- stats %>% map("output") %>% map_chr(~attr(.x, "name"))
+    output <- which(names == name)
+    
+    if(length(output) == 0)
+        stop("stat element with name ", name, " does not exist")
+    if(length(output)  > 1)
+        stop("there are multiple stat elements with name ", name)
+    
+    output <- stats[[ output ]]$output
+    if( ! any(c("tibble", "data.frame") %in% class(output)) )
+        stop("output of stat result ", stat, " is not a table")
+
+    if( ! "var" %in% colnames(output) )
+        stop("output of stat result ", stat, " does not have 'var' column")
+    output
+}
 
 # safely add to end of list, even if list does not exist
 mti_add_to_list <- function(lst, element) {
@@ -100,7 +127,7 @@ mti_res_get_pre_entries  <- function(D){mti_res_get_toplevel(D,"pre")}
 # extracts all plotting $results entries
 mti_res_get_plot_entries <- function(D){mti_res_get_toplevel(D,"plots")}
 # extracts all plotting $results entries
-mti_res_get_plot_entries <- function(D){mti_res_get_toplevel(D,"stats")}
+mti_res_get_stats_entries <- function(D){mti_res_get_toplevel(D,"stats")}
 # extract plots only, not entire $results structure
 mti_res_get_plots <- function(D,unlist=T){
   l=sapply(mti_res_get_toplevel(D,"plots"),'[[','output',simplify=F)

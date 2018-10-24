@@ -23,10 +23,11 @@ D <-
   mt_plots_sampleboxplot(color=Group) %>%
   mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>% 
   mt_stats_univ_lm(
-    formula = ~ Group, 
-    samplefilter= (Group %in% c("Li_2","Li_5"))
+    formula      = ~ Group, 
+    samplefilter = (Group %in% c("Li_2","Li_5")),
+    name         = "Li's"
     ) %>%
-  mt_plots_boxplot(stat              = 10,
+    mt_plots_boxplot(statname           = "Li's",
                    x                  = Group,
                    fill               = Group,
                    correct_confounder = ~BRADFORD_PROTEIN + BATCH_MOCK,
@@ -51,7 +52,6 @@ sapply(pl,plot)
 pdf("output.pdf")
 sapply(pl, plot)
 dev.off()
-
 
 
 #### show statistics ----
