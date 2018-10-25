@@ -76,19 +76,18 @@ mt_stats_univ_lm <- function(
      mutate(var=rownames(D)) %>% select(var,everything()) %>% select(-term,term)
   tab$term = outvar
 
-  # set attributes
-  attr(tab, 'formula') <- formula
-  attr(tab, 'name')    <- name
-  attr(tab, "lstobj")  <- models
-  
-  
   # add status information & results
   funargs <- mti_funargs()
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("univariate lm, %s",deparse(formula)),
-      output = tab
+      output = list(
+        table=tab,
+        formula = formula,
+        name = name,
+        lstobj = lstobj
+      )
     )
   
   # return
