@@ -3,7 +3,8 @@
 ################################################################################
 #' mt_post_addFC
 #'
-#' add metabolite foldchanges to results table
+#' add metabolite foldchanges to results table'
+#' new column i called 'fc'
 #'
 #' @author Jonas Zierer
 #' @import SummarizedExperiment
@@ -19,8 +20,7 @@ mt_post_addFC <- function(D,
                           ...){
 
     ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
-    is_logscale <- metadata(D)$results %>% map_lgl(~"log" %in% .x$fun) %>% any()
-    if(!is_logscale)
+    if (length(mti_res_get_path(D, c("pre","trans","log"))) != 1)
         stop("fold-changes can only be calculated for log-scale data")
 
     ## stat
@@ -64,7 +64,7 @@ mt_post_addFC <- function(D,
         inner_join(model, by = outcome)
 
     ## CHECK TYPE OF OUTCOME
-    if(class(d_fc[[ outcome ]]) %!in% c("factor", "character"))
+    if(!(class(d_fc[[ outcome ]]) %in% c("factor", "character")))
         stop(glue::glue("Fold-changes are only meaningful for factor/character, but {outcome} is a {class(d[[outcome]])}"))
     if(length(unique(d_fc[[ outcome ]])) != 2)
         stop(glue::glue("Fold-changes are only meaningful 2 groups, but {outcome} has {length(unique(d[[outcome]]))}"))

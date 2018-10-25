@@ -80,7 +80,8 @@ mt_plots_boxplot <- function(D,
         ## do plot
         ggplot() +
         geom_boxplot(aes(x = !!x, y = value, ...), outlier.shape = ifelse(jitter, NA, 19)) +
-        labs(x = NULL, y = NULL)
+        labs(x = NULL, y = NULL) +
+        ggtitle(statname)
 
     ## ADD JITTER
     if(jitter){
@@ -118,9 +119,6 @@ mt_plots_boxplot <- function(D,
         p <- list(p + facet_wrap(.~name, scales = "free_y"))
     }
 
-    ## ADD TITLE
-    p[[1]] <- p[[1]] + ggtitle(statname)
-    
     ## add status information & plot
     funargs <- mti_funargs()
     metadata(D)$results %<>% 

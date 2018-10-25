@@ -165,7 +165,7 @@ plotting.makePairs <- function(data, cols = colnames(data)){
 
     ## SELECT COLUMNS
     cols   <- intersect(cols, colnames(data))
-    others <- colnames(data) %without% cols
+    others <- colnames(data)[ !(colnames(data) %in% cols)]        
     
     ## PREPARE GRID
     all <- crossing(xvar = cols, yvar = cols) %>%
