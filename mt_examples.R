@@ -14,6 +14,7 @@ lapply(l, function(x){source(x,echo=F,verbose=F)})
 mt_logging(console=T) 
 D <- 
   mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>%
+  mt_plots_PCA_mult(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
   mt_plots_sampleboxplot() %>%
   mt_plots_qc_missingness() %>%
   mt_pre_filtermiss(metMax=0.2) %>%
@@ -30,11 +31,24 @@ D <-
     samplefilter = (Group %in% c("Li_2","Li_5")),
     name         = "Li's"
   ) %>%
+  mt_stats_univ_lm(
+    formula      = ~ num2 + Group, 
+    name         = "num"
+  )%>%
+  mt_post_multTest(statname = "Li's", method = "BH") %>%
+  mt_post_addFC(statname = "Li's") %>%
+  mt_plots_volcano(statname = "Li's",
+                   metab_filter = p.adj < 0.1,
+                   colour = p.value < 0.05) %>%
+  mt_plots_volcano(statname = "Li's",
+                   x = -rank(abs(statistic)),
+                   metab_filter = p.adj < 0.1,
+                   colour = SUPER_PATHWAY) %>%
   mt_plots_boxplot(statname           = "Li's",
                    x                  = Group,
                    fill               = Group,
                    correct_confounder = ~BRADFORD_PROTEIN + BATCH_MOCK,
-                   metab_filter       = p.value < 0.05 & !is.na(SUPER_PATHWAY),  
+                   metab_filter       = p.adj < 0.1,  
                    metab_sort         = p.value,
                    annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
                    rows               = 2,

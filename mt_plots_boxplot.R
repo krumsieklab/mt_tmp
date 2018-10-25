@@ -47,7 +47,6 @@ mt_plots_boxplot <- function(D,
     
     ## stat
     if(!missing(statname)){
-        message("extract stat")
         stat <- mti_get_stat_by_name(D, statname) %>%
             inner_join(rd, by = "var")
     }else{
