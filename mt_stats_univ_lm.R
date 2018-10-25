@@ -83,10 +83,10 @@ mt_stats_univ_lm <- function(
       funargs = funargs,
       logtxt = sprintf("univariate lm, %s",deparse(formula)),
       output = list(
-        table=tab,
+        table   = tab,
         formula = formula,
-        name = name,
-        lstobj = lstobj
+        name    = name,
+        lstobj  = models
       )
     )
   
