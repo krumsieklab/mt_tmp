@@ -47,7 +47,8 @@ mt_pre_norm_quot = function(
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = 'quotient normalization'
+      logtxt = 'quotient normalization',
+      output = list(dilution=d)
     )
   
   # return

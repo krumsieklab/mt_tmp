@@ -134,4 +134,21 @@ mti_res_get_plots <- function(D,unlist=T){
   if(unlist) l <- unlist(l,recursive=F)
   l
 }
+# extract a certain "path" of entries, e.g. c("pre","norm")  [sorry for the code, but it works]
+mti_res_get_path <- function(D,path) {
+  labels <- lapply(metadata(D)$results,'[[', 'fun')
+  m <- rep(T,length(labels))
+  # exclude non-matches
+  for (i in 1:length(path)) {
+    m <- m & sapply(labels, function(label){
+      if (length(label)<i) F
+      else {
+        if (label[i]!=path[i])F
+        else T
+      }
+    })
+  }
+  # return
+  metadata(D)$results[m]
+}
 

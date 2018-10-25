@@ -19,6 +19,8 @@ D <-
   mt_pre_filtermiss(sampleMax=0.1) %>%
   mt_pre_trans_log() %>%
   mt_pre_norm_quot() %>%
+  mt_plots_qc_dilutionplot(comp="num1") %>%
+  mt_plots_qc_dilutionplot(comp="Group") %>%
   mt_pre_impute_knn() %>%
   mt_plots_sampleboxplot(color=Group) %>%
   mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>% 
@@ -26,8 +28,8 @@ D <-
     formula      = ~ Group, 
     samplefilter = (Group %in% c("Li_2","Li_5")),
     name         = "Li's"
-    ) %>%
-    mt_plots_boxplot(statname           = "Li's",
+  ) %>%
+  mt_plots_boxplot(statname           = "Li's",
                    x                  = Group,
                    fill               = Group,
                    correct_confounder = ~BRADFORD_PROTEIN + BATCH_MOCK,
