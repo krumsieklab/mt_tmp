@@ -60,7 +60,7 @@ mt_plots_boxplot <- function(D,
             filter(!!metab_filter_q)
         logmsg(glue::glue("filter metabolites: {metab_filter_q} [{nrow(stat)} remaining]"))
     }
-    
+
     ## SORT METABOLITES
     if(!missing(metab_sort)){
         metab_sort_q <- enquo(metab_sort)
@@ -103,13 +103,21 @@ mt_plots_boxplot <- function(D,
         p_plots   <- length(unique(stat$name))
         p_perpage <- cols*rows
         pages     <- ceiling(p_plots / p_perpage)
-        ## CREATE PAGES
         logmsg(glue::glue("split {p_plots} plots to {pages} pages with {rows} rows and {cols}  cols"))
         p <- map(1:pages, ~ p + ggforce::facet_wrap_paginate(~name, scales = "free_y", nrow = rows, ncol  = cols, page = .x))
+        ## ADD EMPTY PLOTS TO FILL PAGE
+        fill_page <- (pages*p_perpage) - p_plots
+        if(fill_page > 0){
+            logmsg(glue::glue("add {fill_page} blanks to fill page"))
+            spaces <- map(1:fill_page, ~rep(" ", .x)) %>%
+                map_chr(str_c, collapse = "")
+            p[[ pages ]] <- p[[ pages ]] +
+                geom_blank(data = data.frame(name = spaces))
+        }
     }else{
         p <- list(p + facet_wrap(.~name, scales = "free_y"))
     }
-    
+
     ## add status information & plot
     funargs <- mti_funargs()
     metadata(D)$results %<>% 
