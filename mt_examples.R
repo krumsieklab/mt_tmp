@@ -15,6 +15,7 @@ mt_logging(console=T)
 D <- 
   mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>%
   mt_plots_sampleboxplot() %>%
+  mt_plots_qc_missingness() %>%
   mt_pre_filtermiss(metMax=0.2) %>%
   mt_pre_filtermiss(sampleMax=0.1) %>%
   mt_pre_trans_log() %>%
