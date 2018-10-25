@@ -16,7 +16,7 @@ mti_get_stat_by_name <- function(D, name){
     if(length(stats) == 0)
         stop("no stats element found in D")
     
-    names  <- stats %>% map("output") %>% map_chr(~attr(.x, "name"))
+    names  <- stats %>% map_chr(~.x$output$name)
     output <- which(names == name)
     
     if(length(output) == 0)
@@ -24,7 +24,7 @@ mti_get_stat_by_name <- function(D, name){
     if(length(output)  > 1)
         stop("there are multiple stat elements with name ", name)
     
-    output <- stats[[ output ]]$output
+    output <- stats[[ output ]]$output$table
     if( ! any(c("tibble", "data.frame") %in% class(output)) )
         stop("output of stat result ", stat, " is not a table")
 

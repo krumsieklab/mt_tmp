@@ -26,7 +26,7 @@ mt_post_multTest <- function(D,
 
     ## FIND ENTRY
     stat_id <- metadata(D)$results %>%
-                         map_lgl(~"stats" %in% .x$fun && attr(.x$output, "name") == statname) %>%
+                         map_lgl(~"stats" %in% .x$fun && .x$output$name == statname) %>%
                          which()
     if(length(stat_id) == 0)
         stop("stat element with name ", statname, " does not exist")
@@ -34,8 +34,9 @@ mt_post_multTest <- function(D,
         stop("there are multiple stat elements with name ", statname)
 
     ## DO CORRECTION
-    metadata(D)$results[[stat_id]]$output %<>%
+    metadata(D)$results[[stat_id]]$output$table %<>%
                   mutate(p.adj = p.adjust(!!pcolumn, method = method))
+    ## UPDATE LOG ENTRIES
     metadata(D)$results[[stat_id]]$logtxt %<>%
                   str_c(., ", multiple testing adjusted (", method, ")")
     metadata(D)$results[[stat_id]]$logshort %<>%

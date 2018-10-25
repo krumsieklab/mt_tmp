@@ -47,6 +47,7 @@ mt_plots_boxplot <- function(D,
     
     ## stat
     if(!missing(statname)){
+        message("extract stat")
         stat <- mti_get_stat_by_name(D, statname) %>%
             inner_join(rd, by = "var")
     }else{
@@ -118,6 +119,9 @@ mt_plots_boxplot <- function(D,
         p <- list(p + facet_wrap(.~name, scales = "free_y"))
     }
 
+    ## ADD TITLE
+    p[[1]] <- p[[1]] + ggtitle(statname)
+    
     ## add status information & plot
     funargs <- mti_funargs()
     metadata(D)$results %<>% 
