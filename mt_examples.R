@@ -19,8 +19,9 @@ D <-
   mt_plots_qc_missingness() %>%
   mt_pre_filtermiss(metMax=0.2) %>%
   mt_pre_filtermiss(sampleMax=0.1) %>%
-  mt_pre_trans_log() %>%
+  mt_pre_batch_median(batches = "BATCH_MOCK") %>%
   mt_pre_norm_quot() %>%
+  mt_pre_trans_log() %>%
   mt_plots_qc_dilutionplot(comp="num1") %>%
   mt_plots_qc_dilutionplot(comp="Group") %>%
   mt_pre_impute_knn() %>%
