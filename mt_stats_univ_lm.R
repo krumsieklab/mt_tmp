@@ -20,7 +20,8 @@ mt_stats_univ_lm <- function(
   D,              # SummarizedExperiment input
   formula,        # formula defining statistical model, see above.
   name = '',  # [optional] name of comparison,
-  samplefilter
+  samplefilter,
+  mc.cores = 1
 ) {
   
   # validate arguments
@@ -63,13 +64,13 @@ mt_stats_univ_lm <- function(
   
   # iterate over data matrix, run tests
   X = t(assay(D))
-  models <- lapply (rownames(D), function(f) {
+  models <- parallel::mclapply (rownames(D), function(f) {
      # run glm with updated formula
     lm(
       data = Ds,
       formula = update(formula, sprintf("%s~.",f))
       )
-  })
+  }, mc.cores = mc.cores)
   
   # broom it up, subselect to term, rearrange, possibly rename factor field
   tab <- map_dfr(models, broom::tidy) %>% filter(term==paste0(outvar,termsuff)) %>% 
