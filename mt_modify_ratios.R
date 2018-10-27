@@ -1,0 +1,81 @@
+################################################################################
+## CALCULATE METABOLITE RATIOS
+################################################################################
+#' mt_modify_ratios
+#'
+#' 
+#'
+#' @author Jonas Zierer
+#' @import SummarizedExperiment
+#' @importFrom dplyr %>% mutate gather left_join filter arrange
+#' @param D SummarizedExperiment object
+#' @return SummarizedExperiment containing pairwise ratios from all variables of input
+#' @export mt_modify_ratios
+mt_modify_ratios <- function(D){
+
+    stopifnot("SummarizedExperiment" %in% class(D))
+
+    as <- assay(D)
+    ## as <- matrix(1:(4*2), nrow = 4, ncol = 2, dimnames = list(letters[23:26], letters[1:2]))
+
+    ## CREATE RATIOS
+    as_ratio <- map(1:(nrow(as)-1), ~ sweep(as[(.x+1):nrow(as), , drop = F], 2, as[.x,], "/")) %>%
+        setNames(rownames(as)[1:(nrow(as)-1)]) 
+
+    ## CREATE NEW ROWDATA
+    rd <- D %>%
+        rowData() %>%
+        as.data.frame() %>%
+        mutate(rownames = rownames(D))
+    rd_new <- as_ratio %>%
+        imap_dfr(~tibble(m1 = rownames(.x), m2 = .y)) %>%
+        mutate(rownames = str_c(m1, m2, sep = "_")) %>%
+        left_join(rd %>% transmute(m1 = rownames, name1 = name), by = "m1") %>%
+        left_join(rd %>% transmute(m2 = rownames, name2 = name), by = "m2") %>%
+        mutate(name = str_c(name1, " / ", name2))
+    rd <- rd %>%
+        mutate(m1 = rownames,
+               m2 = NA,
+               name1 = name,
+               name2 = NA)
+    rd <- bind_rows(rd, rd_new) %>%
+        select(rownames, m1, m2, name1, name2, everything()) %>%
+        column_to_rownames("rownames")
+    
+    ## COMBINE RATIOS TO SINGLE MATRIX
+    as_ratio <- as_ratio %>%
+        imap(~{rownames(.x) <- str_c(rownames(.x), .y, sep = "_"); .x}) %>%
+        invoke(rbind, .)
+    as_ratio <- rbind(as, as_ratio)
+    
+    ## CHECK NAMES
+    if(!identical(rownames(as_ratio), rownames(rd)))
+        stop("something went wrong. check data!")
+
+    ## ADD RAW DATA
+    rd_final <- bind_rows(rd, rd_new)
+
+    ## CREATE NEW OBJECT
+    D <- SummarizedExperiment(assay    = as_ratio,
+                              rowData  = rd,
+                              colData  = colData(D),
+                              metadata = metadata(D))
+
+    ## add status information & plot
+    funargs <- mti_funargs()
+    metadata(D)$results %<>% 
+                  mti_generate_result(
+                      funargs = funargs,
+                      logtxt = sprintf("Create Metabolite Ratios"),
+                      output = NULL
+                  )
+    D
+
+}
+
+
+
+
+
+
+            
