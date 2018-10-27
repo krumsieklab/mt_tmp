@@ -5,12 +5,26 @@
 # last update: 2018-10-13
 # authors: JK
 #
+# Usage of logger:
+#
+# Activate it once, either in a SummarizedExperiment pipe, or with a separate call.
+# ... %>% mt_logging() %>% ...
+# or
+# mt_logging()
+#
+# Then there are three functions for three logging levels:
+# mti_logmsg()     - logger "mt", one single message at the end of each mt_ function
+# mti_logstatus()  - logger "mts", for internal status updates of the function
+# mti_logwarning()    - logger "mtw", for warnings
 
 require(logging)
 
 # helper function that sends an info message to the "mt" logger
 # function also returns the string again, so it can be directly used to store log messages as well
-logmsg <- function(msg) { loginfo(msg, logger="mt"); msg }
+mti_logmsg <- function(msg) { loginfo(msg, logger="mt"); msg }
+mti_logstatus <- function(msg) { loginfo(msg, logger="mts"); msg }
+mti_logwarning <- function(msg) { loginfo(sprintf("WARNING: %s",msg), logger="mtw"); msg }
+
 
 # main function definition
 mt_logging <- function(
@@ -21,6 +35,8 @@ mt_logging <- function(
   # set up logging
   logReset()
   if (console) addHandler(writeToConsole, logger = "mt")
+  if (console) addHandler(writeToConsole, logger = "mts")
+  if (console) addHandler(writeToConsole, logger = "mtw")
   
   # return unchanged object
   if(!is.null(D)) D

@@ -80,7 +80,7 @@ mti_generate_result <- function(
     list(
       fun=funargs$fun,
       args=funargs$args,
-      logtxt=logmsg(logtxt),
+      logtxt=mti_logmsg(logtxt),
       logshort=logshort,
       output=output
     )
@@ -119,6 +119,9 @@ mti_dots_to_str <- function(...) {
   l = eval(substitute(alist(...)))
   paste(sapply(names(l), function(k){sprintf('%s=%s',k,as.character(l[[k]]))}), collapse = ', ')
 }
+
+# fix order of a factor (in the order it appears in the vector)
+mti_fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)} 
 
 # generate extractor for $results entry, filter on top level function name
 mti_res_get_toplevel <- function(D,str){metadata(D)$results[sapply(sapply(metadata(D)$results,'[[', 'fun',simplify=F), '[[', 1,simplify=F)==str]}

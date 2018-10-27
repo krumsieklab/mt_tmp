@@ -60,7 +60,7 @@ mt_plots_volcano <- function(D,
 
     ## ADD METABOLITE LABELS
     if(!missing(metab_filter)){
-        logmsg("add label")
+        mti_logstatus("add label")
         metab_filter_q <- enquo(metab_filter)
         data_annotate <- data_plot %>%
             filter(!!metab_filter_q)

@@ -54,7 +54,7 @@ mt_post_addFC <- function(D,
     confounder <- update.formula(formula, str_c(".~.-", outcome))
     confounder_terms <- attr(terms(confounder), "term.labels")
     if(length(confounder_terms) > 0){
-        logmsg(glue::glue("correcting for {confounder}"))
+        mti_logstatus(glue::glue("correcting for {confounder}"))
         D <- mti_correctConfounder(D, confounder)
     }
 

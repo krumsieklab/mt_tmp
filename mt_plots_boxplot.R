@@ -36,7 +36,7 @@ mt_plots_boxplot <- function(D,
 
     ## CONFOUNDER
     if(!missing(correct_confounder)){
-        logmsg(glue::glue("correcting for {correct_confounder}"))
+        mti_logstatus(glue::glue("correcting for {correct_confounder}"))
         D <- mti_correctConfounder(D, correct_confounder)
     }
     
@@ -58,7 +58,7 @@ mt_plots_boxplot <- function(D,
         metab_filter_q <- enquo(metab_filter)
         stat <- stat %>%
             filter(!!metab_filter_q)
-        logmsg(glue::glue("filter metabolites: {metab_filter_q} [{nrow(stat)} remaining]"))
+          mti_logstatus(glue::glue("filter metabolites: {metab_filter_q} [{nrow(stat)} remaining]"))
     }
 
     ## SORT METABOLITES
@@ -68,7 +68,7 @@ mt_plots_boxplot <- function(D,
             arrange(!!metab_sort_q) %>%
             ## sort according to stat
             mutate(name = factor(name, levels = unique(name)))
-        logmsg(glue::glue("sorted metabolites: {metab_sort_q}"))
+        mti_logstatus(glue::glue("sorted metabolites: {metab_sort_q}"))
     }
 
     ## CREATE PLOT
@@ -104,12 +104,12 @@ mt_plots_boxplot <- function(D,
         p_plots   <- length(unique(stat$name))
         p_perpage <- cols*rows
         pages     <- ceiling(p_plots / p_perpage)
-        logmsg(glue::glue("split {p_plots} plots to {pages} pages with {rows} rows and {cols}  cols"))
+        mti_logstatus(glue::glue("split {p_plots} plots to {pages} pages with {rows} rows and {cols}  cols"))
         p <- map(1:pages, ~ p + ggforce::facet_wrap_paginate(~name, scales = "free_y", nrow = rows, ncol  = cols, page = .x))
         ## ADD EMPTY PLOTS TO FILL PAGE
         fill_page <- (pages*p_perpage) - p_plots
         if(fill_page > 0){
-            logmsg(glue::glue("add {fill_page} blanks to fill page"))
+            mti_logstatus(glue::glue("add {fill_page} blanks to fill page"))
             spaces <- map(1:fill_page, ~rep(" ", .x)) %>%
                 map_chr(str_c, collapse = "")
             p[[ pages ]] <- p[[ pages ]] +

@@ -21,7 +21,7 @@ mt_modify_ratios <- function(D){
     ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
     op <- "/"
     if (length(mti_res_get_path(D, c("pre","trans","log"))) > 0){
-        logmsg("data already logscale, using '-'")
+        mti_logstatus("data already logscale, using '-'")
         op <- "-"
     }
     

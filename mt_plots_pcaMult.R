@@ -21,14 +21,14 @@ mt_stats_mutivar_pca <- function(D, fail.on.na=FALSE, ...){
             stop("PCA - incomplete samples: exiting")
         }
         nas <- apply(ass, MARGIN = 1, function(x)all(is.finite(x)))
-        logmsg(glue::glue("PCA - incomplete metabolites: excluding {sum(!nas)} metabolites - using {sum(nas)}"))
+        mti_logstatus(glue::glue("PCA - incomplete metabolites: excluding {sum(!nas)} metabolites - using {sum(nas)}"))
         ass <- ass[nas, ]
     }
 
     ## EXCLUDE INVARIANT
     var <- apply(ass, MARGIN = 1, function(x)var(x) > 0)
     if(sum(!var) > 0){
-        logmsg(glue::glue("PCA - invariant metabolites: excluding {sum(!var)} metabolites - using {sum(var)}"))
+      mti_logstatus(glue::glue("PCA - invariant metabolites: excluding {sum(!var)} metabolites - using {sum(var)}"))
         ass <- ass[var, ]
     }
 

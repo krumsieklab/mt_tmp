@@ -38,7 +38,7 @@ mt_stats_univ_lm <- function(
     # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
     # did we leave 0 rows?
     if (nrow(Ds)==0) stop("Filtering left 0 rows")
-    if (nrow(Ds)==ncol(D)) warning('filtering did not filter out any samples')
+    if (nrow(Ds)==ncol(D)) mti_logwarning('filtering did not filter out any samples')
   }
 
   # save outcome variable

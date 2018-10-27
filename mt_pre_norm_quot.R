@@ -25,7 +25,7 @@ mt_pre_norm_quot = function(
     if (NAerror) {
       stop('Data matrix contains NAs')
     } else {
-      warning('Data matrix contains NAs')
+      mti_logwarning('Data matrix contains NAs')
     }
   }
   
