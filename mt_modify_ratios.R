@@ -18,8 +18,15 @@ mt_modify_ratios <- function(D){
     as <- assay(D)
     ## as <- matrix(1:(4*2), nrow = 4, ncol = 2, dimnames = list(letters[23:26], letters[1:2]))
 
+    ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
+    op <- "/"
+    if (length(mti_res_get_path(D, c("pre","trans","log"))) > 0){
+        logmsg("data already logscale, using '-'")
+        op <- "-"
+    }
+    
     ## CREATE RATIOS
-    as_ratio <- map(1:(nrow(as)-1), ~ sweep(as[(.x+1):nrow(as), , drop = F], 2, as[.x,], "/")) %>%
+    as_ratio <- map(1:(nrow(as)-1), ~ sweep(as[(.x+1):nrow(as), , drop = F], 2, as[.x,], "-")) %>%
         setNames(rownames(as)[1:(nrow(as)-1)]) 
 
     ## CREATE NEW ROWDATA
