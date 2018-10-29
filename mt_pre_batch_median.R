@@ -1,4 +1,3 @@
-# NONFUNCTIONAL
 # MetaboTools
 #
 # Median batch correction, as Metabolon does it for runday correction.
