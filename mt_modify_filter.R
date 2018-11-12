@@ -40,7 +40,7 @@ mt_modify_filter_samples <- function(D, sample_filter){
         rownames_to_column("colnames") %>%
         filter(!!sample_filter_q)
 
-    ## SUBSET METABOLITES
+    ## SUBSET SAMPLES
     excluded <-colnames(D)[ !(colnames(D) %in% cd$colnames) ]
     D <- D[, cd$colnames]
 
