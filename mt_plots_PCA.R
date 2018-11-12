@@ -12,9 +12,11 @@
 require(ggplot2)
 
 mt_plots_PCA <- function(
-  D,          # SummarizedExperiment input
-  title="",   # title of plot
-  ...         # additional arguments directly passed to aes() of ggplot
+  D,            # SummarizedExperiment input
+  title="",     # title of plot
+  scaledata=F,  # scale data before plotting (mean 0, std 1)
+  ggadd=NULL,   # further elements/functions to add (+) to the ggplot object
+  ...           # additional arguments directly passed to aes() of ggplot
 ) {
   
   # validate arguments
@@ -23,6 +25,9 @@ mt_plots_PCA <- function(
   # extract data and verify that there are no NA values
   X = t(assay(D))
   if (any(is.na(X))) stop("Data matrix for PCA cannot contain NAs")
+  
+  # scale?
+  if (scaledata) X <- scale(X)
   
   # PCA
   pca <- prcomp(x=as.matrix(X)) 
@@ -38,7 +43,8 @@ mt_plots_PCA <- function(
   p <- ggplot(data=df) +
     geom_point(aes(x=PC1,y=PC2,...)) + 
     xlab(pc1name) + ylab(pc2name) + ggtitle(title)
-  
+  # add custom elements?
+  if (!is.null(ggadd)) p <- p+ggadd
   
   # add status information & plot
   funargs <- mti_funargs()

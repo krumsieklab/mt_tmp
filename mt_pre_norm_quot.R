@@ -7,11 +7,13 @@
 # authors: JK
 #
 
+require(glue)
+
 mt_pre_norm_quot = function(
   D,                 # SummarizedExperiment input
-  vars=1:dim(X)[2],  # vars: index vector of variables of be used, default: all
+  vars=1:dim(D)[1],  # vars: index vector of variables of be used, default: all
   NAerror=F,         # NAerrors: throw error for NA's or just ignore?
-  refsamples=NA      # indices (or logical vector) of samples to calculate reference sample on (e.g. only on control samples)
+  refsamples=NULL    # expression filtering reference samples from colData
 ) {
   
   # validate and extract arguments
@@ -29,11 +31,21 @@ mt_pre_norm_quot = function(
     }
   }
   
-  # if reference samples not given -> use all samples
-  if (is.na(refsamples)) refsamples <- 1:nrow(X)
+  # apply reference sample filter?
+  if (!missing(refsamples)) {
+    sample_filter_q <- enquo(refsamples)
+    cd <- colData(D) %>%
+      as.data.frame() %>%
+      rownames_to_column("colnames") %>%
+      filter(!!sample_filter_q)
+    # define samples to be used
+    useref <- (colnames(D) %in% cd$colnames) 
+  } else {
+    useref = rep(T, ncol(D))
+  }
   
   # median reference sample
-  ref = apply(X[refsamples,vars],2,function(x)median(x,na.rm=T))
+  ref = apply(X[useref,vars],2,function(x)median(x,na.rm=T))
   # get dilution factors
   d = apply(X[,vars],1,  function(s) median(as.numeric(s/ref),na.rm=T))
   # apply to each sample  (for each row=sample, divide values by median dilution factor)
@@ -47,7 +59,7 @@ mt_pre_norm_quot = function(
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = 'quotient normalization',
+      logtxt = glue('quotient normalization based on {sum(useref)} reference samples'),
       output = list(dilution=d)
     )
   
