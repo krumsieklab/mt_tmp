@@ -11,7 +11,7 @@
 
 mt_plots_qc_dilutionplot <- function(
   D,      # SummarizedExperiment input
-  comp  # list of sample annotation column to compare with
+  comp    # list of sample annotation column to compare with
 ) {
   
   # validate arguments

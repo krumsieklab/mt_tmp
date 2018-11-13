@@ -6,31 +6,31 @@
 # authors: JK
 #
 mti_get_stat_by_name <- function(D, name){
-    stopifnot("SummarizedExperiment" %in% class(D))
-
-    if(! ("results" %in% names(metadata(D))))
-        stop("no results element found in D")
-
-    stats <- mti_res_get_stats_entries(D)
-    
-    if(length(stats) == 0)
-        stop("no stats element found in D")
-    
-    names  <- stats %>% map_chr(~.x$output$name)
-    output <- which(names == name)
-    
-    if(length(output) == 0)
-        stop("stat element with name ", name, " does not exist")
-    if(length(output)  > 1)
-        stop("there are multiple stat elements with name ", name)
-    
-    output <- stats[[ output ]]$output$table
-    if( ! any(c("tibble", "data.frame") %in% class(output)) )
-        stop("output of stat result ", stat, " is not a table")
-
-    if( ! "var" %in% colnames(output) )
-        stop("output of stat result ", stat, " does not have 'var' column")
-    output
+  stopifnot("SummarizedExperiment" %in% class(D))
+  
+  if(! ("results" %in% names(metadata(D))))
+    stop("no results element found in D")
+  
+  stats <- mti_res_get_stats_entries(D)
+  
+  if(length(stats) == 0)
+    stop("no stats element found in D")
+  
+  names  <- stats %>% map_chr(~.x$output$name)
+  output <- which(names == name)
+  
+  if(length(output) == 0)
+    stop("stat element with name ", name, " does not exist")
+  if(length(output)  > 1)
+    stop("there are multiple stat elements with name ", name)
+  
+  output <- stats[[ output ]]$output$table
+  if( ! any(c("tibble", "data.frame") %in% class(output)) )
+    stop("output of stat result ", stat, " is not a table")
+  
+  if( ! "var" %in% colnames(output) )
+    stop("output of stat result ", stat, " does not have 'var' column")
+  output
 }
 
 # safely add to end of list, even if list does not exist
@@ -68,7 +68,7 @@ mti_generate_result <- function(
   logtxt="",        # log text describing what the function did
   logshort=logtxt,  # shorter version of log text for printing; especially important for preprocessing funs... if not given, logtxt will be used
   output=NULL       # output structure of that function (e.g. plot, statistical results)... default is NULL (i.e. no output)
-  ) {
+) {
   
   # ensure structure of funargs
   stopifnot("fun" %in% names(funargs))
@@ -110,7 +110,7 @@ mti_funargs <- function(...) {
   res$args$D = NULL
   # return 
   res
- 
+  
 }
 
 
@@ -137,6 +137,13 @@ mti_res_get_plots <- function(D,unlist=T){
   if(unlist) l <- unlist(l,recursive=F)
   l
 }
+# return all unique plots from multiple SummarizedExperiments
+mti_multi_get_unique_plots <- function(...) {
+  L <- list(...)
+  allplots <- unlist(map(L, ~mti_res_get_plots(.,unlist=T)), recursive = F)
+  unique(allplots)
+}
+
 # extract a certain "path" of entries, e.g. c("pre","norm")  [sorry for the code, but it works]
 mti_res_get_path <- function(D,path) {
   labels <- lapply(metadata(D)$results,'[[', 'fun')
@@ -155,3 +162,48 @@ mti_res_get_path <- function(D,path) {
   metadata(D)$results[m]
 }
 
+
+# remove all NAs from a vector
+# alternatively, replaces NAs with a value
+mti_removeNAs <- function(v, replaceWith=NULL) {
+  if (!is.null(replaceWith)) {
+    v[is.na(v)] <- replaceWith
+    v
+  } else {
+    v[!is.na(v)]
+  }
+}
+
+
+# tester function that just writes to stdout and stderr without flags to suppress it
+mti_debug_badconsole <- function() {
+  write("prints to stderr", stderr())
+  write("prints to stdout", stdout())
+}
+
+# # completely suppresses a functions outputs
+# mti_silent <- function(...) {
+#   
+#   zz <- file("/dev/null", open = "wt")
+#   sink(file=zz, type = "output")
+#   sink(file=zz, type = "message")
+# 
+#   pf <- parent.frame()
+#   evalVis <- function(expr) withVisible(eval(expr, pf))
+#   for (i in seq_along(args)) {
+#     expr <- args[[i]]
+#     tmp <- switch(mode(expr), expression = lapply(expr, evalVis), 
+#                   call = , name = list(evalVis(expr)), stop("bad argument"))
+#     for (item in tmp) if (item$visible) 
+#       print(item$value)
+#   }
+#   sink()
+#   sink()
+#   
+#   
+#   
+#   
+# }
+# 
+# 
+# 
