@@ -178,7 +178,6 @@ mt_stats_univ_lm <- function(
     
   ## run tests for all metabolites
   models <- parallel::mclapply(rownames(D), do_lm, mc.cores = mc.cores) %>%
-      map("results") %>%
       setNames(rownames(D))
   
   # broom it up, subselect to term, rename term
