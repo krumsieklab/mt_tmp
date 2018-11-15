@@ -32,13 +32,18 @@ D_alone <-
     name         = "Li's",
     mc.cores     = 2
   ) %>% 
+  mt_plots_volcano(statname     = "Li's",
+                   metab_filter = p.adj < 0.1,
+                   colour       = p.value < 0.05) %>% 
   mt_plots_pvalhist()
 
 # show all functions that have been run
 metadata(D_alone)$results %>% map('fun')
 
 # plot all plots
-D_alone %>% mti_res_get_plots()
+pdf("plots.pdf")
+lapply(D_alone %>% mti_res_get_plots(), plot)
+dev.off()
 
 
 
