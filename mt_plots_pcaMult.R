@@ -168,7 +168,7 @@ plotting.makePairs <- function(data, cols = colnames(data)){
     others <- colnames(data)[ !(colnames(data) %in% cols)]        
     
     ## PREPARE GRID
-    all <- crossing(xvar = cols, yvar = cols) %>%
+    all <- tidyr::crossing(xvar = cols, yvar = cols) %>%
         filter(xvar != yvar) %>%
         mutate(data = map2(xvar, yvar, function(xx, yy){
             data %>%
