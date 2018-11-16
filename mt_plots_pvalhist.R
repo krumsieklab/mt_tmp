@@ -28,8 +28,10 @@ mt_plots_pvalhist <- function(
     bwidth <- breaks[2]-breaks[1]
     # histogram
     st %>% 
-      ggplot(aes(x=p.value)) + geom_histogram(binwidth=bwidth,fill="white",colour="black") +
-      ggtitle(glue("'{statname}' p-values"))
+        ggplot(aes(x=p.value)) +
+        geom_histogram(binwidth=bwidth,fill="white",colour="black") +
+        xlim(0,1) +
+        ggtitle(glue("'{statname}' p-values"))
     })
   
 
