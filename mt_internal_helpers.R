@@ -28,8 +28,9 @@ mti_get_stat_by_name <- function(D, name){
   if( ! any(c("tibble", "data.frame") %in% class(output)) )
     stop("output of stat result ", stat, " is not a table")
   
-  if( ! "var" %in% colnames(output) )
-    stop("output of stat result ", stat, " does not have 'var' column")
+  if( ! ("var" %in% colnames(output)) )
+    stop("output of stat result ", name, " does not have 'var' column")
+  
   output
 }
 
