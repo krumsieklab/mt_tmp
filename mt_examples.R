@@ -4,7 +4,7 @@ zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- fu
 
 l=list.files(path=codes.makepath("packages/metabotools"),pattern="*.R$",full.names=T)
 l=l[!grepl('*examples*',l)]
-lapply(l, function(x){source(x,echo=F,verbose=F)})
+l=lapply(l, function(x){source(x,echo=F,verbose=F)})
 
 # library(operators)
 
@@ -13,7 +13,7 @@ lapply(l, function(x){source(x,echo=F,verbose=F)})
 mt_logging(console=T) 
 D_alone <- 
   mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>%
-  mt_plots_PCA_mult(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
+  ##mt_plots_PCA_mult(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
   mt_plots_sampleboxplot() %>%
   mt_plots_qc_missingness() %>%
   mt_pre_filtermiss(metMax=0.2) %>%
@@ -31,11 +31,15 @@ D_alone <-
     samplefilter = (Group %in% c("Li_2","Li_5")),
     name         = "Li's",
     mc.cores     = 2
-  ) %>% 
+  ) %>%
+  mt_post_addFC(statname = "Li's") %>%
+  mt_post_multTest(statname = "Li's", method = "BH") %>%
+  mt_plots_pvalhist() %>%
   mt_plots_volcano(statname     = "Li's",
                    metab_filter = p.adj < 0.1,
-                   colour       = p.value < 0.05) %>% 
-  mt_plots_pvalhist()
+                   colour       = p.value < 0.05)
+
+
 
 # show all functions that have been run
 metadata(D_alone)$results %>% map('fun')

@@ -181,7 +181,7 @@ mt_stats_univ_lm <- function(
       setNames(rownames(D))
   
   # broom it up, subselect to term, rename term
-  tab <- map_dfr(models, f_tidy_tidy, conf.int = T, .id = "metab") %>%
+  tab <- map_dfr(models, f_tidy_tidy, conf.int = T, .id = "var") %>%
       filter(term == outvar_term) %>%
       mutate(term =  outvar_label)
 
