@@ -1,6 +1,8 @@
 
 #### source all files except myself... ugly but works for now ----
-zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- function(){lst<-ls(envir=.GlobalEnv); lst<-lst[!(lst %in% c("zap","codes.makepath","store","restore","debugstore"))]; rm(list=lst, envir=.GlobalEnv) }
+# zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- function(){lst<-ls(envir=.GlobalEnv); lst<-lst[!(lst %in% c("zap","codes.makepath","store","restore","debugstore"))]; rm(list=lst, envir=.GlobalEnv) }
+if(!exists("codes.makepath"))
+    codes.makepath <- function(a)paste0("./", a)
 
 l=list.files(path=codes.makepath("packages/metabotools"),pattern="*.R$",full.names=T)
 l=l[!grepl('*examples*',l)]
@@ -109,9 +111,9 @@ my_sexy_analysis <- {.} %>>>%
 
 
 #### apply pipeline to individual metabolites and ratios ----
-# D_single <- D %>%
-#   my_sexy_analysis() 
-# metadata(D_single)$results %>% map("fun")
+D_single <- D %>%
+  my_sexy_analysis() 
+metadata(D_single)$results %>% map("fun")
 
 
 D_ratio <- D %>%
