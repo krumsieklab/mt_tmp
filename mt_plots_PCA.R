@@ -30,7 +30,7 @@ mt_plots_PCA <- function(
   if (scaledata) X <- scale(X)
   
   # PCA
-  pca <- prcomp(x=as.matrix(X)) 
+  pca <- prcomp(x=as.matrix(X), center=F, scale=F) 
   expvar = (pca$sdev)^2 / sum(pca$sdev^2) 
   # assemble data frame, two PCS and sample info
   df = data.frame(PC1 = pca$x[,1], PC2 = pca$x[,2], colData(D))
