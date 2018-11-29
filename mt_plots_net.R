@@ -8,10 +8,10 @@
 
 ## dependencies
 
-require(igraph)
-require(GGally)
-require(network)
-require(sna)
+library(igraph)
+library(GGally)
+library(network)
+library(sna)
 source(paste0(codes.makepath("R/networks"),"/writeYED.R", sep=""))
 
 mt_plots_net <- function(
