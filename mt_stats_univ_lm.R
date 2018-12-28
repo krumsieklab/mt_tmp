@@ -27,6 +27,9 @@ mt_stats_univ_lm <- function(
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
   
+  # make sure name does not exist yet
+  if (name %in% unlist(mti_res_get_stats_entries(D) %>% map("output") %>% map("name"))) stop(sprintf("stat element with name '%s' already exists",name))
+  
   # merge data with sample info
   Ds <- D %>% mti_format_se_samplewise() 
   

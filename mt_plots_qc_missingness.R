@@ -15,7 +15,8 @@ missingness <- function(X)apply(is.na(X),2,sum)/dim(X)[1]
 
 # main function
 mt_plots_qc_missingness <- function(
-  D # SummarizedExperiment input
+  D,        # SummarizedExperiment input
+  metMax=NA # which % to mark on the y axis
 ) {
   
   # validate argument
@@ -30,6 +31,10 @@ mt_plots_qc_missingness <- function(
     xlab("metabolites (sorted)") +
     ylab("missingness") +
     ggtitle("Missing values")
+  # mark?
+  if (!is.na(metMax))
+    p1 <- p1+geom_hline(yintercept=metMax, color='red', linetype="dashed")
+  
   # heatmap
   molten <- melt(t(is.na(X)))
   colnames(molten) <- c("X1","X2","value") #rename to avoid colname errors 

@@ -55,7 +55,7 @@ mt_plots_volcano <- function(D,
         scale_y_continuous(trans = reverselog_trans(10),
                            breaks = scales::trans_breaks("log10", function(x) 10^x),
                            labels = scales::trans_format("log10", scales::math_format(10^.x))) +
-        labs(x = NULL, y = "p-value") +
+        labs(x = "statistics", y = "p-value") +
         ggtitle(statname)
 
     ## ADD METABOLITE LABELS

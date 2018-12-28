@@ -112,7 +112,7 @@ mt_files_load_metabolon <- function(
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("loaded Metabolon file: %s", basename(file))
+      logtxt = sprintf("loaded Metabolon file: %s, sheet: %s", basename(file), sheet)
     )
   
   # return

@@ -8,10 +8,12 @@
 # authors: JK
 #
 
+library(ggbeeswarm)
 
 mt_plots_qc_dilutionplot <- function(
-  D,      # SummarizedExperiment input
-  comp    # list of sample annotation column to compare with
+  D,       # SummarizedExperiment input
+  comp,    # list of sample annotation column to compare with
+  boxpl=T  # produce boxplot (TRUE, default), or beeswarm plot (FALSE) .... only relevant for factor comparison
 ) {
   
   # validate arguments
@@ -41,9 +43,13 @@ mt_plots_qc_dilutionplot <- function(
     # ensure factor
     dfplot[[comp]] = as.factor(dfplot[[comp]])
     # boxplot
-    p <- dfplot %>% ggplot() +
-      geom_boxplot(aes_string(x=comp,y="dilution.factor",color=comp)) + 
+    p <- dfplot %>% 
+      ggplot(aes_string(x=comp,y="dilution.factor",color=comp)) +
       ggtitle("quotient normalization dilution factors")
+    if (boxpl)
+      p <- p+geom_boxplot()
+    if (!boxpl)
+      p <- p+geom_quasirandom()
     
   } else {
     if (!is.numeric(vc)) stop(sprintf("'%s' has to be character, factor, or numeric.", comp))
