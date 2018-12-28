@@ -1,6 +1,8 @@
-require(tidyverse)
+
 #### source all files except myself... ugly but works for now ----
-# zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- function(){lst<-ls(envir=.GlobalEnv); lst<-lst[!(lst %in% c("zap","codes.makepath","store","restore","debugstore"))]; rm(list=lst, envir=.GlobalEnv) }
+require(tidyverse)
+zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- function(){lst<-ls(envir=.GlobalEnv); lst<-lst[!(lst %in% c("zap","codes.makepath","store","restore","debugstore"))]; rm(list=lst, envir=.GlobalEnv) }
+
 if(!exists("codes.makepath"))
     codes.makepath <- function(a)paste0("./", a)
 
@@ -9,6 +11,7 @@ l <- l[!grepl('*examples*',l)]
 suppressPackageStartupMessages({
     walk(l, function(x){source(x,echo=F,verbose=F)})
 })
+
 
 #### run single pipeline without Gestalt (easier to debug) ----
 message("\nSINGLE")
@@ -39,7 +42,11 @@ D_alone <-
   mt_plots_pvalhist() %>%
   mt_plots_volcano(statname     = "Li's",
                    metab_filter = p.adj < 0.1,
-                   colour       = p.value < 0.05)
+                   colour       = p.value < 0.05) %>%
+  mt_stats_multiv_net_GeneNet(name="GeneNetpcor") %>%
+  mt_post_multTest(statname = "GeneNetpcor", method = "BH") %>%
+  mt_plots_net(statname = "GeneNetpcor", corr_filter = p.adj < 0.5, export=TRUE, 
+               filename = "network.graphml")
 
 
 
