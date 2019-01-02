@@ -117,12 +117,11 @@ mt_add_pathways <- function(
 
 
 
-
-# Example -----------------------------------------------------------------
-
-D_alone <- 
-  mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>% 
-  mt_add_pathways(in_col = "KEGG", out_col = "humancyc_db", pw_species = "hsapiens", pw_name = "humancyc")
-
+if (false) {
+  # Example -----------------------------------------------------------------
+  D_alone <- 
+    mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>% 
+    mt_add_pathways(in_col = "KEGG", out_col = "humancyc_db", pw_species = "hsapiens", pw_name = "humancyc")
+}
 
 
