@@ -117,7 +117,7 @@ mt_add_pathways <- function(
 
 
 
-if (false) {
+if (F) {
   # Example -----------------------------------------------------------------
   D_alone <- 
     mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>% 
