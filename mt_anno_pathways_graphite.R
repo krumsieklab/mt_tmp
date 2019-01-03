@@ -53,7 +53,7 @@ mt_add_pathways <- function(
       
       pw <- pwdb[[pwname]]
       pw %>% 
-        edges(which = "metabolites") %>% 
+        graphite::edges(which = "metabolites") %>% 
         mutate(name = pwname,
                ID = pathwayId(pw))
       
