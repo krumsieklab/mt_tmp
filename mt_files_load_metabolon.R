@@ -46,7 +46,7 @@ mt_files_load_metabolon <- function(
   result$metinfo$COMP_IDstr = sapply(sprintf('%05d',as.numeric(result$metinfo$COMP_ID)), function(x)paste0('M',x))
   
   # extract sample information
-  result$sampleinfo = data.frame(t(raw[1:imetheader,(isampheader+1):isamplast]))
+  result$sampleinfo = data.frame(t(raw[1:imetheader,(isampheader+1):isamplast]), stringsAsFactors = F)
   #colnames(result$sampleinfo) = as.list(raw[1:imetheader-1,isampheader])[[1]] # dirty hack, had something to do with the output format of read_excel
   colnames(result$sampleinfo) = c(as.vector(as.matrix(raw[1:imetheader-1,isampheader])),overlsamp) # dirty hack, had something to do with the output format of read_excel
   rownames(result$sampleinfo) = c()
