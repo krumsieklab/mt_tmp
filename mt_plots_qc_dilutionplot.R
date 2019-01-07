@@ -12,7 +12,7 @@ library(ggbeeswarm)
 
 mt_plots_qc_dilutionplot <- function(
   D,       # SummarizedExperiment input
-  comp,    # list of sample annotation column to compare with
+  comp,    # sample annotation column to compare with
   boxpl=T  # produce boxplot (TRUE, default), or beeswarm plot (FALSE) .... only relevant for factor comparison
 ) {
   

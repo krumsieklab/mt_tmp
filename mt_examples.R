@@ -18,6 +18,7 @@ message("\nSINGLE")
 mt_logging(console=T) 
 D_alone <- 
   mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>%
+  mt_logging_tic() %>% 
   mt_plots_PCA_mult(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
   mt_plots_sampleboxplot() %>%
   mt_plots_qc_missingness() %>%
@@ -46,7 +47,31 @@ D_alone <-
   mt_stats_multiv_net_GeneNet(name="GeneNetpcor") %>%
   mt_post_multTest(statname = "GeneNetpcor", method = "BH") %>%
   mt_plots_net(statname = "GeneNetpcor", corr_filter = p.adj < 0.5, export=TRUE, 
-               filename = "network.graphml")
+               filename = "network.graphml") %>%  
+  mt_logging_toc()
+
+D_sub <- D_alone %>% 
+  mt_modify_aggPW(pw="SUB_PATHWAY", method="aggmean") %>% 
+  mt_stats_univ_lm(
+    formula      = ~ Group, 
+    samplefilter = (Group %in% c("Li_2","Li_5")),
+    name         = "Li's SUB"
+  ) %>%
+  mt_plots_equalizer(comp1="Li's SUB", D2=D_alone, comp2="Li's")
+
+walk(D_sub %>% mti_res_get_plots(), plot)
+
+D_super <- D_alone %>% 
+  mt_modify_aggPW(pw="SUPER_PATHWAY", method="aggmean") %>% 
+  mt_stats_univ_lm(
+    formula      = ~ Group, 
+    samplefilter = (Group %in% c("Li_2","Li_5")),
+    name         = "Li's SUPER"
+  ) %>%
+  mt_plots_equalizer(comp1="Li's SUPER", D2=D_sub, comp2="Li's SUB")
+
+walk(D_super %>% mti_res_get_plots(), plot)
+
 
 
 
@@ -58,6 +83,12 @@ pdf("output_alone.pdf")
 walk(D_alone %>% mti_res_get_plots(), plot)
 dev.off()
 
+# missing value analysis
+D_missing <-
+  mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>%
+  mt_stats_univ_missingness(comp = 'Group', name='miss')
+
+mti_get_stat_by_name(D_missing, "miss")
 
 
 #### run preprocessing ----

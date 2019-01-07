@@ -19,7 +19,7 @@ require(formula.tools)
 mt_stats_univ_lm <- function(
   D,              # SummarizedExperiment input
   formula,        # formula defining statistical model, see above.
-  name = '',  # [optional] name of comparison,
+  name,           # name of comparison,
   samplefilter,
   mc.cores = 1
 ) {
