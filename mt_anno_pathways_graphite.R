@@ -72,7 +72,7 @@ mt_add_pathways <- function(
     distinct()
   
   # create a dataframe with only the ID and name
-  pwdb_map <- select(pwdb, ID, name)
+  pwdb_map <- select(pwdb, ID, name) %>% distinct()
   
   # nest all the pathway IDs given our lieblings input IDs
   pwdb_reduced <- 
