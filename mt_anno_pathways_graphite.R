@@ -24,7 +24,8 @@ mt_add_pathways <- function(
   in_col,        # column name to use for pathway fetching
   out_col,       # name of the column to add pathway info
   pw_species,    # name of the species the data was measured in
-  pw_name        # the name of the pathway database to use
+  pw_name,       # the name of the pathway database to use
+  n_cpus = 2     # number of cores to use for parallelizaion (used in convertIdentifiers)
 ) {
   
   # check arguments, SummarizedExperiment, and exactly one cutoff argument must be non-NA
@@ -40,7 +41,7 @@ mt_add_pathways <- function(
   pwdb <- pathways(species = pw_species, database = pw_name)
   
   # use given number of cores, this should be part of input
-  options(Ncpus = 5)
+  options(Ncpus = n_cpus)
   
   # convert from ChEBI IDs (given by graphite) to our lieblings ID
   con_id <- if_else(in_col == "KEGG", "KEGGCOMP", in_col) 
@@ -61,7 +62,7 @@ mt_add_pathways <- function(
     names(pwdb),
     SIMPLIFY = F,
     mc.cleanup = T,
-    mc.cores = 5)
+    mc.cores = n_cpus)
   
   # convert the pathway list into a dataframe 
   pwdb %<>% 
@@ -157,7 +158,7 @@ if (F) {
   # Example -----------------------------------------------------------------
   D_alone <- 
     mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>% 
-    mt_add_pathways(in_col = "KEGG", out_col = "humancyc_db", pw_species = "hsapiens", pw_name = "humancyc")
+    mt_add_pathways(in_col = "KEGG", out_col = "humancyc_db", pw_species = "hsapiens", pw_name = "humancyc", n_cpus = 5)
 }
 
 
