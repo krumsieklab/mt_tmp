@@ -69,10 +69,41 @@ mt_add_pathways <- function(
     dplyr::select(src, dest, name, ID) %>% 
     gather(key = tmp, value = mappingID, -c(name, ID)) %>% 
     dplyr::select(mappingID, name, ID) %>% 
+    drop_na() %>% # ensure that there are no NAs in any rows
     distinct()
   
-  # create a dataframe with only the ID and name
-  pwdb_map <- select(pwdb, ID, name) %>% distinct()
+  # create a dataframe that enables the mapping between pathway
+  # names and IDs. Included also are num_total, num_measured,
+  # num_pw_total, and num_pw_measured (see below for further details)
+  pwdb_summary <-
+    pwdb %>% 
+    mutate(
+      # num_total - overall number of metabolites in entire database (this will 
+      # be a redundant, repeating number, identical in every row… but it’s the 
+      # easiest way to store it right now)
+      num_total = n_distinct(mappingID),
+      # num_measured - overall number of measured metabolites found in the DB
+      num_measured = 
+        mappingID %>% 
+        intersect(rowData(D)[[in_col]]) %>% 
+        length()
+    ) %>% 
+    group_by(ID) %>% 
+    mutate(
+      # num_pw_total - the total number of metabolites in that pathway 
+      # (overall DB background)
+      num_pw_total = n(),
+      # num_pw_measured - the number of measured metabolites in that pathway 
+      # (for the M type of analysis on the actual measured background).
+      num_pw_measured = 
+        mappingID %>% 
+        intersect(rowData(D)[[in_col]]) %>% 
+        length()
+    ) %>% 
+    ungroup() %>% 
+    dplyr::select(-mappingID) %>% 
+    distinct()
+  
   
   # nest all the pathway IDs given our lieblings input IDs
   pwdb_reduced <- 
@@ -102,8 +133,13 @@ mt_add_pathways <- function(
   # add the pathway IDs into D
   rowData(D)[[out_col]] <- pw_col
   
+  # add pathway database to the metadata of D
+  metadata(D)$pathways[[out_col]]$database <- pwdb
+  
   # add pathway map to the metadata of D
-  metadata(D)$pathways[[out_col]] <- pwdb_map
+  metadata(D)$pathways[[out_col]]$id_map <- pwdb_summary
+  
+  
   
   funargs <- mti_funargs()
   metadata(D)$results %<>% 
