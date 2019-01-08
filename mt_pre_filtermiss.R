@@ -26,6 +26,9 @@ mt_pre_filtermiss <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
   stopifnot(!is.na(metMax) || !is.na(sampleMax))
   stopifnot(!(is.na(metMax) && is.na(sampleMax)))
+  stopifnot(!(!is.na(metMax) && (metMax<0 || metMax>1)))
+  stopifnot(!(!is.na(sampleMax) && (sampleMax<0 || sampleMax>1)))
+  
   # perform filtering
   if (!is.na(metMax)) {
     
@@ -41,7 +44,7 @@ mt_pre_filtermiss <- function(
         logshort = sprintf("filter met %d%%", metMax*100),
         output = list(kept=as.vector(metKeep))
       )
-  
+    
   } else {
     
     # sample
@@ -58,7 +61,11 @@ mt_pre_filtermiss <- function(
         output = list(kept=as.vector(sampleKeep))
       )
     
-   }
+  }
+  
+  # throw error if filtering caused empty dataset
+  if (ncol(D)==0 || nrow(D)==0) stop("Filtering resulted in empty dataset.")
+  
   # return
   D
 }

@@ -28,6 +28,7 @@ mt_plots_qc_missingness <- function(
   # missingness % plot
   p1 <- ggplot() +
     geom_point(aes(x=1:ncol(X),y=sort(missingness(X)))) +
+    ylim(0,1) +
     xlab("metabolites (sorted)") +
     ylab("missingness") +
     ggtitle("Missing values")
