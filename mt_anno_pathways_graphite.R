@@ -44,11 +44,13 @@ mt_add_pathways <- function(
   options(Ncpus = n_cpus)
   
   # convert from ChEBI IDs (given by graphite) to our lieblings ID
+  mti_logstatus(glue::glue("converting graphite ChEBI IDs to {in_col} IDs"))
   con_id <- if_else(in_col == "KEGG", "KEGGCOMP", in_col) 
   pwdb %<>% convertIdentifiers(con_id)
   
   # graphite comes with as a list of pathways given a database
   # given this list, subselect the metabolite entries per pathway
+  mti_logstatus(glue::glue("subselecting pathways that contain metabolites"))
   pwdb <- 
     mcmapply(function(pwname) {
       
@@ -157,6 +159,7 @@ mt_add_pathways <- function(
 
 if (F) {
   # Example -----------------------------------------------------------------
+  mt_logging(console=T) 
   D_alone <- 
     mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>% 
     mt_add_pathways(in_col = "KEGG", out_col = "humancyc_db", pw_species = "hsapiens", pw_name = "humancyc", n_cpus = 5)
