@@ -17,7 +17,6 @@ library(magrittr)
 library(graphite)
 library(rpubchem)
 
-
 # main
 mt_add_pathways <- function(
   D,             # SummarizedExperiment input
@@ -25,7 +24,8 @@ mt_add_pathways <- function(
   out_col,       # name of the column to output pathway information to in D
   pw_species,    # name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species
   pw_name,       # the name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species
-  n_cpus = 2     # number of cores to use for parallelizaion (used in convertIdentifiers)
+  n_cpus = 2,    # number of cores to use for parallelizaion (used in convertIdentifiers)
+  save_database_path # OPTIONAL. Save the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 ) {
   
   # check arguments, SummarizedExperiment, and exactly one cutoff argument must be non-NA
@@ -134,12 +134,13 @@ mt_add_pathways <- function(
   # add the pathway IDs into D
   rowData(D)[[out_col]] <- pw_col
   
-  # add pathway database to the metadata of D
-  metadata(D)$pathways[[out_col]]$database <- pwdb
-  
   # add pathway map to the metadata of D
-  metadata(D)$pathways[[out_col]]$id_map <- pwdb_summary
+  metadata(D)$pathways[[out_col]] <- pwdb_summary
   
+  
+  if(!missing(save_database_path)) {
+    openxlsx::write.xlsx(pwdb, save_database_path)
+  }
   
   
   funargs <- mti_funargs()
