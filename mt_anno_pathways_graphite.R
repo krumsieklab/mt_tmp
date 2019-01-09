@@ -21,10 +21,10 @@ library(rpubchem)
 # main
 mt_add_pathways <- function(
   D,             # SummarizedExperiment input
-  in_col,        # column name to use for pathway fetching
-  out_col,       # name of the column to add pathway info
-  pw_species,    # name of the species the data was measured in
-  pw_name,       # the name of the pathway database to use
+  in_col,        # column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. KEGG, ChEBI, HMBD, etc)
+  out_col,       # name of the column to output pathway information to in D
+  pw_species,    # name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species
+  pw_name,       # the name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species
   n_cpus = 2     # number of cores to use for parallelizaion (used in convertIdentifiers)
 ) {
   
