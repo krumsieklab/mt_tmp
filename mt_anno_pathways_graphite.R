@@ -3,9 +3,9 @@
 # Add pathway information
 #
 # Adds custom pathways to the already existing SummarizedExperiment
-# data structure.
+# data structure using the graphite package.
 #
-# last update: 2018-12-11
+# last update: 2019-01-09
 # authors: Parviz Gomari
 #
 
@@ -25,7 +25,7 @@ mt_add_pathways <- function(
   pw_species,    # name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species
   pw_name,       # the name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species
   n_cpus = 2,    # number of cores to use for parallelizaion (used in convertIdentifiers)
-  save_database_path # OPTIONAL. Save the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
+  export_raw_db # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 ) {
   
   # check arguments, SummarizedExperiment, and exactly one cutoff argument must be non-NA
@@ -140,8 +140,8 @@ mt_add_pathways <- function(
   metadata(D)$pathways[[out_col]] <- pwdb_summary
   
   
-  if(!missing(save_database_path)) {
-    openxlsx::write.xlsx(pwdb, save_database_path)
+  if(!missing(export_raw_db)) {
+    openxlsx::write.xlsx(pwdb, export_raw_db)
   }
   
   
