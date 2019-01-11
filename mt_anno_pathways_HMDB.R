@@ -1,0 +1,174 @@
+# MetaboTools
+#
+# Add pathway information
+#
+# Adds custom pathways to the already existing SummarizedExperiment
+# data structure using the graphite package.
+#
+# last update: 2019-01-11
+# authors: Parviz Gomari
+#
+
+# todo: document output
+
+# dependencies
+library(tidyverse)
+library(data.table)
+
+# main
+mt_add_pathways_HMDB <- function(
+  D,                  # SummarizedExperiment input
+  in_col,             # column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
+  out_col,            # a new column name for D to output pathway information to
+  pwdb_name = "SMP",  # the name of the pathway database to use. Can use either SMP or KEGG for this argument
+  db_dir,             # name of the directory where the parsed HMDB files are stored
+  db_filename,        # filename of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds
+  export_raw_db       # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
+) {
+  
+  # check arguments
+  stopifnot("SummarizedExperiment" %in% class(D))
+  
+  if (missing(db_dir))
+    stop("db_dir must be given to fetch pathway database files from")
+  
+  if (!dir.exists(db_dir))
+    stop(glue::glue("{db_dir} does not exist. input a valid db_dir."))
+  
+  if (missing(db_filename)) {
+    # NOTE: taking the tail work only for HMDB versions below 9, since
+    # list.files sorts the names alphabetically. Current HMDB version
+    # is 4.0
+    db_filename <- list.files(db_dir) %>% tail(1)
+    if (length(db_filename) == 0) 
+      stop(glue::glue("no pathway files were found in {db_dir}"))
+  }
+  
+  if (!pwdb_name %in% c("SMP", "KEGG"))
+    stop(glue::glue("pwdb_name is invalid. please use either SMP or KEGG for pwdb_name."))
+  
+  if(!in_col %in% names(rowData(D)))
+    stop(glue::glue("in_col is invalid. please enter an existing column name."))
+  
+  # HMDB IDs here pertain to secondary accessions
+  mti_logstatus(glue::glue("reading the {pwdb_name} database from {db_filename}"))
+  pwdb <- 
+    read_rds(file.path(db_dir, db_filename)) %>% 
+    dplyr::select(HMDB_id, pw_id = pwdb_name, pathway_names, accession)
+  
+  # create a dataframe that enables the mapping between pathway
+  # names and IDs. Included also are num_total, num_measured,
+  # num_pw_total, and num_pw_measured (see below for further details)
+  
+  # num_total - overall number of metabolites in entire database (this will 
+  # be a redundant, repeating number, identical in every row… but it’s the 
+  # easiest way to store it right now)
+  # pwdb$accession is used here, since there is a many-to-one mapping 
+  # between HMDB_id (secondary accessions) and accession
+  num_total <- 
+    pwdb$accession %>% 
+    unique() %>% 
+    length()
+  
+  # num_measured - overall number of measured metabolites found in the DB
+  num_measured = 
+    pwdb$HMDB_id %>% 
+    # for this intersect, similar to the one in pwdb_summary (below),
+    # it is assumed that the HMDB IDs in the dataset D is non-redundant.
+    # else this number may not be accurate.
+    intersect(rowData(D)[[in_col]]) %>% 
+    length()
+  
+  mti_logstatus(glue::glue("summarizing {pwdb_name} pathway information"))
+  pwdb_summary <- pwdb
+  # using methods from data.table reduces runtime by almost 10x as compared
+  # to dplyr
+  pwdb_summary <- 
+    setDT(pwdb_summary)[, `:=`(
+      
+      num_total = num_total,
+      num_measured = num_measured,
+      
+      # num_pw_total - the total number of metabolites in that pathway 
+      # here, accession is used.
+      # (overall DB background)
+      num_pw_total = uniqueN(accession), 
+      
+      # num_pw_measured - the number of measured metabolites in that pathway 
+      # (for the M type of analysis on the actual measured background).
+      num_pw_measured = 
+        sum(HMDB_id %in% rowData(D)[[in_col]], na.rm = TRUE)
+    ),
+    by = pw_id] %>% 
+    # some pw_ids might have more than two names, however, these will be discarded
+    # for now
+    unique(by = c("pw_id")) %>% 
+    subset(!is.na(pw_id), 
+           select = -c(HMDB_id, accession))
+  
+  
+  mti_logstatus(glue::glue("nesting {pwdb_name} pathway IDs"))
+  # nest all the pathway IDs given our lieblings input IDs (HMDB IDs for now)
+  pwdb_reduced <- 
+    pwdb %>%
+    group_by(HMDB_id) %>% 
+    filter(!is.na(pw_id)) %>% 
+    distinct(HMDB_id, pw_id) %>% 
+    nest(pw_id, .key = pw_id) %>% 
+    mutate(pw_id = 
+             pw_id %>%
+             unlist(recursive = FALSE) %>% 
+             as.list())
+  
+  
+  # have to do this to take a variable input name for the columns
+  # used for joining in the next step
+  left_index <- enquo(in_col)
+  right_index <- "HMDB_id"
+  by <-  set_names(quo_name(right_index), quo_name(left_index))
+  
+  # match the nested pathways to our lieblings IDs
+  pw_col <- D %>% 
+    rowData %>% 
+    .[in_col] %>% 
+    as.data.frame() %>% 
+    left_join(pwdb_reduced, by = by) %>% 
+    .$pw_id
+  
+  # add the pathway IDs into D
+  rowData(D)[[out_col]] <- pw_col
+  
+  # add pathway map to the metadata of D
+  metadata(D)$pathways[[out_col]] <- 
+    pwdb_summary %>% 
+    dplyr::rename(!!pwdb_name := pw_id)
+  
+  
+  if(!missing(export_raw_db)) {
+    openxlsx::write.xlsx(pwdb %>% 
+                           dplyr::rename(!!pwdb_name := pw_id), 
+                         export_raw_db)
+  }
+  
+  
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf('added pathway annotations using the %s pathway database', pwdb_name)
+    )
+  
+  D
+}
+
+
+
+if (FALSE) {
+  # Example -----------------------------------------------------------------
+  mt_logging(console=T) 
+  D_alone <- 
+    mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>% 
+    mt_add_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db", 
+                         pwdb_name = "SMP", db_dir = codes.makepath("packages/metabotools_external/hmdb"))
+}
+
