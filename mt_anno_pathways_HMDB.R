@@ -54,7 +54,7 @@ mt_add_pathways_HMDB <- function(
   mti_logstatus(glue::glue("reading the {pwdb_name} database from {db_filename}"))
   pwdb <- 
     read_rds(file.path(db_dir, db_filename)) %>% 
-    dplyr::select(HMDB_id, pw_id = pwdb_name, pathway_names, accession)
+    dplyr::select(HMDB_id, ID = pwdb_name, pathway_name, accession)
   
   # create a dataframe that enables the mapping between pathway
   # names and IDs. Included also are num_total, num_measured,
@@ -99,11 +99,11 @@ mt_add_pathways_HMDB <- function(
       num_pw_measured = 
         sum(HMDB_id %in% rowData(D)[[in_col]], na.rm = TRUE)
     ),
-    by = pw_id] %>% 
-    # some pw_ids might have more than two names, however, these will be discarded
+    by = ID] %>% 
+    # some IDs might have more than two names, however, these will be discarded
     # for now
-    unique(by = c("pw_id")) %>% 
-    subset(!is.na(pw_id), 
+    unique(by = c("ID")) %>% 
+    subset(!is.na(ID), 
            select = -c(HMDB_id, accession))
   
   
@@ -112,11 +112,11 @@ mt_add_pathways_HMDB <- function(
   pwdb_reduced <- 
     pwdb %>%
     group_by(HMDB_id) %>% 
-    filter(!is.na(pw_id)) %>% 
-    distinct(HMDB_id, pw_id) %>% 
-    nest(pw_id, .key = pw_id) %>% 
-    mutate(pw_id = 
-             pw_id %>%
+    filter(!is.na(ID)) %>% 
+    distinct(HMDB_id, ID) %>% 
+    nest(ID, .key = ID) %>% 
+    mutate(ID = 
+             ID %>%
              unlist(recursive = FALSE) %>% 
              as.list())
   
@@ -133,21 +133,18 @@ mt_add_pathways_HMDB <- function(
     .[in_col] %>% 
     as.data.frame() %>% 
     left_join(pwdb_reduced, by = by) %>% 
-    .$pw_id
+    .$ID
   
   # add the pathway IDs into D
   rowData(D)[[out_col]] <- pw_col
   
   # add pathway map to the metadata of D
   metadata(D)$pathways[[out_col]] <- 
-    pwdb_summary %>% 
-    dplyr::rename(!!pwdb_name := pw_id)
+    pwdb_summary
   
   
   if(!missing(export_raw_db)) {
-    openxlsx::write.xlsx(pwdb %>% 
-                           dplyr::rename(!!pwdb_name := pw_id), 
-                         export_raw_db)
+    openxlsx::write.xlsx(pwdb, export_raw_db)
   }
   
   
