@@ -13,6 +13,7 @@ suppressPackageStartupMessages({
 })
 
 
+
 #### run single pipeline without Gestalt (easier to debug) ----
 message("\nSINGLE")
 mt_logging(console=T) 
@@ -91,6 +92,30 @@ D_missing <-
 mti_get_stat_by_name(D_missing, "miss")
 
 
+
+#### integrate all results into structure ----
+
+r <- MTResultCollector$new()
+
+# r$add(D_alone)
+# r$add(D_sub)
+r$addMultiple(D_alone, D_sub, D_super)
+
+# play around with graph walking
+root <- r$graph_roots()
+r$graph_next(root)
+# branching point from alone to pathways
+branch <- metadata(D_alone)$results[[length(metadata(D_alone)$results)]]$uuid
+r$graph_next(branch)
+
+igraph.options(plot.layout=layout.auto, vertex.size=5, label.cex=0.1 )
+# igraph.options(plot.layout=layout_with_sugiyama, vertex.size=5)
+
+plot(simplify(r$graph))
+
+
+
+
 #### run preprocessing ----
 message("\nPREPROCESS")
 mt_logging(console=T) 
@@ -109,6 +134,8 @@ D <-
   mt_pre_impute_knn() %>%
   mt_plots_sampleboxplot(color=Group) %>%
   mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) 
+
+
 
 
 

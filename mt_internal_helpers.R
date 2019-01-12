@@ -5,6 +5,10 @@
 # last update: 2018-10-11
 # authors: JK
 #
+
+library(uuid)
+
+#
 mti_get_stat_by_name <- function(D, name){
   stopifnot("SummarizedExperiment" %in% class(D))
   
@@ -83,6 +87,7 @@ mti_generate_result <- function(
       args=funargs$args,
       logtxt=mti_logmsg(logtxt),
       logshort=logshort,
+      uuid=uuid::UUIDgenerate(),
       output=output
     )
   )
