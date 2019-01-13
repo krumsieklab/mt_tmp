@@ -18,7 +18,8 @@ mt_plots_equalizer <- function(
   comp1,    # name of first comparison output to take arguments from     first one has to be the less granular one (e.g. D1 super, D2 sub)
   D2,       # SummarizedExperiment input 2
   comp2,    # name of second comparison output to take arguments from
-  legend.name, # label to be plotted
+  legend.fine, # fine label to be plotted
+  legend.coarse = NULL, # coarse legend to be plotted
   th = 2,   # log10(p.value) threholds for red dashed lines
   clrs = c("#9494FF","red") # colors for sub and super pathways
 ) {
@@ -51,9 +52,15 @@ mt_plots_equalizer <- function(
   if (sum(col2)>1) stop(sprintf("Multiple columns in first rowData map to names of second: %s", paste0(colnames(rd2)[col2],collapse=", ")))
   if (sum(col2)==0) stop(sprintf("No columns in first rowData map to names of second. Specified correct rowData frames?"))
   
+  
   col2 = col2 %>% which %>% names
+  # if legend.coarse given 
+  if(!is.null(legend.coarse)){
+    colnames(rd2)[colnames(rd2)==col2] <-  legend.coarse
+    col2 = legend.coarse
+  }
   colnames(rd1)[1] = col2
-  colnames(rd2)[1] = legend.name 
+  colnames(rd2)[1] = legend.fine 
   
   
   # df: data frame includes columns: "SUB_PATHWAY", "SUPER_PATHWAY", "statistic", "p.value"
@@ -121,7 +128,7 @@ mt_plots_equalizer <- function(
     
   }
   
-  p =  mti_plot_equalizer_gg(df = data.frame(rd2, res2), name.df = legend.name,
+  p =  mti_plot_equalizer_gg(df = data.frame(rd2, res2), name.df = legend.fine,
                              df2 = data.frame(rd1, res1), name.df2 = col2 )
   
   # add status information & plot
