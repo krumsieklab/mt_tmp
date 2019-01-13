@@ -37,7 +37,7 @@ mt_plots_equalizer <- function(
   # rm "name" duplicates
   frm_ <- function(x){
     xnames = setdiff(colnames(x),"name")
-    x[,c("name", xnames[!sapply(x[,xnames],identical, x$name)]),drop =F]
+    x[,c("name", xnames[!sapply(x[,xnames,drop =F],identical, x$name)]),drop =F]
   }
   
   # shortcuts
