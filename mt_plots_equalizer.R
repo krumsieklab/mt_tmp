@@ -54,13 +54,13 @@ mt_plots_equalizer <- function(
   
   
   col2 = col2 %>% which %>% names
-  # if legend.coarse given 
-  if(!is.null(legend.coarse)){
-    colnames(rd2)[colnames(rd2)==col2] <-  legend.coarse
-    col2 = legend.coarse
-  }
-  colnames(rd1)[1] = col2
-  colnames(rd2)[1] = legend.fine 
+  colnames(rd2)[colnames(rd2) == col2] = "COARSE"
+  # if legend.coarse not given 
+  if(is.null(legend.coarse)) legend.coarse = col2
+  
+  colnames(rd1)[1] = "COARSE"
+  colnames(rd2)[1] = "FINE" 
+  
   
   
   # df: data frame includes columns: "SUB_PATHWAY", "SUPER_PATHWAY", "statistic", "p.value"
@@ -70,12 +70,7 @@ mt_plots_equalizer <- function(
   # th: log10(p.value) threholds for red dashed lines
   # clrs: colors for sub and super pathways
   
-  mti_plot_equalizer_gg <- function(df, name.df="FINE", df2=NULL, name.df2="COARSE", th = 2, clrs = c("#9494FF","red") ){
-    
-    colnames(df)[colnames(df) == name.df] <- "FINE"
-    colnames(df)[colnames(df) == name.df2] <- "COARSE"
-    colnames(df2)[colnames(df2) == name.df2] <- "COARSE"
-    
+  mti_plot_equalizer_gg <- function(df, name.df="SUB", df2=NULL, name.df2="SUPER", th = 2, clrs = c("#9494FF","red") ){
     
     # create x-axis
     df$x = abs(log10(df$p.value)) * sign(df$statistic)
@@ -119,7 +114,7 @@ mt_plots_equalizer <- function(
                          fill = clrs[2], size = 5, alpha = 0.7) 
     
     # add legend
-    df.legend = data.frame(x = rep(1,2), y = rep(NA,2), class = c(name.df2, name.df))
+    df.legend = data.frame(x = rep(1,2), y = rep(NA,2), class = factor(c(name.df2, name.df),levels = c(name.df, name.df2)))
     gg + geom_point(data = df.legend,aes(x= x,y=y, fill =class),pch = 22, size = 4) + 
       labs(fill="", x = expression(paste("directed |log"[10],"p|")), y = "") + 
       scale_fill_manual(values = clrs) + 
@@ -129,7 +124,7 @@ mt_plots_equalizer <- function(
   }
   
   p =  mti_plot_equalizer_gg(df = data.frame(rd2, res2), name.df = legend.fine,
-                             df2 = data.frame(rd1, res1), name.df2 = col2 )
+                             df2 = data.frame(rd1, res1), name.df2 = legend.coarse )
   
   # add status information & plot
   funargs <- mti_funargs()
