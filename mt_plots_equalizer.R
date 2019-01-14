@@ -14,10 +14,10 @@ library(purrr)
 library(glue)
 
 mt_plots_equalizer <- function(
-  D1,       # SummarizedExperiment input 1
-  comp1,    # name of first comparison output to take arguments from     first one has to be the less granular one (e.g. D1 super, D2 sub)
-  D2,       # SummarizedExperiment input 2
-  comp2,    # name of second comparison output to take arguments from
+  D1,       # SummarizedExperiment input 1, the coarse one
+  comp1,    # name of first comparison output to take arguments from, the coarse one [first one has to be the less granular one (e.g. D1 super, D2 sub)]
+  D2,       # SummarizedExperiment input 2, the fine one
+  comp2,    # name of second comparison output to take arguments from, the fine one
   legend.fine, # fine label to be plotted
   legend.coarse = NULL, # coarse legend to be plotted
   th = 2,   # log10(p.value) threholds for red dashed lines
