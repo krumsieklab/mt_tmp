@@ -3,10 +3,10 @@
 # Add pathway information
 #
 # Adds custom pathways to the already existing SummarizedExperiment
-# data structure using the graphite package.
+# data structure using the HMDB package.
 #
-# last update: 2019-01-11
-# authors: Parviz Gomari
+# last update: 2019-01-17
+# author: Parviz Gomari
 #
 
 # todo: document output
