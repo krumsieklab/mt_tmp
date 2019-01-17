@@ -121,19 +121,13 @@ mt_add_pathways_HMDB <- function(
              as.list())
   
   
-  # have to do this to take a variable input name for the columns
-  # used for joining in the next step
-  left_index <- enquo(in_col)
-  right_index <- "HMDB_id"
-  by <-  set_names(quo_name(right_index), quo_name(left_index))
   
   # match the nested pathways to our lieblings IDs
-  pw_col <- D %>% 
-    rowData %>% 
-    .[in_col] %>% 
-    as.data.frame() %>% 
-    left_join(pwdb_reduced, by = by) %>% 
-    .$ID
+  match_idx <- 
+    match(rowData(D)[[in_col]],
+          pwdb_reduced$HMDB_id)
+  
+  pw_col <- pwdb_reduced$ID[match_idx]
   
   # add the pathway IDs into D
   rowData(D)[[out_col]] <- pw_col
