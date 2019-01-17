@@ -17,8 +17,8 @@ library(tidyverse)
 # main
 mt_anno_pathways_remove_redundant <- function(
   D,                  # SummarizedExperiment input
-  met_ID_col,
-  pw_col
+  met_ID_col,         # Column containing metabolite IDs
+  pw_col              # Column containing pathways IDs
 ) {
   
   # check arguments
