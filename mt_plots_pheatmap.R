@@ -1,3 +1,5 @@
+library(pheatmap)
+
 #' all pheatmap inputs identical to phetamap::pheatmap function 
 #' except for 
 #' D : summarized experiment object
@@ -10,7 +12,7 @@
 #' gg.(ymin,ymax,xmin,xmax): min,max of gg coordinates if gg.return = T
 #' for all other input argumets see pheatmap::pheatmap
 #' 
-mt_plots_pheatmap <- function(D, mat = NULL, color = grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, 
+mt_plots_pheatmap <- function(D, scaledata=F,  mat = NULL, color = grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, 
                              border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, 
                              clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete", 
                              clustering_callback = pheatmap:::identity2, cutree_rows = NA, cutree_cols = NA,  
@@ -34,6 +36,9 @@ mt_plots_pheatmap <- function(D, mat = NULL, color = grDevices::colorRampPalette
     aa$mat = t(assay(D))
     aa = aa[-1]  
   }
+  
+  # scale?
+  if (scaledata) aa$mat <- scale(aa$mat)
   
   # annotate columns with given variables in attr(D, "elementMetadata")
   if(annotation_by_SummarizedExperiment & !is.na(annotation_col[1])){
