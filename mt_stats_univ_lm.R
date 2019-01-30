@@ -191,7 +191,14 @@ mt_stats_univ_lm <- function(
   ## tidy up a bit more
   tab <- tab %>%
       select(-matches("^(effect|group)$"))
-             
+  
+  ## construct output groups variable
+  if (is.factor(Ds[[outvar]])) {
+    outgroups <- levels(Ds[[outvar]])
+  } else {
+    outgroups <- NULL
+  }
+            
   ## add status information & results
   funargs <- mti_funargs()
   metadata(D)$results %<>% 
@@ -202,7 +209,8 @@ mt_stats_univ_lm <- function(
                         table   = tab,
                         formula = formula,
                         name    = name,
-                        lstobj  = models
+                        lstobj  = models,
+                        groups = outgroups
                     )
                 )
     
