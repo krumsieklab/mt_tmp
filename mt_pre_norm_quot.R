@@ -1,19 +1,31 @@
-# MetaboTools
-#
-# Quotient implementation 
-# according to Dieterle et al., 2006; https://www.ncbi.nlm.nih.gov/pubmed/16808434
-#
-# last update: 2018-10-11
-# authors: JK
-#
-
 require(glue)
 
+#' Quotient normalization
+#'
+#' Implementation according to Dieterle et al., 2006\cr
+#' https://www.ncbi.nlm.nih.gov/pubmed/16808434
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param vars index vector of variables of be used, default: all
+#' @param NAerror T/F, throw error for NA's or just ignore?
+#' @param refsamples expression filtering reference samples from colData
+#' 
+#' @return assay: quotient-normalized version
+#' @return $result: dilution factors
+#'
+#' @examples
+#' #' # in the context of a SE pipeline
+#' ... %>% mt_pre_norm_quot() %>% ...    # standard call
+#' ... %>% mt_pre_norm_quot(refsamples = GROUP=="ctrl") %>% ...    # use reference samples where 'GROUP' field in colData is 'ctrl'
+#'
+#' @author JK
+#' @export
+#' 
 mt_pre_norm_quot = function(
-  D,                 # SummarizedExperiment input
-  vars=1:dim(D)[1],  # vars: index vector of variables of be used, default: all
-  NAerror=F,         # NAerrors: throw error for NA's or just ignore?
-  refsamples=NULL    # expression filtering reference samples from colData
+  D,                 # 
+  vars=1:dim(D)[1],  # vars:
+  NAerror=F,         # NAerrors: 
+  refsamples=NULL    # 
 ) {
   
   # validate and extract arguments
