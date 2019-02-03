@@ -165,5 +165,16 @@ if (FALSE) {
       flatfile = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
       met_ID_col = "HMDB_id", pw_ID_col = "SMP", pw_name_col = "pathway_name"
     ) 
+  
+  
+  D_alone <- 
+    mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>% 
+    mt_anno_pathways_from_file(
+      in_col = "HMDb_ID", out_col = "janpw", 
+      flatfile = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
+      met_ID_col = "HMDB_id", pw_ID_col = "SMP", pw_name_col = "pathway_name"
+    ) 
+  
+  
 }
 

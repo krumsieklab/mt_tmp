@@ -4,12 +4,12 @@ require(tidyverse)
 zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- function(){lst<-ls(envir=.GlobalEnv); lst<-lst[!(lst %in% c("zap","codes.makepath","store","restore","debugstore"))]; rm(list=lst, envir=.GlobalEnv) }
 
 if(!exists("codes.makepath"))
-    codes.makepath <- function(a)paste0("./", a)
+  codes.makepath <- function(a)paste0("./", a)
 
 l <- list.files(path=codes.makepath("packages/metabotools"),pattern="*.R$",full.names=T)
 l <- l[!grepl('*examples*',l)]
 suppressPackageStartupMessages({
-    walk(l, function(x){source(x,echo=F,verbose=F)})
+  walk(l, function(x){source(x,echo=F,verbose=F)})
 })
 
 
@@ -58,21 +58,22 @@ D_sub <- D_alone %>%
     samplefilter = (Group %in% c("Li_2","Li_5")),
     name         = "Li's SUB"
   ) %>%
-  mt_plots_equalizer(comp1="Li's SUB", D2=D_alone, comp2="Li's")
+  mt_plots_equalizer(comp1="Li's SUB", D2=D_alone, comp2="Li's", legend.fine="metabolite", legend.coarse='sub pathway')
 
-walk(D_sub %>% mti_res_get_plots(), plot)
+# walk(D_sub %>% mti_res_get_plots(), plot)
+metadata(D_sub)$results[[27]]
 
-D_super <- D_alone %>% 
+D_super <- D_sub %>% 
   mt_modify_aggPW(pw="SUPER_PATHWAY", method="aggmean") %>% 
   mt_stats_univ_lm(
     formula      = ~ Group, 
     samplefilter = (Group %in% c("Li_2","Li_5")),
     name         = "Li's SUPER"
   ) %>%
-  mt_plots_equalizer(comp1="Li's SUPER", D2=D_sub, comp2="Li's SUB")
+  mt_plots_equalizer(comp1="Li's SUPER", D2=D_sub, comp2="Li's SUB", legend.fine="sub pathway", legend.coarse='super pathway')
 
-walk(D_super %>% mti_res_get_plots(), plot)
-
+# walk(D_super %>% mti_res_get_plots(), plot)
+metadata(D_super)$results[[30]]
 
 
 
@@ -80,8 +81,8 @@ walk(D_super %>% mti_res_get_plots(), plot)
 metadata(D_alone)$results %>% map('fun') %>% map_chr(str_c, collapse = " - ")
 
 # plot all plots
-pdf("output_alone.pdf")
-walk(D_alone %>% mti_res_get_plots(), plot)
+pdf("output.pdf")
+walk(D_super %>% mti_res_get_plots(), plot)
 dev.off()
 
 # missing value analysis
@@ -90,6 +91,28 @@ D_missing <-
   mt_stats_univ_missingness(comp = 'Group', name='miss')
 
 mti_get_stat_by_name(D_missing, "miss")
+
+
+
+#### run pathway analysis with HMDB KEGG annotations ----
+D_kegg <- D_alone %>% 
+  mt_add_pathways_HMDB(in_col = "HMDb_ID", out_col = "kegg_db", 
+                       pwdb_name = "KEGG", db_dir = codes.makepath("packages/metabotools_external/hmdb")) %>% 
+  mt_modify_aggPW(pw="kegg_db", method="aggmean") %>% 
+  mt_stats_univ_lm(
+    formula      = ~ Group, 
+    samplefilter = (Group %in% c("Li_2","Li_5")),
+    name         = "Li's KEGG"
+  ) %>% 
+  mt_post_addFC(statname = "Li's KEGG") %>%
+  mt_post_multTest(statname = "Li's KEGG", method = "BH") %>%
+  mt_plots_volcano(statname     = "Li's KEGG",
+                   metab_filter = p.adj < 0.2,
+                   colour       = p.value < 0.05)
+
+# last plot
+r <- metadata(D_kegg)$results
+r[[length(r)]]$output
 
 
 
@@ -112,6 +135,23 @@ igraph.options(plot.layout=layout.auto, vertex.size=5, label.cex=0.1 )
 # igraph.options(plot.layout=layout_with_sugiyama, vertex.size=5)
 
 plot(simplify(r$graph))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
