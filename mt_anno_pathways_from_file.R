@@ -14,6 +14,7 @@
 # dependencies
 library(tidyverse)
 library(data.table)
+library(readxl)
 
 # main
 mt_anno_pathways_from_file <- function(
@@ -21,6 +22,7 @@ mt_anno_pathways_from_file <- function(
   in_col,             # column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
   out_col,            # a new column name for D to output pathway information to
   flatfile,           # path where the pathway annotation flat file is stored
+  sheet,              # sheet name or number or number to read in flat file
   met_ID_col,         # flatfile colname: this column should contain metabolite IDs
   pw_ID_col,          # flatfile colname: this column should contain pathway IDs
   pw_name_col,        # flatfile colname: this column should contain pathway names
@@ -39,9 +41,10 @@ mt_anno_pathways_from_file <- function(
   if(!in_col %in% names(rowData(D)))
     stop(glue::glue("in_col is invalid. please enter an existing column name."))
   
+  
+  mti_logstatus(glue::glue("reading annotation file: {basename(flatfile)}, sheet: {sheet}"))
   # check flatfile colnames
-  pwdb <- 
-    fread(flatfile) 
+  pwdb <- read_excel(path=flatfile, sheet=sheet)
   
   flatfile_cols <- c(met_ID_col, pw_ID_col, pw_name_col)
   valid_names <- flatfile_cols %in% names(pwdb)
@@ -147,7 +150,7 @@ mt_anno_pathways_from_file <- function(
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf('added pathway annotations using the %s flat file', flatfile)
+      logtxt = sprintf('added pathway annotations using %s', basename(flatfile))
     )
   
   D
@@ -162,7 +165,8 @@ if (FALSE) {
     mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>% 
     mt_anno_pathways_from_file(
       in_col = "HMDb_ID", out_col = "smp_db", 
-      flatfile = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
+      flatfile = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.xlsx"),
+      sheet = "hmdb",
       met_ID_col = "HMDB_id", pw_ID_col = "SMP", pw_name_col = "pathway_name"
     ) 
   
