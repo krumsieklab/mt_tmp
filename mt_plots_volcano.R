@@ -1,11 +1,9 @@
-################################################################################
-## HEATMAP
-################################################################################
+
 #' mt_plot_volcano
 #'
 #' create volcano plot
 #'
-#' @author Jonas Zierer
+#' @author Jonas Zierer, Jan Krumsiek
 #' @import SummrizedExperiment
 #' @import ggplot2
 #' @importFrom dplyr %>% mutate gather left_join filter arrange
@@ -47,6 +45,15 @@ mt_plots_volcano <- function(D,
                           scales::log_breaks(base = base),
                           domain = c(1e-100, Inf))
     }
+    
+    ## generate xlabel
+    d <- mti_get_stat_by_name(D, statname, fullstruct=T)
+    if ("groups" %in% names(d) && length(d$groups)==2) {
+      xlabel <- sprintf("%s high <--     statistics     --> %s high", d$groups[1], d$groups[2])
+    } else {
+      xlabel <- "statistics"
+    }
+    
     ## CREATE PLOT
     p <- data_plot %>%
         ## do plot
@@ -55,7 +62,7 @@ mt_plots_volcano <- function(D,
         scale_y_continuous(trans = reverselog_trans(10),
                            breaks = scales::trans_breaks("log10", function(x) 10^x),
                            labels = scales::trans_format("log10", scales::math_format(10^.x))) +
-        labs(x = "statistics", y = "p-value") +
+        labs(x = xlabel, y = "p-value") +
         ggtitle(statname)
 
     ## ADD METABOLITE LABELS

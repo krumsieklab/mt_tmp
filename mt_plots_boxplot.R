@@ -28,6 +28,7 @@ mt_plots_boxplot <- function(D,
                             jitter       = T,
                             rows,
                             cols,
+                            restrict_to_groups=T,
                             ...){
 
     stopifnot("SummarizedExperiment" %in% class(D))
@@ -70,11 +71,22 @@ mt_plots_boxplot <- function(D,
             mutate(name = factor(name, levels = unique(name)))
         mti_logstatus(glue::glue("sorted metabolites: {metab_sort_q}"))
     }
+    
+   
 
     ## CREATE PLOT
-    p <- D %>%
+    dummy <- D %>%
         mti_format_se_samplewise() %>%
-        gather(var, value, one_of(rownames(D))) %>%
+        gather(var, value, one_of(rownames(D)))
+    ## filter to groups?
+    if (restrict_to_groups) {
+      filterto <- mti_get_stat_by_name(D, statname, fullstruct=T)$groups
+    } else {
+      filterto <- unique(dummy[[stat$term[1]]])
+    }
+    dummy <- dummy[dummy[[stat$term[1]]] %in% filterto,]
+    #
+    p <- dummy %>%
         ## add metabolite names
         inner_join(stat, by = "var") %>% 
         ## do plot
