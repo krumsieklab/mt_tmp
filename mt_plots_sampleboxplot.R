@@ -45,7 +45,8 @@ mt_plots_sampleboxplot <- function(
     gather(metab, value, one_of(rownames(D))) %>%
     ggplot(aes(x = primary, y = value, ...)) +
     geom_boxplot() +
-    ylab(ylabel)
+    ylab(ylabel) +
+    ggtitle("Sample boxplot")
   # todo add rowname 
   
   # remove legend?

@@ -13,7 +13,7 @@ require(ggplot2)
 
 mt_plots_PCA <- function(
   D,            # SummarizedExperiment input
-  title="",     # title of plot
+  title="PCA",     # title of plot
   scaledata=F,  # scale data before plotting (mean 0, std 1)
   ggadd=NULL,   # further elements/functions to add (+) to the ggplot object
   ...           # additional arguments directly passed to aes() of ggplot

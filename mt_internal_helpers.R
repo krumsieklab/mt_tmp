@@ -9,7 +9,7 @@
 library(uuid)
 
 #
-mti_get_stat_by_name <- function(D, name){
+mti_get_stat_by_name <- function(D, name, fullstruct=F){
   stopifnot("SummarizedExperiment" %in% class(D))
   
   if(! ("results" %in% names(metadata(D))))
@@ -28,13 +28,16 @@ mti_get_stat_by_name <- function(D, name){
   if(length(output)  > 1)
     stop("there are multiple stat elements with name ", name)
   
-  output <- stats[[ output ]]$output$table
-  if( ! any(c("tibble", "data.frame") %in% class(output)) )
-    stop("output of stat result ", stat, " is not a table")
-  
-  if( ! ("var" %in% colnames(output)) )
-    stop("output of stat result ", name, " does not have 'var' column")
-  
+  if(!fullstruct) {
+    output <- stats[[ output ]]$output$table
+    if( ! any(c("tibble", "data.frame") %in% class(output)) )
+      stop("output of stat result ", stat, " is not a table")
+    
+    if( ! ("var" %in% colnames(output)) )
+      stop("output of stat result ", name, " does not have 'var' column")
+  } else {
+    output <- stats[[ output ]]$output
+  }
   output
 }
 
