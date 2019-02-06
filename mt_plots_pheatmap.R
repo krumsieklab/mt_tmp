@@ -1,64 +1,86 @@
-#' all pheatmap inputs identical to phetamap::pheatmap function 
-#' except for 
-#' D : summarized experiment object
-#' mat : if mat is not given, mat = assay(D)
-#' annotation_by_SummarizedExperiment: if True, 
-#'         columns are annotated with elementMetaData in D with given column names annotation_col
-#'         rows are annotated with colData in D with given column names annotation_row
-#' return.gg: if TRUE, pheatmep object will be cast to gg object and returned, otherwise, pheatmsp object returns 
-#' gg.scale: scaling of the plot while casting to gg object 
-#' gg.(ymin,ymax,xmin,xmax): min,max of gg coordinates if gg.return = T
-#' for all other input argumets see pheatmap::pheatmap
-#' 
-mt_plots_pheatmap <- function(D, mat = NULL, color = grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, 
-                             border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, 
-                             clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete", 
-                             clustering_callback = pheatmap:::identity2, cutree_rows = NA, cutree_cols = NA,  
-                             treeheight_row = ifelse((class(cluster_rows) == "hclust") || cluster_rows, 50, 0), 
-                             treeheight_col = ifelse((class(cluster_cols) == "hclust") || cluster_cols, 50, 0), 
-                             legend = TRUE, legend_breaks = NA, legend_labels = NA, 
-                             annotation_row = NA, annotation_col = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, 
-                             annotation_names_row = TRUE, annotation_names_col = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, 
-                             main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", 
-                             number_color = "grey30", fontsize_number = 0.8 * fontsize, gaps_row = NULL, gaps_col = NULL, labels_row = NULL, 
-                             labels_col = NULL, filename = NA, width = NA, height = NA, silent = TRUE, na_col = "#DDDDDD",
-                             return.gg = T, gg.scale = 1, gg.ymin = 1 - gg.scale, gg.xmin = 1 - gg.scale, gg.xmax = gg.scale, gg.ymax = gg.scale, 
-                             annotation_by_SummarizedExperiment= T, ...){
+##' 
+##' Heatmap plot by pheatmap::pheatmap 
+##' 
+##' 
+##' @param D summarized experiment object
+##' @param fD function to transform/scale \code{t(assay(D))}, ie \code{mat = fD(t(assay(D)))} will be plotted
+
+##' @param return.gg should pheatmap object be converted to gg object, TRUE for default.
+##' @param gg.scale scaling of plot to be converted to gg object
+##' @param \dots  see \code{pheatmap::pheatmap} for pheatmap arguments 
+##' @return object \code{SummarizedExperiment}, see \code{metabotools} conventions for the details
+##' @note all \code{pheatmap::pheatmap} arguments can be passed 
+##' @author mubu
+##' @references \code{\link{https://github.com/raivokolde/pheatmap}}
+##' @keywords ~heatmap ~pheatmap
+##' @examples 
+##' 
+##' D %>%
+##' mt_plots_pheatmap(annotation_row = c("SUPER_PATHWAY", "PLATFORM", "RI"), 
+##'                   annotation_col = c("GROUP_DESC","BATCH_MOCK","gender"), 
+##'                   fD = function(x) scale(exp(scale(x))),
+##'                   clustering_distance_cols =  "correlation",
+##'                   clustering_distance_rows = "minkowski")
+##' 
+
+
+mt_plots_pheatmap <- function(D, fD = function(x) x, # metabotools arguments
+                              
+                              # pheatmap::pheatmap arguments
+                              color = grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, 
+                              border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, 
+                              clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete", 
+                              clustering_callback = pheatmap:::identity2, cutree_rows = NA, cutree_cols = NA,  
+                              treeheight_row = ifelse((class(cluster_rows) == "hclust") || cluster_rows, 50, 0), 
+                              treeheight_col = ifelse((class(cluster_cols) == "hclust") || cluster_cols, 50, 0), 
+                              legend = TRUE, legend_breaks = NA, legend_labels = NA, 
+                              annotation_row = NA, annotation_col = NA, annotation_colors = NA, annotation_legend = TRUE, 
+                              annotation_names_row = TRUE, annotation_names_col = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, 
+                              main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", 
+                              number_color = "grey30", fontsize_number = 0.8 * fontsize, gaps_row = NULL, gaps_col = NULL, labels_row = NULL, 
+                              labels_col = NULL, filename = NA, width = NA, height = NA, silent = TRUE, na_col = "#DDDDDD",
+                              
+                              # returned plot type, and specs
+                              return.gg = T, gg.scale = 1, gg.ymin = 1 - gg.scale, gg.xmin = 1 - gg.scale, 
+                              gg.xmax = gg.scale, gg.ymax = gg.scale, ...){
   
+
+
+  # upon Jan's comment annotation_col and annotation_row are swapped for compatibility with SummarizedExperiment
   
   # get all inputs 
   aa = c(as.list(environment()), list(...))
   
-  # if no external datagiven to be plotted, assay(D) will be heatmapped
-  if(is.null(mat)){
-    aa$mat = t(assay(D))
-    aa = aa[-1]  
+  # fD(t(assay(D))) will be heatmapped
+  x = t(assay(D))
+  x.colnames = colnames(x)
+  x.rownames = rownames(x)
+  aa$mat = fD(x)
+  
+  # keep only pheatmap::pheatmap parameters
+  aa = aa[!(names(aa) %in% c("D","fD","return.gg", "gg.scale", "gg.ymin", "gg.xmin", "gg.xmax", "gg.ymax"))]
+  # annotations will be added later
+  aa = aa[!(names(aa) %in% c("annotation_col", "annotation_row"))]
+  
+  # deprecated pheatmap parameter 'annotation', see pheatmap::pheatmap
+  aa$annotation = NA
+  
+  # annotate rows with given variables in attr(D, "colData")
+  if(!is.na(annotation_col[1])){
+    annotation_col = D %>% colData %>% as.data.frame %>% `[`(,annotation_col,drop = F)
+    rownames(annotation_col) = x.rownames
+    aa$annotation_row = annotation_col
   }
   
-  # annotate columns with given variables in attr(D, "elementMetadata")
-  if(annotation_by_SummarizedExperiment & !is.na(annotation_col[1])){
-    annotation_col = attr(D,"elementMetadata") %>% as.data.frame %>% `[`(,annotation_col,drop = F)
-    rownames(annotation_col) = colnames(aa[[1]])
-    aa$annotation_col = annotation_col
-  }
-  
-  # deprecated pheatmap parameter 'annotation', see pheatmap::pheatmap  
-  # annotate columns with given variables in attr(D, "elementMetadata")
-  if(annotation_by_SummarizedExperiment & !is.na(annotation[1])){
-    annotation = attr(D,"elementMetadata") %>% as.data.frame %>% `[`(,annotation,drop = F)
-    rownames(annotation) = colnames(aa[[1]])
-    aa$annotation = annotation
-  }
-  
-  # annotate rowss with given variables in attr(D, "colData")
-  if(annotation_by_SummarizedExperiment & !is.na(annotation_row[1])){
-    annotation_row = attr(D,"colData") %>% as.data.frame %>% `[`(,annotation_row,drop = F)
-    rownames(annotation_row) = rownames(aa[[1]])
-    aa$annotation_row = annotation_row
+  # annotate columns with given variables in attr(D, "rowData")
+  if(!is.na(annotation_row[1])){
+    annotation_row = D %>% rowData %>% as.data.frame %>% `[`(,annotation_row,drop = F)
+    rownames(annotation_row) = x.colnames
+    aa$annotation_col = annotation_row
   }
   
   # plot pheatmap 
-  re <- do.call(pheatmap, aa)
+  re <- do.call(pheatmap::pheatmap, aa)
   
   # cast pheatmap object to gg object 
   if(return.gg){
@@ -85,7 +107,20 @@ mt_plots_pheatmap <- function(D, mat = NULL, color = grDevices::colorRampPalette
 
 
 if(FALSE){
-  mt_logging(console=T) 
+  # all pheatmap inputs identical to phetamap::pheatmap function 
+  # except for 
+  # D : summarized experiment object
+  # fD: function to transform/scale t(assay(D)), ie mat = fD(t(assay(D))) will be plotted
+  # 
+  # rows are annotated with rowData in D with given column names annotation_col
+  # columns are annotated with colData in D with given column names annotation_row
+  # 
+  # return.gg: if TRUE, pheatmep object will be cast to gg object and returned, otherwise, pheatmap object will be returned 
+  # gg.scale: scaling of the plot while casting to gg object 
+  # gg.(ymin,ymax,xmin,xmax): min,max of gg coordinates if gg.return = T
+  # for all other input argumets see pheatmap::pheatmap
+  # 
+  
   D <- 
     mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>%
     mt_plots_PCA_mult(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
@@ -101,9 +136,12 @@ if(FALSE){
     mt_pre_impute_knn() %>%
     mt_plots_sampleboxplot(color=Group) %>%
     mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>% 
-    mt_plots_pheatmap(annotation_col = c("SUPER_PATHWAY", "PLATFORM", "RI"), 
-                      annotation_row = c("GROUP_DESC","BATCH_MOCK","gender"), return.gg = T)
+    mt_plots_pheatmap(annotation_row = c("SUPER_PATHWAY", "PLATFORM", "RI"), 
+                      annotation_col = c("GROUP_DESC","BATCH_MOCK","gender"), 
+                      fD = function(x) scale(exp(scale(x))),
+                      clustering_distance_cols =  "correlation",
+                      clustering_distance_rows = "correlation",
+                      return.gg = T)
   
   metadata(D)$results[[15]]$output
-  
 }
