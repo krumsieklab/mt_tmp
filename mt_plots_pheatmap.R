@@ -3,6 +3,7 @@
 ##' 
 ##' 
 ##' @param D summarized experiment object
+##' @param scaledata scaling the data, TRUE by default
 ##' @param fD function to transform/scale \code{t(assay(D))}, ie \code{mat = fD(t(assay(D)))} will be plotted
 
 ##' @param return.gg should pheatmap object be converted to gg object, TRUE for default.
@@ -24,7 +25,7 @@
 ##' 
 
 
-mt_plots_pheatmap <- function(D, fD = function(x) x, # metabotools arguments
+mt_plots_pheatmap <- function(D, scaledata=T, fD = function(x){ if(scaledata) return(scale(x)); x}, # metabotools arguments
                               
                               # pheatmap::pheatmap arguments
                               color = grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, 
@@ -44,8 +45,6 @@ mt_plots_pheatmap <- function(D, fD = function(x) x, # metabotools arguments
                               return.gg = T, gg.scale = 1, gg.ymin = 1 - gg.scale, gg.xmin = 1 - gg.scale, 
                               gg.xmax = gg.scale, gg.ymax = gg.scale, ...){
   
-
-
   # upon Jan's comment annotation_col and annotation_row are swapped for compatibility with SummarizedExperiment
   
   # get all inputs 
@@ -58,7 +57,7 @@ mt_plots_pheatmap <- function(D, fD = function(x) x, # metabotools arguments
   aa$mat = fD(x)
   
   # keep only pheatmap::pheatmap parameters
-  aa = aa[!(names(aa) %in% c("D","fD","return.gg", "gg.scale", "gg.ymin", "gg.xmin", "gg.xmax", "gg.ymax"))]
+  aa = aa[!(names(aa) %in% c("D","scaledata","fD","return.gg", "gg.scale", "gg.ymin", "gg.xmin", "gg.xmax", "gg.ymax"))]
   # annotations will be added later
   aa = aa[!(names(aa) %in% c("annotation_col", "annotation_row"))]
   
