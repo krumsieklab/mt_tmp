@@ -25,7 +25,7 @@
 ##' 
 
 
-mt_plots_pheatmap <- function(D, scaledata=T, fD = function(x){ if(scaledata) return(scale(x)); x}, # metabotools arguments
+mt_plots_pheatmap <- function(D, scaledata=F, fD = function(x){ if(scaledata) return(scale(x)); x}, # metabotools arguments
                               
                               # pheatmap::pheatmap arguments
                               color = grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, 
