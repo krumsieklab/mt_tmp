@@ -59,6 +59,7 @@ mt_post_addFC <- function(D,
     }
 
     ## EXTRACT DATA
+    if(is.factor(colData(D)[[outcome]]))model[[outcome]] <- as.factor(model[[outcome]])
     d_fc <- mti_format_se_samplewise(D) %>%
         ## use only levels that were used in stat
         inner_join(model, by = outcome)
@@ -92,6 +93,14 @@ mt_post_addFC <- function(D,
     ## ADD TO RESULTS
     metadata(D)$results[[stat_id]]$output$table %<>%
                   left_join(d_fc, by = "var")
+    
+    ## CHECK IF WE NEED TO FLIP THE FC DUE TO FACTOR REORDERING. HACKYHACK
+    if (is.factor(colData(D)[[outcome]])) {
+      ind=match(gsub("`","",c(levels_1,levels_2)), levels(colData(D)[[outcome]]))
+      if(ind[2]>ind[1]) {
+        metadata(D)$results[[stat_id]]$output$table$fc = -metadata(D)$results[[stat_id]]$output$table$fc
+      }
+    }
 
     ## add status information & plot
     funargs <- mti_funargs()
