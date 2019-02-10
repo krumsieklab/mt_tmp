@@ -96,7 +96,7 @@ mti_get_stat_by_name(D_missing, "miss")
 
 #### run pathway analysis with HMDB KEGG annotations ----
 D_kegg <- D_alone %>% 
-  mt_add_pathways_HMDB(in_col = "HMDb_ID", out_col = "kegg_db", 
+  mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "kegg_db", 
                        pwdb_name = "KEGG", db_dir = codes.makepath("packages/metabotools_external/hmdb")) %>% 
   mt_modify_aggPW(pw="kegg_db", method="aggmean") %>% 
   mt_stats_univ_lm(

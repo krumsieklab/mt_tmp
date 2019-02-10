@@ -16,7 +16,7 @@ library(tidyverse)
 library(data.table)
 
 # main
-mt_add_pathways_HMDB <- function(
+mt_anno_pathways_HMDB <- function(
   D,                  # SummarizedExperiment input
   in_col,             # column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
   out_col,            # a new column name for D to output pathway information to
@@ -39,7 +39,7 @@ mt_add_pathways_HMDB <- function(
     # NOTE: taking the tail work only for HMDB versions below 9, since
     # list.files sorts the names alphabetically. Current HMDB version
     # is 4.0
-    db_filename <- list.files(db_dir) %>% tail(1)
+    db_filename <- list.files(db_dir,pattern='*.rds') %>% tail(1)
     if (length(db_filename) == 0) 
       stop(glue::glue("no pathway files were found in {db_dir}"))
   }

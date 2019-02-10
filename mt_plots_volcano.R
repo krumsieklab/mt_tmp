@@ -19,6 +19,7 @@ mt_plots_volcano <- function(D,
                              x = fc,
                              statname,
                              metab_filter = p.value < 0.05,
+                             xlabel=gsub("~","",as.character(x)),
                              ...){
     x <- enquo(x)
     
@@ -46,13 +47,6 @@ mt_plots_volcano <- function(D,
                           domain = c(1e-100, Inf))
     }
     
-    ## generate xlabel
-    d <- mti_get_stat_by_name(D, statname, fullstruct=T)
-    if ("groups" %in% names(d) && length(d$groups)==2) {
-      xlabel <- sprintf("%s high <--     statistics     --> %s high", d$groups[1], d$groups[2])
-    } else {
-      xlabel <- "statistics"
-    }
     
     ## CREATE PLOT
     p <- data_plot %>%
@@ -73,6 +67,12 @@ mt_plots_volcano <- function(D,
             filter(!!metab_filter_q)
         p <- p + ggrepel::geom_text_repel(data = data_annotate,
                            aes(label = name))
+    }
+    
+    ## ADD AXIS GROUPS
+    d <- mti_get_stat_by_name(D, statname, fullstruct=T)
+    if ("groups" %in% names(d) && length(d$groups)==2) {
+      p <- mti_add_leftright_gg(p, paste0(d$groups[1],' high'), paste0(d$groups[2],' high'))
     }
 
     ## add status information & plot

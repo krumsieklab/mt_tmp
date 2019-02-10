@@ -24,7 +24,7 @@ mt_files_load_WCM <- function(
   # split off HMDB column if it exists
   if ("HMDB" %in% colnames(raw)) {
     metinfo = data.frame(name=names,HMDB=raw$HMDB)
-    raw = raw %>% select(-HMDB)
+    raw = raw %>% dplyr::select(-HMDB)
   } else {
     metinfo = data.frame(name=rownames(raw))
   }

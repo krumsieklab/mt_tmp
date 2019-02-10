@@ -105,7 +105,7 @@ if (FALSE) {
   mt_logging(console=T) 
   D_alone <- 
     mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>% 
-    mt_add_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db", 
+    mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db", 
                          pwdb_name = "SMP", db_dir = codes.makepath("packages/metabotools_external/hmdb")) %>% 
     mt_anno_pathways_remove_redundant(met_ID_col = "HMDb_ID", pw_col = "smp_db")
 }

@@ -20,7 +20,8 @@ mt_plots_equalizer <- function(
   comp2,    # name of second comparison output to take arguments from, the fine one
   legend.fine, # fine label to be plotted
   legend.coarse = NULL, # coarse legend to be plotted
-  th = 2,   # log10(p.value) threholds for red dashed lines
+  verticalline = p.value < 0.05, # filter expression where to draw the red, dashed line
+  # th = 2,   # log10(p.value) threshold for red dashed lines
   clrs = c("#9494FF","red") # colors for sub and super pathways
 ) {
   
@@ -28,7 +29,7 @@ mt_plots_equalizer <- function(
   stopifnot("SummarizedExperiment" %in% class(D1))
   stopifnot("SummarizedExperiment" %in% class(D2))
   stopifnot(comp1!=comp2)
-    
+  
   # get results
   res1 <- mti_get_stat_by_name(D1, comp1) 
   res2 <- mti_get_stat_by_name(D2, comp2) 
@@ -62,6 +63,15 @@ mt_plots_equalizer <- function(
   colnames(rd2)[1] = "FINE" 
   
   
+  # # determine threshold (vertical line position)
+  # if(!missing(verticalline)){
+  #   metab_filter_q <- enquo(verticalline)
+  #   data_annotate <- data_plot %>%
+  #     filter(!!metab_filter_q)
+  #   p <- p + ggrepel::geom_text_repel(data = data_annotate,
+  #                                     aes(label = name))
+  # }
+  
   
   # df: data frame includes columns: "SUB_PATHWAY", "SUPER_PATHWAY", "statistic", "p.value"
   # name.df: primary key(column) name in df
@@ -81,7 +91,7 @@ mt_plots_equalizer <- function(
     gg<-
       ggplot(df, aes(x = x, y = FINE)) +
       geom_vline(xintercept = 0, color ="gray") +
-      geom_vline(xintercept = c(-th,th), color ="tomato", lty = 2) +
+      # geom_vline(xintercept = c(-th,th), color ="tomato", lty = 2) +
       geom_point(pch = 22, fill = clrs[1], size = 3) +
       facet_grid(COARSE~. , scales = "free_y", space = "free_y") +
       theme(strip.background =element_rect(fill=NA), 
@@ -116,15 +126,25 @@ mt_plots_equalizer <- function(
     # add legend
     df.legend = data.frame(x = rep(1,2), y = rep(NA,2), class = factor(c(name.df2, name.df),levels = c(name.df, name.df2)))
     gg + geom_point(data = df.legend,aes(x= x,y=y, fill =class),pch = 22, size = 4) + 
-      labs(fill="", x = expression(paste("directed |log"[10],"p|")), y = "") + 
+      labs(fill="", x = expression(paste("directed log10(p)")), y = "") + 
       scale_fill_manual(values = clrs) + 
       theme(legend.position = "top", legend.key = element_blank(), 
             legend.direction = "vertical", legend.justification = c(0,0))
     
   }
   
+  
+  
   p =  mti_plot_equalizer_gg(df = data.frame(rd2, res2), name.df = legend.fine,
-                             df2 = data.frame(rd1, res1), name.df2 = legend.coarse )
+                             df2 = data.frame(rd1, res1), name.df2 = legend.coarse, th=4 )
+  
+  ## ADD AXIS GROUPS
+  d <- mti_get_stat_by_name(D1, comp1, fullstruct=T)
+  if ("groups" %in% names(d) && length(d$groups)==2) {
+    xlabel <- sprintf("%s high <--     directed log10(p)     --> %s high", d$groups[1], d$groups[2])
+    p <- p + xlab(xlabel)
+  }
+  
   
   # add status information & plot
   funargs <- mti_funargs()
@@ -137,7 +157,7 @@ mt_plots_equalizer <- function(
   
   # return
   D1
- 
+  
   
 }
 
