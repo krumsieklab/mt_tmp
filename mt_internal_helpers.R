@@ -75,7 +75,8 @@ mti_generate_result <- function(
   funargs,          # output from mti_funargs() that should be collected by calling function
   logtxt="",        # log text describing what the function did
   logshort=logtxt,  # shorter version of log text for printing; especially important for preprocessing funs... if not given, logtxt will be used
-  output=NULL       # output structure of that function (e.g. plot, statistical results)... default is NULL (i.e. no output)
+  output=NULL,      # output structure of that function (e.g. plot, statistical results)... default is NULL (i.e. no output)
+  output2=NULL      # optional second output
 ) {
   
   # ensure structure of funargs
@@ -91,7 +92,8 @@ mti_generate_result <- function(
       logtxt=mti_logmsg(logtxt),
       logshort=logshort,
       uuid=uuid::UUIDgenerate(),
-      output=output
+      output=output,
+      output2=output2
     )
   )
 }
@@ -189,6 +191,32 @@ mti_debug_badconsole <- function() {
   write("prints to stderr", stderr())
   write("prints to stdout", stdout())
 }
+
+# add left- and right-aligned labels to gg plot
+mti_add_leftright_gg <- function(gg, left, right) {
+  
+  ggbld <- ggplot_build(gg)
+  xticks = ggbld$layout$coord$labels(ggbld$layout$panel_params)[[1]]$x.major_source
+  xticks.minor = ggbld$layout$coord$labels(ggbld$layout$panel_params)[[1]]$x.minor_source
+  xlims = ggbld$layout$panel_params[[1]]$x.range
+  
+  # add positions of annotation labels 
+  xticks = c(xlims[1], xticks, xlims[2])
+  # get breaks labels
+  xtlabs = ggbld$layout$coord$labels(ggbld$layout$panel_params)[[1]]$x.labels
+  
+  # align with \n
+  txt <- c(left, right)
+  txt = paste0("\n", txt)
+  xtlabs = paste0(xtlabs, "\n")
+  xtlabs = c(txt[1], xtlabs, txt[2])
+  
+  # return
+  gg + scale_x_continuous(breaks = xticks, labels = xtlabs, minor_breaks = xticks.minor)  
+  
+}
+
+
 
 # # completely suppresses a functions outputs
 # mti_silent <- function(...) {
