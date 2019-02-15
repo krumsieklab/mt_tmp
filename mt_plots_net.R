@@ -1,25 +1,31 @@
-# MetaboTools
-#
-# Plots correlation network 
-#
-# last update: 2018-11-08
-# authors: EB
-#
+require(GGally)
+require(sna)
+require(visNetwork)
 
-## dependencies
-
-library(igraph)
-library(GGally)
-library(network)
-library(sna)
-source(paste0(codes.makepath("R/networks"),"/writeYED.R", sep=""))
+#' Network plotting
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param statname name of the test to take correlations from
+#' @param corr_filter filter for correlation values to plot
+#' @param node_coloring name of the test to use for node coloring
+#' 
+#' @return assay: not altered
+#' @return $result: interactive network plot
+#'
+#' @examples
+#' #' # in the context of a SE pipeline
+#' ... %>% mt_plots_net(statsname = "xxx") %>% ...    # standard call
+#' ... %>% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's") %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test
+#'
+#' @author EB
+#' @export
+#'
 
 mt_plots_net <- function(
   D,                               # SummarizedExperiment input
   statname,                        # name of the correlation matrix to plot
   corr_filter = p.value < 0.05,    # filter
-  export=FALSE,                     # decide if export the network to yEd 
-  filename="network.glm"           # name of the yEd file
+  node_coloring                    # name of the statistical test to use for node coloring
 ){
   
   ## check input
@@ -27,7 +33,6 @@ mt_plots_net <- function(
   if(missing(statname))
     stop("statname must be given to plot the network")
     
-  
   ## rowData
   rd1 <- subset(rowData(D), select=which(names(rowData(D))=="name")) %>%
         as.data.frame() %>%
@@ -43,7 +48,20 @@ mt_plots_net <- function(
     inner_join(rd1, by = "var1") %>%
     inner_join(rd2, by = "var2")
   
-  ## apply filter
+  ## define node attributes
+  ids <- unique(data_plot[,which(colnames(data_plot)=="name1")])
+  labels <- ids
+  
+  if(!(missing(node_coloring))) {
+    test <- mti_get_stat_by_name(D, node_coloring);
+    test <- test[match(ids, test$var),];
+    map <- sign(test$statistic)*log10(test$p.value);
+    node_color <- colorRampPalette(c('blue', 'white', 'red'))(length(map))[rank(map)]
+  } else node_color <- "darkblue"
+
+  nodes <- data.frame(id=ids, label=labels, color=node_color)
+  
+  ## apply filter on correlations
   if(!missing(corr_filter)){
     mti_logstatus("filter correlations")
     corr_filter_q <- enquo(corr_filter)
@@ -51,31 +69,16 @@ mt_plots_net <- function(
       filter(!!corr_filter_q)
   }
   
-  data_plot <- data_plot[data_plot$p.adj<0.5, ]
+  ## define edge attributes
+  # rescale correlation to [0 10]
+  cor.scaled <- (abs(data_plot[,which(colnames(data_plot)=="statistic")])-min(abs(data_plot[,which(colnames(data_plot)=="statistic")])))/(max(abs(data_plot[,which(colnames(data_plot)=="statistic")]))-min(abs(data_plot[,which(colnames(data_plot)=="statistic")])))*10
   
-  edge_list <- data_plot[,c(which(colnames(data_plot)=="name1"),which(colnames(data_plot)=="name2"),which(colnames(data_plot)=="statistic"))]
-  G <- graph.data.frame(edge_list,directed=FALSE)
-  A <- abs(as_adjacency_matrix(G, type="both", names=TRUE, sparse=FALSE, attr="statistic"))
+  edges <- data.frame(from = data_plot[,which(colnames(data_plot)=="name1")], to = data_plot[,which(colnames(data_plot)=="name2")], value = cor.scaled)
+  edges$color <- "black"
+  edges$color[edges$value<0] <- "red"
   
-  net <- network(A, directed = FALSE, names.eval = "weights")
-  network.vertex.names(net) = colnames(A)
-  set.edge.attribute(net, "color", ifelse(net %e% "weights" > 0, "black", "red"))
-  
-  ## create plot
-  p <- ggnet2(net, label = TRUE, node.size = 6) #, edge.color = "color" , edge.size = "weights"
-  
-  ## export network to file
-  if(export) {
-    sprintf("network exported to file %s", filename)
-    A.adj <- A
-    A.adj[A.adj!=0] <- 1
-    pos <- c(0, 0, 0)
-    neg <- c(1, 0, 0)
-    col <- rbind(pos, neg)
-    writeYED(A = A.adj, outfile = filename,    # not working for weighted adjacency right now, only plots nodes and labels, no edges
-             options = set_options(nodelabels=colnames(A)))
-  }
-  
+  ## plot
+  p <- visNetwork(nodes, edges)
   
   ## add status information & plot
   funargs <- mti_funargs()

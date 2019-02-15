@@ -47,8 +47,7 @@ D_alone <-
                    colour       = p.value < 0.05) %>%
   mt_stats_multiv_net_GeneNet(name="GeneNetpcor") %>%
   mt_post_multTest(statname = "GeneNetpcor", method = "BH") %>%
-  mt_plots_net(statname = "GeneNetpcor", corr_filter = p.adj < 0.5, export=TRUE, 
-               filename = "network.graphml") %>%  
+  mt_plots_net(statname = "GeneNetpcor", corr_filter = p.adj < 0.5, node_coloring="Li's") %>%  
   mt_logging_toc()
 
 D_sub <- D_alone %>% 
