@@ -32,6 +32,7 @@ mt_files_load_WCM <- function(
   # generate summarized experiment
   D <- SummarizedExperiment(assay    = as.matrix(raw),
                             rowData  = metinfo,
+                            colData  = data.frame(ID=colnames(raw)),
                             metadata = list(sessionInfo=sessionInfo()))
   
   # add status information

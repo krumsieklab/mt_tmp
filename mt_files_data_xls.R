@@ -39,6 +39,11 @@ mt_files_data_xls <- function(
   metinfo = data.frame(name=rownames(assay))
   rownames(assay) %<>% make.names()
   
+  # ensure that all columns are numeric
+  rn <- rownames(assay)
+  assay <- apply(assay,2,as.numeric)
+  rownames(assay) <- rn
+  
   # construct SummarizedExperiment
   cd <- data.frame(as.character(colnames(assay)))
   colnames(cd)[1] <- ID
