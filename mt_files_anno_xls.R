@@ -16,7 +16,9 @@ mt_files_anno_xls <- function(
   file,      # Excel file
   sheet,     # sheet name or number
   annosfor,  # "samples" or "metabolites"
-  ID         # column that contains ID information for mapping
+  IDanno,    # column that contains ID information for mapping
+  IDdata=IDanno, # column in data to map by
+  nomaperr=F # throw error (T) or warning (F) if something does not map
 ) {
   
   
@@ -27,29 +29,51 @@ mt_files_anno_xls <- function(
   # load excel sheet
   df <- as.data.frame(read_excel(path=file,sheet=sheet,col_names=T))
   # ensure that sample ID column exists
-  if (!(ID %in% colnames(df))) stop(glue("sample ID column '{ID}' does not exist in '{basename(file)}, sheet '{sheet}'"))
-  if (any(is.na(df[[ID]]))) stop(glue("sample ID column '{ID}' contains empty cells, '{basename(file)}, sheet '{sheet}'"))
-  rownames(df) <- df[[ID]]
+  if (!(IDanno %in% colnames(df))) stop(glue("sample ID column '{IDanno}' does not exist in '{basename(file)}, sheet '{sheet}'"))
+  if (any(is.na(df[[IDanno]]))) stop(glue("sample ID column '{IDanno}' contains empty cells, '{basename(file)}, sheet '{sheet}'"))
+  rownames(df) <- df[[IDanno]]
   
   # slightly different behavior for samples or metabolites
   if (annosfor=="samples") {
+    # ensure the IDdata column exists
+    if (!(IDdata %in% colnames(colData(D)))) stop(glue("ID column '{IDdata}' does not exist in current sample annotations of SE"))
     # check that all samples are found in the colnames of the existing dataset
-    m <- match(df[[ID]], colnames(D))
-    if (any(is.na(m))) stop(sprintf("The following sample IDs could not be found in the existing data matrix: %s",paste0(df[[ID]][is.na(m)],collapse=",")))
-    # add data
-    newdf <- DataFrame(merge(data.frame(colData(D)), df, by='row.names', all.x=T) %>% select(-Row.names))
+    m <- match(df[[IDanno]], colData(D)[[IDdata]])
+    if (any(is.na(m))) { 
+      msg <- sprintf("The following sample IDs could not be found in the existing data matrix: %s",paste0(df[[IDdata]][is.na(m)],collapse=","))
+      if (nomaperr) stop(msg)
+      # else warning(msg)
+    }
+    # make everything a string
+    df[[IDanno]] %<>% as.character()
+    colData(D)[[IDdata]] %<>% as.character()
+    # merge data frames
+    newdf <- dplyr::left_join(data.frame(colData(D)), df, by = setNames(IDanno,IDdata))
+    newdf[[IDanno]] <- newdf[[IDdata]] # make sure anno column name also exists (if different from data column name)
+    stopifnot(all.equal(newdf[[IDdata]],colData(D)[[IDdata]])) # to make sure nothing was mixed up
     rownames(newdf) <- colnames(D)
-    colData(D) <- newdf
+    colData(D) <- DataFrame(newdf)
     
   } else if (annosfor=="metabolites") {
+    # ensure the IDdata column exists
+    if (!(IDdata %in% colnames(rowData(D)))) stop(glue("ID column '{IDdata}' does not exist in current metabolite annotations of SE"))
     # check that all metabolites are found in the $name column of the existing dataset
-    m <- match(df[[ID]], rowData(D)$name)
-    if (any(is.na(m))) stop(sprintf("The following metabolite IDs could not be found in the existing data matrix: %s",paste0(df[[ID]][is.na(m)],collapse=",")))
-    # add data
-    newdf <- merge(data.frame(rowData(D)), df, by.x='name', by.y='row.names', all.x=T)  
+    m <- match(df[[IDanno]], rowData(D)[[IDdata]])
+    if (any(is.na(m))) { 
+      msg <- sprintf("The following metabolite IDs could not be found in the existing data matrix: %s",paste0(df[[IDdata]][is.na(m)],collapse=","))
+      if (nomaperr) stop(msg)
+      # else warning(msg)
+    } 
+    # make everything a string
+    df[[IDanno]] %<>% as.character()
+    rowData(D)[[IDdata]] %<>% as.character()
+    # merge data frames
+    newdf <- dplyr::left_join(data.frame(rowData(D)), df, by = setNames(IDanno,IDdata))
+    newdf[[IDanno]] <- newdf[[IDdata]] # make sure anno column name also exists (if different from data column name)
+    stopifnot(all.equal(newdf[[IDdata]],rowData(D)[[IDdata]])) # to make sure nothing was mixed up
     rownames(newdf) <- rownames(D)
-    rowData(D) <- newdf
-    
+    rowData(D) <- DataFrame(newdf)
+  
   } else
     stop("bug")
   

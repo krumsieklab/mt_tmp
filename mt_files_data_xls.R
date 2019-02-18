@@ -16,7 +16,7 @@ mt_files_data_xls <- function(
   sheet,            # sheet name or number
   samplesInRows=T,  # read samples as rows (T) or as columns (F)
   ID                # if samplesInRows==T -> name of sample ID column... must be exactly one
-                    # if samplesInRows==F -> name of metabolite name column... must be exactly one
+  # if samplesInRows==F -> name of metabolite name column... must be exactly one
 ) {
   
   # load excel sheet
@@ -40,7 +40,13 @@ mt_files_data_xls <- function(
   rownames(assay) %<>% make.names()
   
   # construct SummarizedExperiment
-  D <- SummarizedExperiment(assay=assay,rowData=metinfo)
+  cd <- data.frame(as.character(colnames(assay)))
+  colnames(cd)[1] <- ID
+  D <- SummarizedExperiment(
+    assay=assay,
+    rowData=metinfo,
+    colData=cd
+  )
   
   # add status information
   funargs <- mti_funargs()
