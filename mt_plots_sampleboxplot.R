@@ -22,7 +22,7 @@ fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.
 ### function definition
 mt_plots_sampleboxplot <- function(
   D,         # SummarizedExperiment input
-  title="",  # title of boxplot
+  plottitle="Sample boxplot",  # title of boxplot
   legend=T,  # keep legend?  [could be removed]
   ylabel = "Metabolite concentrations",  # y axis label
   logged=F,  # plot logged
@@ -46,7 +46,7 @@ mt_plots_sampleboxplot <- function(
     ggplot(aes(x = primary, y = value, ...)) +
     geom_boxplot() +
     ylab(ylabel) +
-    ggtitle("Sample boxplot") + 
+    ggtitle(plottitle) + 
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
   # todo add rowname 
   

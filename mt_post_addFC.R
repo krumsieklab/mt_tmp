@@ -16,7 +16,7 @@
 mt_post_addFC <- function(D,
                           statname,
                           correct_confounder,
-                          combine = mean,
+                          combine = function(x){mean(x,na.rm=T)},
                           ...){
 
     ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)

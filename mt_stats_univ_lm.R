@@ -35,26 +35,26 @@ mt_stats_univ_lm <- function(
   
   ## FILTER METABOLITES
   if(!missing(samplefilter)) {
-
+    
     filter_q <- enquo(samplefilter)
     Ds <- Ds %>%
-        filter(!!filter_q) %>%
-        droplevels()
+      filter(!!filter_q) %>%
+      droplevels()
     # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
     # did we leave 0 rows?
     if (nrow(Ds)==0) stop("Filtering left 0 rows")
     if (nrow(Ds)==ncol(D)) mti_logwarning('filtering did not filter out any samples')
-      
+    
   }
-
+  
   ## save outcome variable
   outvar       <- attr(terms(formula, keep.order = T),"term.labels")[1]
   outvar_label <- outvar
   is_interaction <- FALSE
   if(str_detect(outvar, ":")){
-      outvar <- strsplit(outvar, ":") %>% unlist()
-      is_interaction <- TRUE
-      mti_logmsg("calculating interaction term")
+    outvar <- strsplit(outvar, ":") %>% unlist()
+    is_interaction <- TRUE
+    mti_logmsg("calculating interaction term")
   }
   if(any(!(outvar %in% colnames(Ds))))
     stop(sprintf("column %s do not exist in data", str_c(outvar[ !(outvar %in% colnames(Ds))], collapse = ", ")))
@@ -63,22 +63,22 @@ mt_stats_univ_lm <- function(
   do_anova    <- FALSE
   outvar_term <- outvar
   for(o in seq_along(outvar)){  
-      v = outvar[o]
-      if (is.character(Ds[[v]]))
-          Ds[[ v ]] = as.factor(Ds[[ v ]])
-      if (is.factor(Ds[[v]])) {
-          # check that there are exactly two levels
-          if (length(levels( Ds[[ v]] ))!=2){
-              stop(sprintf("factor outcomes must have exactly two levels, '%s' has %d", o, length(levels(v))))
-              do_anova <- TRUE
-          }
-          # remember the level name of the second (will be deleted later on)
-          outvar_term[o] <- str_c(outvar[o], levels(Ds[[ v ]])[2])
+    v = outvar[o]
+    if (is.character(Ds[[v]]))
+      Ds[[ v ]] = as.factor(Ds[[ v ]])
+    if (is.factor(Ds[[v]])) {
+      # check that there are exactly two levels
+      if (length(levels( Ds[[ v]] ))!=2){
+        stop(sprintf("factor outcomes must have exactly two levels, '%s' has %d", o, length(levels(v))))
+        do_anova <- TRUE
       }
+      # remember the level name of the second (will be deleted later on)
+      outvar_term[o] <- str_c(outvar[o], levels(Ds[[ v ]])[2])
+    }
   }
   if(is_interaction)
-      outvar_term <- str_c(outvar_term, collapse = ":")
-
+    outvar_term <- str_c(outvar_term, collapse = ":")
+  
   
   ## choose lm functions
   has_random_eff <- FALSE
@@ -92,105 +92,106 @@ mt_stats_univ_lm <- function(
     f_tidy <- broom::tidy
   }
   f_tidy_tidy <- function(m, ...){
-      if(is.null(m))
-          return(tibble(term = outvar_term))
-      f_tidy(m) %>%
-          mutate(formula = as.character(m$terms)) %>%
-          select(term, formula, everything())
+    if(is.null(m))
+      return(tibble(term = outvar_term))
+    f_tidy(m) %>%
+      mutate(formula = as.character(m$terms)) %>%
+      select(term, formula, everything())
   }
-
-    
+  
+  
   ## validate formula
   if (!is.null(lhs(formula))) stop("Left-hand side of formula must be empty")
   ## will crash sort of meaningfully if variables don't exist
   if(has_random_eff){
-      mm <- lFormula(update.formula(formula, str_c(rownames(D)[[1]], "~.")), Ds)
+    mm <- lFormula(update.formula(formula, str_c(rownames(D)[[1]], "~.")), Ds)
   }else{
-      mm <- model.matrix(formula,Ds)
+    mm <- model.matrix(formula,Ds)
   }
- 
+  
   ## check if anova is necessary for interaction effects
   ## (happens if 2 factors with 2 levels each where individual variables are not included)
   if(is_interaction){
-      interactions <- map(outvar, function(.x){
-          if(is.factor(Ds[[.x]]))
-              str_c(.x, unique(Ds[[.x]]))
-          else
-              .x
-      })%>%
-          expand.grid() %>%
-          apply(MARGIN = 1, str_c, collapse = ":")
-      if(length(intersect(colnames(mm), interactions)) > 1){
-        do_anova <- TRUE
-        stop("for interactions effects between factors, individual terms should be included")
-      }
+    interactions <- map(outvar, function(.x){
+      if(is.factor(Ds[[.x]]))
+        str_c(.x, unique(Ds[[.x]]))
+      else
+        .x
+    })%>%
+      expand.grid() %>%
+      apply(MARGIN = 1, str_c, collapse = ":")
+    if(length(intersect(colnames(mm), interactions)) > 1){
+      do_anova <- TRUE
+      stop("for interactions effects between factors, individual terms should be included")
+    }
   }
-
- 
+  
+  
   ## function to create models
   ## does checks to minimise errors  
   do_lm <- function(m){
-      ## run glm with updated formula
-      form <- update(formula, sprintf("%s~.",m))
-      ## check for constant confounders
-      trms <- attr(terms(formula), "term.labels") %>%
-          discard(~str_detect(.x, ":")) %>%
-          c(m)
-      clss <- map_chr(trms, ~class(Ds[[.x]])) %>%
-          setNames(trms)
-      ## subset to complete data
-      d <- Ds %>%
-          select(one_of(trms), !!rlang::sym(m)) %>%
-          filter(complete.cases(.))
-      ## check for invariant vonfounders
-      conf_invar_num <- clss %>%
-          keep(~.x %in% c("integer", "numeric")) %>%
-          imap(~var(d[[.y]])) %>%
-          keep(~.x == 0)
-      conf_invar_fct <- clss %>%
-          discard(~.x %in% c("integer", "numeric")) %>%
-          imap(~length(unique(d[[.y]]))) %>%
-          keep(~.x == 1)
-      conf_invar <- c(conf_invar_num, conf_invar_fct)
-      if(length(conf_invar) > 0){
-          ## terminate if metabolite or outcome are invariant
-          if(m %in% names(conf_invar)){ 
-              mti_logwarning(glue::glue("metabolite {m} invariant "))
-              return(NULL)
-          }
-          if(any(outvar %in% names(conf_invar))){ 
-              mti_logwarning(glue::glue("outcome {outvar} invariant for metabolite {m}"))
-              return(NULL)
-          }
-          for(c in names(conf_invar)){
-              mti_logwarning(glue::glue("confounder {c} invariant for metabolite {m}, removing from formula"))
-              form <- update.formula(form, str_c(". ~ . -", c))
-          }
+    ## run glm with updated formula
+    form <- update(formula, sprintf("%s~.",m))
+    ## check for constant confounders
+    trms <- attr(terms(formula), "term.labels") %>%
+      purrr::discard(~str_detect(.x, ":")) %>%
+      c(m)
+    clss <- map_chr(trms, ~class(Ds[[.x]])) %>%
+      setNames(trms)
+    ## subset to complete data
+    d <- Ds %>%
+      select(one_of(trms), !!rlang::sym(m)) %>%
+      filter(complete.cases(.))
+    ## check for invariant vonfounders
+    conf_invar_num <- clss %>%
+      purrr::keep(~.x %in% c("integer", "numeric")) %>%
+      imap(~var(d[[.y]])) %>%
+      purrr::keep(~.x == 0)
+    conf_invar_fct <- clss %>%
+      purrr::discard(~.x %in% c("integer", "numeric")) %>%
+      imap(~length(unique(d[[.y]]))) %>%
+      purrr::keep(~.x == 1)
+    conf_invar <- c(conf_invar_num, conf_invar_fct)
+    if(length(conf_invar) > 0){
+      ## terminate if metabolite or outcome are invariant
+      if(m %in% names(conf_invar)){ 
+        mti_logwarning(glue::glue("metabolite {m} invariant "))
+        return(NULL)
       }
-      ## CALCLUATE ACTUAL MODEL
-      mod <- f_lm(
-          data    = Ds,
-          formula = form
-      )
-      ## DO ANOVA IF MULTIPLE FACTOR LEVELS
-      if(do_anova)
-          mod <- anova(mod)
-      ## RETURN
-      mod
+      if(any(outvar %in% names(conf_invar))){ 
+        mti_logwarning(glue::glue("outcome {outvar} invariant for metabolite {m}"))
+        return(NULL)
+      }
+      for(c in names(conf_invar)){
+        mti_logwarning(glue::glue("confounder {c} invariant for metabolite {m}, removing from formula"))
+        form <- update.formula(form, str_c(". ~ . -", c))
+      }
+    }
+   
+    ## CALCLUATE ACTUAL MODEL
+    mod <- f_lm(
+      data    = Ds,
+      formula = form
+    )
+    ## DO ANOVA IF MULTIPLE FACTOR LEVELS
+    if(do_anova)
+      mod <- anova(mod)
+    ## RETURN
+    mod
   }
-    
+  
   ## run tests for all metabolites
   models <- parallel::mclapply(rownames(D), do_lm, mc.cores = mc.cores) %>%
-      setNames(rownames(D))
+    setNames(rownames(D))
   
   # broom it up, subselect to term, rename term
   tab <- map_dfr(models, f_tidy_tidy, conf.int = T, .id = "var") %>%
-      filter(term == outvar_term) %>%
-      mutate(term =  outvar_label)
-
+    filter(term == outvar_term) %>%
+    mutate(term =  outvar_label)
+  
   ## tidy up a bit more
   tab <- tab %>%
-      select(-matches("^(effect|group)$"))
+    select(-matches("^(effect|group)$"))
   
   ## construct output groups variable
   if (is.factor(Ds[[outvar]])) {
@@ -198,22 +199,22 @@ mt_stats_univ_lm <- function(
   } else {
     outgroups <- NULL
   }
-            
+  
   ## add status information & results
   funargs <- mti_funargs()
   metadata(D)$results %<>% 
-                mti_generate_result(
-                    funargs = funargs,
-                    logtxt = sprintf("univariate lm, %s", as.character(formula)),
-                    output = list(
-                        table   = tab,
-                        formula = formula,
-                        name    = name,
-                        lstobj  = models,
-                        groups = outgroups
-                    )
-                )
-    
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf("univariate lm, %s", as.character(formula)),
+      output = list(
+        table   = tab,
+        formula = formula,
+        name    = name,
+        lstobj  = models,
+        groups = outgroups
+      )
+    )
+  
   ## return
   D
 }

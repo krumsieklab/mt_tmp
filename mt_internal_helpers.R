@@ -217,6 +217,20 @@ mti_add_leftright_gg <- function(gg, left, right) {
 }
 
 
+# open device, plot all, close device
+# works either on list of plots, or on SE
+mti_plot_all_tofile <- function(input, dev=pdf, ...) {
+  if ("SummarizedExperiment" %in% class(input)) {
+    plots <- mti_multi_get_unique_plots(input)
+  } else {
+    plots <- input
+  }
+  dev(...)
+  sapply(plots,plot)
+  dev.off()
+}
+
+
 
 # # completely suppresses a functions outputs
 # mti_silent <- function(...) {
