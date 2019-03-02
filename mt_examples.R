@@ -6,11 +6,7 @@ zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- fu
 if(!exists("codes.makepath"))
   codes.makepath <- function(a)paste0("./", a)
 
-l <- list.files(path=codes.makepath("packages/metabotools"),pattern="*.R$",full.names=T)
-l <- l[!grepl('*examples*',l)]
-suppressPackageStartupMessages({
-  walk(l, function(x){source(x,echo=F,verbose=F)})
-})
+source(codes.makepath("packages/metabotools/quickload.R"))
 
 
 
