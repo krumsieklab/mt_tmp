@@ -3,10 +3,7 @@
 require(tidyverse)
 zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- function(){lst<-ls(envir=.GlobalEnv); lst<-lst[!(lst %in% c("zap","codes.makepath","store","restore","debugstore"))]; rm(list=lst, envir=.GlobalEnv) }
 
-if(!exists("codes.makepath"))
-  codes.makepath <- function(a)paste0("./", a)
-
-source(codes.makepath("packages/metabotools/quickload.R"))
+source(codes.makepath("MT/quickload.R"))
 
 
 

@@ -9,8 +9,8 @@
 # authors: JK
 #
 
-source(codes.makepath("packages/metabotools/mt_internal_helpers.R"))
-source(codes.makepath("packages/metabotools/mt_internal_imputeKNN.R"))
+source(codes.makepath("MT/mt_internal_helpers.R"))
+source(codes.makepath("MT/mt_internal_imputeKNN.R"))
 
 mt_pre_impute_knn <- function(D, methods="knn.obs.euc.sel", K=10, verbose=F) {
   

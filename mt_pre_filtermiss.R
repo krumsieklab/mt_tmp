@@ -13,7 +13,7 @@
 # dependencies
 library(tidyverse)
 library(magrittr)
-source(codes.makepath("packages/metabotools/mt_internal_helpers.R"))
+source(codes.makepath("MT/mt_internal_helpers.R"))
 
 # function definition
 mt_pre_filtermiss <- function(

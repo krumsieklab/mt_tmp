@@ -121,7 +121,7 @@ if(FALSE){
   # 
   
   D <- 
-    mt_files_load_metabolon(codes.makepath("packages/metabotools/sampledata.xlsx"), "OrigScale") %>%
+    mt_files_load_metabolon(codes.makepath("MT/sampledata.xlsx"), "OrigScale") %>%
     mt_plots_PCA_mult(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
     mt_plots_sampleboxplot() %>%
     mt_plots_qc_missingness() %>%

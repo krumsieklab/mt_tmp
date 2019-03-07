@@ -14,7 +14,7 @@
 require(reshape2)
 require(ggplot2)
 
-source(codes.makepath("packages/metabotools/mt_internal_helpers.R"))
+source(codes.makepath("MT/mt_internal_helpers.R"))
 
 fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)} # fix order of a factor
 
