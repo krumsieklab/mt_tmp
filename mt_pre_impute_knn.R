@@ -19,7 +19,7 @@ mt_pre_impute_knn <- function(D, methods="knn.obs.euc.sel", K=10, verbose=F) {
   stopifnot(K%%1==0) # integer number
   
   # impute
-  assay(D) = imputeKNN(assay(D), methods=methods, K=K, verbose=verbose)
+  assay(D) = t( imputeKNN( t(assay(D)), methods=methods, K=K, verbose=verbose) )
   
   # add status information
   funargs <- mti_funargs()
