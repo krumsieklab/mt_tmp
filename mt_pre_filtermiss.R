@@ -4,10 +4,11 @@
 #
 # Filters either samples or metabolites. Won't do both in one call.
 #
-# last update: 2018-10-11
-# authors: JK
+# last update: 2019-3-15
+# authors: JK, MB
 #
-
+# group option for threshold is added 
+#
 # todo: document output
 
 # dependencies
@@ -19,7 +20,8 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 mt_pre_filtermiss <- function(
   D,             # SummarizedExperiment input
   metMax=NA,     # maximum fraction of missing metabolites
-  sampleMax=NA   # maximum fraction of missing samples
+  sampleMax=NA,   # maximum fraction of missing samples
+  met_group = NA  # for each group of samples metMax be applied
 ) {
   
   # check arguments, SummarizedExperiment, and exactly one cutoff argument must be non-NA
@@ -31,10 +33,21 @@ mt_pre_filtermiss <- function(
   
   # perform filtering
   if (!is.na(metMax)) {
-    
+    NA.mat = is.na(assay(D))
     # metabolite
-    metKeep = apply(is.na(assay(D)),1,sum)/ncol(D) <= metMax
-    D=D[metKeep,]
+    if(is.na(met_group)){ # if group metmax
+      na.stat = rowSums(NA.mat) 
+      metKeep = na.stat/ncol(D) <= metMax
+      D=D[metKeep,]
+    }else{
+      stopifnot(met_group %in% (colData(D) %>% colnames))
+      xmet_group = colData(D)[,met_group]
+      na.stat = xmet_group %>% unique %>% {. = as.character(.); names(.) = .; .} %>% 
+        sapply(function(x) rowSums(NA.mat[, xmet_group == x])/sum(xmet_group == x))
+      metKeep = rowSums( na.stat <= metMax ) == ncol(na.stat)
+      D=D[metKeep,]
+    }
+  
     # add status information
     funargs <- mti_funargs()
     metadata(D)$results %<>% 
@@ -42,7 +55,7 @@ mt_pre_filtermiss <- function(
         funargs = funargs,
         logtxt = sprintf('metabolites filtered, %d%%, %d of %d removed', metMax*100,sum(!metKeep),length(metKeep)),
         logshort = sprintf("filter met %d%%", metMax*100),
-        output = list(kept=as.vector(metKeep))
+        output = list(kept=as.vector(metKeep), na.stat = na.stat[metKeep, ], na.mat = NA.mat[metKeep,])
       )
     
   } else {
