@@ -2,8 +2,8 @@
 #
 # Helper functions.
 #
-# last update: 2018-10-11
-# authors: JK
+# last update: 2019-3-15
+# authors: JK,MB
 #
 
 library(uuid)
@@ -42,11 +42,13 @@ mti_get_stat_by_name <- function(D, name, fullstruct=F){
 }
 
 # safely add to end of list, even if list does not exist
-mti_add_to_list <- function(lst, element) {
+mti_add_to_list <- function(lst, element, oname) {
   # init if needed
   if (is.null(lst) || length(lst)==0) lst=c()
   # add and return
   lst[[length(lst)+1]] = element
+  names(lst)[length(lst)] = oname
+  
   lst
 }
 
@@ -76,12 +78,14 @@ mti_generate_result <- function(
   logtxt="",        # log text describing what the function did
   logshort=logtxt,  # shorter version of log text for printing; especially important for preprocessing funs... if not given, logtxt will be used
   output=NULL,      # output structure of that function (e.g. plot, statistical results)... default is NULL (i.e. no output)
-  output2=NULL      # optional second output
+  output2=NULL     # optional second output
 ) {
   
   # ensure structure of funargs
   stopifnot("fun" %in% names(funargs))
   stopifnot("args" %in% names(funargs))
+  
+  this.uuid = uuid::UUIDgenerate()
   
   # assemble list
   mti_add_to_list(
@@ -91,10 +95,11 @@ mti_generate_result <- function(
       args=funargs$args,
       logtxt=mti_logmsg(logtxt),
       logshort=logshort,
-      uuid=uuid::UUIDgenerate(),
+      uuid=this.uuid,
       output=output,
       output2=output2
-    )
+    ), 
+    oname = paste(paste(funargs$fun,collapse = "_"), this.uuid, sep = ".")
   )
 }
 
