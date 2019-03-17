@@ -1,13 +1,15 @@
 library(ggrepel)
 
 mt_plots_compare2stats <- function(
-  D1,
-  stat1,
-  filter1,
-  stat2,
-  filter2,
-  filterop="AND",
-  D2 = D1,
+  D1,       # first SE dataset to compare; the one in the %>% pipeline
+  stat1,    # name of statistical comparison in first dataset
+  filter1,  # filter criterion, which samples to label
+  D2 = D1,  # second SE dataset, if not given, will be the same as the first
+  stat2,    # name of statistical comparison in second dataset
+  filter2,  # filter criterion, which samples to label
+  filterop="AND",  # if AND -> two colors, one for those where both stats match the criterion, and one where they don't
+                   # if OR -> three colors, a third one where only one stat matches the criterion
+
   return.plot.only=F  # return only the plot object. note: setting this to true makes the function non-MT pipeline compatible.
 ) {
   
