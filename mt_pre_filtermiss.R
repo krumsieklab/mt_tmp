@@ -39,6 +39,7 @@ mt_pre_filtermiss <- function(
       na.stat = rowSums(NA.mat) 
       metKeep = na.stat/ncol(D) <= metMax
       D=D[metKeep,]
+      na.stat[metKeep]
     }else{
       stopifnot(met_group %in% (colData(D) %>% colnames))
       xmet_group = colData(D)[,met_group]
@@ -46,6 +47,7 @@ mt_pre_filtermiss <- function(
         sapply(function(x) rowSums(NA.mat[, xmet_group == x])/sum(xmet_group == x))
       metKeep = rowSums( na.stat <= metMax ) == ncol(na.stat)
       D=D[metKeep,]
+      na.stat[metKeep, ]
     }
   
     # add status information
@@ -55,7 +57,7 @@ mt_pre_filtermiss <- function(
         funargs = funargs,
         logtxt = sprintf('metabolites filtered, %d%%, %d of %d removed', metMax*100,sum(!metKeep),length(metKeep)),
         logshort = sprintf("filter met %d%%", metMax*100),
-        output = list(kept=as.vector(metKeep), na.stat = na.stat[metKeep, ], na.mat = NA.mat[metKeep,])
+        output = list(kept=as.vector(metKeep), na.stat = na.stat, na.mat = NA.mat[metKeep,])
       )
     
   } else {
