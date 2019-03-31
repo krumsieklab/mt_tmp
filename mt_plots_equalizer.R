@@ -20,8 +20,8 @@ mt_plots_equalizer <- function(
   comp2,    # name of second comparison output to take arguments from, the fine one
   legend.fine, # fine label to be plotted
   legend.coarse = NULL, # coarse legend to be plotted
-  verticalline = p.value < 0.05, # filter expression where to draw the red, dashed line
-  # th = 2,   # log10(p.value) threshold for red dashed lines
+  vertline.fine = p.adj < 0.05, # filter expression where to draw the red, dashed line, for fine
+  vertline.coarse = p.adj < 0.05, # filter expression where to draw the red, dashed line, for coarse
   clrs = c("#9494FF","red") # colors for sub and super pathways
 ) {
   
@@ -62,16 +62,7 @@ mt_plots_equalizer <- function(
   colnames(rd1)[1] = "COARSE"
   colnames(rd2)[1] = "FINE" 
   
-  
-  # # determine threshold (vertical line position)
-  # if(!missing(verticalline)){
-  #   metab_filter_q <- enquo(verticalline)
-  #   data_annotate <- data_plot %>%
-  #     filter(!!metab_filter_q)
-  #   p <- p + ggrepel::geom_text_repel(data = data_annotate,
-  #                                     aes(label = name))
-  # }
-  
+ 
   
   # df: data frame includes columns: "SUB_PATHWAY", "SUPER_PATHWAY", "statistic", "p.value"
   # name.df: primary key(column) name in df
@@ -80,18 +71,23 @@ mt_plots_equalizer <- function(
   # th: log10(p.value) threholds for red dashed lines
   # clrs: colors for sub and super pathways
   
-  mti_plot_equalizer_gg <- function(df, name.df="SUB", df2=NULL, name.df2="SUPER", th = 2, clrs = c("#9494FF","red") ){
+  mti_plot_equalizer_gg <- function(df, name.df="SUB", df2=NULL, name.df2="SUPER" ){
     
     # create x-axis
     df$x = abs(log10(df$p.value)) * sign(df$statistic)
     # x axis limits
     a = max(abs(df$x))
     
+    # find x coordinates for cutoff lines
+    xfine <- res2 %>% filter(!!enquo(vertline.fine)) %>% .$p.value %>% max()
+    xcoarse <- res1 %>% filter(!!enquo(vertline.coarse)) %>% .$p.value %>% max()
+    
     # main facetted plot
     gg<-
       ggplot(df, aes(x = x, y = FINE)) +
       geom_vline(xintercept = 0, color ="gray") +
-      # geom_vline(xintercept = c(-th,th), color ="tomato", lty = 2) +
+      geom_vline(xintercept = c(-log10(xfine),log10(xfine)), color=clrs[1], alpha=0.4) + 
+      geom_vline(xintercept = c(-log10(xcoarse),log10(xcoarse)), color=clrs[2], alpha=0.4) +
       geom_point(pch = 22, fill = clrs[1], size = 3) +
       facet_grid(COARSE~. , scales = "free_y", space = "free_y") +
       theme(strip.background =element_rect(fill=NA), 
@@ -136,7 +132,7 @@ mt_plots_equalizer <- function(
   
   
   p =  mti_plot_equalizer_gg(df = data.frame(rd2, res2), name.df = legend.fine,
-                             df2 = data.frame(rd1, res1), name.df2 = legend.coarse, th=4 )
+                             df2 = data.frame(rd1, res1), name.df2 = legend.coarse )
   
   ## ADD AXIS GROUPS
   d <- mti_get_stat_by_name(D1, comp1, fullstruct=T)
@@ -145,7 +141,7 @@ mt_plots_equalizer <- function(
     p <- p + xlab(xlabel)
   }
   
-  
+
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D1)$results %<>% 
