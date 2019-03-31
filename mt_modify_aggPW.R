@@ -5,7 +5,7 @@
 #
 # Implemented approaches:
 # 1. Eigenmetabolite/eigengene/eigenvalue PCA based approach. Data matrix cannot have NAs.
-# 2. Mean scaled value. Will scale() data before. Data matrix can have NAs.
+# 2. Mean value. Will NOT scale() data before. Data matrix can have NAs.
 #
 # last update: 2018-10-11
 # authors: JK
