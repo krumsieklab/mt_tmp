@@ -72,7 +72,7 @@ D <-
 
 
 # show all functions that have been run
-metadata(D_alone)$results %>% map('fun') %>% map_chr(str_c, collapse = " - ")
+metadata(D)$results %>% map('fun') %>% map_chr(str_c, collapse = " - ")
 
 # plot all plots to PDF file
 pdf("output.pdf")
