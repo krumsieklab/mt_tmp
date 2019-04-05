@@ -1,11 +1,18 @@
-# MetaboTools
-#
-# Scale data, mean 0, SD 1 by default.
-#
-# last update: 2018-10-16
-# authors: JK
-#
-
+#' Scale data, mean 0 / sd 1 by default.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param center T/F, mean-center data? default: T
+#' @param scale T/F, scale data to sd 1? default: T
+#'
+#' @return assay: scaled data
+#'
+#' @examples
+#' # in the context of a SE pipeline
+#' ... %>% mt_pre_trans_scale() %>% ...    # standard call, center and scale
+#' ... %>% mt_pre_trans_scale(scale=F) %>% ...    # only mean centering
+#' 
+#' @author JK
+#' 
 mt_pre_trans_scale <- function(
   D,        # SummarizedExperiment input
   center=T, # mean 0?

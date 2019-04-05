@@ -1,26 +1,32 @@
-# MetaboTools
-#
-# Filter by missingness.
-#
-# Filters either samples or metabolites. Won't do both in one call.
-#
-# last update: 2019-3-15
-# authors: JK, MB
-#
-# group option for threshold is added 
-#
-# todo: document output
-
-# dependencies
 library(tidyverse)
 library(magrittr)
 source(codes.makepath("MT/mt_internal_helpers.R"))
 
-# function definition
+#' Filter by missingness.
+#' 
+#' Filters either samples or metabolites, won't do both in one call.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param metMax Maximum fraction of missing metabolites (between 0 and 1.0)
+#' @param sampleMax Maximum fraction of missing samples (between 0 and 1.0)
+#' @param met_group Name of of a colData sample annotation column; metMax will be applied to each group separately, metabolite must have at most metMax in any of the groups.
+#'
+#' @return SE rows or columns will be filtered.
+#' @return $output: logical vector of kept metabolites/samples
+#'
+#' @examples
+#' # first remove samples with >10% missingness, then metabolites with >20% missingness
+#' ... %>%
+#'   mt_pre_filtermiss(sampleMax=0.1) %>%
+#'   mt_pre_filtermiss(metMax=0.2) %>%
+#' ...
+#' 
+#' @author JK
+#' 
 mt_pre_filtermiss <- function(
   D,             # SummarizedExperiment input
   metMax=NA,     # maximum fraction of missing metabolites
-  sampleMax=NA,   # maximum fraction of missing samples
+  sampleMax=NA,   # 
   met_group = NA  # for each group of samples metMax be applied
 ) {
   

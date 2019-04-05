@@ -19,7 +19,6 @@ require(glue)
 #' ... %>% mt_pre_norm_quot(refsamples = GROUP=="ctrl") %>% ...    # use reference samples where 'GROUP' field in colData is 'ctrl'
 #'
 #' @author JK
-#' @export
 #' 
 mt_pre_norm_quot = function(
   D,                 # 
