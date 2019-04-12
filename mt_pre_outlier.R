@@ -26,8 +26,7 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 mt_pre_outlier <- function(
   D,            # SummarizedExperiment input
   method="leverage",     # Method for outlier detection, can only be either "univariate" or "leverage"
-  thr=4,        # Number of standard deviations (univariate) or of m/n units (leverage) to use as threshold for the definition of outlier
-  perc = 0.5    # For the univariate method, percentage of metabolites that need to be outliers in order to consider the whole sample an outlier
+  ...   
 ) {
   
   # check arguments, SummarizedExperiment, and exactly one cutoff argument must be non-NA
@@ -42,17 +41,22 @@ mt_pre_outlier <- function(
     stop("Missing values found in the data matrix")
   if(method=="leverage" & !is.fullrank(X))
     stop("The data matrix is not full-rank, leverage cannot be computed")
+  
+  args <- list(...)
 
   if(method=="univariate") {
+    if(is.null(args$thr)) stop("For the univariate method thr must be given")
+    if(is.null(args$perc)) stop("For the univariate method perc must be given")
     # compute univariate outliers
     H <- matrix(0, dim(X)[1], dim(X)[2])
-    H[X>=thr] <- 1
+    H[X>=args$thr] <- 1
     # compute percentage of univariate outliers per sample
     score <- rowSums(H)/dim(H)[2]
     # define outliers
     out <- rep(0,length(score))
-    out[score > perc] <- 1
+    out[score > args$perc] <- 1
   } else {
+    if(is.null(args$thr)) stop("For the leverage method thr must be given")
     # # compute hat matrix through Singular Value Decomposition
     # SVD <- svd(X)
     # H <- tcrossprod(SVD$u)
@@ -68,7 +72,7 @@ mt_pre_outlier <- function(
     score <- diag(H)
     # define outliers
     out <- rep(0,length(score))
-    out[score > thr*sum(score)/dim(X)[1]] <- 1 
+    out[score > args$thr*sum(score)/dim(X)[1]] <- 1 
   }
   
   # adding to colData
@@ -77,8 +81,8 @@ mt_pre_outlier <- function(
   colnames(colData(D))[colnames(colData(D))=="outlier"] <- paste0("outlier_", method, sep="")
   colnames(colData(D))[colnames(colData(D))=="score"] <- paste0("score_", method, sep="")
   
-  l <- list(threshold=thr)
-  if(method=="univariate") l$perc <- perc
+  l <- list(threshold=args$thr)
+  if(method=="univariate") l$perc <- args$perc
   names(l) <- paste0(names(l), "_", method, sep="")
   
   # add status information
