@@ -1,19 +1,33 @@
-# MetaboTools
-#
-# Add pathway information
-#
-# Adds custom pathways to the already existing SummarizedExperiment
-# data structure using the HMDB .xml file
-#
-# last update: 2019-01-17
-# author: Parviz Gomari
-#
-
-# todo: document output
-
-# dependencies
 library(tidyverse)
 library(data.table)
+
+#' Add pathway information.
+#' 
+#' Adds custom pathways to the already existing SummarizedExperiment
+#' data structure using the HMDB .xml file.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param met_ID_col Column containing metabolite IDs
+#' @param in_col Column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
+#' @param out_col A new column name for D to output pathway information to
+#' @param pwdb_name Name of the pathway database to use. Can use either SMP or KEGG for this argument
+#' @param db_dir Name of the directory where the parsed HMDB files are stored
+#' @param db_filename Filename of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds
+#' @param export_raw_db OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
+#'
+#' @return column out_col in SE containing pathway annotation for metabolites
+#' @return $pathways: a dataframe of pathway information
+#'
+#' @examples
+#' # annotate metabolites using smp_db
+#' ... %>%
+#'   mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db", 
+#'                         pwdb_name = "SMP", 
+#'                         db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) %>%
+#' ...
+#' 
+#' @author Parviz Gomari
+#' 
 
 # main
 mt_anno_pathways_HMDB <- function(
