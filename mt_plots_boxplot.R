@@ -15,6 +15,7 @@
 #' @param D SummarizedExperiment object
 #' @param stat index of the entry in metadata(D)$results that contains statistic object
 #' @param x what phenotype (from colData(D)) should be used on x axis
+#' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... further parameters forwarded to ggplot::aes
 #' @return SummarizedExperiment with boxplots in metadata(D)$results
 #' @export mt_plot_boxplot
@@ -29,6 +30,7 @@ mt_plots_boxplot <- function(D,
                             rows,
                             cols,
                             restrict_to_groups=T,
+                            ggadd        = NULL,
                             ...){
 
     stopifnot("SummarizedExperiment" %in% class(D))
@@ -110,6 +112,8 @@ mt_plots_boxplot <- function(D,
                            aes(label = annotate),
                            x = -Inf, y = Inf, hjust = -0.05, vjust = 1.05 )
     }
+    
+    if (!is.null(ggadd)) p <- p+ggadd
 
     ## SPLIT TO MULTIPLE PAGES
     if(!missing(cols) && !missing(rows)){

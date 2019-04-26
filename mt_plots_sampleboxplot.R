@@ -26,6 +26,7 @@ mt_plots_sampleboxplot <- function(
   legend=T,  # keep legend?  [could be removed]
   ylabel = "Metabolite concentrations",  # y axis label
   logged=F,  # plot logged
+  ggadd=NULL,   # further elements/functions to add (+) to the ggplot object
   ...        # additional arguments directly passed to aes() of ggplot
 ) {
   
@@ -52,6 +53,9 @@ mt_plots_sampleboxplot <- function(
   
   # remove legend?
   if (!legend) p = p + theme(legend.position="none")
+  
+  # add custom elements?
+  if (!is.null(ggadd)) p <- p+ggadd
   
   # add status information & plot
   funargs <- mti_funargs()
