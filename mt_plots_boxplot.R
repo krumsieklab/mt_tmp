@@ -81,11 +81,14 @@ mt_plots_boxplot <- function(D,
     ## filter to groups?
     if (restrict_to_groups) {
       filterto <- mti_get_stat_by_name(D, statname, fullstruct=T)$groups
-    } else {
-      filterto <- unique(dummy[[stat$term[1]]])
+      dummy <- dummy[dummy[[stat$term[1]]] %in% filterto,]
     }
-    dummy <- dummy[dummy[[stat$term[1]]] %in% filterto,]
+    # else {
+    #   filterto <- unique(dummy[[stat$term[1]]])
+    # }
+ 
     #
+    plottitle <- ifelse(missing(statname),"",statname)
     p <- dummy %>%
         ## add metabolite names
         inner_join(stat, by = "var") %>% 
@@ -93,7 +96,7 @@ mt_plots_boxplot <- function(D,
         ggplot() +
         geom_boxplot(aes(x = !!x, y = value, ...), outlier.shape = ifelse(jitter, NA, 19)) +
         labs(x = NULL, y = NULL) +
-        ggtitle(statname)
+        ggtitle(plottitle)
 
     ## ADD JITTER
     if(jitter){
