@@ -33,7 +33,7 @@ mt_stats_univ_lm <- function(
   # merge data with sample info
   Ds <- D %>% mti_format_se_samplewise() 
   
-  ## FILTER METABOLITES
+  ## FILTER SAMPLES
   if(!missing(samplefilter)) {
     
     filter_q <- enquo(samplefilter)

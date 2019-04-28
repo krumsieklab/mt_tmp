@@ -14,7 +14,8 @@ library(tidyverse)
 
 mt_files_load_WCM <- function(
   file,          # Metabolon xls file
-  sheet          # sheet name or number to read
+  sheet,         # sheet name or number to read
+  zeroToNA=T     # replace zeros by NAs?
 ) {
   
   # load file in raw format
@@ -28,6 +29,9 @@ mt_files_load_WCM <- function(
   } else {
     metinfo = data.frame(name=rownames(raw))
   }
+  
+  # zeros to NAs?
+  if (zeroToNA) raw[raw==0] <- NA
   
   # generate summarized experiment
   D <- SummarizedExperiment(assay    = as.matrix(raw),
