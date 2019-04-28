@@ -7,11 +7,11 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param method Can be either "univariate" or "leverage" (for now)
-#' @param thr Number of standard deviations or m/n units to use as threshold to define the outlier
-#' @param perc For the univariate method, percentage of metabolites that need to be outliers in order to consider the whole sample an outlier
+#' @param thr Number of standard deviations or m/n units to use as threshold to define the outlier, default value set to 4
+#' @param perc For the univariate method, percentage of metabolites that need to be outliers in order to consider the whole sample an outlier, default value set to 0.5
 #'
-#' @return SE rows or columns will be filtered.
-#' @return $output: logical vector of outlier samples as well as a numeric vector with the sample scores
+#' @return SE with additional colData columns including a binary vector and a numeric score vector
+#' @return $output: returns the specific parameters used to determine outliers for the specific method selected
 #'
 #' @examples
 #' # first identify samples that have more than 50% univariate outliers, then identify multivariate outliers with a leverage >4m/n
@@ -25,7 +25,7 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 
 mt_pre_outlier <- function(
   D,            # SummarizedExperiment input
-  method="leverage",     # Method for outlier detection, can only be either "univariate" or "leverage"
+  method="univariate",     # Method for outlier detection, can only be either "univariate" or "leverage"
   ...   
 ) {
   
@@ -45,8 +45,8 @@ mt_pre_outlier <- function(
   args <- list(...)
 
   if(method=="univariate") {
-    if(is.null(args$thr)) stop("For the univariate method thr must be given")
-    if(is.null(args$perc)) stop("For the univariate method perc must be given")
+    if(is.null(args$thr)) args$thr <- 4
+    if(is.null(args$perc)) args$perc <- 0.5
     # compute univariate outliers
     H <- matrix(0, dim(X)[1], dim(X)[2])
     H[X>=args$thr] <- 1
@@ -56,7 +56,7 @@ mt_pre_outlier <- function(
     out <- rep(0,length(score))
     out[score > args$perc] <- 1
   } else {
-    if(is.null(args$thr)) stop("For the leverage method thr must be given")
+    if(is.null(args$thr)) args$thr <- 4
     # # compute hat matrix through Singular Value Decomposition
     # SVD <- svd(X)
     # H <- tcrossprod(SVD$u)

@@ -1,20 +1,38 @@
-# MetaboTools
-#
-# Add pathway information
-#
-# Adds custom pathways to the already existing SummarizedExperiment
-# data structure using a flatfile.
-#
-# last update: 2019-01-17
-# author: Parviz Gomari
-#
-
-# todo: document output
-
-# dependencies
 library(tidyverse)
 library(data.table)
 library(readxl)
+
+#' Add pathway information.
+#' 
+#' Adds custom pathways to the already existing SummarizedExperiment
+#' data structure using a flatfile.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param in_col Column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
+#' @param out_col A new column name for D to output pathway information to
+#' @param flatfile Path where the pathway annotation flat file is stored
+#' @param sheet Sheet name or number or number to read in flat file
+#' @param met_ID_col Flatfile colname: this column should contain metabolite IDs
+#' @param pw_ID_col Flatfile colname: this column should contain pathway IDs
+#' @param pw_name_col Flatfile colname: this column should contain pathway names
+#' @param export_raw_db OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
+#'
+#' @return column out_col in SE containing pathway annotation for metabolites
+#' @return $pathways: a dataframe of pathway information
+#'
+#' @examples
+#' # annotate metabolites using the SMP column of the pathway database flatfile
+#' ... %>%
+#'       mt_anno_pathways_from_file(in_col = "HMDb_ID", 
+#'                                  out_col = "janpw", 
+#'                                  flatfile = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
+#'                                  met_ID_col = "HMDB_id", 
+#'                                  pw_ID_col = "SMP", 
+#'                                  pw_name_col = "pathway_name") %>%
+#' ...
+#' 
+#' @author Parviz Gomari
+#' 
 
 # main
 mt_anno_pathways_from_file <- function(

@@ -12,6 +12,7 @@
 #' @param x what value shall be plotted on x (default: fc)
 #' @param statname name of the statistics obkect to plot
 #' @param metab_filter if given, filter will be applied to data and remaining varaibles will be labelled in plot
+#' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... further parameters forwarded to ggplot::aes
 #' @return SummarizedExperiment with volcano plot in metadata(D)$results
 #' @export mt_plot_volcano
@@ -20,6 +21,7 @@ mt_plots_volcano <- function(D,
                              statname,
                              metab_filter = p.value < 0.05,
                              xlabel=gsub("~","",as.character(x)),
+                             ggadd=NULL, 
                              ...){
     x <- enquo(x)
     
@@ -75,6 +77,9 @@ mt_plots_volcano <- function(D,
       p <- mti_add_leftright_gg(p, paste0(d$groups[1],' high'), paste0(d$groups[2],' high'))
     }
 
+    # add custom elements?
+    if (!is.null(ggadd)) p <- p+ggadd
+    
     ## add status information & plot
     funargs <- mti_funargs()
     metadata(D)$results %<>% 

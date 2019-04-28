@@ -1,21 +1,36 @@
-# MetaboTools
-#
-# Add pathway information
-#
-# Adds custom pathways to the already existing SummarizedExperiment
-# data structure using the graphite package.
-#
-# last update: 2019-01-09
-# authors: Parviz Gomari
-#
-
-# todo: document output
-
-# dependencies
 library(tidyverse)
 library(magrittr)
 library(graphite)
 library(rpubchem)
+
+#' Add pathway information.
+#' 
+#' Adds custom pathways to the already existing SummarizedExperiment
+#' data structure using the graphite package.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param in_col Column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
+#' @param out_col A new column name for D to output pathway information to
+#' @param pw_species Name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species
+#' @param pw_name The name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species
+#' @param n_cpus Number of cores to use for parallelizaion (used in convertIdentifiers)
+#' @param export_raw_db # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
+#'
+#' @return column out_col in SE containing pathway annotation for metabolites
+#' @return $pathways: a dataframe of pathway information
+#'
+#' @examples
+#' # annotate metabolites using the humancyc database from the graphite package
+#' ... %>%
+#'     mt_add_pathways(in_col = "KEGG", 
+#'                     out_col = "humancyc_db", 
+#'                     pw_species = "hsapiens", 
+#'                     pw_name = "humancyc", 
+#'                     n_cpus = 5) %>%
+#' ...
+#' 
+#' @author Parviz Gomari
+#' 
 
 # main
 mt_add_pathways <- function(
@@ -25,7 +40,7 @@ mt_add_pathways <- function(
   pw_species,    # name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species
   pw_name,       # the name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species
   n_cpus = 2,    # number of cores to use for parallelizaion (used in convertIdentifiers)
-  export_raw_db # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
+  export_raw_db  # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 ) {
   
   # check arguments, SummarizedExperiment, and exactly one cutoff argument must be non-NA

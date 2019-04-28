@@ -8,6 +8,8 @@
 
 ##' @param return.gg should pheatmap object be converted to gg object, TRUE for default.
 ##' @param gg.scale scaling of plot to be converted to gg object
+##' @param ggadd  further elements/functions to add (+) to the ggplot object
+
 ##' @param \dots  see \code{pheatmap::pheatmap} for pheatmap arguments 
 ##' @return object \code{SummarizedExperiment}, see \code{metabotools} conventions for the details
 ##' @note all \code{pheatmap::pheatmap} arguments can be passed 
@@ -40,10 +42,11 @@ mt_plots_pheatmap <- function(D, scaledata=F, fD = function(x){ if(scaledata) re
                               main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", 
                               number_color = "grey30", fontsize_number = 0.8 * fontsize, gaps_row = NULL, gaps_col = NULL, labels_row = NULL, 
                               labels_col = NULL, filename = NA, width = NA, height = NA, silent = TRUE, na_col = "#DDDDDD",
-                              
+                              ggadd=NULL,  
                               # returned plot type, and specs
                               return.gg = T, gg.scale = 1, gg.ymin = 1 - gg.scale, gg.xmin = 1 - gg.scale, 
-                              gg.xmax = gg.scale, gg.ymax = gg.scale, ...){
+                              gg.xmax = gg.scale, gg.ymax = gg.scale,  
+                              ...){
   
   # upon Jan's comment annotation_col and annotation_row are swapped for compatibility with SummarizedExperiment
   
@@ -88,6 +91,9 @@ mt_plots_pheatmap <- function(D, scaledata=F, fD = function(x){ if(scaledata) re
       scale_y_continuous(limits = c(0, 1), expand = c(0,0)) +
       annotation_custom(re$gtable, xmin = gg.xmin, xmax = gg.xmax, ymin = gg.ymin, ymax = gg.ymax) +
       theme_void()
+    
+    # add custom elements?
+    if (!is.null(ggadd)) re <- re+ggadd
   }
   
   # add status information & plot

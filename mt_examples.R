@@ -5,13 +5,20 @@ zap()  # to be safe, erases all vars, can be added to .Rprofile.....   zap <- fu
 
 source(codes.makepath("MT/quickload.R"))
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> master
 #### run single pipeline, preprocessing, linear models, multiple testing correction etc. no networks ----
 mt_logging(console=T) 
 D <- 
   # load data
+<<<<<<< HEAD
   mt_files_load_metabolon(codes.makepath("MT/sampledata.xlsx"), "OrigScale") %>%
+=======
+  mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+>>>>>>> master
   # timing start
   mt_logging_tic() %>% 
   # PCA, colored by some rowData() fields... this function shows 3 PCs
@@ -34,6 +41,11 @@ D <-
   mt_pre_trans_log() %>%
   # KNN imputatio
   mt_pre_impute_knn() %>%
+<<<<<<< HEAD
+=======
+  # outlier detection (univariate)
+  mt_pre_outlier(method="univariate", thr=4, perc=0.5) %>%
+>>>>>>> master
   # final sample boxplot
   mt_plots_sampleboxplot(color=Group, plottitle = 'final') %>%
   # PCA, colored by some rowData() fields... this function shows 2 PCs
@@ -65,6 +77,7 @@ D <-
                      annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
                      rows               = 2,
                      cols               = 2) %>%
+<<<<<<< HEAD
   
   # 
   mt_stats_multiv_net_GeneNet(name="GeneNetpcor") %>%
@@ -77,6 +90,14 @@ D <-
 
 
 
+=======
+  mt_stats_multiv_net_GeneNet(name = "pcor") %>%
+  mt_post_multTest(statname ="pcor", method = "BH") %>%
+  mt_plots_net(statname = "pcor", corr_filter = p.value<0.01, node_coloring = "Li's") %>%
+  # final timing
+  mt_logging_toc()
+
+>>>>>>> master
 # show all functions that have been run
 metadata(D)$results %>% map('fun') %>% map_chr(str_c, collapse = " - ")
 

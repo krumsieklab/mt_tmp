@@ -1,6 +1,8 @@
 require(GGally)
 require(sna)
+require(ggnetwork)
 require(visNetwork)
+require(dils)
 
 #' Network plotting
 #'
@@ -10,7 +12,7 @@ require(visNetwork)
 #' @param node_coloring name of the test to use for node coloring
 #' 
 #' @return assay: not altered
-#' @return $result: interactive network plot
+#' @return $result: network ggplot + visnetwork plot
 #'
 #' @examples
 #' #' # in the context of a SE pipeline
@@ -48,19 +50,16 @@ mt_plots_net <- function(
     inner_join(rd1, by = "var1") %>%
     inner_join(rd2, by = "var2")
   
-  ## define node attributes
-  ids <- unique(data_plot[,which(colnames(data_plot)=="name1")])
-  labels <- ids
+  # define node attributes
+  nodes <- as.data.frame(unique(rbind(cbind(ids=data_plot$var1,label=data_plot$name1),cbind(ids=data_plot$var2,label=data_plot$name2))))
   
   if(!(missing(node_coloring))) {
     test <- mti_get_stat_by_name(D, node_coloring);
-    test <- test[match(ids, test$var),];
-    map <- sign(test$statistic)*log10(test$p.value);
-    node_color <- colorRampPalette(c('blue', 'white', 'red'))(length(map))[rank(map)]
-  } else node_color <- "darkblue"
+    test <- test[match(nodes$ids, test$var),];
+    nodes$map <- sign(test$statistic)*log10(test$p.value);
+    nodes$node_color <- colorRampPalette(c('blue', 'white', 'red'))(length(nodes$map))[rank(nodes$map)]
+  } else nodes$node_color <- rep("darkblue",times=length(nodes$ids))
 
-  nodes <- data.frame(id=ids, label=labels, color=node_color)
-  
   ## apply filter on correlations
   if(!missing(corr_filter)){
     mti_logstatus("filter correlations")
@@ -74,19 +73,58 @@ mt_plots_net <- function(
   cor.scaled <- (abs(data_plot[,which(colnames(data_plot)=="statistic")])-min(abs(data_plot[,which(colnames(data_plot)=="statistic")])))/(max(abs(data_plot[,which(colnames(data_plot)=="statistic")]))-min(abs(data_plot[,which(colnames(data_plot)=="statistic")])))*10
   
   edges <- data.frame(from = data_plot[,which(colnames(data_plot)=="name1")], to = data_plot[,which(colnames(data_plot)=="name2")], value = cor.scaled)
+  edges$from <- as.character(edges$from)
+  edges$to <- as.character(edges$to)
   edges$color <- "black"
   edges$color[edges$value<0] <- "red"
   
   ## plot
-  p <- visNetwork(nodes, edges)
+  e <- edges
+  n <- data.frame(id=nodes$label, label= nodes$label, color=nodes$node_color)
+  p_vis <- visNetwork(n,e)
   
+  # greate ggnetwork object
+  df <- list()
+  df$edges <- data.frame(from = data_plot[,which(colnames(data_plot)=="var1")], to = data_plot[,which(colnames(data_plot)=="var2")], weight = cor.scaled/10)
+  df$vertices <- nodes$label
+  
+  adj <- as.matrix(AdjacencyFromEdgelist(df$edges, check.full = TRUE))
+  colnames(adj[[1]])<- as.character(nodes$label[match(adj[[2]],nodes$ids)])
+  rownames(adj[[1]])<- as.character(nodes$label[match(adj[[2]],nodes$ids)])
+  mm.net <- network(adj[[1]], layout = "kamadakawai", directed = FALSE)
+  
+  test <- mti_get_stat_by_name(D, node_coloring);
+  test <- test[match(adj[[2]], test$var),];
+  map <- sign(test$statistic)*log10(test$p.value);
+  
+  mm.col <- c("positive" = "#000000", "negative" = "#0000FF")
+  x <- data_plot$statistic
+  x[x>=0] <- "positive"
+  x[x<0] <- "negative"
+  mm.net %e% "pcor" <- abs(data_plot[,which(colnames(data_plot)=="statistic")])
+  mm.net %e% "pos" <- x
+  mm.net %v% "strength" <- map
+  
+  # add edge color (positive/negative)
+  # add black circle around nodes
+  p <- ggplot(mm.net, aes(x, y, xend = xend, yend = yend)) +
+    geom_edges(color="black",aes(size=pcor)) +
+    geom_nodes(aes(color = strength), size = 7) +
+    scale_color_gradient2(low = "#0000FF", mid="white",high = "#FF0000") +
+    geom_nodetext(color="grey50",aes(label = vertex.names),
+                  size = 3, vjust = -0.6) +
+    theme_blank() +
+    theme(legend.position = "bottom")
+
+
   ## add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("Correlation Network, aes: %s", statname),
-      output = list(p)
+      output = list(p),
+      output2 = p_vis
     )
   ## return
   D

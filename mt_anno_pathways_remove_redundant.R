@@ -1,20 +1,28 @@
-# MetaboTools
-#
-# Remove redundant pathway annotations
-#
-# Remove identical pathways from an existing SummarizedExperiment
-# data structure that has a column of pathway annotations. 
-#
-# last update: 2019-01-17
-# author: Parviz Gomari
-#
-
-# todo: document output
-
-# dependencies
 library(tidyverse)
+source(codes.makepath("MT/mt_internal_helpers.R"))
 
-# main
+#' Remove redundant pathway annotations.
+#' 
+#' Remove identical pathways from an existing SummarizedExperiment
+#' data structure that has a column of pathway annotations. 
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param met_ID_col Column containing metabolite IDs
+#' @param pw_col Column containing pathways IDs
+#'
+#' @return redundant pathway annotation from SE pw_col column will be filtered.
+#'
+#' @examples
+#' # first annotate metabolites using smp_db and then remove redundant pathways
+#' ... %>%
+#'   mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db", 
+#'   pwdb_name = "SMP", db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) %>% 
+#'   mt_anno_pathways_remove_redundant(met_ID_col = "HMDb_ID", pw_col = "smp_db") %>%
+#' ...
+#' 
+#' @author Parviz Gomari
+#' 
+
 mt_anno_pathways_remove_redundant <- function(
   D,                  # SummarizedExperiment input
   met_ID_col,         # Column containing metabolite IDs
