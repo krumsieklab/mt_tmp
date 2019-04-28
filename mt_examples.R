@@ -65,6 +65,12 @@ D <-
                      annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
                      rows               = 2,
                      cols               = 2) %>%
+  
+  # 
+  mt_stats_multiv_net_GeneNet(name="GeneNetpcor") %>%
+    mt_post_multTest(statname = "GeneNetpcor", method = "BH") %>%
+    # mt_plots_net(statname = "GeneNetpcor", corr_filter = p.adj < 0.5, node_coloring="Li's") %>%
+  
 
   # final timing
   mt_logging_toc()
