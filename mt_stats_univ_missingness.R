@@ -11,7 +11,8 @@ library(gdata)
 mt_stats_univ_missingness <- function(
   D,      # SummarizedExperiment input
   comp,   # sample annotation (colData) column to compare against
-  name    # name of comparison
+  name,    # name of comparison
+  samplefilter
 ) {
   
   # validate arguments
@@ -22,6 +23,16 @@ mt_stats_univ_missingness <- function(
   if (!(comp %in% colnames(colData(D)))) stop(sprintf("'%s' not found in sample annotations.", comp))
   vc = mti_fixorder(as.factor(colData(D)[[comp]]))
   if (length(levels(vc))<2) stop(sprintf("'%s' has less than 2 factor levels",comp))
+  
+  # filter samples?
+  Ds <- D
+  if(!missing(samplefilter)) {
+    filter_q <- enquo(samplefilter)
+    cd <- colData(D) %>% as.data.frame() %>% filter(!!filter_q)
+    # keep <-
+  }
+  
+  
   
   # run models
   rawres <- sapply(1:nrow(D), function(i){

@@ -1,23 +1,43 @@
-# MetaboTools
-#
-# Read data matrix from Excel sheet.
-# That is, this will read the assay(), but not rowData(), or colData()
-#
-# last update: 2018-11-04
-# authors: JK
-
 require(readxl)
 require(glue)
 require(magrittr)
 require(SummarizedExperiment)
 
-mt_files_data_xls <- function(
-  file,             # Excel file
-  sheet,            # sheet name or number
-  samplesInRows=T,  # read samples as rows (T) or as columns (F)
-  ID                # if samplesInRows==T -> name of sample ID column... must be exactly one
-  # if samplesInRows==F -> name of metabolite name column... must be exactly one
-) {
+#' Load data matrix from Excel file.
+#' 
+#' Loads numerical data matrix from Excel sheet.
+#' Can handle files with samples in rows or columns.
+#' 
+#' Default name for entity in columns will be 'name".
+#'
+#' @param file input Excel file 
+#' @param sheet name or number of sheet
+#' @param samplesInRows  read samples as rows (T) or as columns (F). default: T (samples as rows)
+#' @param ID if samplesInRows==T -> name of sample ID column... must be exactly one
+#'           if samplesInRows==F -> name of metabolite name column... must be exactly one
+#'
+#' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry
+#'
+#' @examples
+#' # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
+#' D <- 
+#'   # load raw data
+#'   mt_files_data_xls(file=file, sheet="data", samplesInRows=T, ID="SAMPLE_NAME") %>% 
+#'   # sample annotations from metabolomics run
+#'   mt_files_anno_xls(file=file, sheet="sampleinfo", annosfor="samples", IDanno = "SAMPLE_NAME") %>% 
+#'   # sample annotations from clinical table
+#'   mt_files_anno_xls(file=file, sheet="clinicals", annosfor="samples", IDanno="SAMPLE_NAME") %>% 
+#'   # metabolite annotations`
+#'   mt_files_anno_xls(file=file, sheet="metinfo", annosfor="metabolites", IDanno="BIOCHEMICAL", IDdata = "name") %>% 
+#'   ...
+#' 
+#' @author JK
+#' 
+mt_files_data_xls <- function(file,
+                              sheet,
+                              samplesInRows = T,
+                              ID) {
+  
   
   # load excel sheet
   df <- as.data.frame(read_excel(path=file,sheet=sheet,col_names=T))

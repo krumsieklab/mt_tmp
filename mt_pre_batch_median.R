@@ -1,11 +1,17 @@
-# MetaboTools
-#
-# Median batch correction, as Metabolon does it for runday correction.
-#
-# last update: 2018-10-16
-# authors: JK
-#
-
+#' Median batch correction.
+#'  
+#' Same approach that Metabolon uses for runday correction. Divides metabolite values by the median value per batch.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param batches # sample annotation (colData) column name that contains batch assignment
+#'
+#' @return assay: batch-corrected version
+#' 
+#' @examples
+#' ... %>% mt_pre_batch_median(batches="BATCH") %>% ...
+#'
+#' @author JK
+#' 
 mt_pre_batch_median = function(
   D,       # SummarizedExperiment input
   batches  # sample annotation column that contains batch info

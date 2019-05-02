@@ -1,14 +1,18 @@
-# MetaboTools
-#
-# COMBAT batch correction.
-#
-# last update: 2018-10-29
-# authors: JK
-#
-
 require(sva)
-
-
+#' COMBAT batch correction.
+#' 
+#' Performs batch correction via COMBAT method from \code{sva} package
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param batches sample annotation (colData) column name that contains batch assignment
+#'
+#' @return assay: batch-corrected version
+#' 
+#' @examples
+#' ... %>% mt_pre_batch_COMBAT(batches="BATCH") %>% ...
+#'
+#' @author JK
+#' 
 mt_pre_batch_COMBAT = function(
   D,       # SummarizedExperiment input
   batches  # sample annotation column that contains batch info

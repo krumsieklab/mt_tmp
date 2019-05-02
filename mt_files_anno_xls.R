@@ -1,27 +1,48 @@
-# MetaboTools
-#
-# Add annotations (either sample or metabolite) from Excel file.
-# Will add to colData(), or rowData()s
-#
-# last update: 2018-11-05
-# authors: JK
-
 require(readxl)
 require(glue)
 require(magrittr)
 require(SummarizedExperiment)
 
-mt_files_anno_xls <- function(
-  D,         # SummarizedExperiment input
-  file,      # Excel file
-  sheet,     # sheet name or number
-  annosfor,  # "samples" or "metabolites"
-  IDanno,    # column that contains ID information for mapping
-  IDdata=IDanno, # column in data to map by
-  nomaperr=F # throw error (T) or warning (F) if something does not map
-) {
-  
-  
+#' Load annotations from Excel file.
+#' 
+#' Loads annotations and merges them into current SummarizedExperiment. 
+#' Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
+#' Can load annotations for both metabolites (rowData) and samples (colData)
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param file input Excel file
+#' @param sheet name or number of sheet
+#' @param annosfor "samples" or "metabolites"
+#' @param IDanno column in annotation file that contains ID information for mapping
+#' @param IDdata column in existing data for mapping
+#' @param nomaperr # throw error (T) or warning (F) if something does not map. default: F
+#'
+#' @return rowData or colData: new annotations added
+#'
+#' @examples
+#' # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
+#' D <- 
+#'   # load raw data
+#'   mt_files_data_xls(file=file, sheet="data", samplesInRows=T, ID="SAMPLE_NAME") %>% 
+#'   # sample annotations from metabolomics run
+#'   mt_files_anno_xls(file=file, sheet="sampleinfo", annosfor="samples", IDanno = "SAMPLE_NAME") %>% 
+#'   # sample annotations from clinical table
+#'   mt_files_anno_xls(file=file, sheet="clinicals", annosfor="samples", IDanno="SAMPLE_NAME") %>% 
+#'   # metabolite annotations`
+#'   mt_files_anno_xls(file=file, sheet="metinfo", annosfor="metabolites", IDanno="BIOCHEMICAL", IDdata = "name") %>% 
+#'   ...
+#' 
+#' @author JK
+#' 
+mt_files_anno_xls <-
+  function(D,
+           file,
+           sheet,
+           annosfor,
+           IDanno,
+           IDdata = IDanno,
+           nomaperr = F) {
+    
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
   if (!(annosfor %in% c("samples","metabolites"))) stop("annosfor must be either 'samples' or 'metabolites'")
