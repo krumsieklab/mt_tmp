@@ -94,14 +94,12 @@ mt_post_addFC <- function(D,
     metadata(D)$results[[stat_id]]$output$table %<>%
                   left_join(d_fc, by = "var")
     
-    ## CHECK IF WE NEED TO FLIP THE FC DUE TO FACTOR REORDERING. HACKYHACK
-    if (is.factor(colData(D)[[outcome]])) {
-      ind=match(gsub("`","",c(levels_1,levels_2)), levels(colData(D)[[outcome]]))
-      if(ind[2]>ind[1]) {
-        metadata(D)$results[[stat_id]]$output$table$fc = -metadata(D)$results[[stat_id]]$output$table$fc
-      }
-    }
-
+    ## make sure fold change has the same sign as statistic
+    ## this is a debug solution, it should come out properly from the code above... but this fixes the bug for now
+    metadata(D)$results[[stat_id]]$output$table$fc <-
+      metadata(D)$results[[stat_id]]$output$table$fc %>% abs() * sign(metadata(D)$results[[stat_id]]$output$table$statistic)
+    
+    
     ## add status information & plot
     funargs <- mti_funargs()
     metadata(D)$results %<>% 
