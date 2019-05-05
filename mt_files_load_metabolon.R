@@ -1,16 +1,26 @@
-# MetaboTools
-#
-# Read Metabolon-format files.
-#
-# last update: 2018-10-18
-# authors: JK, JZ
+require(readxl)
+require(stringr)
+require(SummarizedExperiment)
+require(tidyverse)
 
-
-library(readxl)
-library(stringr)
-library(SummarizedExperiment)
-library(tidyverse)
-
+#' Load Metabolon-format data.
+#' 
+#' Loads data from a Metabolon-format Excel file. Needs to be in the original "Client Data Table" format that they deliver.
+#'
+#' @param file input Excel file
+#' @param sheet name of sheet
+#' @param copynansheet if given, which sheet to copy the NA pattern from
+#'
+#' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry
+#'
+#' @examples
+#' D <- 
+#'   # load data
+#'   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+#'   ...
+#' 
+#' @author JK
+#' 
 mt_files_load_metabolon <- function(
   file,           # Metabolon xls file
   sheet,          # sheet name or number to read

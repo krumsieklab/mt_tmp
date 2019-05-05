@@ -1,13 +1,23 @@
-# MetaboTools
-#
-# tic/toc functionality to time certain branches of the pipeline.
-#
-# last update: 2019-01-06
-# authors: JK
-#
+require(tictoc)
 
-library(tictoc)
-
+#' Timing functionality.
+#' 
+#' Call mt_logging_tic to start timing anywhere in pipeline, then mt_logging_toc to show the time elapsed in the status log.
+#'
+#' @param D \code{SummarizedExperiment} input
+#'
+#' @return Nothing - leaves \code{D} unchanged
+#' 
+#' @examples
+#' %>% 
+#'   mt_logging_tic() %>% 
+#'   ... %>% ... # pipeline steps
+#'   ... %>% ... # pipeline steps
+#'   ... %>% ... # pipeline steps
+#'   mt_logging_toc()
+#'
+#' @author JK
+#' 
 mt_logging_tic <- function(D) {
   
   # validate argument
@@ -28,6 +38,24 @@ mt_logging_tic <- function(D) {
   
 }
 
+#' Timing functionality.
+#' 
+#' Call mt_logging_tic to start timing anywhere in pipeline, then mt_logging_toc to show the time elapsed in the status log.
+#'
+#' @param D \code{SummarizedExperiment} input
+#'
+#' @return Nothing - leaves \code{D} unchanged
+#' 
+#' @examples
+#' %>% 
+#'   mt_logging_tic() %>% 
+#'   ... %>% ... # pipeline steps
+#'   ... %>% ... # pipeline steps
+#'   ... %>% ... # pipeline steps
+#'   mt_logging_toc()
+#'
+#' @author JK
+#' 
 mt_logging_toc <- function(D) {
   
   # validate argument

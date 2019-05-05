@@ -1,3 +1,16 @@
+#' Filter metabolites.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param metab_filter Logical expression. Can use fields from \code{rowData()}.
+#'
+#' @return assay: filtered data matrix with removed metabolites
+#' @return rowData: filtered down
+#' 
+#' @examples
+#' ... %>% mt_modify_filter_metabolites(SUPER_PATHWAY=="Nucleotide") %>% ...
+#' 
+#' @author JK
+#' 
 mt_modify_filter_metabolites <- function(D, metab_filter){
 
     stopifnot("SummarizedExperiment" %in% class(D))
@@ -27,6 +40,20 @@ mt_modify_filter_metabolites <- function(D, metab_filter){
     D
 }
 
+#' Filter samples.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param sample_filter Logical expression. Can use fields from \code{colData()}.
+#'
+#' @return assay: filtered data matrix with removed samples
+#' @return rowData: filtered down
+#' 
+#' @examples
+#' # filter to two specific groups of samples
+#' ... %>% mt_modify_filter_samples(sample_filter = GROUP %in% c("FL","ctrl")) %>% ...
+#' 
+#' @author JK
+#' 
 mt_modify_filter_samples <- function(D, sample_filter){
 
     stopifnot("SummarizedExperiment" %in% class(D))

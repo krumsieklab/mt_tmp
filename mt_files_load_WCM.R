@@ -1,17 +1,28 @@
-# MetaboTools
-#
-# Read WCM-format files.
-# -> Expects metabolites as rows and an HMDB column.
-#
-# last update: 2018-12-10
-# authors: JK
+require(readxl)
+require(stringr)
+require(SummarizedExperiment)
+require(tidyverse)
 
-
-library(readxl)
-library(stringr)
-library(SummarizedExperiment)
-library(tidyverse)
-
+#' Load WCM core-format data.
+#' 
+#' Loads data from a WCM core format file (as they send it).
+#'
+#' @param file input Excel file
+#' @param sheet name or number of sheet
+#' @param zeroToNA replace zeros by NAs? (default: T)
+#'
+#' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry
+#'
+#' @examples
+#' D <-
+#'   # load data in WCM format
+#'   mt_files_load_WCM(
+#'     file='DM369_Metabolites separated by nucleotides 12_6_18_altered.xlsx',
+#'     sheet='peakHeight_metabolite_intensiti') %>%
+#'   ...
+#' 
+#' @author JK
+#' 
 mt_files_load_WCM <- function(
   file,          # Metabolon xls file
   sheet,         # sheet name or number to read

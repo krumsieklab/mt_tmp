@@ -1,14 +1,18 @@
-# MetaboTools
-#
-# P-value histogram(s)
-# either for a given list of comparisons, or all
-#
-# last update: 2018-10-13
-# authors: JK
-#
-
 require(glue)
-
+#' Generate p-value histogram.
+#' 
+#' Either for a given list of statistical results, or all.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param statnames Name of the statistical results. If not given, will generate histogram for all.
+#'
+#' @return $result: plot, p-value histogram
+#'
+#' @examples
+#' ... %>% mt_plots_pvalhist() %>% ...                  # for all
+#' ... %>% mt_plots_pvalhist(statnames='comp') %>% ...  # for one
+#' 
+#' @author JK
 mt_plots_pvalhist <- function(
   D,
   statnames=NULL
