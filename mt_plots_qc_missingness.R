@@ -1,19 +1,20 @@
-# MetaboTools
-#
-# Visualize missing value structure of dataset.
-#
-# Creates two plots:
-# 1. missing value matrix view
-# 2. sorted missing value % plot
-#
-# last update: 2018-10-24
-# authors: JK
-#
-
-# helper function
-missingness <- function(X)apply(is.na(X),2,sum)/dim(X)[1]
-
-# main function
+#' Visualize missing value structure of dataset.
+#' 
+#' Creates two plots:
+#' 1. missing value matrix view
+#' 2. sorted missing value % plot
+#'
+#' @param D \code{SummarizedExperiment} input 
+#' @param metMax Which missingness to mark on the y axis (default: NA = no line)
+#'
+#' @return $result: plot, two plots
+#'
+#' @examples
+#' %>%  mt_plots_qc_missingness() %>% # without horizontal line
+#' %>%  mt_plots_qc_missingness(metMax=0.5) %>% # with horizontal line at 50%
+#' 
+#' @author JK
+#' 
 mt_plots_qc_missingness <- function(
   D,        # SummarizedExperiment input
   metMax=NA # which % to mark on the y axis
@@ -68,3 +69,6 @@ mt_plots_qc_missingness <- function(
   
   
 }
+
+# helper function
+missingness <- function(X)apply(is.na(X),2,sum)/dim(X)[1]

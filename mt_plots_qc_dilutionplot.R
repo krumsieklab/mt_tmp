@@ -1,19 +1,28 @@
-# MetaboTools
-#
-# Correlate variable with dilution factors from quotient normalization.
-# - for factors: will produce boxplot
-# - for quantitative variable: will produce scatter plot
-#
-# last update: 2018-10-24
-# authors: JK
-#
+require(ggbeeswarm)
 
-library(ggbeeswarm)
-
+#' Correlate variable with dilution factors from quotient normalization.
+#' 
+#' \itemize{
+#' \item for factors: will produce boxplot
+#' \item for quantitative variable: will produce scatter plot
+#' \item requires exactly one previous quotient normalization call in the pipeline
+#' }
+#'
+#' @param D \code{SummarizedExperiment} input 
+#' @param comp name of colData colum  (sample annotation) to correlation dilution factors with
+#' @param boxpl  produce boxplot (TRUE, default), or beeswarm plot (FALSE) .... only relevant for factor comparison
+#'
+#' @return $result: plot, comparison with dilution factors
+#'
+#' @examples
+#' %>% mt_plots_qc_dilutionplot(comp="group") %>% # compare with 'group' sample annotation
+#' 
+#' @author JK
+#' 
 mt_plots_qc_dilutionplot <- function(
   D,       # SummarizedExperiment input
   comp,    # sample annotation column to compare with
-  boxpl=T  # produce boxplot (TRUE, default), or beeswarm plot (FALSE) .... only relevant for factor comparison
+  boxpl=T  #
 ) {
   
   # validate arguments

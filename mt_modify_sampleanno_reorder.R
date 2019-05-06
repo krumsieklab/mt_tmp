@@ -1,8 +1,20 @@
-#### Reorder a sample annotation
-# will convert it to a factor first
+require(gdata) 
 
-library(gdata) 
-
+#' Reorder a sample annotation.
+#' 
+#' Does not change anything in the actual dataset, but just the factor order of a column in colData. Can be used to change the plotting order in boxplots, volcano plots, etc.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param field name of the column in colData to access
+#' @param new.order list of strings containing the new order
+#'
+#' @returns colData: changes the factor order of one column
+#'
+#' @examples
+#' %>% mt_modify_sampleanno_reorder("Group", c('WT_Norm_F','WT_Hyp_F','KO_Norm_F','KO_Hyp_F','WT:KO2_F','WT:WT2_F')) %>%
+#' 
+#' @author JK
+#' 
 mt_modify_sampleanno_reorder <- function(
   D,          # SummarizedExperiment input
   field,      # field to access
