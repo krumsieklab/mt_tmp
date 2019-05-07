@@ -1,12 +1,31 @@
 #### Markdown-based report generator
 
-cats <- function(...)cat(paste0(sprintf(...),"\n"))
 
-mt_reporting_generateMD <- function(D, firstheading='Output') {
+
+mt_reporting_generateMD <- function(D, firstheading='Output', directknit=T) {
   
+  #### define inside functions
+  
+  # write sprintf style to the console
+  writecons <- function(txt)cat(paste0(txt,"\n"))
+  # write sprintf style to the currently open file
+  writefile <- function(txt)writeLines(txt, stdout())
+  # write either to console or file, depending on directknit 
+  writeswitch <- function(txt)if(directknit){writecons(txt)}else{writefile(txt)}
+  # generate an R chunk
+  writechunk <- function(code) {
+    writefile("```{r}")
+    writefile(code)
+    writefile("```")
+  }
+  # either execute command or write it out as chunk
+  execswitch <- function(cmd)if(directknit){eval(parse(text=cmd))}else{writechunk(cmd)}
+
+  
+  #### start actual output
   
   # first heading
-  cats("# %s", firstheading)
+  writeswitch(glue('# {firstheading}'))
   lvl=2 # current level of results = 2
   
   # loop over results
@@ -16,31 +35,32 @@ mt_reporting_generateMD <- function(D, firstheading='Output') {
     # reporting step?
     if (r[[i]]$fun[1]!="reporting") {
       # not reporting, actual pipeline step
-      # header
-      cats("%s %s", strrep("#",lvl), r[[i]]$fun %>% paste(collapse="_"))
-      # log text
-      cats("%s\n", r[[i]]$logtxt)
-      # plot?
+      
+      ## header
+      writeswitch(glue('{strrep("#",lvl)} {r[[i]]$fun %>% paste(collapse="_")}'))
+      
+      ## log text
+      writeswitch(glue('{r[[i]]$logtxt}\n'))
+      
+      ## plot?
       if (r[[i]]$fun[1]=="plots") {
-        r[[i]]$output %>% lapply(plot)
+        execswitch( glue("r[[{i}]]$output %>% lapply(plot)"))
       }
-      # statistical result table?
+      
+      ## statistical result table?
       if (r[[i]]$fun[1]=="stats") {
-        cats(
-          r[[i]]$output %>% 
-            .$table %>% 
-            knitr::kable()
-        ) 
+        execswitch(glue(' r[[{i}]]$output %>% .$table %>% knitr::kable(format="html") %>% cat()'))
       }
       
       # footer
-      cats("\n")
+      writeswitch("\n")
       
     } else {
+      
       # special reporting step
       if (r[[i]]$fun[2]=="heading") {
         # add extra heading
-        cats("%s %s", strrep("#",r[[i]]$output$lvl), r[[i]]$output$title)
+        writeswitch(glue('{strrep("#",r[[i]]$output$lvl)} {r[[i]]$output$title}'))
         # result level is this heading +1
         lvl = r[[i]]$output$lvl + 1
       }
@@ -49,6 +69,7 @@ mt_reporting_generateMD <- function(D, firstheading='Output') {
   
 }
 
+# D %>% mt_reporting_generateMD(directknit = F)
 
 # knitr::kable(output, "html", booktabs = TRUE, longtable = TRUE, caption = "Test") %>%
 # kableExtra::kable_styling(latex_options = c("hold_position", "repeat_header"))
