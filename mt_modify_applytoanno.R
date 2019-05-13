@@ -1,7 +1,25 @@
-#### Apply function to metabolite or sample annotation column
+require(gdata) 
 
-library(gdata) 
-
+#' Apply function to metabolite or sample annotation column
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param annotype "samples" or "metabolites"
+#' @param field field to access
+#' @param fun function to be applied
+#'
+#' @return changes the contents of a column either in colData or rowData
+#'
+#' @examples
+#'  ... %>%
+#'  # ensure factor for casecontrol variable
+#'  mt_modify_applytoanno(
+#'    annotype='samples',
+#'    field='casecontrol',
+#'    fun=as.factor) %>% 
+#'  ...
+#' 
+#' @author JK
+#' 
 mt_modify_applytoanno <- function(
   D,          # SummarizedExperiment input
   annotype,   # "samples" or "metabolites"
