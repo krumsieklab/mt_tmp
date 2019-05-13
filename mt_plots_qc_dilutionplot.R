@@ -11,6 +11,7 @@ require(ggbeeswarm)
 #' @param D \code{SummarizedExperiment} input 
 #' @param comp name of colData colum  (sample annotation) to correlation dilution factors with
 #' @param boxpl  produce boxplot (TRUE, default), or beeswarm plot (FALSE) .... only relevant for factor comparison
+#' @param ggadd further elements/functions to add (+) to the ggplot object
 #'
 #' @return $result: plot, comparison with dilution factors
 #'
@@ -22,7 +23,8 @@ require(ggbeeswarm)
 mt_plots_qc_dilutionplot <- function(
   D,       # SummarizedExperiment input
   comp,    # sample annotation column to compare with
-  boxpl=T  #
+  boxpl=T,  #
+  ggadd=NULL
 ) {
   
   # validate arguments
@@ -68,6 +70,7 @@ mt_plots_qc_dilutionplot <- function(
       ggtitle("quotient normalization dilution factors")
   }
   
+  if (!is.null(ggadd)) p <- p+ggadd
   
   # add status information & plot
   funargs <- mti_funargs()
