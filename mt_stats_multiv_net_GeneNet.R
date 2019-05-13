@@ -1,12 +1,21 @@
-# MetaboTools
-#
-# GeneNet partial correlation calculation 
-# Default settings use the GeneNet estimator.
-# https://www.ncbi.nlm.nih.gov/pubmed/16646851
-#
-# last update: 2018-11-08
-# authors: EB
-#
+#' Computes partial correlation matrix using the GeneNet estimator.
+#' 
+#' Implementation according to Schäfer and Strimmer, 2006\cr
+#' https://www.ncbi.nlm.nih.gov/pubmed/16646851
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param name name of the correlation matrix
+#' 
+#' @return original SummarizedExperiment as in input
+#' @return $output: list of pairwise partial correlation coefficients and pvalues, as well as the corresponding variable names
+#' 
+#' @examples
+#' ... %>%
+#'   mt_stats_multiv_net_GeneNet(name ="pcor") %>%
+#' ...
+#' 
+#' @author EB
+#' 
 
 mt_stats_multiv_net_GeneNet = function(
   D,                       # SummarizedExperiment input
