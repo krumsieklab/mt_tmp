@@ -1,16 +1,3 @@
-# MetaboTools
-#
-# Boxplot, one box per sample.
-# Can be colored by factor.
-#
-# last update: 2018-10-13
-# authors: JK, JZ
-#
-
-# todo
-# - ensure that colorby is a factor or vector of strings
-
-### dependencies
 require(reshape2)
 require(ggplot2)
 
@@ -18,11 +5,29 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 
 fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)} # fix order of a factor
 
-
-### function definition
+#' Boxplot of samples.
+#' 
+#' Can be colored by factor.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param plottitle title of boxplot, default "Sample boxplot"
+#' @param legend show legend? default: T
+#' @param ylabel y axis label, default: "Metabolite concentrations"
+#' @param logged show plot logged? default: F. note: plot will still be logged if data have been logged before in pipeline.
+#' @param ggadd further elements/functions to add (+) to the ggplot object
+#' @param ...  additional arguments directly passed to aes() of ggplot
+#'
+#' @return $result: plot, sample boxplot
+#'
+#' @examples 
+#' ## sample boxplot, color by colData 'group' variable, with specific title, on log scale, 
+#' ... %>% mt_plots_sampleboxplot(color=group, plottitle='after quotient normalization', logged=T) %>% ...
+#' 
+#' @author JK
+#' 
 mt_plots_sampleboxplot <- function(
   D,         # SummarizedExperiment input
-  plottitle="Sample boxplot",  # title of boxplot
+  plottitle="Sample boxplot",  
   legend=T,  # keep legend?  [could be removed]
   ylabel = "Metabolite concentrations",  # y axis label
   logged=F,  # plot logged

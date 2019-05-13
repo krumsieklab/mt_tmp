@@ -1,5 +1,41 @@
-library(ggrepel)
+require(ggrepel)
 
+#' Comparative plot between two comparisons.
+#' 
+#' Produces a plot that compares the directed -log10 p-values between two previously executed stats.
+#'
+#' @param D1 first SE dataset to compare; the one in the pipeline
+#' @param stat1 name of statistical comparison in first dataset
+#' @param filter1 filter term, defining which metabolites to label from first comparison (can use elements of stats table)
+#' @param D2 second SE dataset, if not given, will be the same as the first
+#' @param stat2 name of statistical comparison in second dataset
+#' @param filter2 filter term, defining which metabolites to label from first comparison (can use elements of stats table)
+#' @param filterop  if AND -> two colors, one for those where both stats match the criterion, and one where they don't
+#'                  if OR -> three colors, a third one where only one stat matches the criterion
+#' @param return.plot.only return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.
+#'
+#' @return $result: plot, p-value histogram
+#'
+#' @examples
+#' ## compare two stats from inside the same pipeline
+#' ... %>%
+#' mt_plots_compare2stats(stat1='WT', 
+#'   filter1= p.adj<0.1, 
+#'   stat2='KO', 
+#'   filter2= p.adj<0.1,
+#'   filterop = 'OR'
+#' ) %>% ...
+#'   
+#' ## compare two stats from different pipelines
+#' ... $>$
+#' mt_plots_compare2stats(
+#'   D1 = D1, stat1 = comp, filter1 = p.adj<0.1, 
+#'   D2 = D2, stat2 = comp, filter2 = p.adj<0.1,
+#'   filterop = "OR", return.plot.only=T
+#' ) %>%
+#' 
+#' @author JK
+#' 
 mt_plots_compare2stats <- function(
   D1,       # first SE dataset to compare; the one in the %>% pipeline
   stat1,    # name of statistical comparison in first dataset

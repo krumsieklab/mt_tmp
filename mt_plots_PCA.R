@@ -1,22 +1,29 @@
-# MetaboTools
-#
-# PCA plot, show first two PCs plotted against each other.
-# - Coloring by factor or numerical.
-# - Symbols by factor.
-#
-# last update: 2018-10-13
-# authors: JK
-#
-
-
 require(ggplot2)
 
+#' 2D PCA of samples.
+#' 
+#' Can be colored by any variable in colData.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param title Title of the plot, default: "PCA"
+#' @param scaledata  scale data before plotting? (mean 0, std 1), default: FALSE
+#' @param ggadd further elements/functions to add (+) to the ggplot object
+#' @param ... # additional expression directly passed to aes() of ggplot, can refer to colData
+#'
+#' @return $result: plot, PCA
+#
+#' @examples
+#' ## PCA on scaledata, color and shape by "Group" variable in colData
+#' ... $>$ mt_plots_PCA(scaledata=T, color=Group, shape=Group, title="PCA - scaled data") %>% ...
+#' 
+#' @author JK
+#' 
 mt_plots_PCA <- function(
-  D,            # SummarizedExperiment input
-  title="PCA",     # title of plot
-  scaledata=F,  # scale data before plotting (mean 0, std 1)
-  ggadd=NULL,   # further elements/functions to add (+) to the ggplot object
-  ...           # additional arguments directly passed to aes() of ggplot
+  D,           
+  title="PCA",    
+  scaledata=F,
+  ggadd=NULL, 
+  ...           
 ) {
   
   # validate arguments
