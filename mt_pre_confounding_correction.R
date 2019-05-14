@@ -1,16 +1,28 @@
-# MetaboTools
-#
-# covariate adjustment of metabolites
-#
-# last update: 2019-03-29
-# authors: MB
-#
-#! returns corrected data scaled
-#
-# consider missing values 
-# has to be colnames
-
-mt_pre_confounding_correction = function(
+#' Confounding correction 
+#' 
+#' \code{mt_pre_confounding_correction} returns the corrected data 
+#' 
+#' each metabolits is corrected by lm with the confounding variables and residuals are returned 
+#' in lieu of uncorrected metabolites expressions.  
+#'  
+#' @param D SummarizedExperiment object 
+#' @param formulae formula uncluding column names from sample annotation, i.e, ~batch+age 
+#' @param strata strata classes for stratified confounding correction, should be a column from colData(D)
+#' @param scalea should data be scaled after correaction
+#'
+#' @return corrected data together bit lm.fit pvalue per metabolites to show confounding affect on them
+#' @export
+#'
+#' @examples
+#' 
+#'  # not run
+#'  #... %>% mt_pre_confounding_correction( formulae = ~batch + age, strata = "RUN_DAY" )
+#' 
+#' @keywords confounding, lm
+#' 
+#' @author mubu
+#' 
+mt_pre_confounding_correction <- function(
   D,         # SummarizedExperiment input
   formulae,  # sample annotation column that contains batch info
   strata = NULL, # strata for stratified correction 
@@ -96,3 +108,16 @@ mt_pre_confounding_correction = function(
   D
   
 }
+
+# MetaboTools
+#
+# covariate adjustment of metabolites
+#
+# last update: 2019-03-29
+# authors: MB
+#
+#! returns corrected data scaled
+#
+# consider missing values 
+# has to be colnames
+
