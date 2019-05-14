@@ -53,8 +53,8 @@ mt_pre_outlier <- function(
     # compute percentage of univariate outliers per sample
     score <- rowSums(H)/dim(H)[2]
     # define outliers
-    out <- rep(0,length(score))
-    out[score > args$perc] <- 1
+    out <- rep(FALSE,length(score))
+    out[score > args$perc] <- TRUE
   } else {
     if(is.null(args$thr)) args$thr <- 4
     # # compute hat matrix through Singular Value Decomposition
@@ -71,8 +71,8 @@ mt_pre_outlier <- function(
     # extract leverage values
     score <- diag(H)
     # define outliers
-    out <- rep(0,length(score))
-    out[score > args$thr*sum(score)/dim(X)[1]] <- 1 
+    out <- rep(FALSE,length(score))
+    out[score > args$thr*sum(score)/dim(X)[1]] <- TRUE
   }
   
   # adding to colData
@@ -90,7 +90,7 @@ mt_pre_outlier <- function(
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("flagged %d %s outliers", sum(out), method),
+      logtxt = sprintf("flagged %d %s outliers", sum(out, na.rm = TRUE), method),
       output = l
     )
   
