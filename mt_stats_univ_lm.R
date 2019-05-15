@@ -1,21 +1,36 @@
-# MetaboTools
-#
-# Univariate GLMs, one per metabolite.
-#
-# model: met ~ outcome + conf1 + conf2
-# input formula as this: ~ outcome + conf1 + conf2
-# first variable on right-hand side of formula is always considered as the outcome.
-#
-# Note on outcome variable:
-# - cannot handle interaction term outcomes right now
-# - factor outcomes can only have exactly 2 levels
-#
-# last update: 2018-10-23
-# authors: JK
-#
-
 require(formula.tools)
 
+#' Univariate GLMs.
+#' 
+#' Computes univariate GLM for each metabolite.
+#' 
+#' \enumerate{
+#'   \item Will treat the first term of the formula as outcome.
+#'   \item If outcome has >2 factors, will perform ANOVA.
+#'   \item If random effect term is contained, will used lmer function. (can also be used for paired analysis, e.g. before/after)
+#' }
+#' 
+#' @param D \code{SummarizedExperiment} input
+#' @param formula left-hand side of formula to be put into glm function.
+#' @param name name under which this comparison will be stored, must be unique to all other statistical results
+#' @param samplefilter term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison
+#' @param mc.cores number of cores to use for mclapply... default: 1. More than one core will not work on Windows platforms.
+#'
+#' @return $result: statistics object
+#'
+#' @examples
+#' # run lm with no confounders, "Group" as outcome
+#' # filter to groups "Li_2" and "Li_5"
+#' # name the comparison "Li's"
+#' ... %>%
+#'  mt_stats_univ_lm(
+#'    formula      = ~ Group, 
+#'    samplefilter = (Group %in% c("Li_2","Li_5")),
+#'    name         = "Li's"
+#'  ) %>% ...
+#' 
+#' @author JK, JZ
+#' 
 mt_stats_univ_lm <- function(
   D,              # SummarizedExperiment input
   formula,        # formula defining statistical model, see above.

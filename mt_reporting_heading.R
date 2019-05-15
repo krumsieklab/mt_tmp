@@ -1,5 +1,22 @@
-#### store info to add heading during report generation
-
+#' Store heading that will be added to report later.
+#' 
+#' Will be used when calling \code{mt_reporting_generateMD}.
+#'
+#' @param D  \code{SummarizedExperiment} input
+#' @param strtitle Heading text
+#' @param lvl Heading level, default: 1 (can be used for nested outline structures)
+#'
+#' @return $result: stores info about heading
+#'
+#' @examples
+#' ... %>% 
+#' # add first and second level of heading
+#' mt_reporting_heading("Preprocessing") %>%
+#' mt_reporting_heading("Part 1", lvl=2) %>%
+#' ...
+#' 
+#' @author JK
+#' 
 mt_reporting_heading <- function(
   D,
   strtitle,

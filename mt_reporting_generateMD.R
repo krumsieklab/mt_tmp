@@ -1,7 +1,29 @@
-#### Markdown-based report generator
 
-
-
+#' Markdown-based report generator
+#' 
+#' Generates a fully automated report version of an entire (linear) pipeline.  
+#' 
+#' Has two modes: 
+#' \enumerate{
+#'   \item Direct knitting. Call from within an R markdown chunk. Will automatically populate the results into the knitted HTML.
+#'   \item Markdown generation. Will output an RMD file then can be adapted and then knitted to HTML. [NOT FUNCTIONAL YET]
+#' }
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param firstheading text of first heading, default: "Output"
+#' @param directknit direct knitting mode? default: T. (see Details)
+#'
+#' @examples
+#' ### direct knitting, inside an RMD, after a pipeline has been executed
+#' ```{r, results='asis', warning=FALSE}
+#' D %>% mt_reporting_generateMD()
+#' ```
+#' 
+#' ### Markdown generation
+#' EXAMPLE COMING SOON
+#' 
+#' 
+#' @author JK
 mt_reporting_generateMD <- function(D, firstheading='Output', directknit=T) {
   
   #### define inside functions
