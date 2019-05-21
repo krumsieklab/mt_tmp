@@ -4,3 +4,9 @@
 \.Rhistory
 
 examples/RMD_example1\.html
+
+examples/output\.pdf
+
+examples/RMD_knitpipeline\.html
+
+examples/temp\.rds
