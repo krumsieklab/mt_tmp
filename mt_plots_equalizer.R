@@ -1,18 +1,37 @@
-# MetaboTools
-#
-# Produce equalizer plot.
-# Requires two nested annotations, e.g. SuperPathway and SubPathway, or SubPathway and Metabolites
-#
-# last update: 2019-01-13
-# authors: JK, MB
-#
+require(purrr)
+require(glue)
 
-# TODO: legend labels -> DONE(MB)
-# JAN TODO NEXT: MAKE WORK WITH SUB AND METABOLITES, WORKSPACE SAVED -> DONE(MB)
-
-library(purrr)
-library(glue)
-
+#' 'Equalizer' plots.
+#' 
+#' Creates a nested plot based on metabolite annotations, e.g. of super-/ and sub-pathways, or of sub-pathways and metabolites.
+#'
+#' @param D1 \code{SummarizedExperiment} input 1, the coarse one
+#' @param comp1  name of first comparison output to take arguments from, the coarse one [first one has to be the less granular one (e.g. D1 super, D2 sub)]
+#' @param D2 \code{SummarizedExperiment} input 2, the fine one
+#' @param comp2 name of second comparison output to take arguments from, the fine one
+#' @param legend.fine fine label to be plotted
+#' @param legend.coarse coarse legend to be plotted
+#' @param vertline.fine filter expression where to draw the red, dashed line, for fine. default: 0.05
+#' @param vertline.coarse filter expression where to draw the red, dashed line, for coarse. default: 0.05
+#' @param clrs colors for fine and coarse, default: c("#9494FF","red") (light blue and red)
+#'
+#' @return $result: plot, equalizer
+#' 
+#' @examples
+#' # super-pathway / sub-pathway equalizer
+#' # sub-pathway analysis must already be stored in D_sub, and this is part of the super-pathway pipeline, with a result already in 'comp'
+#'  ... %>%
+#'  mt_plots_equalizer(
+#'   comp1='comp', 
+#'   D2=D_sub, 
+#'   comp2=='comp',
+#'   legend.fine="sub pathway", 
+#'   legend.coarse='super pathway',
+#'   vertline.fine = p.adj < 0.1,
+#'   vertline.coarse = p.adj < 0.1) %>% 
+#' ...
+#' 
+#' @author JK, MB
 mt_plots_equalizer <- function(
   D1,       # SummarizedExperiment input 1, the coarse one
   comp1,    # name of first comparison output to take arguments from, the coarse one [first one has to be the less granular one (e.g. D1 super, D2 sub)]

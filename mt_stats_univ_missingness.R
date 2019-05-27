@@ -1,13 +1,22 @@
-# MetaboTools
-#
-# Univariate missingness analysis with a factor outcome.
-#
-# last update: 2019-01-06
-# authors: JK
-#
+require(gdata)
 
-library(gdata)
-
+#' Perform missingness significance analysis.
+#' 
+#' This function will determine if NAs significantly accumulate in one of the sample groups. It is recommended that this function is run without prior missing value filtering.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param comp sample annotation (colData) column to compare against
+#' @param name name of comparison for later reference
+#' @param samplefilter sample filter term to restrict to. WARNING: CURRENTLY NON-FUNCTIONAL
+#'
+#' @return $result: statistics object
+#' 
+#' @examples
+#' # run on sample field 'Group', name output stats object 'miss'
+#' ... %>% mt_stats_univ_missingness(comp = 'Group', name='miss') %>% ...
+#' 
+#' @author JK
+#' 
 mt_stats_univ_missingness <- function(
   D,      # SummarizedExperiment input
   comp,   # sample annotation (colData) column to compare against
@@ -24,13 +33,13 @@ mt_stats_univ_missingness <- function(
   vc = mti_fixorder(as.factor(colData(D)[[comp]]))
   if (length(levels(vc))<2) stop(sprintf("'%s' has less than 2 factor levels",comp))
   
-  # filter samples?
-  Ds <- D
-  if(!missing(samplefilter)) {
-    filter_q <- enquo(samplefilter)
-    cd <- colData(D) %>% as.data.frame() %>% filter(!!filter_q)
-    # keep <-
-  }
+  # # filter samples?
+  # Ds <- D
+  # if(!missing(samplefilter)) {
+  #   filter_q <- enquo(samplefilter)
+  #   cd <- colData(D) %>% as.data.frame() %>% filter(!!filter_q)
+  #   # keep <-
+  # }
   
   
   
