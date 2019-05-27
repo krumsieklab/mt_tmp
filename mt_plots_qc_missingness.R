@@ -60,7 +60,7 @@ mt_plots_qc_missingness <- function(
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = "missingness plots",
+      logtxt = sprintf("missingness plots, missing values: %d out of %d (%.2f%%)", sum(is.na(X)), nrow(X)*ncol(X), sum(is.na(X))/(nrow(X)*ncol(X))*100),
       output = list(p1,p2)
     )
   
