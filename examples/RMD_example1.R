@@ -1,30 +1,12 @@
----
-title: "rmd example 1"
-output: 
-  knitrBootstrap::bootstrap_document:
-    highlight: xcode
-    highlight.chooser: yes
-    theme: default
-    theme.chooser: yes
-  toc: yes
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-
-```{r MT, include=FALSE, echo=FALSE}
 #####
 ##### MetaboTools pipeline
 #####
 
-knitr::opts_chunk$set(echo = TRUE)
+#### run pipeline ----
 
 # load MT
 mt.quickload()
 
-mt_logging(console=T) 
 mt_logging(console=T) 
 D <- 
   # load data
@@ -100,12 +82,16 @@ D <-
   mt_logging_toc()
 
 
-```
 
-```{r, results='asis', warning=FALSE}
-#####
-##### Report generation
-#####
-D %>% mt_reporting_generateMD()
-```
 
+#### generate and knit markdown ----
+
+# define file names
+rmdfile <- "RMD_example1.RMD"
+rdsfile <- "RMD_example1.rds"
+# generate RMD
+D %>% mt_reporting_generateMD(outfile = rmdfile, readfrom = rdsfile)
+# save temp file that will be input for the RMD
+save(D, file=rdsfile)
+# knit
+rmarkdown::render(rmdfile)
