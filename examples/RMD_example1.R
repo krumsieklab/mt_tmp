@@ -50,18 +50,18 @@ D <-
   # linear model, differential test on Group
   mt_stats_univ_lm(
     formula      = ~ Group, 
-    samplefilter = (Group %in% c("Li_2","Li_5")),
-    name         = "Li's",
+    samplefilter = (Group %in% c("treatment1","treatment2")),
+    name         = "comp",
     mc.cores     = 1
   ) %>%
   # add fold changes to result tables
-  mt_post_addFC(statname = "Li's") %>%
+  mt_post_addFC(statname = "comp") %>%
   # add multiple testing correction
-  mt_post_multTest(statname = "Li's", method = "BH") %>%
+  mt_post_multTest(statname = "comp", method = "BH") %>%
   # p-value histogram
   mt_plots_pvalhist() %>%
   # Volcano plot as overview of results
-  mt_plots_volcano(statname     = "Li's",
+  mt_plots_volcano(statname     = "comp",
                    metab_filter = p.adj < 0.1,
                    colour       = p.value < 0.05) %>%
   
@@ -69,10 +69,10 @@ D <-
   # heading
   mt_reporting_heading("All boxplots") %>%
   # boxplots
-  mt_plots_boxplot(statname           = "Li's",
+  mt_plots_boxplot(statname           = "comp",
                    x                  = Group,
                    fill               = Group,
-                   correct_confounder = ~BRADFORD_PROTEIN + BATCH_MOCK,
+                   correct_confounder = ~BATCH_MOCK,
                    metab_filter       = p.value<0.01,
                    metab_sort         = p.value,
                    annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
