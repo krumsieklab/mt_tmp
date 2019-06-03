@@ -4,6 +4,7 @@
 ##' 
 ##' @param D summarized experiment object
 ##' @param scaledata scaling the data, TRUE by default
+##' @param sym0 make color scale symmetric around 0? (should only be used for scaled data), default: F 
 ##' @param fD function to transform/scale \code{t(assay(D))}, ie \code{mat = fD(t(assay(D)))} will be plotted
 
 ##' @param return.gg should pheatmap object be converted to gg object, TRUE for default.
@@ -27,7 +28,7 @@
 ##' 
 
 
-mt_plots_pheatmap <- function(D, scaledata=F, fD = function(x){ if(scaledata) return(scale(x)); x}, # metabotools arguments
+mt_plots_pheatmap <- function(D, scaledata=F, sym0=F, fD = function(x){ if(scaledata) return(scale(x)); x}, # metabotools arguments
                               
                               # pheatmap::pheatmap arguments
                               color = grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, 
@@ -81,6 +82,13 @@ mt_plots_pheatmap <- function(D, scaledata=F, fD = function(x){ if(scaledata) re
     aa$annotation_col = annotation_row
   }
   
+  # symmetric around zero?
+  if (sym0) {
+    cap <- max(abs(aa$mat)) # from -cap to +cap
+    cs = length(color) # number of color steps
+    aa$breaks = seq(-cap, cap, 2*cap/cs) # technical stuff
+  }
+  
   # plot pheatmap 
   re <- do.call(pheatmap::pheatmap, aa)
   
@@ -110,43 +118,3 @@ mt_plots_pheatmap <- function(D, scaledata=F, fD = function(x){ if(scaledata) re
 }
 
 
-
-if(FALSE){
-  # all pheatmap inputs identical to phetamap::pheatmap function 
-  # except for 
-  # D : summarized experiment object
-  # fD: function to transform/scale t(assay(D)), ie mat = fD(t(assay(D))) will be plotted
-  # 
-  # rows are annotated with rowData in D with given column names annotation_col
-  # columns are annotated with colData in D with given column names annotation_row
-  # 
-  # return.gg: if TRUE, pheatmep object will be cast to gg object and returned, otherwise, pheatmap object will be returned 
-  # gg.scale: scaling of the plot while casting to gg object 
-  # gg.(ymin,ymax,xmin,xmax): min,max of gg coordinates if gg.return = T
-  # for all other input argumets see pheatmap::pheatmap
-  # 
-  
-  D <- 
-    mt_files_load_metabolon(codes.makepath("MT/sampledata.xlsx"), "OrigScale") %>%
-    mt_plots_PCA_mult(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
-    mt_plots_sampleboxplot() %>%
-    mt_plots_qc_missingness() %>%
-    mt_pre_filtermiss(metMax=0.2) %>%
-    mt_pre_filtermiss(sampleMax=0.1) %>%
-    mt_pre_batch_median(batches = "BATCH_MOCK") %>%
-    mt_pre_norm_quot() %>%
-    mt_pre_trans_log() %>%
-    mt_plots_qc_dilutionplot(comp="num1") %>%
-    mt_plots_qc_dilutionplot(comp="Group") %>%
-    mt_pre_impute_knn() %>%
-    mt_plots_sampleboxplot(color=Group) %>%
-    mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>% 
-    mt_plots_pheatmap(annotation_row = c("SUPER_PATHWAY", "PLATFORM", "RI"), 
-                      annotation_col = c("GROUP_DESC","BATCH_MOCK","gender"), 
-                      fD = function(x) scale(exp(scale(x))),
-                      clustering_distance_cols =  "correlation",
-                      clustering_distance_rows = "correlation",
-                      return.gg = T)
-  
-  metadata(D)$results[[15]]$output
-}
