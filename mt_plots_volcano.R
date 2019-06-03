@@ -13,6 +13,8 @@
 #' @param statname name of the statistics obkect to plot
 #' @param metab_filter if given, filter will be applied to data and remaining varaibles will be labelled in plot
 #' @param ggadd further elements/functions to add (+) to the ggplot object
+#' @param vline where to draw vertical line (for fold-change), has to be single value. default: none
+#' @param hline where to draw horizontal line (for p-values), has to be an expression such as 'p.adj < 0.1'. default: none
 #' @param ... further parameters forwarded to ggplot::aes
 #' @return SummarizedExperiment with volcano plot in metadata(D)$results
 #' @export mt_plot_volcano
@@ -21,6 +23,8 @@ mt_plots_volcano <- function(D,
                              statname,
                              metab_filter = p.value < 0.05,
                              xlabel=gsub("~","",as.character(x)),
+                             vline=NA,
+                             hline,
                              ggadd=NULL, 
                              ...){
     x <- enquo(x)
@@ -49,11 +53,24 @@ mt_plots_volcano <- function(D,
                           domain = c(1e-100, Inf))
     }
     
+    ## determine if and where to draw hline
+    if (!missing(hline)) {
+      hliney <- mti_get_stat_by_name(D, statname) %>%
+        inner_join(rd, by = "var") %>%
+        mutate(xxx = !!x) %>% filter(!!enquo(hline)) %>% .$p.value %>% max()
+    } else {
+      hliney <- NA
+    }
     
     ## CREATE PLOT
     p <- data_plot %>%
         ## do plot
         ggplot(aes(x = xxx, y = p.value)) +
+        # vline?
+        (if(!is.na(vline)){geom_vline(xintercept = c(-vline, vline), linetype='dashed', color='#F8766D')}else{NULL}) +
+        # hline?
+        (if(!is.na(hliney)){geom_hline(yintercept = hliney, linetype='dashed', color='#F8766D')}else{NULL}) +
+        # points
         geom_point(aes(...)) +
         scale_y_continuous(trans = reverselog_trans(10),
                            breaks = scales::trans_breaks("log10", function(x) 10^x),
