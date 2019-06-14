@@ -1,18 +1,23 @@
-################################################################################
-## ADD FOLDCHANGES TO RESULTS TABLE
-################################################################################
-#' mt_post_addFC
+
+#' Compute fold-change
 #'
-#' add metabolite foldchanges to results table'
-#' new column i called 'fc'
+#' Add metabolite fold-changes to results table
 #'
-#' @author Jonas Zierer
-#' @import SummarizedExperiment
-#' @param D SummarizedExperiment object
+#' @param D \code{SummarizedExperiment} input
 #' @param statname name of the statistical comparison
-#' @param correct_confounder confounders to adjust for before calculating FC
-#' @return SummarizedExperiment modifies stats object
-#' @export mt_post_addFC
+#' @param correct_confounder confounders to adjust for before calculating fold-changes
+#' @param combine function with respect to which fold changes are computed (e.g. difference of the log means or median)
+#' 
+#' @return $result: statistical object
+#' 
+#' @example
+#' # add fold-changes to the result table of the statistical comparison called "comparison1", after correcting for variable "age"
+#' ... %>%
+#'  mt_post_addFC(statname="comparison1", correct_confounder=age) %>% ...
+#' 
+#' 
+#' @author JZ
+#' 
 mt_post_addFC <- function(D,
                           statname,
                           correct_confounder,

@@ -1,18 +1,22 @@
-################################################################################
-## MULTIPLE TESTING CORRECTION
-################################################################################
-#' mt_post_multTest 
+
+#' Multiple testing correction
+#' 
+#' Adjust output of statistical tests for multiple testing
 #'
-#' adjust output of stats for multiple testing
-#'
-#' @author Jonas Zierer
-#' @import SummarizedExperiment
-#' @importFrom dplyr %>% mutate gather left_join filter arrange
-#' @param D SummarizedExperiment object
-#' @param statname name of the statistical comparison
+#' @param D \code{SummarizedExperiment} input
+#' @param statname name of the statistical comparison to adjust
+#' @param pcolumn name of p-value column to adjust
 #' @param method which method to use for multiple testing (see p.adjust)
-#' @return SummarizedExperiment modifies stats object
-#' @export mt_post_multTest
+#' 
+#' @return $result: statistical object
+#' 
+#' @examples
+#' # correct the statistical comparison called "Li's" using Benjamini-Hochberg
+#' ... %>%
+#'  mt_post_multTest(statname="Li's", method="BH") %>% ...
+#' 
+#' @author JK, JZ
+#' 
 mt_post_multTest <- function(D,
                              statname,
                              pcolumn = p.value,

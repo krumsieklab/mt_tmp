@@ -1,18 +1,20 @@
-################################################################################
-## MULTIPLE TESTING CORRECTION
-################################################################################
-#' mt_post_pgain
+
+#' Compute p-gain from metabolite ratio test
 #'
-#' add p-gain to metabolite-ratio tests
+#' Add p-gain to result table
 #'
-#' @author Jonas Zierer
-#' @import SummarizedExperiment
-#' @importFrom dplyr %>% mutate gather left_join filter arrange
-#' @param D SummarizedExperiment object
+#' @param D \code{SummarizedExperiment} input
 #' @param statname name of the statistical comparison
-#' @param pcolumn name of p-value column
-#' @return SummarizedExperiment modifies stats object
-#' @export mt_post_pgain
+#' @param pcolumn name of p-value column to compute p-gain from
+#' 
+#' @return $result: statistical object
+#' 
+#' @example 
+#' # add p-gains to the result table of the statistical comparison called "comparison1"
+#' ... %>%
+#'  mt_post_pgain(statname="comparison1") %>% ...
+#' 
+#' @author JZ
 mt_post_pgain <- function(D,
                              statname,
                              pcolumn = p.value,
