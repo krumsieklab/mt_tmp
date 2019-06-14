@@ -1,23 +1,31 @@
+require(SummarizedExperiment)
+require(ggplot2)
 
-#' mt_plot_volcano
+#' mt_plots_volcano
 #'
-#' create volcano plot
+#' Creates a volcano plot
 #'
-#' @author Jonas Zierer, Jan Krumsiek
-#' @import SummrizedExperiment
-#' @import ggplot2
-#' @importFrom dplyr %>% mutate gather left_join filter arrange
-#' @importFrom rlang enquo !!
-#' @param D SummarizedExperiment object
+#' @param D \code{SummarizedExperiment} input
 #' @param x what value shall be plotted on x (default: fc)
-#' @param statname name of the statistics obkect to plot
+#' @param statname name of the statistics object to plot
 #' @param metab_filter if given, filter will be applied to data and remaining varaibles will be labelled in plot
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param vline where to draw vertical line (for fold-change), has to be single value. default: none
 #' @param hline where to draw horizontal line (for p-values), has to be an expression such as 'p.adj < 0.1'. default: none
-#' @param ... further parameters forwarded to ggplot::aes
-#' @return SummarizedExperiment with volcano plot in metadata(D)$results
-#' @export mt_plot_volcano
+#' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
+#' 
+#' @return $result: plot, volcano
+#' 
+#' @examples
+#' # Volcano plot as overview of results with a result already in 'comp'
+#' ... %>%
+#' mt_plots_volcano(statname     = "comp",
+#'  metab_filter = p.adj < 0.1,
+#'  colour       = p.value < 0.05) %>%
+#'  ...
+#'
+#' @author Jonas Zierer, Jan Krumsiek
+#' 
 mt_plots_volcano <- function(D,
                              x = fc,
                              statname,
