@@ -1,24 +1,41 @@
-################################################################################
-## HEATMAP
-################################################################################
+require(SummarizedExperiment)
+require(ggplot2)
+require(glue)
+
 #' mt_plot_boxplot
 #'
-#' create one boxplot per metabolite from SummarizedExperiment and add to metadata
+#' Creates one boxplot per metabolite from SummarizedExperiment and add to metadata
 #'
-#' @author Jonas Zierer
-#' @import SummrizedExperiment
-#' @import ggplot2
-#' @importFrom dplyr %>% mutate gather left_join filter arrange
-#' @importFrom rlang enquo !!
-#' @importFrom glue glue
-#' @importFrom ggbeeswarm geom_beeswarm
-#' @param D SummarizedExperiment object
-#' @param stat index of the entry in metadata(D)$results that contains statistic object
-#' @param x what phenotype (from colData(D)) should be used on x axis
+#' @param D \code{SummarizedExperiment} input
+#' @param x what phenotype (from colData(D)) should be used on x axis, default "x"
+#' @param statname index of the entry in metadata(D)$results that contains statistic object
+#' @param correct_confounder confounders to adjust for before plotting
+#' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
+#' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
+#' @param annotation, if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}",
+#' @param jitter whether to add jitter to boxplot,  default T
+#' @param rows number rows of boxplots in $result
+#' @param cols number columns of boxplots in $result
+#' @param restrict_to_groups whether to filter by groups, default T
 #' @param ggadd further elements/functions to add (+) to the ggplot object
-#' @param ... further parameters forwarded to ggplot::aes
-#' @return SummarizedExperiment with boxplots in metadata(D)$results
-#' @export mt_plot_boxplot
+#' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
+#' 
+#' @return  $result: plot, boxplot
+#' 
+#' @examples 
+#' # boxplots as overview of results with a result already in 'comp'
+#' # color by "Group" variable in colData
+#' mt_plots_boxplot(x                  = Group,
+#'                  statname           = "comp",
+#'                  correct_confounder = ~BATCH_MOCK,
+#'                  metab_filter       = p.value<0.01,
+#'                  metab_sort         = p.value,
+#'                  annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
+#'                  rows               = 2,
+#'                  cols               = 2) %>%
+#'                  ...
+#'                  
+#'  @author Jonas Zierer
 mt_plots_boxplot <- function(D,
                             x = "x",
                             statname,
