@@ -84,7 +84,7 @@ output:
         #   writechunk( glue("r[[{i}]]$output %>% lapply(subchunkify, fig_height=30, fig_width=30 )"))
         # } else {
         # any other plot
-        writechunk( glue("r[[{i}]]$output %>% lapply(plot)"))
+        writechunk( glue("r[[{i}]]$output"))
         # }
         
       }
