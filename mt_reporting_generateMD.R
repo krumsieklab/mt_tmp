@@ -52,7 +52,7 @@ output:
   writechunk("# default chunk options\nknitr::opts_chunk$set(warning=F,echo=F,results='hide',message=F)", params = "echo=F")  
   
   #### chunk that loads libraries
-  writechunk('# load libraries\nmt.quickload()')  
+  writechunk('# load libraries\nmt.quickload()\nrequire("DT")')  
   #### chunk that loads data
   writechunk(glue('# load data\nload("{readfrom}")\nr <- metadata(D)$results'))
   
