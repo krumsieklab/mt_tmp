@@ -79,7 +79,10 @@ D <-
                    rows               = 2,
                    cols               = 2) %>%
   # final timing
-  mt_logging_toc()
+  mt_logging_toc() %>%
+  
+  # testing void (should not occur)
+  mt_internal_void()
 
 
 

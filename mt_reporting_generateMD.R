@@ -66,33 +66,36 @@ output:
   r <- metadata(D)$results
   
   for (i in 1:length(r)) {
-    # reporting step?
-    if (r[[i]]$fun[1]!="reporting") {
-      # not reporting, actual pipeline step
+    # to ignore?
+    if (r[[i]]$fun[2]!="void") { # ignore void
       
-      ## header
-      out(glue('{strrep("#",lvl)} {r[[i]]$fun %>% paste(collapse="_")}'))
-      
-      ## log text
-      out(glue('{r[[i]]$logtxt}\n'))
-      
-      ## plot?
-      if (r[[i]]$fun[1]=="plots") {
-        # # test code for subchunkify
-        # if (all(all.equal(r[[i]]$fun, c("plots","qc","dilutionplot")) == T)) {
-        #   # quot norm plot, try different size
-        #   writechunk( glue("r[[{i}]]$output %>% lapply(subchunkify, fig_height=30, fig_width=30 )"))
-        # } else {
-        # any other plot
-        writechunk( glue("r[[{i}]]$output"))
-        # }
+      # reporting step?
+      if (r[[i]]$fun[1]!="reporting") {
+        # not reporting, actual pipeline step
         
-      }
-      
-      ## statistical result table?
-      if (r[[i]]$fun[1]=="stats") {
-        # write out datatable
-        writechunk(glue('
+        ## header
+        out(glue('{strrep("#",lvl)} {r[[i]]$fun %>% paste(collapse="_")}'))
+        
+        ## log text
+        out(glue('{r[[i]]$logtxt}\n'))
+        
+        ## plot?
+        if (r[[i]]$fun[1]=="plots") {
+          # # test code for subchunkify
+          # if (all(all.equal(r[[i]]$fun, c("plots","qc","dilutionplot")) == T)) {
+          #   # quot norm plot, try different size
+          #   writechunk( glue("r[[{i}]]$output %>% lapply(subchunkify, fig_height=30, fig_width=30 )"))
+          # } else {
+          # any other plot
+          writechunk( glue("r[[{i}]]$output"))
+          # }
+          
+        }
+        
+        ## statistical result table?
+        if (r[[i]]$fun[1]=="stats") {
+          # write out datatable
+          writechunk(glue('
 # extract result table
 df<-r[[{i}]]$output$table
 # add metabolite names
@@ -100,22 +103,23 @@ rd <- rowData(D)
 df <- cbind(name=rd$name[match(df$var, rownames(rd))], df)
 # output
 DT::datatable(df, rownames = FALSE, filter = "top", options = list(pageLength = 20, lengthMenu = c(10*(2^(0:3)), nrow(df)), autoWidth = TRUE, width = 1200, dom = "Bitlrp", buttons = c("copy", "csv", "excel", "pdf", "print")), class = "cell-border stripe", extensions = "Buttons")  %>% DT::formatStyle(columns = c(1:ncol(df)), fontSize = "80%", target= "row", lineHeight="80%")'),
-                   params = "results='asis'")
+                     params = "results='asis'")
+          
+        }
         
-      }
-      
-      # empty line as spacer
-      out("")
-      
-      
-    } else {
-      
-      # special reporting step
-      if (r[[i]]$fun[2]=="heading") {
-        # add extra heading
-        out(glue('{strrep("#",r[[i]]$output$lvl)} {r[[i]]$output$title}'))
-        # result level is this heading +1
-        lvl = r[[i]]$output$lvl + 1
+        # empty line as spacer
+        out("")
+        
+        
+      } else {
+        
+        # special reporting step
+        if (r[[i]]$fun[2]=="heading") {
+          # add extra heading
+          out(glue('{strrep("#",r[[i]]$output$lvl)} {r[[i]]$output$title}'))
+          # result level is this heading +1
+          lvl = r[[i]]$output$lvl + 1
+        }
       }
     }
   }
