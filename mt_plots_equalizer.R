@@ -47,7 +47,7 @@ mt_plots_equalizer <- function(
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D1))
   stopifnot("SummarizedExperiment" %in% class(D2))
-  stopifnot(comp1!=comp2)
+  # stopifnot(comp1!=comp2)
   
   # get results
   res1 <- mti_get_stat_by_name(D1, comp1) 
