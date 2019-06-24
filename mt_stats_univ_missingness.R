@@ -28,27 +28,36 @@ mt_stats_univ_missingness <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
   stopifnot(length(comp)==1)
   
+  # filter samples?
+  Ds <- D
+  if(!missing(samplefilter)) {
+    # translate lazy expression
+    filter_q <- enquo(samplefilter)
+    # get indices
+    keep <-     
+      colData(D) %>% as.data.frame() %>%
+      add_rownames() %>%
+      filter(!!filter_q) %>%
+      `[[`("rowname") %>%
+      as.numeric()
+    # filter SE
+    Ds <- Ds[,keep]
+  }
+  
   # get variable to compare to
-  if (!(comp %in% colnames(colData(D)))) stop(sprintf("'%s' not found in sample annotations.", comp))
-  vc = mti_fixorder(as.factor(colData(D)[[comp]]))
+  if (!(comp %in% colnames(colData(Ds)))) stop(sprintf("'%s' not found in sample annotations.", comp))
+  vc = mti_fixorder(as.factor(colData(Ds)[[comp]]))
   if (length(levels(vc))<2) stop(sprintf("'%s' has less than 2 factor levels",comp))
   
-  # # filter samples?
-  # Ds <- D
-  # if(!missing(samplefilter)) {
-  #   filter_q <- enquo(samplefilter)
-  #   cd <- colData(D) %>% as.data.frame() %>% filter(!!filter_q)
-  #   # keep <-
-  # }
   
   
   
   # run models
-  rawres <- sapply(1:nrow(D), function(i){
-    # for (i in 1:nrow(D)) {
+  rawres <- sapply(1:nrow(Ds), function(i){
+    # for (i in 1:nrow(Ds)) {
     
     # get metabolite
-    m <- assay(D)[i,]
+    m <- assay(Ds)[i,]
     
     # construct table
     tab <- table(is.na(m), vc)
@@ -68,7 +77,7 @@ mt_stats_univ_missingness <- function(
     ex <- unmatrix(tab)
     names(ex) = gsub("TRUE","missing",gsub("FALSE","present", names(ex)))
     # return
-    as.data.frame(cbind(data.frame(var=rownames(D)[i], statistic=test$estimate, p.value=test$p.value),t(as.data.frame(ex))))
+    as.data.frame(cbind(data.frame(var=rownames(Ds)[i], statistic=test$estimate, p.value=test$p.value),t(as.data.frame(ex))))
     
     # }
   },simplify=F) 
