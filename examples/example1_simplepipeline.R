@@ -1,13 +1,12 @@
-#' Example 1
-#' Single pipeline, preprocessing, linear models, multiple testing correction
-#' 
-#' by: JK
+#####
+##### MetaboTools pipeline
+#####
 
-#### source metabotools
-source(codes.makepath("MT/quickload.R"))
+#### run pipeline ----
 
+# load MT
+mt.quickload()
 
-#### run
 mt_logging(console=T) 
 D <- 
   # load data
@@ -15,8 +14,12 @@ D <-
   # timing start
   mt_logging_tic() %>% 
   
-  # this is to structure the HTML markdown later
+  ###
+  # heading
   mt_reporting_heading("Preprocessing") %>%
+  mt_reporting_heading("Part 1", lvl=2) %>%
+  # sample boxplot
+  mt_plots_sampleboxplot() %>%
   # missingness plot
   mt_plots_qc_missingness() %>%
   # filter metabolites with >20% missing values, then samples with >10% missing values
@@ -24,24 +27,26 @@ D <-
   mt_pre_filtermiss(sampleMax=0.1) %>%
   # batch correction by variable BATCH_MOCK
   mt_pre_batch_median(batches = "BATCH_MOCK") %>%
-  # sample boxplot
-  mt_plots_sampleboxplot(color=Group, plottitle = 'before normalization') %>%
+  # heading
+  mt_reporting_heading("Part 2", lvl=2) %>%
   # quotient normalization
   mt_pre_norm_quot() %>%
   # check if there is any correlation between normalization factors and outcomes (bad sign if so)
   mt_plots_qc_dilutionplot(comp="num1") %>%
   mt_plots_qc_dilutionplot(comp="Group") %>%
-  # log
+  # logging
   mt_pre_trans_log() %>%
   # KNN imputation
   mt_pre_impute_knn() %>%
-  # sample boxplot
+  # outlier detection (univariate)
+  mt_pre_outlier(method="univariate", thr=4, perc=0.5) %>%
+  # final sample boxplot
   mt_plots_sampleboxplot(color=Group, plottitle = 'final') %>%
   # PCA, colored by some rowData() fields... this function shows 2 PCs
   mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
   
-  # this is to structure the HTML markdown later
-  mt_reporting_heading("Statistical analysis") %>%
+  ###
+  mt_reporting_heading("Statistics") %>%
   # linear model, differential test on Group
   mt_stats_univ_lm(
     formula      = ~ Group, 
@@ -59,6 +64,10 @@ D <-
   mt_plots_volcano(statname     = "comp",
                    metab_filter = p.adj < 0.1,
                    colour       = p.value < 0.05) %>%
+  
+  ###
+  # heading
+  mt_reporting_heading("All boxplots") %>%
   # boxplots
   mt_plots_boxplot(statname           = "comp",
                    x                  = Group,
@@ -70,10 +79,22 @@ D <-
                    rows               = 2,
                    cols               = 2) %>%
   # final timing
-  mt_logging_toc()
+  mt_logging_toc() %>%
+  
+  # testing void (should not occur)
+  mt_internal_void()
 
 
-#### Write all generated plots into PDF file (without headers or log messages, so not ideal)
-D %>% mti_plot_all_tofile(file="output.pdf")
 
 
+#### generate and knit markdown ----
+
+# define file names
+rmdfile <- "example1_simplepipeline.RMD"
+rdsfile <- "example1_simplepipeline.rds"
+# generate RMD
+D %>% mt_reporting_generateMD(outfile = rmdfile, readfrom = rdsfile)
+# save temp file that will be input for the RMD
+save(D, file=rdsfile)
+# knit
+rmarkdown::render(rmdfile)
