@@ -9,6 +9,7 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #' @param method Can be either "univariate" or "leverage" (for now)
 #' @param thr Number of standard deviations or m/n units to use as threshold to define the outlier, default value set to 4
 #' @param perc For the univariate method, percentage of metabolites that need to be outliers in order to consider the whole sample an outlier, default value set to 0.5
+#' @param pval For the mahalanobis distance method, p-val of chi-squared test to threshold at, default = 0.01
 #'
 #' @return SE with additional colData columns including a binary vector and a numeric score vector
 #' @return $output: returns the specific parameters used to determine outliers for the specific method selected
@@ -18,6 +19,7 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #' ... %>%
 #'   mt_pre_outlier(method="univariate", thr=4, perc=0.5) %>%
 #'   mt_pre_outlier(method="leverage", thr=4) %>%
+#'   mt_pre_outlier(method="mahalanobis", pval=0.01) %>%
 #' ...
 #' 
 #' @author EB
@@ -31,8 +33,8 @@ mt_pre_outlier <- function(
   
   # check arguments, SummarizedExperiment, and exactly one cutoff argument must be non-NA
   stopifnot("SummarizedExperiment" %in% class(D))
-  if(!(method %in% c("univariate","leverage")))
-    stop("method can only be either univariate or leverage")
+  if(!(method %in% c("univariate","leverage", "mahalanobis")))
+    stop("method can only be either univariate, leverage, or mahalanobis")
   
   X <- t(assay(D))
   X <- scale(X)
@@ -55,7 +57,7 @@ mt_pre_outlier <- function(
     # define outliers
     out <- rep(FALSE,length(score))
     out[score > args$perc] <- TRUE
-  } else {
+  } else if (method == "leverage"){
     if(is.null(args$thr)) args$thr <- 4
     # # compute hat matrix through Singular Value Decomposition
     # SVD <- svd(X)
@@ -73,8 +75,16 @@ mt_pre_outlier <- function(
     # define outliers
     out <- rep(FALSE,length(score))
     out[score > args$thr*sum(score)/dim(X)[1]] <- TRUE
+  } else{
+    if(is.null(args$pval)) args$pval <- 0.01
+    # Calculate covariance matrix
+    cov_mat <- cov(X)
+    # Get mahalanobis distance
+    score <- mahalanobis(X, center = F, cov_mat)
+    # Define outliers based on threshold
+    out <- rep(FALSE,length(score))
+    out[out > qchisq(1 - args$pval/ncol(X), nrow(X))] <- TRUE
   }
-  
   # adding to colData
   colData(D)$outlier <- out
   colData(D)$score <- score

@@ -22,7 +22,7 @@ mt_pre_trans_log <- function(
   stopifnot(base%%1==0) # integer number
   
   # log
-  assay(D) = log(assay(D))
+  assay(D) = log(assay(D), base = base)
   
   # add status information
   funargs <- mti_funargs()
