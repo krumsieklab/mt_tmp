@@ -89,12 +89,5 @@ D <-
 
 #### generate and knit markdown ----
 
-# define file names
-rmdfile <- "example1_simplepipeline.RMD"
-rdsfile <- "example1_simplepipeline.rds"
-# generate RMD
-D %>% mt_reporting_generateMD(outfile = rmdfile, readfrom = rdsfile)
-# save temp file that will be input for the RMD
-save(D, file=rdsfile)
-# knit
-rmarkdown::render(rmdfile)
+D %>% mt_reporting_quickhtml(outfile="example1_simplepipeline.html")
+
