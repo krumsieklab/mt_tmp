@@ -1,9 +1,9 @@
 require(limma)
 source(codes.makepath("MT/mt_internal_helpers.R"))
 
-#' Identifies sample outliers.
+#' Identifies single outliers in samples.
 #' 
-#' Uses either univariate or multivariate (leverage) approaches, won't do both in one call.
+#' Uses univariate approach
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param threshold Number of standard deviations or m/n units to use as threshold to define the outlier, default value set to 4
@@ -11,9 +11,8 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #' @return SE with NA values where outliers used to be
 #'
 #' @examples
-#' # first identify samples that have more than 50% univariate outliers, then identify multivariate outliers with a leverage >4m/n
 #' ... %>%
-#'   mt_pre_singleout(threshold=3) %>%
+#'   mt_pre_outliercorrection(threshold=3) %>%
 #' ...
 #' 
 #' @author Annalise Schweickart
