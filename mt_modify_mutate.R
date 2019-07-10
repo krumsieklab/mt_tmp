@@ -1,0 +1,45 @@
+#' Title
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param dir direction, "samples" or "metabolites"
+#' @param varname name of new variable
+#' @param term mutate term to forward to dplyr::mutate
+#'
+#' @return
+#' @export
+#'
+#' @examples
+mt_modify_mutate <- function(D, dir, varname, term) {
+  
+  # validate arguments
+  stopifnot("SummarizedExperiment" %in% class(D))
+  if (!(dir %in% c("samples","metabolites"))) stop("dir must be either 'samples' or 'metabolites'")
+  
+  # run mutate argument in correct direction
+  x <- enquo(term)
+  
+  if (dir=="samples") {
+    cd <- colData(D) %>% as.data.frame()
+    cd %<>% mutate(!!varname := !!x)
+    colData(D) <- DataFrame(cd)
+  } else if (dir=="metabolites") {
+    rd <- rowData(D) %>% as.data.frame()
+    rd %<>% mutate(!!varname := !!x)
+    rowData(D) <- DataFrame(rd)
+  } else {
+    stop('bug')
+  }
+  
+  
+  ## add status information & plot
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf("added variable to %s: %s := %s", dir, varname, as.character(x))
+    )
+  
+  ## return
+  D
+  
+}

@@ -77,7 +77,7 @@ output:
         out(glue('{strrep("#",lvl)} {r[[i]]$fun %>% paste(collapse="_")}'))
         
         ## log text
-        out(glue('{r[[i]]$logtxt}\n'))
+        out(glue('{r[[i]]$logtxt}\n\n'))
         
         ## plot?
         if (r[[i]]$fun[1]=="plots") {

@@ -68,8 +68,8 @@ mt_modify_filter_samples <- function(D, sample_filter){
         filter(!!sample_filter_q)
 
     ## SUBSET SAMPLES
-    excluded <-colnames(D)[ !(colnames(D) %in% cd$colnames) ]
-    D <- D[, cd$colnames]
+    cnames <- colData(D) %>% as.data.frame() %>% rownames_to_column("colnames") %>% .$colnames
+    D <- D[, cnames %in% cd$colnames]
 
     ## add status information & plot
     funargs <- mti_funargs()
@@ -77,7 +77,7 @@ mt_modify_filter_samples <- function(D, sample_filter){
                   mti_generate_result(
                       funargs = funargs,
                       logtxt = sprintf("Filter samples: %s",  as.character(sample_filter_q)),
-                      output = excluded
+                      output = list(kept=cnames %in% cd$colnames)
                   )
     ## return
     D
