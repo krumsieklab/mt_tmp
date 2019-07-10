@@ -62,8 +62,8 @@ mt_plots_PCA <- function(
   colnames(df)[1:2] <- c(sprintf("PC%d",PCa),sprintf("PC%d",PCb))
   
   # prep
-  pc1name = sprintf('PC%d (%.1f%%)', PCa, expvar[1]*100)
-  pc2name = sprintf('PC%d (%.1f%%)', PCb, expvar[2]*100)
+  pc1name = sprintf('PC%d (%.1f%%)', PCa, expvar[PCa]*100)
+  pc2name = sprintf('PC%d (%.1f%%)', PCb, expvar[PCb]*100)
   
   # plot
   p <- ggplot(data=df) +
