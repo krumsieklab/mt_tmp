@@ -46,6 +46,13 @@ mt_plots_PCA <- function(
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
   
+  # helper function to combine two aesthetics, e.g. from aes() and aes_string() 
+  combine_aes <- function(...) {
+    v <- c(...)
+    class(v) <- "uneval"
+    v
+  }
+  
   # extract data and verify that there are no NA values
   X = t(assay(D))
   if (any(is.na(X))) stop("Data matrix for PCA cannot contain NAs")
@@ -69,12 +76,12 @@ mt_plots_PCA <- function(
   
   # plot
   p <- ggplot(data=df) +
-    geom_point(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb),...)) + 
+    geom_point(combine_aes(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb)),aes(...))) + 
     xlab(pc1name) + ylab(pc2name) + ggtitle(title)
   # add text?
   if (nchar(labelby)>0) {
     if (textrepel) p <- p + geom_text_repel(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb),label=labelby,...))
-    else p <- p + geom_text(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb),label=labelby,...))
+    else p <- p + geom_text(combine_aes(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb),label=labelby),aes(...)))
   }
   # add ellipse?
   if (!is.na(ellipse)) p <- p + stat_ellipse(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb)), level=ellipse)
