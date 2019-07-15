@@ -1,4 +1,5 @@
 require(limma)
+require(GeneNet)
 source(codes.makepath("MT/mt_internal_helpers.R"))
 
 #' Identifies sample outliers.
@@ -41,8 +42,6 @@ mt_pre_outlier <- function(
   
   if(any(is.na(X)))
     stop("Missing values found in the data matrix")
-  if(method=="leverage" & !is.fullrank(X))
-    stop("The data matrix is not full-rank, leverage cannot be computed")
   
   args <- list(...)
 
@@ -57,7 +56,12 @@ mt_pre_outlier <- function(
     # define outliers
     out <- rep(FALSE,length(score))
     out[score > args$perc] <- TRUE
-  } else if (method == "leverage"){
+    
+  } else if (method == "leverage") {
+    
+    if(!is.fullrank(X))
+      stop("The data matrix is not full-rank, leverage cannot be computed")
+    
     if(is.null(args$thr)) args$thr <- 4
     # # compute hat matrix through Singular Value Decomposition
     # SVD <- svd(X)
@@ -75,15 +79,24 @@ mt_pre_outlier <- function(
     # define outliers
     out <- rep(FALSE,length(score))
     out[score > args$thr*sum(score)/dim(X)[1]] <- TRUE
-  } else{
+    
+  } else if (method == "mahalanobis") {
+    
+    if(!is.fullrank(X))
+      stop("The data matrix is not full-rank, Mahalanobis cannot be computed")
+    
     if(is.null(args$pval)) args$pval <- 0.01
+    
     # Calculate covariance matrix
     cov_mat <- cov(X)
     # Get mahalanobis distance
-    score <- mahalanobis(X, center = F, cov_mat)
+    score <- mahalanobis(X, colMeans(X), cov_mat)
     # Define outliers based on threshold
     out <- rep(FALSE,length(score))
-    out[out > qchisq(1 - args$pval/ncol(X), nrow(X))] <- TRUE
+    out[score > qchisq(1 - args$pval/nrow(X), df=ncol(X))] <- TRUE
+    
+  } else {
+    stop("BUG")
   }
   # adding to colData
   colData(D)$outlier <- out
@@ -108,3 +121,16 @@ mt_pre_outlier <- function(
   D
   
 }
+
+
+# deleted code for low-rank cov approx
+# is_invertible <- class(try(solve(cov_mat),silent=T))=="matrix"
+# if (!is_invertible) {
+#   # matrix has low rank, use GeneNet's shrinkage version instead
+#   # https://rdrr.io/cran/Hotelling/man/hotelling.stat.html
+#   cov_mat <- cov.shrink(X, verbose=F) %>% apply(2, as.vector)
+# }
+# 
+# 
+# 
+# 
