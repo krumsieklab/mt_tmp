@@ -111,7 +111,7 @@ mt_stats_univ_lm <- function(
       return(tibble(term = outvar_term))
     f_tidy(m) %>%
       mutate(formula = as.character(m$terms)) %>%
-      select(term, formula, everything())
+      dplyr::select(term, formula, everything())
   }
   
   
@@ -155,7 +155,7 @@ mt_stats_univ_lm <- function(
       setNames(trms)
     ## subset to complete data
     d <- Ds %>%
-      select(one_of(trms), !!rlang::sym(m)) %>%
+      dplyr::select(one_of(trms), !!rlang::sym(m)) %>%
       filter(complete.cases(.))
     ## check for invariant vonfounders
     conf_invar_num <- clss %>%
@@ -206,7 +206,7 @@ mt_stats_univ_lm <- function(
   
   ## tidy up a bit more
   tab <- tab %>%
-    select(-matches("^(effect|group)$"))
+    dplyr::select(-matches("^(effect|group)$"))
   
   ## construct output groups variable
   if (is.factor(Ds[[outvar]])) {

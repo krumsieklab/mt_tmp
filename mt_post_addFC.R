@@ -49,7 +49,7 @@ mt_post_addFC <- function(D,
                        ## get model matrix
                        .$model %>%
                        ## remove metabolites
-                       select(-one_of(intersect(names(.), rownames(D)))) %>%
+                       dplyr::select(-one_of(intersect(names(.), rownames(D)))) %>%
                        ## select first phenotype = outcome of interest
                        .[,1, drop = F]
     outcome    <- colnames(model)[[1]]
@@ -93,7 +93,7 @@ mt_post_addFC <- function(D,
         ungroup() %>%
         spread(!!outcome_q, value) %>%
         mutate(fc = !!levels_1 - !!levels_2) %>%
-        select(var, fc)
+        dplyr::select(var, fc)
 
     ## ADD TO RESULTS
     metadata(D)$results[[stat_id]]$output$table %<>%

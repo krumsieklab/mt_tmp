@@ -86,7 +86,7 @@ mt_modify_aggPW <- function(
     })
     # generate new rowData
     rd <- rowData(D) %>% as.data.frame() %>% as.tibble() %>% filter(!duplicated(!!rlang::sym(pw))) %>%
-      select(which(copyover)) %>% filter(!is.na(!!rlang::sym(pw))) %>% mutate(name=!!rlang::sym(pw)) %>% select(name,everything())
+      dplyr::select(which(copyover)) %>% filter(!is.na(!!rlang::sym(pw))) %>% dplyr::mutate(name=!!rlang::sym(pw)) %>% dplyr::select(name,everything())
     # sanity bug check
     stopifnot(all.equal(rd$name, rd[[pw]]))
     
