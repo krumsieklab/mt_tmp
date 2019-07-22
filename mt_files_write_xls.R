@@ -20,7 +20,7 @@ mt_files_write_xls <- function(D, file) {
   # write out
   wb <- createWorkbook()
   addWorksheet(wb,"assay")
-  writeData(wb, "assay", assay(D), rowNames = T, colNames=F)
+  writeData(wb, "assay", assay(D), rowNames = T, colNames=T)
   addWorksheet(wb,"rowData")
   writeData(wb, "rowData", rowData(D) %>% as.data.frame(), rowNames = T)
   addWorksheet(wb,"colData")

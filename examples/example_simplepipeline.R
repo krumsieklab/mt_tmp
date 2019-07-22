@@ -38,8 +38,9 @@ D <-
   mt_pre_trans_log() %>%
   # KNN imputation
   mt_pre_impute_knn() %>%
-  # outlier detection (univariate)
-  mt_pre_outlier(method="univariate", thr=4, perc=0.5) %>%
+  # outlier detection (multivariate) & visualization
+  mt_pre_outlier(method="mahalanobis", pval=0.01, reduce.dim = T) %>%
+  mt_plots_PCA(color='outlier_mahalanobis') %>%
   # final sample boxplot
   mt_plots_sampleboxplot(color=Group, plottitle = 'final') %>%
   # PCA, colored by some rowData() fields... this function shows 2 PCs

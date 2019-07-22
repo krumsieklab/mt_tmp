@@ -69,7 +69,7 @@ mt_files_anno_xls <-
     df[[IDanno]] %<>% as.character()
     colData(D)[[IDdata]] %<>% as.character()
     # merge data frames
-    newdf <- dplyr::left_join(data.frame(colData(D)), df, by = setNames(IDanno,IDdata))
+    newdf <- dplyr::left_join(data.frame(colData(D), check.names=F), df, by = setNames(IDanno,IDdata))
     newdf[[IDanno]] <- newdf[[IDdata]] # make sure anno column name also exists (if different from data column name)
     stopifnot(all.equal(newdf[[IDdata]],colData(D)[[IDdata]])) # to make sure nothing was mixed up
     rownames(newdf) <- colnames(D)

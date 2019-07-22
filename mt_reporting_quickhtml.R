@@ -7,7 +7,7 @@
 #'
 #' @author JK
 #' 
-mt_reporting_quickhtml <- function(D, outfile) {
+mt_reporting_quickhtml <- function(D, outfile, title = 'RMD output') {
   
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))  
@@ -16,7 +16,7 @@ mt_reporting_quickhtml <- function(D, outfile) {
   rmdfile <- "tmpmd.RMD"
   rdsfile <- "tmpmd.rds"
   # generate RMD
-  D %>% mt_reporting_generateMD(outfile = rmdfile, readfrom = rdsfile)
+  D %>% mt_reporting_generateMD(outfile = rmdfile, readfrom = rdsfile, title = title)
   # save temp file that will be input for the RMD
   save(D, file=rdsfile)
   # knit
