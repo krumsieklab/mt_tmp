@@ -65,9 +65,13 @@ mt_post_addFC <- function(D,
 
     ## EXTRACT DATA
     if(is.factor(colData(D)[[outcome]]))model[[outcome]] <- as.factor(model[[outcome]])
-    d_fc <- mti_format_se_samplewise(D) %>%
-        ## use only levels that were used in stat
-        inner_join(model, by = outcome)
+    # d_fc <- mti_format_se_samplewise(D) %>%
+    #     ## use only levels that were used in stat
+    #     inner_join(model, by = outcome)
+    d_fc <- mti_format_se_samplewise(D) 
+    keep <- d_fc[[outcome]] %in% model[[outcome]]
+    d_fc <- d_fc[keep,]
+    d_fc[[outcome]] <- droplevels(d_fc[[outcome]])
 
     ## CHECK TYPE OF OUTCOME
     if(!(class(d_fc[[ outcome ]]) %in% c("factor", "character")))
