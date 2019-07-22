@@ -8,7 +8,6 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param method Can be either "univariate" or "leverage" (for now)
-#' @param reduce.dim Perform PCA-based dimension reduction before outlier detection? Needed for multivariate methods in low-rank datasets.
 #' @param thr Number of standard deviations or m/n units to use as threshold to define the outlier, default value set to 4
 #' @param perc For the univariate method, percentage of metabolites that need to be outliers in order to consider the whole sample an outlier, default value set to 0.5
 #' @param pval For the mahalanobis distance method, p-val of chi-squared test to threshold at, default = 0.01
@@ -24,13 +23,12 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #'   mt_pre_outlier(method="mahalanobis", pval=0.01) %>%
 #' ...
 #' 
-#' @author EB, JK
+#' @author EB
 #' 
 
 mt_pre_outlier <- function(
   D,            # SummarizedExperiment input
   method="univariate",     # Method for outlier detection, can only be either "univariate" or "leverage"
-  reduce.dim=F,    
   ...   
 ) {
   
@@ -45,20 +43,8 @@ mt_pre_outlier <- function(
   if(any(is.na(X)))
     stop("Missing values found in the data matrix")
   
-  # perform dimension reduction?
-  if (reduce.dim) {
-    ## Calculate the number of "independent features"
-    ## As in Li and Ji, Heredity, 2005
-    cordat <- cor(X)
-    eigenvals <- eigen(cordat)$values
-    Meff <- sum( as.numeric(eigenvals >= 1) + (eigenvals - floor(eigenvals)) )
-    ## reduce
-    pca <- prcomp(X)
-    X <- pca[]
-  }
-  
   args <- list(...)
-
+  
   if(method=="univariate") {
     if(is.null(args$thr)) args$thr <- 4
     if(is.null(args$perc)) args$perc <- 0.5
@@ -137,8 +123,6 @@ mt_pre_outlier <- function(
 }
 
 
-
-
 # deleted code for low-rank cov approx
 # is_invertible <- class(try(solve(cov_mat),silent=T))=="matrix"
 # if (!is_invertible) {
@@ -150,21 +134,3 @@ mt_pre_outlier <- function(
 # 
 # 
 # 
-
-# 
-# ##### SHRINKAGE COV and PINV 
-# 
-# # Calculate covariance matrix and inverse
-# C <- corpcor::cov.shrink(X, verbose=F) %>% apply(2, as.vector)
-# # Get mahalanobis distance
-# score <- mahalanobis(X, colMeans(X), C)
-# 
-# 
-# # # Xc <- scale(X, scale=F, center=T)
-# # center = colMeans(X)
-# # Xc <- sweep(X, 2L, center)
-# # score2 <- rowSums(Xc %*% Ci * Xc)
-# # i=5; t(Xc[i,]) %*% Ci %*% Xc[i,]
-# # Define outliers based on threshold
-# out <- rep(FALSE,length(score))
-# out[score > qchisq(1 - args$pval/nrow(X), df=ncol(X))] <- TRUE
