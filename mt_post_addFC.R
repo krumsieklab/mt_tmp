@@ -71,6 +71,7 @@ mt_post_addFC <- function(D,
     d_fc <- mti_format_se_samplewise(D) 
     keep <- d_fc[[outcome]] %in% model[[outcome]]
     d_fc <- d_fc[keep,]
+    d_fc[[outcome]] <- as.factor(d_fc[[outcome]])
     d_fc[[outcome]] <- droplevels(d_fc[[outcome]])
 
     ## CHECK TYPE OF OUTCOME
