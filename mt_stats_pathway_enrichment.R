@@ -3,7 +3,7 @@
 #' Takes a pathway annotation column of the metabolites (rowData) and builds one representative sample per pathway for each sample.
 #'
 #' Implemented approaches:
-#' 1. GAGE 
+#' 1. GAGE: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-161
 #' 2. Fisher's exact test. Will NOT scale() data before. Data matrix can have NAs.
 #' 
 #' @param D  \code{SummarizedExperiment} input
