@@ -51,13 +51,13 @@ D <-
   
   ###
   mt_reporting_heading("Statistics") %>%
-  # linear model, differential test on Group
+  # linear model on multiple groups, i.e. ANOVA
   mt_stats_univ_lm(
-    formula      = ~ NUM_MOCK, 
+    formula      = ~ Group, 
     name         = "comp",
     mc.cores     = 1
   ) %>%
-   # add multiple testing correction
+  # add multiple testing correction
   mt_post_multTest(statname = "comp", method = "BH") %>%
   # p-value histogram
   mt_plots_pvalhist() %>%
@@ -69,19 +69,18 @@ D <-
   
   ###
   # heading
-  mt_reporting_heading("All scatter plots") %>%
+  mt_reporting_heading("All boxplots") %>%
   # boxplots
-  mt_plots_scatter(statname           = "comp",
-                   x                  = NUM_MOCK,
-                   color              = Group,
-                   correct_confounder = ~BATCH_MOCK,
-                   metab_filter       = p.value<0.1,
-                   metab_sort         = p.value,
-                   annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
-                   rows               = 2,
-                   cols               = 2,
-                   fitline = T,
-                   fitline_se = F) %>%
+  mt_plots_boxplot(
+    statname           = "comp",
+    x                  = Group,
+    fill               = Group,
+    metab_filter       = p.adj<0.05,
+    metab_sort         = p.value,
+    annotation         = "{sprintf('P-value: %.1e', p.value)}\nadjusted: {sprintf('%.1e', p.adj)}",
+    rows               = 2,
+    cols               = 2) %>%
+  
   # final timing
   mt_logging_toc() %>%
   
@@ -93,5 +92,5 @@ D <-
 
 #### generate and knit markdown ----
 
-D %>% mt_reporting_quickhtml(outfile="example_quant_outcome.html")
+D %>% mt_reporting_quickhtml(outfile="example_anova.html")
 

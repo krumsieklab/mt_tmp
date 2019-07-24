@@ -39,7 +39,7 @@ D <-
   # KNN imputation
   mt_pre_impute_knn() %>%
   # outlier detection (multivariate) & visualization
-  mt_pre_outlier(method="mahalanobis", pval=0.01, reduce.dim = T) %>%
+  # mt_pre_outlier(method="mahalanobis", pval=0.01, reduce.dim = T) %>%
   mt_plots_PCA(color='outlier_mahalanobis') %>%
   # final sample boxplot
   mt_plots_sampleboxplot(color=Group, plottitle = 'final') %>%
@@ -90,5 +90,5 @@ D <-
 
 #### generate and knit markdown ----
 
-D %>% mt_reporting_quickhtml(outfile="example1_simplepipeline.html")
+D %>% mt_reporting_quickhtml(outfile="example_simplepipeline.html")
 

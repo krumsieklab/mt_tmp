@@ -28,3 +28,7 @@ examples/example1_simplepipeline\.rds
 examples/example1_simplepipeline\.RMD
 
 examples/example3_newfuns\.R
+
+out\.xlsx
+
+examples/example_anova\.html

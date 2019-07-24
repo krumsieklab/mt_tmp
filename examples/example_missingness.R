@@ -42,4 +42,4 @@ D <-
 
 #### generate and knit markdown ----
 
-D %>% mt_reporting_quickhtml(outfile="example2_simplepipeline.html")
+D %>% mt_reporting_quickhtml(outfile="example_missingness.html")
