@@ -71,6 +71,7 @@ mt_plots_boxplot <- function(D,
             inner_join(rd, by = "var")
     }else{
         stat <- rd
+        restrict_to_groups <- F # not dependend on a stat
     }
 
     ## FILTER METABOLITES

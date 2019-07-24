@@ -84,7 +84,7 @@ mt_stats_univ_lm <- function(
     if (is.factor(Ds[[v]])) {
       # check that there are exactly two levels
       if (length(levels( Ds[[ v]] ))!=2){
-        stop(sprintf("factor outcomes must have exactly two levels, '%s' has %d", o, length(levels(v))))
+        # stop(sprintf("factor outcomes must have exactly two levels, '%s' has %d", o, length(levels(v))))
         do_anova <- TRUE
       }
       # remember the level name of the second (will be deleted later on)
@@ -110,7 +110,7 @@ mt_stats_univ_lm <- function(
     if(is.null(m))
       return(tibble(term = outvar_term))
     f_tidy(m) %>%
-      mutate(formula = as.character(m$terms)) %>%
+      mutate(formula = as.character(attr(m,'terms'))) %>%
       dplyr::select(term, formula, everything())
   }
   
@@ -182,15 +182,19 @@ mt_stats_univ_lm <- function(
         form <- update.formula(form, str_c(". ~ . -", c))
       }
     }
-   
+    
     ## CALCLUATE ACTUAL MODEL
     mod <- f_lm(
       data    = Ds,
       formula = form
     )
+    terms <- mod$terms
     ## DO ANOVA IF MULTIPLE FACTOR LEVELS
     if(do_anova)
       mod <- anova(mod)
+    ## attach linear model terms as attribute to the variable 
+    ## (only way to make this compatible for both lm and anova, because they are very different data structures)
+    attr(mod, 'terms') <- terms
     ## RETURN
     mod
   }
@@ -200,9 +204,15 @@ mt_stats_univ_lm <- function(
     setNames(rownames(D))
   
   # broom it up, subselect to term, rename term
-  tab <- map_dfr(models, f_tidy_tidy, conf.int = T, .id = "var") %>%
-    filter(term == outvar_term) %>%
-    mutate(term =  outvar_label)
+  if (do_anova) {
+    tab <- map_dfr(models, f_tidy_tidy, conf.int = T, .id = "var") %>%
+      filter(term == outvar) %>%
+      mutate(term =  outvar_label)
+  } else {
+    tab <- map_dfr(models, f_tidy_tidy, conf.int = T, .id = "var") %>%
+      filter(term == outvar_term) %>%
+      mutate(term =  outvar_label)
+  }
   
   ## tidy up a bit more
   tab <- tab %>%
