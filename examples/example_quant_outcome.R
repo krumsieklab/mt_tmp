@@ -70,7 +70,7 @@ D <-
   ###
   # heading
   mt_reporting_heading("All scatter plots") %>%
-  # boxplots
+  # scatter plots
   mt_plots_scatter(statname           = "comp",
                    x                  = NUM_MOCK,
                    color              = Group,
