@@ -4,10 +4,11 @@
 #'
 #' @param D Summarized experiment input
 #' @param outfile # output HTML file name
+#' @param output.calls Output detailed info on function calls? default: F (passed through to mt_reporting_generateMD)
 #'
 #' @author JK
 #' 
-mt_reporting_quickhtml <- function(D, outfile, title = 'RMD output') {
+mt_reporting_quickhtml <- function(D, outfile, title = 'RMD output', output.calls=F) {
   
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))  
@@ -16,7 +17,7 @@ mt_reporting_quickhtml <- function(D, outfile, title = 'RMD output') {
   rmdfile <- "tmpmd.RMD"
   rdsfile <- "tmpmd.rds"
   # generate RMD
-  D %>% mt_reporting_generateMD(outfile = rmdfile, readfrom = rdsfile, title = title)
+  D %>% mt_reporting_generateMD(outfile = rmdfile, readfrom = rdsfile, title = title, output.calls = output.calls)
   # save temp file that will be input for the RMD
   save(D, file=rdsfile)
   # knit

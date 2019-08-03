@@ -16,7 +16,9 @@ mt_reporting_generateMD <- function(
   outfile = 'MT.RMD',    # output file to write to
   readfrom = 'mt.rds',   # R data file data will be loaded and is supposed to contain SummarizedExperiment "D"
   title = 'RMD output',  # title of document
-  firstheading='Output'  # name of first heading
+  firstheading='Output', # name of first heading
+  use.plotly=F,          # output interactive plotly plots?
+  output.calls=F          # output full information about all parameters of each function call?
 ) {
   
   
@@ -52,7 +54,11 @@ output:
   writechunk("# default chunk options\nknitr::opts_chunk$set(warning=F,echo=F,results='hide',message=F)", params = "echo=F")  
   
   #### chunk that loads libraries
-  writechunk('# load libraries\nmt.quickload()\nrequire("DT")')  
+  if (!use.plotly) {
+    writechunk('# load libraries\nmt.quickload()\nrequire("DT")')  
+  } else  {
+    writechunk('# load libraries\nmt.quickload()\nrequire("DT")\nrequire("plotly")')  
+  }
   #### chunk that loads data
   writechunk(glue('# load data\nload("{readfrom}")\nr <- metadata(D)$results'))
   
@@ -76,18 +82,28 @@ output:
         ## header
         out(glue('{strrep("#",lvl)} {r[[i]]$fun %>% paste(collapse="_")}'))
         
+        ## detailed arguments?
+        if (output.calls) {
+          L <- r[[i]]$args 
+          out("*Function arguments:*<br/>")
+          out(names(L) %>% lapply(function(x){sprintf("%s=%s",x, toString(L[[x]]))}) %>% paste0(collapse = "<br/>"))
+          out("")
+        }
+        
         ## log text
-        out(glue('{r[[i]]$logtxt}\n\n'))
+        out(glue('*Log text:*<br/>{r[[i]]$logtxt}\n\n'))
         
         ## plot?
         if (r[[i]]$fun[1]=="plots") {
-          # # test code for subchunkify
-          # if (all(all.equal(r[[i]]$fun, c("plots","qc","dilutionplot")) == T)) {
-          #   # quot norm plot, try different size
-          #   writechunk( glue("r[[{i}]]$output %>% lapply(subchunkify, fig_height=30, fig_width=30 )"))
-          # } else {
-          # any other plot
-          writechunk( glue("r[[{i}]]$output"))
+          # plot
+          if (!use.plotly) {
+            writechunk( glue("r[[{i}]]$output"))
+          } else {
+            writechunk( glue("
+plotlist = r[[{i}]]$output %>% lapply(ggplotly)
+htmltools::tagList(setNames(plotlist, NULL))
+                             "), params='results="show"')
+          }
           # }
           
         }
