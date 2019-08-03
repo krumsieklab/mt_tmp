@@ -117,6 +117,12 @@ mt_plots_boxplot <- function(D,
         geom_boxplot(aes(x = !!x, y = value, ...), outlier.shape = ifelse(jitter, NA, 19)) +
         labs(x = NULL, y = NULL) +
         ggtitle(plottitle)
+    
+    ## add ylabel if this is logged data
+    r <- D %>% mti_res_get_path(c("pre","trans","log"))
+    if (length(r)>0) {
+      p <- p + ylab(r[[1]]$logtxt) # log text contains e.g. "log2"
+    }
 
     ## ADD JITTER
     if(jitter){
@@ -137,7 +143,11 @@ mt_plots_boxplot <- function(D,
     if (!is.null(ggadd)) p <- p+ggadd
 
     ## SPLIT TO MULTIPLE PAGES
-    if(!missing(cols) && !missing(rows)){
+    # if there is no plot, create a single empty page
+    if (length(unique(stat$name))==0) {
+      p <- list(ggplot() + geom_text(aes(x=0, y=0, label='no plots'), size=10))
+    } else {
+      if(!missing(cols) && !missing(rows)){
         p_plots   <- length(unique(stat$name))
         p_perpage <- cols*rows
         pages     <- ceiling(p_plots / p_perpage)
@@ -146,14 +156,15 @@ mt_plots_boxplot <- function(D,
         ## ADD EMPTY PLOTS TO FILL PAGE
         fill_page <- (pages*p_perpage) - p_plots
         if(fill_page > 0){
-            mti_logstatus(glue::glue("add {fill_page} blanks to fill page"))
-            spaces <- map(1:fill_page, ~rep(" ", .x)) %>%
-                map_chr(str_c, collapse = "")
-            p[[ pages ]] <- p[[ pages ]] +
-                geom_blank(data = data.frame(name = spaces))
+          mti_logstatus(glue::glue("add {fill_page} blanks to fill page"))
+          spaces <- map(1:fill_page, ~rep(" ", .x)) %>%
+            map_chr(str_c, collapse = "")
+          p[[ pages ]] <- p[[ pages ]] +
+            geom_blank(data = data.frame(name = spaces))
         }
-    }else{
+      }else{
         p <- list(p + facet_wrap(.~name, scales = "free_y"))
+      }
     }
 
     ## add status information & plot
