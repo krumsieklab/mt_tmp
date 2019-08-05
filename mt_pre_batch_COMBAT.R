@@ -22,6 +22,11 @@ mt_pre_batch_COMBAT = function(
   stopifnot("SummarizedExperiment" %in% class(D))
   X = assay(D) # combat uses data probe s sample
   
+  # crash if there are any missing values
+  if (any(is.na(X))) {
+    stop("COMBAT batch correction cannot work with missing/NA values.")
+  }
+  
   # get variable
   if (!(batches %in% colnames(colData(D)))) stop(sprintf("'%s' not found in sample annotations.", batches))
   b = colData(D)[[batches]]

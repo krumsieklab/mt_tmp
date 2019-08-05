@@ -56,6 +56,9 @@ mt_plots_pheatmap <- function(D, scaledata=F, sym0=F, fD = function(x){ if(scale
   
   # fD(t(assay(D))) will be heatmapped
   x = t(assay(D))
+  # if x doesn't have rownames, use numbers 1:nrow
+  if (is.null(rownames(x))) rownames(x) <- 1:nrow(x)
+  # store
   x.colnames = colnames(x)
   x.rownames = rownames(x)
   aa$mat = fD(x)

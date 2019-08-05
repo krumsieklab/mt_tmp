@@ -66,7 +66,7 @@ mt_files_data_xls <- function(file,
   
   # construct SummarizedExperiment
   cd <- data.frame(as.character(colnames(assay)))
-  colnames(cd)[1] <- ifelse(samplesInRows,ID,'name')
+  colnames(cd)[1] <- ifelse(samplesInRows,ID,'sample')
   D <- SummarizedExperiment(
     assay=assay,
     rowData=metinfo,

@@ -12,7 +12,8 @@ require(glue)
 #' @param correct_confounder confounders to adjust for before plotting
 #' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
 #' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
-#' @param annotation, if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}",
+#' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}",
+#' @param text.size text size of the annotations
 #' @param jitter whether to add jitter to boxplot,  default T
 #' @param rows number rows of boxplots in $result
 #' @param cols number columns of boxplots in $result
@@ -43,6 +44,7 @@ mt_plots_boxplot <- function(D,
                             metab_filter = p.value < 0.05,
                             metab_sort   = p.value,
                             annotation   = "{sprintf('P-value: %.1e', p.value)}",
+                            text.size = 3.88,
                             jitter       = T,
                             rows,
                             cols,
@@ -137,7 +139,7 @@ mt_plots_boxplot <- function(D,
             distinct(name, annotate) 
         p <- p + geom_text(data = data_annotate,
                            aes(label = annotate),
-                           x = -Inf, y = Inf, hjust = -0.05, vjust = 1.05 )
+                           x = -Inf, y = Inf, hjust = -0.05, vjust = 1.05, size=text.size )
     }
     
     if (!is.null(ggadd)) p <- p+ggadd

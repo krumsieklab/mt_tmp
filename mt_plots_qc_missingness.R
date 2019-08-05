@@ -46,7 +46,7 @@ mt_plots_qc_missingness <- function(
     ggplot(data=molten, aes(x=X1,y=X2)) + 
     geom_tile(aes(fill=value)) +
     theme(axis.text=element_blank(),axis.ticks=element_blank()) + 
-    xlab("metabolites") + ylab("samples") +
+    xlab(sprintf("metabolites (%d)", ncol(X))) + ylab(sprintf("samples (%d)", nrow(X))) +
     theme(panel.border = element_rect(colour = "black", fill=NA, size=1)) +
     ggtitle("Missing values") + 
     scale_fill_manual(values=c("#FFFFFF", "#000000"), 
