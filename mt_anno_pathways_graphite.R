@@ -72,7 +72,7 @@ mt_add_pathways <- function(
       pw <- pwdb[[pwname]]
       pw %>% 
         graphite::edges(which = "metabolites") %>% 
-        mutate(name = pwname,
+        mutate(pathway_name = pwname,
                ID = pathwayId(pw))
       
     },
@@ -84,9 +84,9 @@ mt_add_pathways <- function(
   # convert the pathway list into a dataframe 
   pwdb %<>% 
     bind_rows() %>% 
-    dplyr::select(src, dest, name, ID) %>% 
-    gather(key = tmp, value = mappingID, -c(name, ID)) %>% 
-    dplyr::select(mappingID, name, ID) %>% 
+    dplyr::select(src, dest, pathway_name, ID) %>% 
+    gather(key = tmp, value = mappingID, -c(pathway_name, ID)) %>% 
+    dplyr::select(mappingID, pathway_name, ID) %>% 
     drop_na() %>% # ensure that there are no NAs in any rows
     distinct()
   
