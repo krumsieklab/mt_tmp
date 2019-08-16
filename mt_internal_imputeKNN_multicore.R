@@ -51,8 +51,13 @@ mt_internal_imputeKNN_multicore <- function(dat,
   Cor <- cor(dat,use="p")
   
   
-  dist_path <- "tmp/distance_matrices_test/"
+  dist_path <- "tmp/distance_matrices/"
   dir.create(dist_path, recursive = TRUE)
+  
+  # Precalculate values that will be reused in the mclapply below. Increases speed...
+  scale_dat <- scale(dat)
+  dist_scale_dat <- dist(scale_dat)
+  
   # Get a list of sample distance matrices based on each incom_vars and varsel.
   # Basically what this is doing is that, if an incom.var is missing, find
   # metabolites with highest correlation, and based on these metabolites
@@ -73,12 +78,12 @@ mt_internal_imputeKNN_multicore <- function(dat,
     
     # calculate distance matrix of each sample based on scaled varsel data (column-wise)
     # Convert to a full matrix
-    D2 <- as.matrix(dist(scale(dat[,varsel])),upper=T,diag=T) 
+    D2 <- as.matrix(dist(scale_dat[,varsel]),upper=T,diag=T) 
     
     # if D2 has missing values, replace them by distance matrix of whole dataframe,
     # scaled by length of varsel and ncol(dat)
     if(any(is.na(D2))) {
-      D2a <- as.matrix(dist(scale(dat)),upper=T,diag=T)*sqrt(length(varsel)/ncol(dat))
+      D2a <- as.matrix(dist_scale_dat,upper=T,diag=T)*sqrt(length(varsel)/ncol(dat))
       D2[is.na(D2)] <- D2a[is.na(D2)] }
     diag(D2) <- NA
     saveRDS(D2, paste0(dist_path, j, ".rds"), compress = FALSE)
