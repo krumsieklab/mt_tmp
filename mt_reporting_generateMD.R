@@ -18,7 +18,8 @@ mt_reporting_generateMD <- function(
   title = 'RMD output',  # title of document
   firstheading='Output', # name of first heading
   use.plotly=F,          # output interactive plotly plots?
-  output.calls=F          # output full information about all parameters of each function call?
+  output.calls=F,        # output full information about all parameters of each function call?
+  start.after=NA         # UUID of pipeline step AFTER which to start (default: none, i.e. output entire pipeline) 
 ) {
   
   
@@ -48,6 +49,21 @@ output:
 
     '))
   
+  #### determine where to start from (first pipeline step, or after one)
+  start.from = 1 # by default
+  if (!is.na(start.after)) {
+    # extract all UUIDs
+    allids <- D %>% metadata() %>% .$results %>% map("uuid") %>% unlist()
+    # find the one to start after
+    start.from <- which(allids==start.after) 
+    # error-check
+    if (length(start.from)==0) 
+      stop(sprintf("Could not find pipeline step to start after: '%s'", start.after))
+    if (D %>% metadata() %>% .$results %>% length() == start.from) 
+      stop(sprintf("Cannot start after pipeline step '%s', because it's the last entry of the pipeline", start.after))
+    start.from <- start.from + 1
+  }
+  
   
   
   #### global chunk options
@@ -71,7 +87,7 @@ output:
   # loop over results
   r <- metadata(D)$results
   
-  for (i in 1:length(r)) {
+  for (i in start.from:length(r)) {
     # to ignore?
     if (r[[i]]$fun[2]!="void") { # ignore void
       
