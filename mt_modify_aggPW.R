@@ -98,7 +98,9 @@ mt_modify_aggPW <- function(
   }
   
   # generate summarized experiment
-  newD <- SummarizedExperiment(assay = t(M),
+  assay <- t(M)
+  rownames(rd) <- assay %>% row.names()
+  newD <- SummarizedExperiment(assay = assay,
                                colData  = colData(D),
                                rowData  = rd,
                                metadata = metadata(D)
