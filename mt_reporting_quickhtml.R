@@ -35,4 +35,6 @@ mt_reporting_quickhtml <- function(
   file.remove(rmdfile)
   file.remove(rdsfile)
   
+  # return document, in case pipeline is supposed to keep running
+  D
 }
