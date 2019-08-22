@@ -117,6 +117,10 @@ mt_plots_boxplot <- function(D,
   }
   vars <- unique(vars)
   
+  # make sure the main outcome variable x is a factor
+  mainvar <- x %>% as.character() %>% gsub("~","",.)
+  dummy[[mainvar]] <- as.factor(dummy[[mainvar]])
+  
   #
   plottitle <- ifelse(missing(statname),"",statname)
   p <- dummy %>%
@@ -126,7 +130,7 @@ mt_plots_boxplot <- function(D,
     dplyr::select(-var) %>%
     ## do plot
     ggplot() +
-    geom_boxplot(aes(x = !!x, y = value, ...), outlier.shape = ifelse(jitter, NA, 19)) +
+    geom_boxplot(aes(x = as.factor(!!x), y = value, ...), outlier.shape = ifelse(jitter, NA, 19)) +
     labs(x = NULL, y = NULL) +
     ggtitle(plottitle)
   
