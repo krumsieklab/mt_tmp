@@ -17,7 +17,8 @@ require(glue)
 #' @param jitter whether to add jitter to boxplot,  default T
 #' @param rows number rows of boxplots in $result
 #' @param cols number columns of boxplots in $result
-#' @param restrict_to_groups whether to filter by groups, default T
+#' @param restrict.to.groups whether to filter by groups, default T
+#' @param full.info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #' 
@@ -48,7 +49,8 @@ mt_plots_boxplot <- function(D,
                              jitter       = T,
                              rows,
                              cols,
-                             restrict_to_groups=T,
+                             restrict.to.groups=T,
+                             full.info=F,
                              ggadd        = NULL,
                              ...){
   
@@ -73,7 +75,7 @@ mt_plots_boxplot <- function(D,
       inner_join(rd, by = "var")
   }else{
     stat <- rd
-    restrict_to_groups <- F # not dependend on a stat
+    restrict.to.groups <- F # not dependend on a stat
   }
   
   ## FILTER METABOLITES
@@ -101,38 +103,55 @@ mt_plots_boxplot <- function(D,
     mti_format_se_samplewise() %>%
     gather(var, value, one_of(rownames(D)))
   ## filter to groups?
-  if (restrict_to_groups) {
+  if (restrict.to.groups) {
     filterto <- mti_get_stat_by_name(D, statname, fullstruct=T)$groups
     dummy <- dummy[dummy[[stat$term[1]]] %in% filterto,]
   }
   
   
-
-  # filter down only to the variables needed for plotting
-  # need to parse x and ... list
-  vars <- x %>% as.character() %>% gsub("~","",.)
-  q <- quos(...)
-  if (length(q) > 0) {
-    vars <- c(vars, q %>% lapply(function(x){x %>% as.character() %>% gsub("~","",.)}) %>% unlist() %>% as.vector())
+  
+  if (!full.info) { 
+    # filter down only to the variables needed for plotting
+    # need to parse x and ... list
+    vars <- x %>% as.character() %>% gsub("~","",.)
+    q <- quos(...)
+    if (length(q) > 0) {
+      vars <- c(vars, q %>% lapply(function(x){x %>% as.character() %>% gsub("~","",.)}) %>% unlist() %>% as.vector())
+    }
+    vars <- unique(vars)
+    
+    # make sure the main outcome variable x is a factor
+    mainvar <- x %>% as.character() %>% gsub("~","",.)
+    dummy[[mainvar]] <- as.factor(dummy[[mainvar]])
+    
+    #
+    plottitle <- ifelse(missing(statname),"",statname)
+    p <- dummy %>%
+      dplyr::select(one_of(c("var","value", vars))) %>%
+      ## add metabolite names, but only restricted subset from statistics table
+      inner_join(stat[,c('var','statistic','p.value','p.adj','name')], by = "var") %>% 
+      dplyr::select(-var) %>%
+      ## do plot
+      ggplot() +
+      geom_boxplot(aes(x = as.factor(!!x), y = value, ...), outlier.shape = ifelse(jitter, NA, 19)) +
+      labs(x = NULL, y = NULL) +
+      ggtitle(plottitle)
+    
+  } else {
+    # leave full info in
+    # can create huge data.frames
+    
+    plottitle <- ifelse(missing(statname),"",statname)
+    p <- dummy %>%
+      ## add metabolite names
+      inner_join(stat, by = "var") %>% 
+      ## do plot
+      ggplot() +
+      geom_boxplot(aes(x = !!x, y = value, ...), outlier.shape = ifelse(jitter, NA, 19)) +
+      labs(x = NULL, y = NULL) +
+      ggtitle(plottitle)
+    
   }
-  vars <- unique(vars)
-  
-  # make sure the main outcome variable x is a factor
-  mainvar <- x %>% as.character() %>% gsub("~","",.)
-  dummy[[mainvar]] <- as.factor(dummy[[mainvar]])
-  
-  #
-  plottitle <- ifelse(missing(statname),"",statname)
-  p <- dummy %>%
-    dplyr::select(one_of(c("var","value", vars))) %>%
-    ## add metabolite names, but only restricted subset from statistics table
-    inner_join(stat[,c('var','statistic','p.value','p.adj','name')], by = "var") %>% 
-    dplyr::select(-var) %>%
-    ## do plot
-    ggplot() +
-    geom_boxplot(aes(x = as.factor(!!x), y = value, ...), outlier.shape = ifelse(jitter, NA, 19)) +
-    labs(x = NULL, y = NULL) +
-    ggtitle(plottitle)
   
   ## add ylabel if this is logged data
   r <- D %>% mti_res_get_path(c("pre","trans","log"))
