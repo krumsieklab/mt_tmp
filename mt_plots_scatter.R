@@ -14,6 +14,7 @@ mt_plots_scatter <- function(D,
                              cols,
                              fitline = T,
                              fitline_se = T,
+                             full.info=F,
                              ggadd        = NULL,
                              ...){
   
@@ -66,22 +67,53 @@ mt_plots_scatter <- function(D,
     mti_format_se_samplewise() %>%
     gather(var, value, one_of(rownames(D)))
   
-  # else {
-  #   filterto <- unique(dummy[[stat$term[1]]])
-  # }
   
-  #
-  plottitle <- ifelse(missing(statname),"",statname)
-  p <- dummy %>%
-    ## add metabolite names
-    inner_join(stat, by = "var") %>% 
-    ## do plot
-    ggplot() +
-    ## add fit line?
-    {if (fitline) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fitline_se, color = "black") else NULL} + 
-    geom_point(aes(x = !!x, y = value, ...)) +
-    labs(x = quo_name(x), y="metabolite") +
-    ggtitle(plottitle)
+  if (!full.info) { 
+    # filter down only to the variables needed for plotting
+    # need to parse x and ... list
+    vars <- x %>% as.character() %>% gsub("~","",.)
+    q <- quos(...)
+    if (length(q) > 0) {
+      vars <- c(vars, q %>% lapply(function(x){x %>% as.character() %>% gsub("~","",.)}) %>% unlist() %>% as.vector())
+    }
+    vars <- unique(vars)
+    
+    # make sure the main outcome variable x is a factor
+    mainvar <- x %>% as.character() %>% gsub("~","",.)
+    dummy[[mainvar]] <- as.factor(dummy[[mainvar]])
+    
+    #
+    plottitle <- ifelse(missing(statname),"",statname)
+    p <- dummy %>%
+      dplyr::select(one_of(c("var","value", vars))) %>%
+      ## add metabolite names, but only restricted subset from statistics table
+      inner_join(stat[,c('var','statistic','p.value','p.adj','name')], by = "var") %>% 
+      dplyr::select(-var) %>%
+      ## do plot
+      ggplot() +
+      ## add fit line?
+      {if (fitline) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fitline_se, color = "black") else NULL} + 
+      geom_point(aes(x = !!x, y = value, ...)) +
+      labs(x = quo_name(x), y="metabolite") +
+      ggtitle(plottitle)
+    
+  } else {
+    # leave full info in
+    # can create huge data.frames
+    
+    #
+    plottitle <- ifelse(missing(statname),"",statname)
+    p <- dummy %>%
+      ## add metabolite names
+      inner_join(stat, by = "var") %>% 
+      ## do plot
+      ggplot() +
+      ## add fit line?
+      {if (fitline) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fitline_se, color = "black") else NULL} + 
+      geom_point(aes(x = !!x, y = value, ...)) +
+      labs(x = quo_name(x), y="metabolite") +
+      ggtitle(plottitle)
+  }
   
   
   ## ADD ANNOTATION
