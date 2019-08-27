@@ -27,12 +27,11 @@ require(ggrepel)
 #' ) %>% ...
 #'   
 #' ## compare two stats from different pipelines
-#' ... $>$
+#' # 'comp' is a string that contains the name of a comparison (here both SEs have the same comparison on two datasets)
 #' mt_plots_compare2stats(
 #'   D1 = D1, stat1 = comp, filter1 = p.adj<0.1, 
 #'   D2 = D2, stat2 = comp, filter2 = p.adj<0.1,
-#'   filterop = "OR", return.plot.only=T
-#' ) %>%
+#'   filterop = "OR", return.plot.only=T)
 #' 
 #' @author JK
 #' 
