@@ -2,25 +2,25 @@
 #' 
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param var colData variable name to use as ordered categorical for the correlation calculation. Needs to be an ordered factor or numeric.
+#' @param var string name of the colData variable to use as ordered categorical variable for the correlation calculation. class(D[[var]]) needs to be numeric.
 #' @param name name under which this comparison will be stored, must be unique to all other statistical results
-#' @param samplefilter term which samples to filter to first
+#' @param samplefilter optional sample filter condition
 #' 
 #' @return original SummarizedExperiment as in input
 #' @return $output: list of pairwise partial correlation coefficients and pvalues, as well as the corresponding variable names
 #' 
 #' @examples
 #' ... %>%
-#'   mt_stats_univ_tau(name ="tau") %>%
+#'   mt_stats_univ_tau(var = "Stage", samplefilter = (GROUP %in% "Tumor"), name = "tau") %>%
 #' ...
 #' 
 #' @author EB
 #' 
 
 mt_stats_univ_tau = function(
-  D,                       # SummarizedExperiment input
+  D,
   var,
-  name,                     # unique name for this particular partial correlation matrix
+  name,
   samplefilter){
   
   # validate arguments
@@ -32,6 +32,8 @@ mt_stats_univ_tau = function(
   
   # make sure name does not exist yet
   if (name %in% unlist(mti_res_get_stats_entries(D) %>% map("output") %>% map("name"))) stop(sprintf("stat element with name '%s' already exists",name))
+  
+  require(stats)
   
   # merge data with sample info
   Ds <- D %>% mti_format_se_samplewise() 
