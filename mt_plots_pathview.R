@@ -7,6 +7,8 @@ require(pathview)
 #' @param D \code{SummarizedExperiment} input
 #' @param gene.id string name of the rowData column containing the gene identifiers.
 #' @param met.id string name of the rowData column containing the metabolite identifiers
+#' @param statname name of the statistics object to apply metab_filter to
+#' @param metab_filter if given, filter will be applied to data and only variables satisfying the condition will be included
 #' @param gene.data either vector (single sample) or a matrix-like data (multiple sample). Vector should be numeric with gene IDs as names or it may also be character of gene IDs. Character vector is treated as discrete or count data. Matrix-like data structure has genes as rows and samples as columns. Row names should be gene IDs. Here gene ID is a generic concepts, including multiple types of gene, transcript and protein uniquely mappable to KEGG gene IDs. KEGG ortholog IDs are also treated as gene IDs as to handle metagenomic data. Check details for mappable ID types. Default gene.data=NULL.
 #' @param cpd.data the same as gene.data, excpet named with IDs mappable to KEGG compound IDs. Over 20 types of IDs included in CHEMBL database can be used here. Check details for mappable ID types. Default cpd.data=NULL. Note that gene.data and cpd.data can't be NULL simultaneously.
 #' @param pathway.id character vector, the KEGG pathway ID(s), usually 5 digit, may also include the 3 letter KEGG species code.
@@ -15,9 +17,10 @@ require(pathview)
 #' @return $result: pathview images
 #' 
 #' @examples
-#' # map given metabolite KEGG identifiers to the pathway "hsa00010" and save images in the in the current directory
+#' # map given metabolite KEGG identifiers and given genes Entrez identifiers to the pathway "hsa00010" and save images in the in the current directory
 #' ... %>%
-#' mt_plots_pathview(cpd.data=c("C02787","C08521","C01043","C11496","C07111"),
+#' mt_plots_pathview(cpd.data=c("C02787","C08521","C01043","C11496","C07111"), 
+#'                   gene.data=c("100008586" "100008587" "100008588" "100008589" "100009613"),
 #'                   pathway.id="hsa00010",
 #'                   kegg.dir = ".") %>%
 #' ...
@@ -38,6 +41,9 @@ mt_plots_pathview <- function(D,
                              # only one between met.id and cpd.data can be given
                              met.id = NULL,
                              cpd.data = NULL,
+                             # if gene.id or met.id is given, variables can be selected from the results of a statistical analysis
+                             statname,
+                             metab_filter,
                              pathway.id,
                              kegg.dir = ".",
 
@@ -73,16 +79,45 @@ mt_plots_pathview <- function(D,
   if(!is.null(met.id)) {
     if(length(met.id)!=1)
       stop(sprintf("%s can only be a single column", met.id))}
+  ## if metab_filter is given, statname must also be given and either met.id or gene.id must be given as well
+  if(!missing(metab_filter)) {
+    if(missing(statname))
+      stop("In order to use metab_filter, statname must be given")
+    if(is.null(gene.id) & is.null(met.id))
+      stop("In order to use metab_filter, one betweeen gene.id and met.id must be given")
+  }
+
+  ## rowData
+  rd <- rowData(D) %>%
+    as.data.frame() %>%
+    mutate(var = rownames(D))
   
+  ## stat
+  if(!missing(statname)){
+    stat <- mti_get_stat_by_name(D, statname) %>%
+      inner_join(rd, by = "var")
+  }else{
+    stat <- rd
+    restrict.to.groups <- F # not dependend on a stat
+  }
+  
+  ## FILTER METABOLITES
+  if(!missing(metab_filter)){
+    metab_filter_q <- enquo(metab_filter)
+    stat <- stat %>%
+      filter(!!metab_filter_q)
+    mti_logstatus(glue::glue("filter metabolites: {metab_filter_q} [{nrow(stat)} remaining]"))
+  }
   
   # if gene.id is provided, extract identifiers from the rowData
   if(!is.null(gene.id)) {
-    gene.data <- rowData(D)[[gene.id]]
+    gene.data <- stat[[gene.id]]
   }
   # if met.id is provided, extract identifiers from the rowData
   if(!is.null(met.id)) {
-    cpd.data <- rowData(D)[[met.id]]
+    cpd.data <- stat[[met.id]]
   }
+
   # if kegg.dir is provided, check if the folder exists, otherwise create it
   if (!file.exists(kegg.dir)){
     dir.create(kegg.dir)
