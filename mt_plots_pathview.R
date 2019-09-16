@@ -84,8 +84,7 @@ mt_plots_pathview <- function(D,
     if(missing(statname))
       stop("In order to use metab_filter, statname must be given")
     if(is.null(gene.id) & is.null(met.id))
-      stop("In order to use metab_filter, one betweeen gene.id and met.id must be given")
-  }
+      stop("In order to use metab_filter, one betweeen gene.id and met.id must be given")}
 
   ## rowData
   rd <- rowData(D) %>%
@@ -98,7 +97,6 @@ mt_plots_pathview <- function(D,
       inner_join(rd, by = "var")
   }else{
     stat <- rd
-    restrict.to.groups <- F # not dependend on a stat
   }
   
   ## FILTER METABOLITES
