@@ -1,10 +1,7 @@
 
 #### load libraries ----
 
-library(AnnotationDbi)
-library(org.Hs.eg.db)
-library(graphite)
-
+zap()
 # load MT 
 mt.quickload()
 
@@ -48,12 +45,15 @@ D <- D %>%
   ###### </SAME AS example_simplepipeline.R>
   ### heading
   mt_reporting_heading("Statistics") %>%
-  # linear model on multiple groups, i.e. ANOVA
+  # linear model, differential test on Group
   mt_stats_univ_lm(
     formula      = ~ Group, 
+    samplefilter = (Group %in% c("treatment1","treatment2")),
     name         = "comp",
     mc.cores     = 1
   ) %>%
+  # add fold change
+  mt_post_addFC(statname = "comp") %>%
   # add multiple testing correction
   mt_post_multTest(statname = "comp", method = "BH") %>%
   # p-value histogram
@@ -64,57 +64,27 @@ D <- D %>%
                    metab_filter = p.adj < 0.1,
                    colour       = p.value < 0.05)
 
-
-#### part 3, gnerate KEGG pathway annotations ----
-
-# download kegg pathways
-pwdb <- pathways(species = "hsapiens", database = "kegg")
-pwdb <- mcmapply(function(pwname) {
-  pw <- pwdb[[pwname]]
-  pw %>% 
-    graphite::edges(which = "mixed") %>% # "metabolites", "proteins", or "mixed"
-    mutate(name = pwname,
-           ID = pathwayId(pw))
-},
-names(pwdb),
-SIMPLIFY = F,
-mc.cleanup = T,
-mc.cores = 3)
-
-# build just one big dataframe with all pathway informations
-pwdf <- do.call(rbind, pwdb)
-
-# find metabolite pathway annotations
-m_anno <- lapply(rowData(D)$KEGG[!is.na(rowData(D)$KEGG)], function(x) {
-  pwdf$ID[pwdf$dest==x] %>% unique()
-  
-})
-names(m_anno) <- rowData(D)$KEGG[!is.na(rowData(D)$KEGG)]
-
-# build one long list
-m_anno_list <- do.call(c, m_anno)
-
-# find most common pathway for metabolites
-pw_met <- m_anno_list %>% table() %>% as.data.frame() 
-colnames(pw_met) <- c("pathway","Freq")
-# pathway list ordered according to the number of metabolites with that annotation
-pw_met <- pw_met[order(pw_met$Freq,decreasing = TRUE),]
-# remove ":" from pathway ids for pathview
-pw_met$pathway <- gsub(":", "", pw_met$pathway)
-
-#### part 4, create pathview plots ----
+#### part 3, create pathview plots ----
 
 D <- D %>%
-  # plot all metabolites and all genes in the top 5 most frequent pathway annotations for metabolites
+  # plot all metabolites in the top 10 most frequent pathway annotations
   mt_plots_pathview(met.id="KEGG", 
-                    pathway.id = pw_met$pathway[1:5], 
-                    # plots will be created in a folder called "Pathview_met" inside the current working directory
-                    kegg.dir = "./Pathview_met") %>%
-  # plot only significant metabolites in the top 5 most frequent pathway annotations for metabolites
+                    n.pathways = 10,
+                    # kegg pathway files will be created in a folder called "Pathview_database" inside the current working directory
+                    path.database = "./Pathview_database",
+                    # output will be created in a folder called "Pathview_output" inside the current working directory
+                    path.output = "./Pathview_output1") %>%
+  # plot all metabolites in the top 10 most frequent pathway annotations
+  # use the results of the statistical analysis "comp" to color and filter metabolites
   mt_plots_pathview(met.id="KEGG", 
-                    pathway.id = pw_met$pathway[1:5], 
-                    statname = "comp", 
-                    # only metabolites with p.adj < 0.05 in the statistitical comparison called "comp" will be included in the plots
-                    metab_filter = p.adj < 0.05,
-                    # plots will be created in a folder called "Pathview_met_sing" inside the current working directory
-                    kegg.dir = "./Pathview_met_sign")
+                    n.pathways = 10,
+                    # take results from statistical analysis called "comp"
+                    statname = "comp",
+                    # color scale function
+                    color_scale = -sign(fc)*log10(p.value),
+                    # metabolite filtering condition (filtered metabolites will be shown in gray)
+                    metab_filter = p.value < 0.05,
+                    # kegg pathway files will be created in a folder called "Pathview_database" inside the current working directory
+                    path.database = "./Pathview_database",
+                    # output will be created in a folder called "Pathview_output" inside the current working directory
+                    path.output = "./Pathview_output2")
