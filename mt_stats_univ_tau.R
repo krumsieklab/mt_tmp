@@ -1,4 +1,7 @@
+require(stats)
+
 #' Computes Kendall's rank correlation.
+#' If present, NAs will be omitted.
 #' 
 #'
 #' @param D \code{SummarizedExperiment} input
@@ -7,7 +10,7 @@
 #' @param samplefilter optional sample filter condition
 #' 
 #' @return original SummarizedExperiment as in input
-#' @return $output: list of pairwise partial correlation coefficients and pvalues, as well as the corresponding variable names
+#' @return $output: list of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names
 #' 
 #' @examples
 #' ... %>%
@@ -33,8 +36,6 @@ mt_stats_univ_tau = function(
   # make sure name does not exist yet
   if (name %in% unlist(mti_res_get_stats_entries(D) %>% map("output") %>% map("name"))) stop(sprintf("stat element with name '%s' already exists",name))
   
-  require(stats)
-  
   # merge data with sample info
   Ds <- D %>% mti_format_se_samplewise() 
   
@@ -55,7 +56,7 @@ mt_stats_univ_tau = function(
   met <- colnames(Ds)[(length(colnames(colData(D)))+2):length(colnames(Ds))]
   # compute association to the phenotype
   rr <- lapply(met, function(x){
-    d=cor.test(Ds[,x], Ds[[var]], method="kendall",alternative = "two.sided")
+    d=cor.test(Ds[,x], Ds[[var]], method="kendall", alternative = "two.sided")
     list("statistic"=d$estimate, "p.value"=d$p.value)
   })
   names(rr) <- met
@@ -73,8 +74,13 @@ mt_stats_univ_tau = function(
   tab <-cbind.data.frame(as.data.frame(do.call(rbind, rr_reverse$statistic)),
                                    as.data.frame(do.call(rbind, rr_reverse$p.value)))
   colnames(tab) <- c("statistic","p.value")
+  # add term column with ordinal variable
+  tab$term <- rep(var, dim(tab)[1])
   # add column with names
   tab$var <- rownames(tab)
+  
+  ## construct output groups variable
+  outgroups <- unique(Ds[[var]])
   
   # add status information
   funargs <- mti_funargs()
@@ -85,7 +91,8 @@ mt_stats_univ_tau = function(
       output = list(
         table = tab,
         name = name,
-        lstobj = NULL
+        lstobj = NULL,
+        groups = outgroups
       )
     )
   
