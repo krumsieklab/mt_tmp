@@ -1,7 +1,7 @@
 require(pathview)
-require(AnnotationDbi)
-require(org.Hs.eg.db)
-require(graphite)
+# require(AnnotationDbi)
+# require(org.Hs.eg.db)
+# require(graphite)
 
 #' mt_plots_pathview
 #'
@@ -9,9 +9,11 @@ require(graphite)
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param gene.id string name of the rowData column containing the gene identifiers.
-#' @param met.id string name of the rowData column containing the metabolite identifiers
 #' @param gene.data either vector (single sample) or a matrix-like data (multiple sample). Vector should be numeric with gene IDs as names or it may also be character of gene IDs. Character vector is treated as discrete or count data. Matrix-like data structure has genes as rows and samples as columns. Row names should be gene IDs. Here gene ID is a generic concepts, including multiple types of gene, transcript and protein uniquely mappable to KEGG gene IDs. KEGG ortholog IDs are also treated as gene IDs as to handle metagenomic data. Check details for mappable ID types. Default gene.data=NULL.
+#' @param gene.idtype character, ID type used for the gene.data, case insensitive. Default gene.idtype="entrez", i.e. Entrez Gene, which are the primary KEGG gene ID for many common model organisms. For other species, gene.idtype should be set to "KEGG" as KEGG use other types of gene IDs. For the common model organisms (to check the list, do: data(bods); bods), you may also specify other types of valid IDs. To check the ID list, do: data(gene.idtype.list); gene.idtype.list.
+#' @param met.id string name of the rowData column containing the metabolite identifiers
 #' @param cpd.data the same as gene.data, excpet named with IDs mappable to KEGG compound IDs. Over 20 types of IDs included in CHEMBL database can be used here. Check details for mappable ID types. Default cpd.data=NULL. Note that gene.data and cpd.data can't be NULL simultaneously.
+#' @param cpd.idtype character, ID type used for the cpd.data. Currently can eithr be "kegg" or "hmdb" (default "kegg").
 #' @param statname name of the statistics object to apply metab_filter to
 #' @param metab_filter if given, filter will be applied to data and only variables satisfying the condition will be included
 #' @param color_scale if given, this will be used to map colors to a continuous scale
@@ -32,9 +34,11 @@ mt_plots_pathview <- function(D,
                              # only one between gene.id and gene.data can be given
                              gene.id = NULL,
                              gene.data = NULL,
+                             gene.idtype = "entrez",
                              # only one between met.id and cpd.data can be given
                              met.id = NULL,
                              cpd.data = NULL,
+                             cpd.idtype = "kegg",
                              # if gene.id or met.id is given, variables can be selected from the results of a statistical analysis
                              statname,
                              metab_filter,
@@ -51,7 +55,7 @@ mt_plots_pathview <- function(D,
                              path.output = "./Pathview_output",
 
                              # other pathview::pathview arguments
-                             species = "hsa", cpd.idtype = "kegg", gene.idtype = "entrez", gene.annotpkg = NULL, min.nnodes = 3, kegg.native = TRUE,
+                             species = "hsa", gene.annotpkg = NULL, min.nnodes = 3, kegg.native = TRUE,
                              map.null = TRUE, expand.node = FALSE, split.group = FALSE, map.symbol = TRUE, map.cpdname = TRUE, node.sum = "sum", 
                              discrete=list(gene=FALSE,cpd=FALSE), limit = list(gene = 1, cpd = 1), bins = list(gene = 10, cpd = 10), 
                              both.dirs = list(gene = T, cpd = T), trans.fun = list(gene = NULL, cpd = NULL), na.col = "transparent"
@@ -129,7 +133,7 @@ mt_plots_pathview <- function(D,
     var <- var$var
     # set color variable of non significant results to 0
     stat$color[!(stat$var %in% var)] <- 0
-    #mti_logstatus(glue::glue("filter metabolites: {metab_filter_q} [{nrow(stat)} remaining]"))
+    #mti_logstatus(glue::glue("filter metabolites: {metab_filter_q} [{nrow(stat)-length(var)} significant]"))
   }
   
   # if gene.id is provided, extract identifiers from the rowData
@@ -137,18 +141,18 @@ mt_plots_pathview <- function(D,
     # remove duplicated identifiers if they occur
     stat <- stat[!duplicated(stat[[gene.id]]),]
     # create pathview variable
-    gene.data <- data.frame(stat$color[!is.na(stat[[gene.id]])])
+    gene.data <- data.frame(ID=stat[[gene.id]][!is.na(stat[[gene.id]])],color=stat$color[!is.na(stat[[gene.id]])])
     # remove rows with NAs in the identifiers
-    rownames(gene.data) <- stat[[gene.id]][!is.na(stat[[gene.id]])]
+    # rownames(gene.data) <- stat[[gene.id]][!is.na(stat[[gene.id]])]
   }
   # if met.id is provided, extract identifiers from the rowData
   if(!is.null(met.id)) {
     # remove duplicated identifiers if they occur
     stat <- stat[!duplicated(stat[[met.id]]),]
     # create pathview variable
-    cpd.data <- data.frame(stat$color[!is.na(stat[[met.id]])])
+    cpd.data <- data.frame(ID=stat[[met.id]][!is.na(stat[[met.id]])],color=stat$color[!is.na(stat[[met.id]])])
     # remove rows with NAs in the identifiers
-    rownames(cpd.data) <- stat[[met.id]][!is.na(stat[[met.id]])]
+    # rownames(cpd.data) <- stat[[met.id]][!is.na(stat[[met.id]])]
   }
 
   # if path.output is provided, check if the folder exists, otherwise create it
@@ -160,32 +164,63 @@ mt_plots_pathview <- function(D,
     dir.create(path.database)
   }
   
+  # if cpd.idtype is "hmdb", map identifiers to KEGG
+  if (cpd.idtype=="hmdb") {
+    # load look-up table of HMDB to KEGG identifiers
+    load(codes.makepath("snippets/packages/metabotools_external/pathview/MetaboliteMapping.Rds"))
+    # MetaboliteMapping <- data.frame(secondary_accessions=rowData(D)$HMDb_ID, accession = as.character(rep(NA, length(rowData(D)$HMDb_ID))), kegg_id=rowData(D)$KEGG)
+    # collect IDs
+    dict <- data.frame(HMDB=cpd.data[,1])
+    dict$HMDB <- as.character(dict$HMDB)
+    
+    # build conversion table
+    suppressWarnings(
+      dict <- dict %>% 
+        left_join(MetaboliteMapping[,c("secondary_accessions","kegg_id")], by=c("HMDB" = "secondary_accessions")) %>%
+                    left_join(MetaboliteMapping[,c("accession","kegg_id")], by=c("HMDB" = "accession"))
+    )
+
+    # merge KEGG identifiers
+    dict$KEGG <- dict$kegg_id.x
+    dict$KEGG[is.na(dict$KEGG)] <- dict$kegg_id.y[is.na(dict$KEGG)]
+    cpd.data$KEGG <- dict$KEGG
+    # remove NAs
+    cpd.data <- cpd.data[!is.na(cpd.data$KEGG),]
+    # map KEGG identifiers to rownames
+    cpd.data$ID <- cpd.data$KEGG
+    # remove extra column
+    cpd.data <- cpd.data[,-which(colnames(cpd.data) %in% c("KEGG"))]
+  }
+
+  if (!is.null(met.id)) {
+    # remove duplicates
+    cpd.data <- cpd.data[!duplicated(cpd.data$ID),]
+    # move first column of data to rownames for pathview
+    rownames(cpd.data) <- cpd.data$ID
+    # remove ID column (now converted to rownames)
+    cpd.data <- subset(cpd.data, select=-c(ID))
+  }
+  
   # if no pathway.id list is provided, find annotations for kegg identifiers
   if (missing(pathway.id)) {
     
-    # download kegg pathways
-    pwdb <- pathways(species = "hsapiens", database = "kegg")
-    pwdb <- mcmapply(function(pwname) {
-      pw <- pwdb[[pwname]]
-      pw %>% 
-        graphite::edges(which = "mixed") %>% # "metabolites", "proteins", or "mixed"
-        mutate(name = pwname,
-               ID = pathwayId(pw))
-    },
-    names(pwdb),
-    SIMPLIFY = F,
-    mc.cleanup = T,
-    mc.cores = 3)
-    
-    # build just one big dataframe with all pathway informations
+    # load KEGG pathway database
+    load(codes.makepath("snippets/packages/metabotools_external/pathview/KeggPathways.Rds"))
+    # build one big dataframe with all pathway informations
     pwdf <- do.call(rbind, pwdb)
     
-    if (!is.null(gene.id) | !is.null(gene.data)) {
-    # find gene pathway annotations
-      g_anno <- lapply(rownames(gene.data), function(x) {
+    if (!is.null(gene.data)) {
+      if(!is.null(rownames(gene.data))) {
+        ids <- rownames(gene.data)
+      } else {
+        ids <- gene.data
+      }
+      
+      # find gene pathway annotations
+      g_anno <- lapply(ids, function(x) {
         pwdf$ID[pwdf$src==x] %>% unique()
       })
-      names(g_anno) <- rownames(gene.data)
+      names(g_anno) <- ids
 
       # build one long list
       g_anno_list <- do.call(c, g_anno)
@@ -199,12 +234,18 @@ mt_plots_pathview <- function(D,
       pw <- pw_gene
     }
     
-    if (!is.null(met.id) | !is.null(cpd.data)) {
+    if (!is.null(cpd.data)) {
+      if(!is.null(rownames(cpd.data))) {
+        ids <- rownames(cpd.data)
+      } else {
+        ids <- cpd.data
+      }
+      
       # find metabolite pathway annotations
-      m_anno <- lapply(rownames(cpd.data), function(x) {
+      m_anno <- lapply(ids, function(x) {
         pwdf$ID[pwdf$dest==x] %>% unique()
       })
-      names(m_anno) <- rownames(cpd.data)
+      names(m_anno) <- ids
 
       # build one long list
       m_anno_list <- do.call(c, m_anno)
@@ -218,7 +259,7 @@ mt_plots_pathview <- function(D,
       pw <- pw_met
     }
     
-    if (((!is.null(gene.id)) | (!is.null(gene.data))) & ((!is.null(met.id)) | (!is.null(cpd.data)))) {
+    if (!is.null(gene.data) & !is.null(cpd.data)) {
       # find most common pathway for both genes and metabolites
       pw_list <- c(m_anno_list,g_anno_list)
       pw <- pw_list %>% table() %>% as.data.frame() 
@@ -234,8 +275,8 @@ mt_plots_pathview <- function(D,
   
   if(!missing(n.pathways)) {
     if(n.pathways>length(pathway.id))
-      stop(sprintf("n.pathway is %i, but there are only %i pathways", n.pathways, length(pathway.id)))
-    pathway.id <- pathway.id[1:n.pathways]
+      warning(sprintf("n.pathway is %i, but there are only %i pathways, so %i pathways will be used", n.pathways, length(pathway.id), length(pathway.id)))
+    pathway.id <- pathway.id[1:min(n.pathways,length(pathway.id))]
   }
   
   # move working directory to kegg.dir (otherwise some files will be saved in the working directory even if another directory is provided)
@@ -247,21 +288,19 @@ mt_plots_pathview <- function(D,
   
   suppressMessages(
   pv.out <- pathview::pathview(gene.data = gene.data, cpd.data = cpd.data, pathway.id = pathway.id, kegg.dir = save.path,
-                               species = species, cpd.idtype = cpd.idtype, gene.idtype = gene.idtype, gene.annotpkg = gene.annotpkg, min.nnodes = min.nnodes, kegg.native = kegg.native,
+                               species = species, cpd.idtype = "kegg", gene.idtype = gene.idtype, gene.annotpkg = gene.annotpkg, min.nnodes = min.nnodes, kegg.native = kegg.native,
                                map.null = map.null, expand.node = expand.node, split.group = split.group, map.symbol = map.symbol, map.cpdname = map.cpdname, node.sum = node.sum, 
                                discrete = discrete, limit = limit, bins = bins, 
                                both.dirs = both.dirs, trans.fun = trans.fun, low = low, mid = mid, high = high, na.col = na.col)
   )
   setwd(wd)
   
-  # browser()
-  
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("Pathway images saved in %s", save.path),
+      logtxt = sprintf("Pathway images saved in %s", path.output),
       output = NULL,
       output2 = pv.out
     )
