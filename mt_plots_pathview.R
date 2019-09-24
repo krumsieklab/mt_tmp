@@ -13,7 +13,7 @@ require(pathview)
 #' @param gene.idtype character, ID type used for the gene.data, case insensitive. Default gene.idtype="entrez", i.e. Entrez Gene, which are the primary KEGG gene ID for many common model organisms. For other species, gene.idtype should be set to "KEGG" as KEGG use other types of gene IDs. For the common model organisms (to check the list, do: data(bods); bods), you may also specify other types of valid IDs. To check the ID list, do: data(gene.idtype.list); gene.idtype.list.
 #' @param met.id string name of the rowData column containing the metabolite identifiers
 #' @param cpd.data the same as gene.data, excpet named with IDs mappable to KEGG compound IDs. Over 20 types of IDs included in CHEMBL database can be used here. Check details for mappable ID types. Default cpd.data=NULL. Note that gene.data and cpd.data can't be NULL simultaneously.
-#' @param cpd.idtype character, ID type used for the cpd.data. Currently can eithr be "kegg" or "hmdb" (default "kegg").
+#' @param cpd.idtype character, ID type used for the cpd.data. Currently only works with "kegg".
 #' @param statname name of the statistics object to apply metab_filter to
 #' @param metab_filter if given, filter will be applied to data and only variables satisfying the condition will be included
 #' @param color_scale if given, this will be used to map colors to a continuous scale
@@ -133,7 +133,6 @@ mt_plots_pathview <- function(D,
     var <- var$var
     # set color variable of non significant results to 0
     stat$color[!(stat$var %in% var)] <- 0
-    #mti_logstatus(glue::glue("filter metabolites: {metab_filter_q} [{nrow(stat)-length(var)} significant]"))
   }
   
   # if gene.id is provided, extract identifiers from the rowData
@@ -141,18 +140,18 @@ mt_plots_pathview <- function(D,
     # remove duplicated identifiers if they occur
     stat <- stat[!duplicated(stat[[gene.id]]),]
     # create pathview variable
-    gene.data <- data.frame(ID=stat[[gene.id]][!is.na(stat[[gene.id]])],color=stat$color[!is.na(stat[[gene.id]])])
+    gene.data <- data.frame(color=stat$color[!is.na(stat[[gene.id]])])
     # remove rows with NAs in the identifiers
-    # rownames(gene.data) <- stat[[gene.id]][!is.na(stat[[gene.id]])]
+    rownames(gene.data) <- stat[[gene.id]][!is.na(stat[[gene.id]])]
   }
   # if met.id is provided, extract identifiers from the rowData
   if(!is.null(met.id)) {
     # remove duplicated identifiers if they occur
     stat <- stat[!duplicated(stat[[met.id]]),]
     # create pathview variable
-    cpd.data <- data.frame(ID=stat[[met.id]][!is.na(stat[[met.id]])],color=stat$color[!is.na(stat[[met.id]])])
+    cpd.data <- data.frame(color=stat$color[!is.na(stat[[met.id]])])
     # remove rows with NAs in the identifiers
-    # rownames(cpd.data) <- stat[[met.id]][!is.na(stat[[met.id]])]
+    rownames(cpd.data) <- stat[[met.id]][!is.na(stat[[met.id]])]
   }
 
   # if path.output is provided, check if the folder exists, otherwise create it
@@ -162,43 +161,6 @@ mt_plots_pathview <- function(D,
   # if path.database is provided, check if the folder exists, otherwise create it
   if (!file.exists(path.database)){
     dir.create(path.database)
-  }
-  
-  # if cpd.idtype is "hmdb", map identifiers to KEGG
-  if (cpd.idtype=="hmdb") {
-    # load look-up table of HMDB to KEGG identifiers
-    load(codes.makepath("snippets/packages/metabotools_external/pathview/MetaboliteMapping.Rds"))
-    # MetaboliteMapping <- data.frame(secondary_accessions=rowData(D)$HMDb_ID, accession = as.character(rep(NA, length(rowData(D)$HMDb_ID))), kegg_id=rowData(D)$KEGG)
-    # collect IDs
-    dict <- data.frame(HMDB=cpd.data[,1])
-    dict$HMDB <- as.character(dict$HMDB)
-    
-    # build conversion table
-    suppressWarnings(
-      dict <- dict %>% 
-        left_join(MetaboliteMapping[,c("secondary_accessions","kegg_id")], by=c("HMDB" = "secondary_accessions")) %>%
-                    left_join(MetaboliteMapping[,c("accession","kegg_id")], by=c("HMDB" = "accession"))
-    )
-
-    # merge KEGG identifiers
-    dict$KEGG <- dict$kegg_id.x
-    dict$KEGG[is.na(dict$KEGG)] <- dict$kegg_id.y[is.na(dict$KEGG)]
-    cpd.data$KEGG <- dict$KEGG
-    # remove NAs
-    cpd.data <- cpd.data[!is.na(cpd.data$KEGG),]
-    # map KEGG identifiers to rownames
-    cpd.data$ID <- cpd.data$KEGG
-    # remove extra column
-    cpd.data <- cpd.data[,-which(colnames(cpd.data) %in% c("KEGG"))]
-  }
-
-  if (!is.null(met.id)) {
-    # remove duplicates
-    cpd.data <- cpd.data[!duplicated(cpd.data$ID),]
-    # move first column of data to rownames for pathview
-    rownames(cpd.data) <- cpd.data$ID
-    # remove ID column (now converted to rownames)
-    cpd.data <- subset(cpd.data, select=-c(ID))
   }
   
   # if no pathway.id list is provided, find annotations for kegg identifiers
