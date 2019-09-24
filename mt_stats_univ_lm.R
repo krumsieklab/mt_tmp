@@ -196,8 +196,8 @@ mt_stats_univ_lm <- function(
   }
   
   ## run tests for all metabolites
-  models <- parallel::mclapply(rownames(D), do_lm) %>%
-    setNames(rownames(D), mc.cores = mc.cores)
+  models <- parallel::mclapply(rownames(D), do_lm, mc.cores = mc.cores) %>%
+    setNames(rownames(D))
   
   # broom it up, subselect to term, rename term
   tab <- map_dfr(models, f_tidy_tidy, conf.int = T, .id = "var") %>%
