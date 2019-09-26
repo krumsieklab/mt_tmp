@@ -46,7 +46,7 @@ mt_modify_ratios <- function(D){
                name1 = name,
                name2 = NA)
     rd <- bind_rows(rd, rd_new) %>%
-        select(rownames, m1, m2, name1, name2, everything()) %>%
+        dplyr::select(rownames, m1, m2, name1, name2, everything()) %>%
         column_to_rownames("rownames")
     
     ## COMBINE RATIOS TO SINGLE MATRIX
