@@ -22,6 +22,7 @@ require(pathview)
 #' @param n.pathways (optional) number of pathways to output. Most populated pathway will be plotted first.
 #' @param path.database character, the directory path of KEGG pathway data file (.xml) and image file (.png). If the path does not exist, the function will create it. Default path.database = "./Pathview_database" (subfolder in the current working directory).
 #' @param path.output character, the directory path of the function output files. If the path does not exist, the function will create it. Default path.output ="./Pathview_output" (subfolder in the current working directory).
+#' @param show.only.filtered logical, if TRUE only filtered variables will be shown, otherwise filtered variables will be shown in gray.
 #' @param \dots  see \code{pathview::pathview} for pathview arguments
 #' @return $result: pathview images
 #' 
@@ -50,6 +51,8 @@ mt_plots_pathview <- function(D,
                              # pathways to plot
                              pathway.id,
                              n.pathways,
+                             # only plot significant results if TRUE
+                             show.only.filtered = FALSE,
                              # result directories
                              path.database = "./Pathview_database",
                              path.output = "./Pathview_output",
@@ -131,8 +134,12 @@ mt_plots_pathview <- function(D,
       filter(!!metab_filter_q)
     # collect variable names of filtered results
     var <- var$var
-    # set color variable of non significant results to 0
-    stat$color[!(stat$var %in% var)] <- 0
+    if(show.only.filtered) {
+      stat <- stat[stat$var %in% var,]
+    } else {
+      # set color variable of non significant results to 0
+      stat$color[!(stat$var %in% var)] <- 0
+    }
   }
   
   # if gene.id is provided, extract identifiers from the rowData

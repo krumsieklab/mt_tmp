@@ -75,7 +75,7 @@ D <- D %>%
                     # kegg pathway files will be created in a folder called "Pathview_database" inside the current working directory
                     path.database = "./Pathview_database",
                     # output will be created in a folder called "Pathview_output1" inside the current working directory
-                    path.output = "./Pathview_output10") %>%
+                    path.output = "./Pathview_output1") %>%
   # plot all metabolites in the top 10 most frequent pathway annotations
   # use the results of the statistical analysis "comp" to color and filter metabolites
   mt_plots_pathview(met.id="KEGG_identifiers",
@@ -84,9 +84,11 @@ D <- D %>%
                     statname = "comp",
                     # color scale function
                     color_scale = -sign(fc)*log10(p.value),
-                    # metabolite filtering condition (filtered metabolites will be shown in gray)
+                    # metabolite filtering condition
                     metab_filter = p.value < 0.05,
+                    # show only filtered metabolites
+                    show.only.filtered = TRUE,
                     # kegg pathway files will be created in a folder called "Pathview_database" inside the current working directory
                     path.database = "./Pathview_database",
                     # output will be created in a folder called "Pathview_output2" inside the current working directory
-                    path.output = "./Pathview_output20")
+                    path.output = "./Pathview_output2")
