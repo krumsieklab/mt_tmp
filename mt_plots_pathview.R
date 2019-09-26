@@ -1,7 +1,4 @@
 require(pathview)
-# require(AnnotationDbi)
-# require(org.Hs.eg.db)
-# require(graphite)
 
 #' mt_plots_pathview
 #'
@@ -18,13 +15,13 @@ require(pathview)
 #' @param metab.filter if given, filter will be applied to data and only variables satisfying the condition will be included
 #' @param color.scale if given, this will be used to map colors to a continuous scale
 #' @param color.range numeric (positive), if given, indicates the color range (-color.range, +color.range). If missing, color.range will be determined internally.
-#' @param show.only.filtered logical, if TRUE only filtered variables will be shown, otherwise filtered variables will be shown in gray.
+#' @param show.only.filtered logical, if TRUE generate pathway list only based on filtered variables, otherwise pathways will be generated based on all variables.
 #' @param low,mid,high each is a list of two colors with "gene" and "cpd" as the names. This argument specifies the color spectra to code gene.data and cpd.data. Default spectra (low-mid-high) "green"-"gray"-"red" and "yellow"-"gray"-"blue" are used for gene.data and cpd.data respectively. The values for 'low, mid, high' can be given as color names ('red'), plot color index (2=red), and HTML-style RGB, ("\#FF0000"=red).
 #' @param pathway.id character vector, the KEGG pathway ID(s), usually 5 digit, may also include the 3 letter KEGG species code. If missing, the function will find all KEGG pathway annotations for the given KEGG identifiers.
 #' @param n.pathways (optional) number of pathways to output. Most populated pathway will be plotted first.
 #' @param path.database character, the directory path of KEGG pathway data file (.xml) and image file (.png). If the path does not exist, the function will create it. Default path.database = "./Pathview_database" (subfolder in the current working directory).
 #' @param path.output character, the directory path of the function output files. If the path does not exist, the function will create it. Default path.output ="./Pathview_output" (subfolder in the current working directory).
-#' @param same.layer logical, controls if node colors are to be plotted in the same layer as the pathway graph. If FALSE, output generation will be ca faster, but output plots will be larger in size.
+#' @param same.layer logical, controls if node colors are to be plotted in the same layer as the pathway graph. If FALSE, output generation will be faster, but output plots will be larger in size.
 #' @param \dots  see \code{pathview::pathview} for pathview arguments
 #' @return $result: pathview images
 #' 
@@ -47,7 +44,7 @@ mt_plots_pathview <- function(D,
                              metab.filter,
                              color.scale,
                              color.range,
-                             # only plot filtered results if TRUE
+                             # only show pathways that include filtered results?
                              show.only.filtered = FALSE,
                              # colors for genes and metabolite data
                              low = list(gene = "green", cpd = "yellow"), 
@@ -104,6 +101,11 @@ mt_plots_pathview <- function(D,
     if(class(n.pathways)!="numeric")
       stop("n.pathways must be numeric")
   }
+  ## if show.only.filtered is TRUE, metab.filter must be given
+  if(show.only.filtered) {
+    if(missing(metab.filter))
+      stop("show.only.filtered can be TRUE only if metab.filter is given")
+  }
   
   ## rowData
   rd <- rowData(D) %>%
@@ -143,13 +145,9 @@ mt_plots_pathview <- function(D,
       filter(!!metab.filter_q)
     # collect variable names of filtered results
     var <- var$var
-    # if show.only.filtered is TRUE, only include filtered variables
-    if(show.only.filtered) {
-      stat <- stat[stat$var %in% var,]
-    # otherwise, set color variable of filtered out variables to 0
-    } else {
-      stat$color[!(stat$var %in% var)] <- 0
-    }
+    # set color variable of filtered out variables to 0
+    stat$color[!(stat$var %in% var)] <- 0
+    
     if(dim(stat)[1]==0)
       warning("Filtering returned an empty matrix")
   }
@@ -193,6 +191,9 @@ mt_plots_pathview <- function(D,
     if (!is.null(gene.data) & dim(stat)[1]!=0) {
       if(!is.null(rownames(gene.data))) {
         ids <- rownames(gene.data)
+        if(show.only.filtered) {
+          ids <- ids[ids %in% rownames(gene.data)[gene.data$color != 0]]
+        }
       } else {
         ids <- gene.data
       }
@@ -218,10 +219,13 @@ mt_plots_pathview <- function(D,
     if (!is.null(cpd.data) & dim(stat)[1]!=0) {
       if(!is.null(rownames(cpd.data))) {
         ids <- rownames(cpd.data)
+        if(show.only.filtered) {
+          ids <- ids[ids %in% rownames(cpd.data)[cpd.data$color != 0]]
+        }
       } else {
         ids <- cpd.data
       }
-
+      
       # find metabolite pathway annotations
       m_anno <- lapply(ids, function(x) {
         pwdf$ID[pwdf$dest==x] %>% unique()
