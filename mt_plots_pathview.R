@@ -17,6 +17,7 @@ require(pathview)
 #' @param statname name of the statistics object to apply metab_filter to
 #' @param metab_filter if given, filter will be applied to data and only variables satisfying the condition will be included
 #' @param color_scale if given, this will be used to map colors to a continuous scale
+#' @param color_range numeric (positive), if given, indicates the color range (-color_range, +color_range). If missing, color_range will be determined internally.
 #' @param show.only.filtered logical, if TRUE only filtered variables will be shown, otherwise filtered variables will be shown in gray.
 #' @param low,mid,high each is a list of two colors with "gene" and "cpd" as the names. This argument specifies the color spectra to code gene.data and cpd.data. Default spectra (low-mid-high) "green"-"gray"-"red" and "yellow"-"gray"-"blue" are used for gene.data and cpd.data respectively. The values for 'low, mid, high' can be given as color names ('red'), plot color index (2=red), and HTML-style RGB, ("\#FF0000"=red).
 #' @param pathway.id character vector, the KEGG pathway ID(s), usually 5 digit, may also include the 3 letter KEGG species code. If missing, the function will find all KEGG pathway annotations for the given KEGG identifiers.
@@ -45,6 +46,7 @@ mt_plots_pathview <- function(D,
                              statname,
                              metab_filter,
                              color_scale,
+                             color_range,
                              # only plot filtered results if TRUE
                              show.only.filtered = FALSE,
                              # colors for genes and metabolite data
@@ -58,13 +60,13 @@ mt_plots_pathview <- function(D,
                              path.database = "./Pathview_database",
                              path.output = "./Pathview_output",
                              # set to false for speed-up (output files will be bigger in size though)
-                             same.layer = T,
+                             same.layer = TRUE,
 
                              # other pathview::pathview arguments
                              species = "hsa", gene.annotpkg = NULL, min.nnodes = 3, kegg.native = TRUE,
                              map.null = TRUE, expand.node = FALSE, split.group = FALSE, map.symbol = TRUE, map.cpdname = TRUE, node.sum = "sum", 
                              discrete=list(gene=FALSE,cpd=FALSE), limit = list(gene = 1, cpd = 1), bins = list(gene = 10, cpd = 10), 
-                             both.dirs = list(gene = T, cpd = T), trans.fun = list(gene = NULL, cpd = NULL), na.col = "transparent"
+                             both.dirs = list(gene = TRUE, cpd = TRUE), trans.fun = list(gene = NULL, cpd = NULL), na.col = "transparent"
                              ) {
   
   ## check input
@@ -122,7 +124,11 @@ mt_plots_pathview <- function(D,
     # add color variable according to input
     stat <- stat %>%
       mutate(color=!!color_scale_q)
-    limit=list(gene=max(ceiling(abs(stat$color))), cpd=max(ceiling(abs(stat$color))))
+    if(!missing(color_range)) {
+      limit = list(gene=color_range, cpd=color_range)
+    } else {
+      limit=list(gene=max(ceiling(abs(stat$color))), cpd=max(ceiling(abs(stat$color))))
+    }
   } else {
     # if not given, set color to 1
     stat <- stat %>%
@@ -144,6 +150,8 @@ mt_plots_pathview <- function(D,
     } else {
       stat$color[!(stat$var %in% var)] <- 0
     }
+    if(dim(stat)[1]==0)
+      warning("Filtering returned an empty matrix")
   }
   
   # if gene.id is provided, extract identifiers from the rowData
@@ -182,7 +190,7 @@ mt_plots_pathview <- function(D,
     # build one big dataframe with all pathway informations
     pwdf <- do.call(rbind, pwdb)
     
-    if (!is.null(gene.data)) {
+    if (!is.null(gene.data) & dim(stat)[1]!=0) {
       if(!is.null(rownames(gene.data))) {
         ids <- rownames(gene.data)
       } else {
@@ -206,14 +214,14 @@ mt_plots_pathview <- function(D,
       pw_gene$pathway <- gsub(":", "", pw_gene$pathway)
       pw <- pw_gene
     }
-    
-    if (!is.null(cpd.data)) {
+
+    if (!is.null(cpd.data) & dim(stat)[1]!=0) {
       if(!is.null(rownames(cpd.data))) {
         ids <- rownames(cpd.data)
       } else {
         ids <- cpd.data
       }
-      
+
       # find metabolite pathway annotations
       m_anno <- lapply(ids, function(x) {
         pwdf$ID[pwdf$dest==x] %>% unique()
@@ -232,7 +240,8 @@ mt_plots_pathview <- function(D,
       pw <- pw_met
     }
     
-    if (!is.null(gene.data) & !is.null(cpd.data)) {
+    if (!is.null(gene.data) & !is.null(cpd.data) &
+        dim(stat)[1]!=0) {
       # find most common pathway for both genes and metabolites
       pw_list <- c(m_anno_list,g_anno_list)
       pw <- pw_list %>% table() %>% as.data.frame() 
@@ -243,7 +252,11 @@ mt_plots_pathview <- function(D,
       pw$pathway <- gsub(":", "", pw$pathway)
     }
     
-    pathway.id <- pw$pathway
+    if(dim(stat)[1]!=0) {
+      pathway.id <- pw$pathway
+    } else {
+      pathway.id <- NULL
+    }
   }
   
   if(!missing(n.pathways)) {
@@ -258,6 +271,10 @@ mt_plots_pathview <- function(D,
   save.path <- getwd()
   setwd(wd)
   setwd(path.output)
+  
+  if(dim(stat)[1]==0) {
+    file.create(paste0(getwd(),"/NO_RESULTS_AFTER_FILTERING.txt",sep=""))
+  }
   
   suppressMessages(
   pv.out <- pathview::pathview(gene.data = gene.data, cpd.data = cpd.data, pathway.id = pathway.id, kegg.dir = save.path,
