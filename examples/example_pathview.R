@@ -83,11 +83,11 @@ D <- D %>%
                     # take results from statistical analysis called "comp"
                     statname = "comp",
                     # color scale function
-                    color_scale = -sign(fc)*log10(p.value),
+                    color.scale = -sign(fc)*log10(p.value),
                     # set color range
-                    color_range = 3.5,
+                    color.range = 3.5,
                     # metabolite filtering condition
-                    metab_filter = p.value < 0.05,
+                    metab.filter = p.value < 0.05,
                     # show only filtered metabolites
                     show.only.filtered = TRUE,
                     # kegg pathway files will be created in a folder called "Pathview_database" inside the current working directory

@@ -14,17 +14,17 @@ require(pathview)
 #' @param met.id string name of the rowData column containing the metabolite identifiers
 #' @param cpd.data the same as gene.data, excpet named with IDs mappable to KEGG compound IDs. Over 20 types of IDs included in CHEMBL database can be used here. Check details for mappable ID types. Default cpd.data=NULL. Note that gene.data and cpd.data can't be NULL simultaneously.
 #' @param cpd.idtype character, ID type used for the cpd.data. Currently only works with "kegg".
-#' @param statname name of the statistics object to apply metab_filter to
-#' @param metab_filter if given, filter will be applied to data and only variables satisfying the condition will be included
-#' @param color_scale if given, this will be used to map colors to a continuous scale
-#' @param color_range numeric (positive), if given, indicates the color range (-color_range, +color_range). If missing, color_range will be determined internally.
+#' @param statname name of the statistics object to apply metab.filter to
+#' @param metab.filter if given, filter will be applied to data and only variables satisfying the condition will be included
+#' @param color.scale if given, this will be used to map colors to a continuous scale
+#' @param color.range numeric (positive), if given, indicates the color range (-color.range, +color.range). If missing, color.range will be determined internally.
 #' @param show.only.filtered logical, if TRUE only filtered variables will be shown, otherwise filtered variables will be shown in gray.
 #' @param low,mid,high each is a list of two colors with "gene" and "cpd" as the names. This argument specifies the color spectra to code gene.data and cpd.data. Default spectra (low-mid-high) "green"-"gray"-"red" and "yellow"-"gray"-"blue" are used for gene.data and cpd.data respectively. The values for 'low, mid, high' can be given as color names ('red'), plot color index (2=red), and HTML-style RGB, ("\#FF0000"=red).
 #' @param pathway.id character vector, the KEGG pathway ID(s), usually 5 digit, may also include the 3 letter KEGG species code. If missing, the function will find all KEGG pathway annotations for the given KEGG identifiers.
 #' @param n.pathways (optional) number of pathways to output. Most populated pathway will be plotted first.
 #' @param path.database character, the directory path of KEGG pathway data file (.xml) and image file (.png). If the path does not exist, the function will create it. Default path.database = "./Pathview_database" (subfolder in the current working directory).
 #' @param path.output character, the directory path of the function output files. If the path does not exist, the function will create it. Default path.output ="./Pathview_output" (subfolder in the current working directory).
-#' @param same.layer logical, controls if node colors are to be plotted in the same layer as the pathway graph.
+#' @param same.layer logical, controls if node colors are to be plotted in the same layer as the pathway graph. If FALSE, output generation will be ca faster, but output plots will be larger in size.
 #' @param \dots  see \code{pathview::pathview} for pathview arguments
 #' @return $result: pathview images
 #' 
@@ -44,9 +44,9 @@ mt_plots_pathview <- function(D,
                              cpd.idtype = "kegg",
                              # if gene.id or met.id is given, variables can be selected from the results of a statistical analysis
                              statname,
-                             metab_filter,
-                             color_scale,
-                             color_range,
+                             metab.filter,
+                             color.scale,
+                             color.range,
                              # only plot filtered results if TRUE
                              show.only.filtered = FALSE,
                              # colors for genes and metabolite data
@@ -93,12 +93,12 @@ mt_plots_pathview <- function(D,
   if(!is.null(met.id)) {
     if(length(met.id)!=1)
       stop(sprintf("%s can only be a single column", met.id))}
-  ## if metab_filter is given, statname must also be given and either met.id or gene.id must be given as well
-  if(!missing(metab_filter)) {
+  ## if metab.filter is given, statname must also be given and either met.id or gene.id must be given as well
+  if(!missing(metab.filter)) {
     if(missing(statname))
-      stop("In order to use metab_filter, statname must be given")
+      stop("In order to use metab.filter, statname must be given")
     if(is.null(gene.id) & is.null(met.id))
-      stop("In order to use metab_filter, one betweeen gene.id and met.id must be given")}
+      stop("In order to use metab.filter, one betweeen gene.id and met.id must be given")}
   ## if n.pathway is given, it must be numeric
   if(!missing(n.pathways)) {
     if(class(n.pathways)!="numeric")
@@ -119,13 +119,13 @@ mt_plots_pathview <- function(D,
   }
   
   ## Add color variable
-  if(!missing(color_scale)){
-    color_scale_q <- enquo(color_scale)
+  if(!missing(color.scale)){
+    color.scale_q <- enquo(color.scale)
     # add color variable according to input
     stat <- stat %>%
-      mutate(color=!!color_scale_q)
-    if(!missing(color_range)) {
-      limit = list(gene=color_range, cpd=color_range)
+      mutate(color=!!color.scale_q)
+    if(!missing(color.range)) {
+      limit = list(gene=color.range, cpd=color.range)
     } else {
       limit=list(gene=max(ceiling(abs(stat$color))), cpd=max(ceiling(abs(stat$color))))
     }
@@ -136,11 +136,11 @@ mt_plots_pathview <- function(D,
   }
   
   ## FILTER METABOLITES
-  if(!missing(metab_filter)){
-    metab_filter_q <- enquo(metab_filter)
+  if(!missing(metab.filter)){
+    metab.filter_q <- enquo(metab.filter)
     # filter results
     var <- stat %>%
-      filter(!!metab_filter_q)
+      filter(!!metab.filter_q)
     # collect variable names of filtered results
     var <- var$var
     # if show.only.filtered is TRUE, only include filtered variables
@@ -252,6 +252,7 @@ mt_plots_pathview <- function(D,
       pw$pathway <- gsub(":", "", pw$pathway)
     }
     
+    # save pathway list only if list of variables to output is not empty
     if(dim(stat)[1]!=0) {
       pathway.id <- pw$pathway
     } else {
