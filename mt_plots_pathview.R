@@ -147,9 +147,6 @@ mt_plots_pathview <- function(D,
     var <- var$var
     # set color variable of filtered out variables to 0
     stat$color[!(stat$var %in% var)] <- 0
-    
-    if(dim(stat)[1]==0)
-      warning("Filtering returned an empty matrix")
   }
   
   # if gene.id is provided, extract identifiers from the rowData
@@ -188,7 +185,7 @@ mt_plots_pathview <- function(D,
     # build one big dataframe with all pathway informations
     pwdf <- do.call(rbind, pwdb)
     
-    if (!is.null(gene.data) & dim(stat)[1]!=0) {
+    if (!is.null(gene.data)) {
       if(!is.null(rownames(gene.data))) {
         ids <- rownames(gene.data)
         if(show.only.filtered) {
@@ -198,25 +195,31 @@ mt_plots_pathview <- function(D,
         ids <- gene.data
       }
       
-      # find gene pathway annotations
-      g_anno <- lapply(ids, function(x) {
-        pwdf$ID[pwdf$src==x] %>% unique()
-      })
-      names(g_anno) <- ids
-
-      # build one long list
-      g_anno_list <- do.call(c, g_anno)
-      # find most common pathway for genes
-      pw_gene <- g_anno_list %>% table() %>% as.data.frame() 
-      colnames(pw_gene) <- c("pathway","Freq")
-      # pathway list ordered according to the number of genes with that annotation
-      pw_gene <- pw_gene[order(pw_gene$Freq,decreasing = TRUE),]
-      # remove ":" from pathway ids for pathview
-      pw_gene$pathway <- gsub(":", "", pw_gene$pathway)
-      pw <- pw_gene
+      if(length(ids) != 0) {
+        # find gene pathway annotations
+        g_anno <- lapply(ids, function(x) {
+          pwdf$ID[pwdf$src==x] %>% unique()
+        })
+        names(g_anno) <- ids
+        
+        # build one long list
+        g_anno_list <- do.call(c, g_anno)
+        # find most common pathway for genes
+        pw_gene <- g_anno_list %>% table() %>% as.data.frame() 
+        colnames(pw_gene) <- c("pathway","Freq")
+        # pathway list ordered according to the number of genes with that annotation
+        pw_gene <- pw_gene[order(pw_gene$Freq,decreasing = TRUE),]
+        # remove ":" from pathway ids for pathview
+        pw_gene$pathway <- gsub(":", "", pw_gene$pathway)
+        pw <- pw_gene
+      } else {
+        warning("Filtering returned an empty matrix")
+        pw <- list()
+        pw$pathway <- NULL
+      }
     }
 
-    if (!is.null(cpd.data) & dim(stat)[1]!=0) {
+    if (!is.null(cpd.data)) {
       if(!is.null(rownames(cpd.data))) {
         ids <- rownames(cpd.data)
         if(show.only.filtered) {
@@ -226,26 +229,31 @@ mt_plots_pathview <- function(D,
         ids <- cpd.data
       }
       
-      # find metabolite pathway annotations
-      m_anno <- lapply(ids, function(x) {
-        pwdf$ID[pwdf$dest==x] %>% unique()
-      })
-      names(m_anno) <- ids
-
-      # build one long list
-      m_anno_list <- do.call(c, m_anno)
-      # find most common pathway for metabolites
-      pw_met <- m_anno_list %>% table() %>% as.data.frame() 
-      colnames(pw_met) <- c("pathway","Freq")
-      # pathway list ordered according to the number of metabolites with that annotation
-      pw_met <- pw_met[order(pw_met$Freq,decreasing = TRUE),]
-      # remove ":" from pathway ids for pathview
-      pw_met$pathway <- gsub(":", "", pw_met$pathway)
-      pw <- pw_met
+      if(length(ids)!=0) {
+        # find metabolite pathway annotations
+        m_anno <- lapply(ids, function(x) {
+          pwdf$ID[pwdf$dest==x] %>% unique()
+        })
+        names(m_anno) <- ids
+        
+        # build one long list
+        m_anno_list <- do.call(c, m_anno)
+        # find most common pathway for metabolites
+        pw_met <- m_anno_list %>% table() %>% as.data.frame() 
+        colnames(pw_met) <- c("pathway","Freq")
+        # pathway list ordered according to the number of metabolites with that annotation
+        pw_met <- pw_met[order(pw_met$Freq,decreasing = TRUE),]
+        # remove ":" from pathway ids for pathview
+        pw_met$pathway <- gsub(":", "", pw_met$pathway)
+        pw <- pw_met
+      } else { 
+        warning("Filtering returned an empty matrix")
+        pw <- list()
+        pw$pathway <- NULL
+      }
     }
     
-    if (!is.null(gene.data) & !is.null(cpd.data) &
-        dim(stat)[1]!=0) {
+    if (!is.null(gene.data) & !is.null(cpd.data)) {
       # find most common pathway for both genes and metabolites
       pw_list <- c(m_anno_list,g_anno_list)
       pw <- pw_list %>% table() %>% as.data.frame() 
@@ -257,11 +265,7 @@ mt_plots_pathview <- function(D,
     }
     
     # save pathway list only if list of variables to output is not empty
-    if(dim(stat)[1]!=0) {
-      pathway.id <- pw$pathway
-    } else {
-      pathway.id <- NULL
-    }
+    pathway.id <- pw$pathway
   }
   
   if(!missing(n.pathways)) {
@@ -277,7 +281,7 @@ mt_plots_pathview <- function(D,
   setwd(wd)
   setwd(path.output)
   
-  if(dim(stat)[1]==0) {
+  if(length(ids) == 0) {
     file.create(paste0(getwd(),"/NO_RESULTS_AFTER_FILTERING.txt",sep=""))
   }
   

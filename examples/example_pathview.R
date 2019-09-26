@@ -71,19 +71,21 @@ D <- D %>%
   mt_anno_metabolites_HMDB2KEGG(col_input = "HMDb_ID", col_output = "KEGG_identifiers")
 
 D <- D %>%
-  # plot all metabolites in the top 10 most frequent pathway annotations
+  # plot all metabolites in the top 5 most frequent pathway annotations
   mt_plots_pathview(met.id="KEGG_identifiers",
-                    n.pathways = 3,
+                    n.pathways = 5,
                     # kegg pathway files will be created in a folder called "Pathview_database" inside the current working directory
                     path.database = "./Pathview_database",
                     # output will be created in a folder called "Pathview_output1" inside the current working directory
-                    path.output = "./Pathview_output1")
-  # plot all metabolites in the top 10 most frequent pathway annotations
-  # use the results of the statistical analysis "comp" to color and filter metabolites
+                    path.output = "./Pathview_output1",
+                    # set to false to speed-up (output files will be bigger in size)
+                    same.layer = FALSE)
   
 D <- D %>%
+  # plot all metabolites in the top 5 most frequent pathway annotations among significant metabolites
+  # use the results of the statistical analysis "comp" to color and filter metabolites
   mt_plots_pathview(met.id="KEGG_identifiers",
-                    n.pathways = 3,
+                    n.pathways = 5,
                     # take results from statistical analysis called "comp"
                     statname = "comp",
                     # color scale function
@@ -102,8 +104,10 @@ D <- D %>%
                     same.layer = FALSE)
 
 D <- D %>%
+  # plot all metabolites in the top 5 most frequent pathway annotations overall
+  # use the results of the statistical analysis "comp" to color and filter metabolites
   mt_plots_pathview(met.id="KEGG_identifiers",
-                    n.pathways = 3,
+                    n.pathways = 5,
                     # take results from statistical analysis called "comp"
                     statname = "comp",
                     # color scale function
@@ -117,6 +121,6 @@ D <- D %>%
                     # kegg pathway files will be created in a folder called "Pathview_database" inside the current working directory
                     path.database = "./Pathview_database",
                     # output will be created in a folder called "Pathview_output2" inside the current working directory
-                    path.output = "./Pathview_output2",
+                    path.output = "./Pathview_output3",
                     # set to false to speed-up (output files will be bigger in size)
                     same.layer = FALSE)
