@@ -91,4 +91,6 @@ D <- D %>%
                     # kegg pathway files will be created in a folder called "Pathview_database" inside the current working directory
                     path.database = "./Pathview_database",
                     # output will be created in a folder called "Pathview_output2" inside the current working directory
-                    path.output = "./Pathview_output2")
+                    path.output = "./Pathview_output2",
+                    # set to false to speed-up (output files will be bigger in size)
+                    same.layer = F)

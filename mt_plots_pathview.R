@@ -17,12 +17,13 @@ require(pathview)
 #' @param statname name of the statistics object to apply metab_filter to
 #' @param metab_filter if given, filter will be applied to data and only variables satisfying the condition will be included
 #' @param color_scale if given, this will be used to map colors to a continuous scale
+#' @param show.only.filtered logical, if TRUE only filtered variables will be shown, otherwise filtered variables will be shown in gray.
 #' @param low,mid,high each is a list of two colors with "gene" and "cpd" as the names. This argument specifies the color spectra to code gene.data and cpd.data. Default spectra (low-mid-high) "green"-"gray"-"red" and "yellow"-"gray"-"blue" are used for gene.data and cpd.data respectively. The values for 'low, mid, high' can be given as color names ('red'), plot color index (2=red), and HTML-style RGB, ("\#FF0000"=red).
 #' @param pathway.id character vector, the KEGG pathway ID(s), usually 5 digit, may also include the 3 letter KEGG species code. If missing, the function will find all KEGG pathway annotations for the given KEGG identifiers.
 #' @param n.pathways (optional) number of pathways to output. Most populated pathway will be plotted first.
 #' @param path.database character, the directory path of KEGG pathway data file (.xml) and image file (.png). If the path does not exist, the function will create it. Default path.database = "./Pathview_database" (subfolder in the current working directory).
 #' @param path.output character, the directory path of the function output files. If the path does not exist, the function will create it. Default path.output ="./Pathview_output" (subfolder in the current working directory).
-#' @param show.only.filtered logical, if TRUE only filtered variables will be shown, otherwise filtered variables will be shown in gray.
+#' @param same.layer logical, controls if node colors are to be plotted in the same layer as the pathway graph.
 #' @param \dots  see \code{pathview::pathview} for pathview arguments
 #' @return $result: pathview images
 #' 
@@ -44,6 +45,8 @@ mt_plots_pathview <- function(D,
                              statname,
                              metab_filter,
                              color_scale,
+                             # only plot filtered results if TRUE
+                             show.only.filtered = FALSE,
                              # colors for genes and metabolite data
                              low = list(gene = "green", cpd = "yellow"), 
                              mid =list(gene = "gray", cpd = "gray"), 
@@ -51,11 +54,11 @@ mt_plots_pathview <- function(D,
                              # pathways to plot
                              pathway.id,
                              n.pathways,
-                             # only plot significant results if TRUE
-                             show.only.filtered = FALSE,
                              # result directories
                              path.database = "./Pathview_database",
                              path.output = "./Pathview_output",
+                             # set to false for speed-up (output files will be bigger in size though)
+                             same.layer = T,
 
                              # other pathview::pathview arguments
                              species = "hsa", gene.annotpkg = NULL, min.nnodes = 3, kegg.native = TRUE,
@@ -134,10 +137,11 @@ mt_plots_pathview <- function(D,
       filter(!!metab_filter_q)
     # collect variable names of filtered results
     var <- var$var
+    # if show.only.filtered is TRUE, only include filtered variables
     if(show.only.filtered) {
       stat <- stat[stat$var %in% var,]
+    # otherwise, set color variable of filtered out variables to 0
     } else {
-      # set color variable of non significant results to 0
       stat$color[!(stat$var %in% var)] <- 0
     }
   }
@@ -260,7 +264,8 @@ mt_plots_pathview <- function(D,
                                species = species, cpd.idtype = "kegg", gene.idtype = gene.idtype, gene.annotpkg = gene.annotpkg, min.nnodes = min.nnodes, kegg.native = kegg.native,
                                map.null = map.null, expand.node = expand.node, split.group = split.group, map.symbol = map.symbol, map.cpdname = map.cpdname, node.sum = node.sum, 
                                discrete = discrete, limit = limit, bins = bins, 
-                               both.dirs = both.dirs, trans.fun = trans.fun, low = low, mid = mid, high = high, na.col = na.col)
+                               both.dirs = both.dirs, trans.fun = trans.fun, low = low, mid = mid, high = high, na.col = na.col,
+                               same.layer = same.layer)
   )
   setwd(wd)
   
