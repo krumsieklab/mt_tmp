@@ -80,7 +80,7 @@ D <- D %>%
                     path.output = "./Pathview_output1",
                     # set to false to speed-up (output files will be bigger in size)
                     same.layer = FALSE)
-  
+mt.quickload() 
 D <- D %>%
   # plot all metabolites in the top 5 most frequent pathway annotations among significant metabolites
   # use the results of the statistical analysis "comp" to color and filter metabolites
@@ -101,7 +101,8 @@ D <- D %>%
                     # output will be created in a folder called "Pathview_output2" inside the current working directory
                     path.output = "./Pathview_output2",
                     # set to false to speed-up (output files will be bigger in size)
-                    same.layer = FALSE)
+                    same.layer = FALSE,
+                    add.pwname.suffix = TRUE)
 
 D <- D %>%
   # plot all metabolites in the top 5 most frequent pathway annotations overall
@@ -123,4 +124,5 @@ D <- D %>%
                     # output will be created in a folder called "Pathview_output2" inside the current working directory
                     path.output = "./Pathview_output3",
                     # set to false to speed-up (output files will be bigger in size)
-                    same.layer = FALSE)
+                    same.layer = FALSE,
+                    add.pwname.suffix = TRUE)

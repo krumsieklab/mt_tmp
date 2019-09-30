@@ -22,6 +22,8 @@ require(pathview)
 #' @param path.database character, the directory path of KEGG pathway data file (.xml) and image file (.png). If the path does not exist, the function will create it. Default path.database = "./Pathview_database" (subfolder in the current working directory).
 #' @param path.output character, the directory path of the function output files. If the path does not exist, the function will create it. Default path.output ="./Pathview_output" (subfolder in the current working directory).
 #' @param same.layer logical, controls if node colors are to be plotted in the same layer as the pathway graph. If FALSE, output generation will be faster, but output plots will be larger in size.
+#' @param out.suffix character, the suffix to be added after the pathway name as part of the output graph file. Default out.suffix="pathview".
+#' @param add.pwname.to.filename logical, if TRUE will add the pathway name to the output filename. If FALSE, will use what stored in out.suffix for all files. Default add.pwname.to.filename=FALSE.
 #' @param \dots  see \code{pathview::pathview} for pathview arguments
 #' @return $result: pathview images
 #' 
@@ -58,6 +60,8 @@ mt_plots_pathview <- function(D,
                              path.output = "./Pathview_output",
                              # set to false for speed-up (output files will be bigger in size though)
                              same.layer = TRUE,
+                             out.suffix = "pathview",
+                             add.pwname.suffix = FALSE,
 
                              # other pathview::pathview arguments
                              species = "hsa", gene.annotpkg = NULL, min.nnodes = 3, kegg.native = TRUE,
@@ -209,8 +213,16 @@ mt_plots_pathview <- function(D,
         colnames(pw_gene) <- c("pathway","Freq")
         # pathway list ordered according to the number of genes with that annotation
         pw_gene <- pw_gene[order(pw_gene$Freq,decreasing = TRUE),]
+        # find names of these pathways
+        g_pw_names <- lapply(pw_met$pathway, function(x) {
+          pwdf$name[pwdf$ID==x] %>% unique()
+        })
+        names(g_pw_names) <- pw_met$pathway
+        # build one long list
+        pw_names <- do.call(c, g_pw_names)
         # remove ":" from pathway ids for pathview
         pw_gene$pathway <- gsub(":", "", pw_gene$pathway)
+        names(pw_names) <- gsub(":", "", names(pw_names))
         pw <- pw_gene
       } else {
         warning("Filtering returned an empty matrix")
@@ -228,11 +240,12 @@ mt_plots_pathview <- function(D,
       } else {
         ids <- cpd.data
       }
-      
+
       if(length(ids)!=0) {
         # find metabolite pathway annotations
         m_anno <- lapply(ids, function(x) {
           pwdf$ID[pwdf$dest==x] %>% unique()
+          # cbind(pwdf$ID[pwdf$dest==x] %>% unique(),pwdf$name[pwdf$dest==x] %>% unique())
         })
         names(m_anno) <- ids
         
@@ -243,8 +256,16 @@ mt_plots_pathview <- function(D,
         colnames(pw_met) <- c("pathway","Freq")
         # pathway list ordered according to the number of metabolites with that annotation
         pw_met <- pw_met[order(pw_met$Freq,decreasing = TRUE),]
+        # find names of these pathways
+        m_pw_names <- lapply(pw_met$pathway, function(x) {
+          pwdf$name[pwdf$ID==x] %>% unique()
+        })
+        names(m_pw_names) <- pw_met$pathway
+        # build one long list
+        pw_names <- do.call(c, m_pw_names)
         # remove ":" from pathway ids for pathview
         pw_met$pathway <- gsub(":", "", pw_met$pathway)
+        names(pw_names) <- gsub(":", "", names(pw_names))
         pw <- pw_met
       } else { 
         warning("Filtering returned an empty matrix")
@@ -260,9 +281,17 @@ mt_plots_pathview <- function(D,
       colnames(pw) <- c("pathway","Freq")
       # pathway list ordered according to the number of metabolites/genes with that annotation
       pw <- pw[order(pw$Freq,decreasing = TRUE),]
+      # find names of these pathways
+      pw_names <- lapply(pw_met$pathway, function(x) {
+        pwdf$name[pwdf$ID==x] %>% unique()
+      })
+      names(pw_names) <- pw_met$pathway
+      # build one long list
+      pw_names <- do.call(c, pw_names)
       # remove ":" from pathway ids for pathview
       pw$pathway <- gsub(":", "", pw$pathway)
-    }
+      names(pw_names) <- gsub(":", "", names(pw_names))
+      }
     
     # save pathway list only if list of variables to output is not empty
     pathway.id <- pw$pathway
@@ -272,6 +301,7 @@ mt_plots_pathview <- function(D,
     if(n.pathways>length(pathway.id))
       warning(sprintf("n.pathway is %i, but there are only %i pathways, so %i pathways will be used", n.pathways, length(pathway.id), length(pathway.id)))
     pathway.id <- pathway.id[1:min(n.pathways,length(pathway.id))]
+    pw_names <- pw_names[1:min(n.pathways,length(pathway.id))]
   }
   
   # move working directory to kegg.dir (otherwise some files will be saved in the working directory even if another directory is provided)
@@ -291,8 +321,19 @@ mt_plots_pathview <- function(D,
                                map.null = map.null, expand.node = expand.node, split.group = split.group, map.symbol = map.symbol, map.cpdname = map.cpdname, node.sum = node.sum, 
                                discrete = discrete, limit = limit, bins = bins, 
                                both.dirs = both.dirs, trans.fun = trans.fun, low = low, mid = mid, high = high, na.col = na.col,
-                               same.layer = same.layer)
+                               same.layer = same.layer, out.suffix = out.suffix)
   )
+  # if add.pwname.suffix is TRUE, change output filename with pathway name
+  if(add.pwname.suffix) {
+    filelist <- list.files(".",pattern=".png")
+    sapply(filelist, FUN=function(x){
+      # isolate pathway name from filename
+      m <- pw_names[names(pw_names)==substr(x, 1, 8)]
+      m <- gsub('[[:punct:]]+','',m)
+      m <- str_replace_all(m," ","_")
+      file.rename(from=x,to=sub(pattern=out.suffix,replacement=m,x))
+    })
+  }
   setwd(wd)
   
   # add status information & plot
