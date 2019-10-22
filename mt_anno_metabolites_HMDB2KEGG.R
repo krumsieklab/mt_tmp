@@ -56,7 +56,8 @@ mt_anno_metabolites_HMDB2KEGG <- function(D,
   # join with automatic metabolite mapping
   newdf <- df %>% 
     dplyr::left_join(MetaboliteMapping[,c("secondary_accessions","kegg_id")], by = c("MappingIDs" = "secondary_accessions")) %>%
-    dplyr::left_join(MetaboliteMapping[,c("accession","kegg_id")], by=c("MappingIDs" = "accession"))
+    dplyr::left_join(MetaboliteMapping[,c("accession","kegg_id")], by=c("MappingIDs" = "accession")) %>% 
+    distinct()
   # merge KEGG identifiers
   newdf[[col_output]] <- newdf$kegg_id.x
   newdf[[col_output]] [is.na(newdf[[col_output]])] <- newdf$kegg_id.y[is.na(newdf[[col_output]])]
@@ -81,7 +82,6 @@ mt_anno_metabolites_HMDB2KEGG <- function(D,
   dd <- dd[match(newdf[[col_input]][which(newdf[[col_input]] %in% ow)], dd$HMDB),]
   # overwrite identifiers
   newdf[[col_output]][which(newdf[[col_input]] %in% ow)] <- dd$KEGG
-  
   # update rowData
   rowData(D) <- DataFrame(newdf)
   
