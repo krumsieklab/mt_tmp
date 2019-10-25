@@ -54,7 +54,8 @@ mt_plots_compare2stats <- function(
   filterop="AND",  # if AND -> two colors, one for those where both stats match the criterion, and one where they don't
                    # if OR -> three colors, a third one where only one stat matches the criterion
   
-  plot_title = "", # optional param for plot title
+  plot_title = "", # optional argument for plot title
+  label_column = "name", # optional argument on which column in the statistical results df to use for labeling points
   return.plot.only=F  # return only the plot object. note: setting this to true makes the function non-MT pipeline compatible.
 ) {
   
@@ -112,7 +113,7 @@ mt_plots_compare2stats <- function(
     ggplot(aes(x=dp1,y=dp2,color=as.factor(filtered))) + 
     geom_point() + 
     labs(color='filtered') +
-    geom_text_repel(data=filter(st, filtered>0), aes(label=name), size=3, colour = "black") + 
+    geom_text_repel(data=filter(st, filtered>0), aes_string(label=label_column), size=3, colour = "black") + 
     xlab(xlabel) + ylab(ylabel)
   
   
