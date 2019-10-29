@@ -103,12 +103,15 @@ mt_plots_pathview <- function(D,
   ## if n.pathway is given, it must be numeric
   if(!missing(n.pathways)) {
     if(class(n.pathways)!="numeric")
-      stop("n.pathways must be numeric")
-  }
+      stop("n.pathways must be numeric")}
   ## if show.only.filtered is TRUE, metab.filter must be given
   if(show.only.filtered) {
     if(missing(metab.filter))
-      stop("show.only.filtered can be TRUE only if metab.filter is given")
+      stop("show.only.filtered can be TRUE only if metab.filter is given")}
+  ## in order for add.pwname.suffix to work when TRUE, pathway.id must be missing
+  if(add.pwname.suffix){
+    if(!(missing(pathway.id)))
+      stop("add.pwname.suffix can only be TRUE if pathway.id is missing")
   }
   
   ## rowData
@@ -133,7 +136,23 @@ mt_plots_pathview <- function(D,
     if(!missing(color.range)) {
       limit = list(gene=color.range, cpd=color.range)
     } else {
-      limit=list(gene=max(ceiling(abs(stat$color))), cpd=max(ceiling(abs(stat$color))))
+      if(!is.null(met.id)) {
+        limit$cpd = max(ceiling(abs(stat$color)), na.rm = TRUE)
+      }
+      if(!is.null(gene.id)) {
+        limit$gene = max(ceiling(abs(stat$color)), na.rm = TRUE)
+      }
+      # limit=list(gene=max(ceiling(abs(stat$color))), cpd=max(ceiling(abs(stat$color))))
+      if(!is.null(cpd.data)) {
+        if(!is.null(rownames(cpd.data))) {
+          limit$gene = max(ceiling(abs(cpd.data)), na.rm = TRUE)
+        }
+      }
+      if(!is.null(gene.data)) {
+        if(!is.null(rownames(gene.data))) {
+          limit$gene = max(ceiling(abs(gene.data)), na.rm = TRUE)
+        }
+      }
     }
   } else {
     # if not given, set color to 1
@@ -182,10 +201,19 @@ mt_plots_pathview <- function(D,
   }
   
   # if no pathway.id list is provided, find annotations for kegg identifiers
-  if (missing(pathway.id)) {
+  if(missing(pathway.id)) {
     
-    # load KEGG pathway database
-    load(codes.makepath("snippets/packages/metabotools_external/pathview/KeggPathways.Rds"))
+    if(species=="hsa") {
+      # load KEGG pathway database
+      load(codes.makepath("snippets/packages/metabotools_external/pathview/KeggPathways.Rds"))
+    } else {
+      if(species=="mmu") {
+        # load KEGG pathway database for mouse
+        load(codes.makepath("snippets/packages/metabotools_external/pathview/KeggPathways_mouse.Rds"))
+      } else {
+        stop("The function only supports hsa and mmu as species")
+      }
+    }
     # build one big dataframe with all pathway informations
     pwdf <- do.call(rbind, pwdb)
     
@@ -214,10 +242,10 @@ mt_plots_pathview <- function(D,
         # pathway list ordered according to the number of genes with that annotation
         pw_gene <- pw_gene[order(pw_gene$Freq,decreasing = TRUE),]
         # find names of these pathways
-        g_pw_names <- lapply(pw_met$pathway, function(x) {
+        g_pw_names <- lapply(pw_gene$pathway, function(x) {
           pwdf$name[pwdf$ID==x] %>% unique()
         })
-        names(g_pw_names) <- pw_met$pathway
+        names(g_pw_names) <- pw_gene$pathway
         # build one long list
         pw_names <- do.call(c, g_pw_names)
         # remove ":" from pathway ids for pathview
@@ -282,10 +310,10 @@ mt_plots_pathview <- function(D,
       # pathway list ordered according to the number of metabolites/genes with that annotation
       pw <- pw[order(pw$Freq,decreasing = TRUE),]
       # find names of these pathways
-      pw_names <- lapply(pw_met$pathway, function(x) {
+      pw_names <- lapply(pw$pathway, function(x) {
         pwdf$name[pwdf$ID==x] %>% unique()
       })
-      names(pw_names) <- pw_met$pathway
+      names(pw_names) <- pw$pathway
       # build one long list
       pw_names <- do.call(c, pw_names)
       # remove ":" from pathway ids for pathview
@@ -323,6 +351,7 @@ mt_plots_pathview <- function(D,
                                both.dirs = both.dirs, trans.fun = trans.fun, low = low, mid = mid, high = high, na.col = na.col,
                                same.layer = same.layer, out.suffix = out.suffix)
   )
+  
   # if add.pwname.suffix is TRUE, change output filename with pathway name
   if(add.pwname.suffix) {
     filelist <- list.files(".",pattern=".png")

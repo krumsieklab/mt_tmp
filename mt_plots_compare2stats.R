@@ -12,6 +12,7 @@ require(ggrepel)
 #' @param filter2 filter term, defining which metabolites to label from first comparison (can use elements of stats table)
 #' @param filterop  if AND -> two colors, one for those where both stats match the criterion, and one where they don't
 #'                  if OR -> three colors, a third one where only one stat matches the criterion
+#' @param plot_title optional param for plot title
 #' @param return.plot.only return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.
 #'
 #' @return $result: plot, p-value histogram
@@ -52,7 +53,9 @@ mt_plots_compare2stats <- function(
   filter2,  # filter criterion, which samples to label
   filterop="AND",  # if AND -> two colors, one for those where both stats match the criterion, and one where they don't
                    # if OR -> three colors, a third one where only one stat matches the criterion
-
+  
+  plot_title = "", # optional argument for plot title
+  label_column = "name", # optional argument on which column in the statistical results df to use for labeling points
   return.plot.only=F  # return only the plot object. note: setting this to true makes the function non-MT pipeline compatible.
 ) {
   
@@ -110,9 +113,14 @@ mt_plots_compare2stats <- function(
     ggplot(aes(x=dp1,y=dp2,color=as.factor(filtered))) + 
     geom_point() + 
     labs(color='filtered') +
-    geom_text_repel(data=filter(st, filtered>0), aes(label=name), size=3, colour = "black") + 
+    geom_text_repel(data=filter(st, filtered>0), aes_string(label=label_column), size=3, colour = "black") + 
     xlab(xlabel) + ylab(ylabel)
   
+  
+  if (plot_title != "") {
+    p <- p + ggtitle(plot_title)
+    
+  }
   
   if (!return.plot.only) {
     ## add status information & plot
