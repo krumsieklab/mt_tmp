@@ -129,7 +129,7 @@ mt_plots_boxplot <- function(D,
     p <- dummy %>%
       dplyr::select(one_of(c("var","value", vars))) %>%
       ## add metabolite names, but only restricted subset from statistics table
-      inner_join(stat[,c('var','statistic','p.value','p.adj','name')], by = "var") %>% 
+      inner_join(stat[,intersect(colnames(stat),c('var','statistic','p.value','p.adj','name'))], by = "var") %>% 
       dplyr::select(-var) %>%
       ## do plot
       ggplot() +
