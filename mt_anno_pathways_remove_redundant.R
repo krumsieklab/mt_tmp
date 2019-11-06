@@ -53,7 +53,7 @@ mt_anno_pathways_remove_redundant <- function(
     unnest(pw_ID) %>% 
     group_by(pw_ID) %>% 
     arrange(met_ID) %>% 
-    mutate(met_IDs = str_c(met_ID, collapse = "|")) %>% 
+    dplyr::mutate(met_IDs = str_c(met_ID, collapse = "|")) %>% 
     ungroup() %>% 
     transmute(met_ID, 
               pw_ID,
@@ -62,7 +62,7 @@ mt_anno_pathways_remove_redundant <- function(
   pw_col_replacement <- row_data_indexed %>% 
     group_by(pw_idx) %>% 
     arrange(pw_ID) %>% 
-    mutate(tmp_ID = dplyr::first(pw_ID),
+    dplyr::mutate(tmp_ID = dplyr::first(pw_ID),
            all_IDs = str_c(pw_ID %>% unique(), collapse = "|")) %>% 
     ungroup() %>% 
     dplyr::select(met_ID,
@@ -70,11 +70,8 @@ mt_anno_pathways_remove_redundant <- function(
                   all_IDs) %>% 
     distinct() %>% 
     group_by(met_ID) %>%
-    nest(ID, .key = ID) %>% 
-    mutate(ID = 
-             ID %>%
-             unlist(recursive = FALSE) %>% 
-             as.list()) %>% 
+    summarise(ID = str_c(ID, collapse = ", ")) %>% 
+    dplyr::mutate(ID = str_split(ID, ", ")) %>% 
     right_join(row_data, by = "met_ID") %>% 
     .$ID
   
@@ -85,7 +82,7 @@ mt_anno_pathways_remove_redundant <- function(
                by = c("ID" = "pw_ID")) %>% 
     group_by(pw_idx) %>% 
     arrange(ID) %>% 
-    mutate(tmp_ID = dplyr::first(ID),
+    dplyr::mutate(tmp_ID = dplyr::first(ID),
            all_IDs = str_c(ID, collapse = "|"),
            tmp_name = dplyr::first(pathway_name),
            all_pathway_names = str_c(pathway_name, collapse = "|")) %>% 
