@@ -82,7 +82,8 @@ mt_anno_pathways_graphite <- function(
     mc.cores = n_cpus)
   
   # convert the pathway list into a dataframe 
-  pwdb %<>% 
+  pwdb <- 
+    pwdb %>% 
     bind_rows() %>% 
     dplyr::select(src, dest, pathway_name, ID) %>% 
     gather(key = tmp, value = mappingID, -c(pathway_name, ID)) %>% 
@@ -122,13 +123,12 @@ mt_anno_pathways_graphite <- function(
     dplyr::select(-mappingID) %>% 
     distinct()
   
-  
   # nest all the pathway IDs given our lieblings input IDs
   pwdb_reduced <- 
     pwdb %>% 
     group_by(mappingID) %>% 
-    nest(ID, .key = IDs) %>% 
-    dplyr::mutate(IDs = as.list(unlist(IDs, recursive = FALSE)))
+    dplyr::summarise(IDs = str_c(ID, collapse = ", ")) %>% 
+    dplyr::mutate(IDs = str_split(IDs, ", "))
   
   ######################################################################################
   ## End of move
