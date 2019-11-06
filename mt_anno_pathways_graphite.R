@@ -61,7 +61,7 @@ mt_anno_pathways_graphite <- function(
   # convert from ChEBI IDs (given by graphite) to our lieblings ID
   mti_logstatus(glue::glue("converting graphite ChEBI IDs to {in_col} IDs"))
   con_id <- if_else(in_col == "KEGG", "KEGGCOMP", in_col) 
-  pwdb %<>% convertIdentifiers(con_id)
+  pwdb <- pwdb %>% convertIdentifiers(con_id)
   
   # graphite comes with as a list of pathways given a database
   # given this list, subselect the metabolite entries per pathway
@@ -72,7 +72,7 @@ mt_anno_pathways_graphite <- function(
       pw <- pwdb[[pwname]]
       pw %>% 
         graphite::edges(which = "metabolites") %>% 
-        mutate(pathway_name = pwname,
+        dplyr::mutate(pathway_name = pwname,
                ID = pathwayId(pw))
       
     },
@@ -95,7 +95,7 @@ mt_anno_pathways_graphite <- function(
   # num_pw_total, and num_pw_measured (see below for further details)
   pwdb_summary <-
     pwdb %>% 
-    mutate(
+    dplyr::mutate(
       # num_total - overall number of metabolites in entire database (this will 
       # be a redundant, repeating number, identical in every row… but it’s the 
       # easiest way to store it right now)
@@ -107,7 +107,7 @@ mt_anno_pathways_graphite <- function(
         length()
     ) %>% 
     group_by(ID) %>% 
-    mutate(
+    dplyr::mutate(
       # num_pw_total - the total number of metabolites in that pathway 
       # (overall DB background)
       num_pw_total = n(),
@@ -128,7 +128,7 @@ mt_anno_pathways_graphite <- function(
     pwdb %>% 
     group_by(mappingID) %>% 
     nest(ID, .key = IDs) %>% 
-    mutate(IDs = as.list(unlist(IDs, recursive = FALSE)))
+    dplyr::mutate(IDs = as.list(unlist(IDs, recursive = FALSE)))
   
   ######################################################################################
   ## End of move
