@@ -33,7 +33,7 @@ library(rpubchem)
 #' 
 
 # main
-mt_add_pathways_graphite <- function(
+mt_anno_pathways_graphite <- function(
   D,             # SummarizedExperiment input
   in_col,        # column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. KEGG, ChEBI, HMBD, etc)
   out_col,       # name of the column to output pathway information to in D
@@ -177,7 +177,7 @@ if (F) {
   mt_logging(console=T) 
   D_alone <- 
     mt_files_load_metabolon(codes.makepath("MT/sampledata.xlsx"), "OrigScale") %>% 
-    mt_add_pathways_graphite(in_col = "KEGG", out_col = "humancyc_db", pw_species = "hsapiens", pw_name = "humancyc", n_cpus = 5)
+    mt_anno_pathways_graphite(in_col = "KEGG", out_col = "humancyc_db", pw_species = "hsapiens", pw_name = "humancyc", n_cpus = 5)
 }
 
 
