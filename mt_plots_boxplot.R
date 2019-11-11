@@ -19,6 +19,7 @@ require(glue)
 #' @param cols number columns of boxplots in $result
 #' @param restrict.to.groups whether to filter by groups, default T
 #' @param full.info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
+#' @param manual.ylab manual ylabel (default: none)
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #' 
@@ -51,6 +52,7 @@ mt_plots_boxplot <- function(D,
                              cols,
                              restrict.to.groups=T,
                              full.info=F,
+                             manual.ylab=NULL,
                              ggadd        = NULL,
                              ...){
   
@@ -153,10 +155,15 @@ mt_plots_boxplot <- function(D,
     
   }
   
-  ## add ylabel if this is logged data
-  r <- D %>% mti_res_get_path(c("pre","trans","log"))
-  if (length(r)>0) {
-    p <- p + ylab(r[[1]]$logtxt) # log text contains e.g. "log2"
+  ## add ylabel
+  if (!is.null(manual.ylab)) {
+    p <- p + ylab(manual.ylab)
+  } else {
+    # add label if this is logged data
+    r <- D %>% mti_res_get_path(c("pre","trans","log"))
+    if (length(r)>0) {
+      p <- p + ylab(r[[1]]$logtxt) # log text contains e.g. "log2"
+    }
   }
   
   ## ADD JITTER
