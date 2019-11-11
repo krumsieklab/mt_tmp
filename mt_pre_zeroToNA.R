@@ -1,0 +1,36 @@
+#' Set zeros in dataset to NA.
+#'
+#' @param D \code{SummarizedExperiment} input
+#'
+#' @return assay: zeros replaced by NA
+#'
+#' @examples
+#' # in the context of a SE pipeline
+#' ... %>% mt_pre_zeroToNA() %>% ...
+#' 
+#' @author JK
+#' 
+mt_pre_zeroToNA <- function(
+  D      # SummarizedExperiment input
+) {
+
+  # validate arguments
+  stopifnot("SummarizedExperiment" %in% class(D))
+  
+  # replace
+  X <- assay(D)
+  X[X==0] <- NA
+  assay(D) <- X
+  
+  # add status information
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = "zeros replaced by NAs"
+    )
+  
+  # return
+  D
+  
+}
