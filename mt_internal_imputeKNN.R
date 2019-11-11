@@ -105,6 +105,7 @@ imputeKNN <- function(dat,
           KNNids <- KNNids[sapply(KNNids,function(j) any(!is.na(dat[j,!comvars])))]
         }  else KNNids <- KNNids_naomit <- NULL
         
+         
           dattmp <-  dat
           if(!is.null(KNNids)) KNNids_sel <- KNNids[1:min(K,length(KNNids))]
           if(any(!is.na(D2[i,])) & length(KNNids)>=1) dattmp[i,!comvars] <- 
@@ -150,6 +151,10 @@ imputeKNN <- function(dat,
             KNNids <- order(D2[i,],na.last=NA)
             KNNids_naomit <- KNNids[sapply(KNNids,function(ii) any(!is.na(dat[ii,j])))]
           }  else KNNids  <- NULL
+          
+          # JK, 10/29/19
+          # KNNids cannot actually be NULL, this happens if there's a row with all Infs or NA
+          if (is.null(KNNids)) stop("Imputation method could not calculate correlations for some samples. Dataset probably contains samples that are all zero or NA and were then logged.")
           
           
             if(!is.null(KNNids)) KNNids_sel <- intersect(KNNids[1:min(K,length(KNNids))],KNNids_naomit)
