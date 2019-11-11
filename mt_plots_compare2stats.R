@@ -56,6 +56,7 @@ mt_plots_compare2stats <- function(
   
   plot_title = "", # optional argument for plot title
   label_column = "name", # optional argument on which column in the statistical results df to use for labeling points
+  point_size = 1.5,
   return.plot.only=F  # return only the plot object. note: setting this to true makes the function non-MT pipeline compatible.
 ) {
   
@@ -111,7 +112,7 @@ mt_plots_compare2stats <- function(
   st <- as.data.frame(st)
   p <- st %>% 
     ggplot(aes(x=dp1,y=dp2,color=as.factor(filtered))) + 
-    geom_point() + 
+    geom_point(size = point_size) + 
     labs(color='filtered') +
     geom_text_repel(data=filter(st, filtered>0), aes_string(label=label_column), size=3, colour = "black") + 
     xlab(xlabel) + ylab(ylabel)
