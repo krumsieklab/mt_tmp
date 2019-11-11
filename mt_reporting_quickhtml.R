@@ -1,3 +1,4 @@
+library(uuid)
 #' Generates markdown-based HTML output from SummarizedExperiment
 #' 
 #' Shortcut for mt_reporting_generateMD with subsequent knitting and clean-up.
@@ -20,9 +21,12 @@ mt_reporting_quickhtml <- function(
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))  
   
+  # unique string
+  ustr <- uuid::UUIDgenerate()
+  
   # define file names
-  rmdfile <- "tmpmd.RMD"
-  rdsfile <- "tmpmd.rds"
+  rmdfile <- sprintf("tmp_%s.RMD", ustr)
+  rdsfile <-  sprintf("tmp_%s.rds", ustr)
   # generate RMD
   D %>% mt_reporting_generateMD(outfile = rmdfile, readfrom = rdsfile, title = title, output.calls = output.calls, start.after=start.after)
   # save temp file that will be input for the RMD

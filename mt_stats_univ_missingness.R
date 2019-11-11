@@ -7,7 +7,7 @@ require(gdata)
 #' @param D \code{SummarizedExperiment} input
 #' @param comp sample annotation (colData) column to compare against
 #' @param name name of comparison for later reference
-#' @param samplefilter sample filter term to restrict to. WARNING: CURRENTLY NON-FUNCTIONAL
+#' @param samplefilter sample filter term to restrict to. 
 #'
 #' @return $result: statistics object
 #' 

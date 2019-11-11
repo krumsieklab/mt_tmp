@@ -70,7 +70,7 @@ mt_pre_norm_quot = function(
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = glue('quotient normalization based on {sum(useref)} reference samples'),
+      logtxt = glue('quotient normalization based on {sum(useref)} reference samples: {enquo(refsamples) %>% as.character()}'),
       output = list(dilution=d)
     )
   

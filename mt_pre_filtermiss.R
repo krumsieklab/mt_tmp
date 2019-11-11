@@ -61,8 +61,8 @@ mt_pre_filtermiss <- function(
     metadata(D)$results %<>% 
       mti_generate_result(
         funargs = funargs,
-        logtxt = sprintf('metabolites filtered, %d%%, %d of %d removed', round(metMax*100),sum(!metKeep),length(metKeep)),
-        logshort = sprintf("filter met %d%%", round(metMax*100)),
+        logtxt = sprintf('metabolites filtered, %.2f%%, %d of %d removed', round(metMax*100),sum(!metKeep),length(metKeep)),
+        logshort = sprintf("filter met %.2f%%", round(metMax*100)),
         output = list(kept=as.vector(metKeep), na.stat = na.stat, na.mat = NA.mat[metKeep,])
       )
     
@@ -77,8 +77,8 @@ mt_pre_filtermiss <- function(
     metadata(D)$results %<>% 
       mti_generate_result(
         funargs = funargs,
-        logtxt = sprintf('samples filtered, %d%%, %d of %d removed', sampleMax*100,sum(!sampleKeep),length(sampleKeep)),
-        logshort = sprintf("filter samples %d%%", sampleMax*100),
+        logtxt = sprintf('samples filtered, %.2f%%, %d of %d removed', sampleMax*100,sum(!sampleKeep),length(sampleKeep)),
+        logshort = sprintf("filter samples %.2f%%", sampleMax*100),
         output = list(kept=as.vector(sampleKeep))
       )
     
