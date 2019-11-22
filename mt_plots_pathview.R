@@ -233,7 +233,6 @@ mt_plots_pathview <- function(D,
           pwdf$ID[pwdf$src==x] %>% unique()
         })
         names(g_anno) <- ids
-        
         # build one long list
         g_anno_list <- do.call(c, g_anno)
         # find most common pathway for genes
@@ -289,7 +288,7 @@ mt_plots_pathview <- function(D,
         pw_met <- pw_met[order(pw_met$Freq,decreasing = TRUE),]
         # find names of these pathways
         m_pw_names <- lapply(pw_met$pathway, function(x) {
-          pwdf$name[pwdf$ID==x] %>% unique()
+          pwdf$name[pwdf$ID==x] %>% unique() 
         })
         names(m_pw_names) <- pw_met$pathway
         # build one long list
