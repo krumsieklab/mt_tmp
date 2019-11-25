@@ -81,10 +81,10 @@ mt_files_load_UCD <- function(
   result$info$sheet = sheet
   
   
-  #### return SummarizedExperiment
+  #### return SummarizedExperiment, make sure colData and rowData are data.frames
   D <- SummarizedExperiment(assay    = t(result$data),
-                            colData  = result$sampleinfo,
-                            rowData  = result$metinfo,
+                            colData  = result$sampleinfo %>% as.data.frame(),
+                            rowData  = result$metinfo %>% as.data.frame(),
                             metadata = list(sessionInfo=sessionInfo(), parseInfo=result$info))
   
   # add status information
