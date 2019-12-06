@@ -10,15 +10,17 @@ require(ggrepel)
 #' @param scaledata  scale data before plotting? (mean 0, std 1), default: FALSE
 #' @param PCa first PC to plot, default is 1 (PC1)
 #' @param PCb second PC to plot, default is 2 (PC2)
-#' @param showscores show 'scores' or 'loadings' 
+#' @param show show 'scores' or 'loadings' 
 #' @param labelby field to label. default: none
 #' @param textrepel try to avoid all text overlaps when labeling? default:T 
 #' @param ellipse confidence interval for ellipse. default: none (no ellipse)
 #' @param expvarplot add explained variance plot? default: F
+#' @param store.matrices store scores and loadings matrices in result structure? default: F
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... # additional expression directly passed to aes() of ggplot, can refer to colData
 #'
-#' @return $result: plot, PCA
+#' @return result output: plot(s)
+#' @return result output2: scores and loadings matrix
 #
 #' @examples
 #' ## PCA on scaledata, color and shape by "Group" variable in colData
@@ -39,6 +41,7 @@ mt_plots_PCA <- function(
   textrepel=T,
   ellipse=NA,
   expvarplot=F,
+  store.matrices=F,
   ggadd=NULL, 
   ...           
 ) {
@@ -104,17 +107,28 @@ mt_plots_PCA <- function(
     plotlist[[2]] <- newp
   }
   
+  # prep output matrices
+  if (store.matrices) { 
+    scores=pca$x
+    loadings=pca$rotation
+    rownames(loadings) <- D %>% rowData %>% .$name
+    output2 <- list(scores=scores, loadings=loadings)
+  } else {
+    output2 <- NULL
+  }
+  
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("PCA, %s, labelby: %s, aes: %s", show, labelby,  mti_dots_to_str(...)),
-      output = plotlist
+      output = plotlist,
+      output2 = output2
     )
   
   # return
   D
   
-
+  
 }
