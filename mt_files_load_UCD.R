@@ -52,7 +52,7 @@ mt_files_load_UCD <- function(
   if (sum(!is.na(inds))==0) stop(sprintf("Could not find any metabolite name column. Was looking for %s", paste0(lookfor, collapse = ", ")))
   # pick first annotation
   ind <- inds[!is.na(inds)][1]
-  metinfo$name <- metinfo[,ind]
+  metinfo$name <- metinfo[[ind]]
   # fix names
   if (gen.valid.varnames) colnames(metinfo) <- make.names(colnames(metinfo))
   # store
@@ -81,10 +81,10 @@ mt_files_load_UCD <- function(
   result$info$sheet = sheet
   
   
-  #### return SummarizedExperiment
+  #### return SummarizedExperiment, make sure colData and rowData are data.frames
   D <- SummarizedExperiment(assay    = t(result$data),
-                            colData  = result$sampleinfo,
-                            rowData  = result$metinfo,
+                            colData  = result$sampleinfo %>% as.data.frame(),
+                            rowData  = result$metinfo %>% as.data.frame(),
                             metadata = list(sessionInfo=sessionInfo(), parseInfo=result$info))
   
   # add status information

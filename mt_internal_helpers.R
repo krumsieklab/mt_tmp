@@ -61,12 +61,12 @@ mti_get_sample_anno <- function(D, strarg, requireFactor=F) {
   v
 }
 
-# returns data frame as samples X variables, merges all sample annotations, and adds sample rownames as "primary" field
+# returns data frame as samples X variables, merges all sample annotations, and adds sample rownames as "merge.primary" field
 mti_format_se_samplewise <- function(se){
   cbind(colData(se),
         t(assay(se))) %>%
     as.data.frame() %>%
-    rownames_to_column("primary")
+    rownames_to_column("merge.primary")
 }
 
 

@@ -49,7 +49,7 @@ mt_plots_sampleboxplot <- function(
   p <- Dplot %>%
     mti_format_se_samplewise() %>%
     gather(metab, value, one_of(rownames(D))) %>%
-    ggplot(aes(x = primary, y = value, ...)) +
+    ggplot(aes(x = merge.primary, y = value, ...)) +
     geom_boxplot() +
     ylab(ylabel) +
     ggtitle(plottitle) + 

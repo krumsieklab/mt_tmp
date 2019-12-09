@@ -23,7 +23,7 @@ require(pathview)
 #' @param path.output character, the directory path of the function output files. If the path does not exist, the function will create it. Default path.output ="./Pathview_output" (subfolder in the current working directory).
 #' @param same.layer logical, controls if node colors are to be plotted in the same layer as the pathway graph. If FALSE, output generation will be faster, but output plots will be larger in size.
 #' @param out.suffix character, the suffix to be added after the pathway name as part of the output graph file. Default out.suffix="pathview".
-#' @param add.pwname.to.filename logical, if TRUE will add the pathway name to the output filename. If FALSE, will use what stored in out.suffix for all files. Default add.pwname.to.filename=FALSE.
+#' @param add.pwname.suffix logical, if TRUE will add the pathway name to the output filename. If FALSE, will use what stored in out.suffix for all files. Default add.pwname.to.filename=FALSE.
 #' @param \dots  see \code{pathview::pathview} for pathview arguments
 #' @return $result: pathview images
 #' 
@@ -233,7 +233,6 @@ mt_plots_pathview <- function(D,
           pwdf$ID[pwdf$src==x] %>% unique()
         })
         names(g_anno) <- ids
-        
         # build one long list
         g_anno_list <- do.call(c, g_anno)
         # find most common pathway for genes
@@ -256,7 +255,12 @@ mt_plots_pathview <- function(D,
         warning("Filtering returned an empty matrix")
         pw <- list()
         pw$pathway <- NULL
+        gene.data <- NULL
       }
+      if(!(is.null(pw$pathway))) {
+        # save pathway list only if list of variables to output is not empty
+        pathway.id <- pw$pathway
+        }
     }
 
     if (!is.null(cpd.data)) {
@@ -268,7 +272,6 @@ mt_plots_pathview <- function(D,
       } else {
         ids <- cpd.data
       }
-
       if(length(ids)!=0) {
         # find metabolite pathway annotations
         m_anno <- lapply(ids, function(x) {
@@ -276,7 +279,6 @@ mt_plots_pathview <- function(D,
           # cbind(pwdf$ID[pwdf$dest==x] %>% unique(),pwdf$name[pwdf$dest==x] %>% unique())
         })
         names(m_anno) <- ids
-        
         # build one long list
         m_anno_list <- do.call(c, m_anno)
         # find most common pathway for metabolites
@@ -286,7 +288,7 @@ mt_plots_pathview <- function(D,
         pw_met <- pw_met[order(pw_met$Freq,decreasing = TRUE),]
         # find names of these pathways
         m_pw_names <- lapply(pw_met$pathway, function(x) {
-          pwdf$name[pwdf$ID==x] %>% unique()
+          pwdf$name[pwdf$ID==x] %>% unique() 
         })
         names(m_pw_names) <- pw_met$pathway
         # build one long list
@@ -299,7 +301,12 @@ mt_plots_pathview <- function(D,
         warning("Filtering returned an empty matrix")
         pw <- list()
         pw$pathway <- NULL
+        cpd.data <- NULL
       }
+      if(!(is.null(pw$pathway))) {
+        # save pathway list only if list of variables to output is not empty
+        pathway.id <- pw$pathway
+        }
     }
     
     if (!is.null(gene.data) & !is.null(cpd.data)) {
@@ -319,50 +326,55 @@ mt_plots_pathview <- function(D,
       # remove ":" from pathway ids for pathview
       pw$pathway <- gsub(":", "", pw$pathway)
       names(pw_names) <- gsub(":", "", names(pw_names))
+      
+      if(!(is.null(pw$pathway))) {
+        # save pathway list only if list of variables to output is not empty
+        pathway.id <- pw$pathway
+        }
       }
-    
-    # save pathway list only if list of variables to output is not empty
-    pathway.id <- pw$pathway
   }
-  
-  if(!missing(n.pathways)) {
-    if(n.pathways>length(pathway.id))
-      warning(sprintf("n.pathway is %i, but there are only %i pathways, so %i pathways will be used", n.pathways, length(pathway.id), length(pathway.id)))
-    pathway.id <- pathway.id[1:min(n.pathways,length(pathway.id))]
-    pw_names <- pw_names[1:min(n.pathways,length(pathway.id))]
-  }
-  
+
   # move working directory to kegg.dir (otherwise some files will be saved in the working directory even if another directory is provided)
   wd <- getwd()
   setwd(path.database)
   save.path <- getwd()
   setwd(wd)
   setwd(path.output)
-  
-  if(length(ids) == 0) {
+
+  if(missing(pathway.id)) {
     file.create(paste0(getwd(),"/NO_RESULTS_AFTER_FILTERING.txt",sep=""))
-  }
-  
-  suppressMessages(
-  pv.out <- pathview::pathview(gene.data = gene.data, cpd.data = cpd.data, pathway.id = pathway.id, kegg.dir = save.path,
+    pv.out <- NULL
+  } else {
+    
+    if(!missing(n.pathways)) {
+      if(n.pathways>length(pathway.id))
+        warning(sprintf("n.pathway is %i, but there are only %i pathways, so %i pathways will be used", n.pathways, length(pathway.id), length(pathway.id)))
+      pathway.id <- pathway.id[1:min(n.pathways,length(pathway.id))]
+      pw_names <- pw_names[1:min(n.pathways,length(pathway.id))]
+    }
+    
+    suppressMessages(
+    pv.out <- pathview::pathview(gene.data = gene.data, cpd.data = cpd.data, pathway.id = pathway.id, kegg.dir = save.path,
                                species = species, cpd.idtype = "kegg", gene.idtype = gene.idtype, gene.annotpkg = gene.annotpkg, min.nnodes = min.nnodes, kegg.native = kegg.native,
                                map.null = map.null, expand.node = expand.node, split.group = split.group, map.symbol = map.symbol, map.cpdname = map.cpdname, node.sum = node.sum, 
                                discrete = discrete, limit = limit, bins = bins, 
                                both.dirs = both.dirs, trans.fun = trans.fun, low = low, mid = mid, high = high, na.col = na.col,
                                same.layer = same.layer, out.suffix = out.suffix)
-  )
+    )
   
-  # if add.pwname.suffix is TRUE, change output filename with pathway name
-  if(add.pwname.suffix) {
-    filelist <- list.files(".",pattern=".png")
-    sapply(filelist, FUN=function(x){
-      # isolate pathway name from filename
-      m <- pw_names[names(pw_names)==substr(x, 1, 8)]
-      m <- gsub('[[:punct:]]+','',m)
-      m <- str_replace_all(m," ","_")
-      file.rename(from=x,to=sub(pattern=out.suffix,replacement=m,x))
-    })
+    # if add.pwname.suffix is TRUE, change output filename with pathway name
+    if(add.pwname.suffix) {
+      filelist <- list.files(".",pattern=".png")
+      sapply(filelist, FUN=function(x){
+        # isolate pathway name from filename
+        m <- pw_names[names(pw_names)==substr(x, 1, 8)]
+        m <- gsub('[[:punct:]]+','',m)
+        m <- str_replace_all(m," ","_")
+        file.rename(from=x,to=sub(pattern=out.suffix,replacement=m,x))
+      })
+    }
   }
+  
   setwd(wd)
   
   # add status information & plot
