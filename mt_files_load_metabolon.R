@@ -50,6 +50,9 @@ mt_files_load_metabolon <- function(
                                range = cell_limits(ul = c(imetheader, 1),
                                                    lr = c(imetlast  , isampheader)))
   result$metinfo <- as.data.frame(result$metinfo)
+  
+  # convert any spaces in the colnames to underscores
+  colnames(result$metinfo) <- gsub(" ", "_", colnames(result$metinfo))
   # fix last one
   colnames(result$metinfo)[ncol(result$metinfo)] = overlmet
   # also add Metabolon ID in M00000 format
