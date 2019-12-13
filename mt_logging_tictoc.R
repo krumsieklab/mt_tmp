@@ -63,12 +63,17 @@ mt_logging_toc <- function(D) {
   
   # toc 
   t <- toc(quiet=T)
+  if (is.null(t)) {
+    logtxt <- "toc without prior tic, no timing recorded"
+  } else {
+    logtxt = sprintf("toc, elapsed: %.2fs", t$toc-t$tic)
+  }
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("toc, elapsed: %.2fs", t$toc-t$tic)
+      logtxt = logtxt
     )
   
   # return
