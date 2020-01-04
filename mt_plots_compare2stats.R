@@ -1,5 +1,5 @@
 require(ggrepel)
-
+require(openxlsx)
 #' Comparative plot between two comparisons.
 #' 
 #' Produces a plot that compares the directed -log10 p-values between two previously executed stats.
@@ -57,7 +57,8 @@ mt_plots_compare2stats <- function(
   plot_title = "", # optional argument for plot title
   label_column = "name", # optional argument on which column in the statistical results df to use for labeling points
   point_size = 1.5,
-  return.plot.only=F  # return only the plot object. note: setting this to true makes the function non-MT pipeline compatible.
+  return.plot.only=F,  # return only the plot object. note: setting this to true makes the function non-MT pipeline compatible.
+  export.file = NULL   # export overlap table to file?
 ) {
   
   ## check input
@@ -117,10 +118,16 @@ mt_plots_compare2stats <- function(
     geom_text_repel(data=filter(st, filtered>0), aes_string(label=label_column), size=3, colour = "black") + 
     xlab(xlabel) + ylab(ylabel)
   
-  
   if (plot_title != "") {
     p <- p + ggtitle(plot_title)
     
+  }
+  
+  ## export to file?
+  if (!is.null(export.file)) {
+    # can't handle list columns, drop those
+    keep = !sapply(st, is.list)
+    openxlsx::write.xlsx(x=st[,keep], file=export.file, asTable=F)
   }
   
   if (!return.plot.only) {
