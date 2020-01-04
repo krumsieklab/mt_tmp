@@ -145,7 +145,7 @@ mti_res_get_toplevel <- function(D,str){metadata(D)$results[sapply(sapply(metada
 mti_res_get_pre_entries  <- function(D){mti_res_get_toplevel(D,"pre")}
 # extracts all plotting $results entries
 mti_res_get_plot_entries <- function(D){mti_res_get_toplevel(D,"plots")}
-# extracts all plotting $results entries
+# extracts all stats entries
 mti_res_get_stats_entries <- function(D){mti_res_get_toplevel(D,"stats")}
 # extract plots only, not entire $results structure
 mti_res_get_plots <- function(D,unlist=T){

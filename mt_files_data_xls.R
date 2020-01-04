@@ -43,6 +43,7 @@ mt_files_data_xls <- function(file,
   df <- as.data.frame(read_excel(path=file,sheet=sheet,col_names=T))
   
   # ensure that sample ID column exists
+  if (missing(ID)) stop("No ID column provided")
   if (!(ID %in% colnames(df))) stop(glue("sample ID column '{ID}' does not exist in '{basename(file)}, sheet '{sheet}'"))
   # now convert to rownames
   df %<>% tibble::column_to_rownames(ID)  

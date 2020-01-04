@@ -1,5 +1,3 @@
-library(hash)
-
 #' Validate MD5 checksum of file.
 #' 
 #' Note: Has to be run after loading the data, since it needs to operate on an existing SummarizedExperiment.
@@ -25,7 +23,7 @@ mt_files_checksum <- function(D, file, checksum) {
   stopifnot("SummarizedExperiment" %in% class(D))
   
   # calculate checksum
-  md5 <- md5sum(file)[[1]]
+  md5 <- tools::md5sum(file)[[1]]
   # crash if wrong
   if (checksum != md5) {
     stop(sprintf("Wrong checksum for %s, expected: %s, actual: %s\n", file, checksum, md5))
