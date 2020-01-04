@@ -25,7 +25,8 @@ mt_post_addFC <- function(D,
                           ...){
   
   ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
-  if (length(mti_res_get_path(D, c("pre","trans","log"))) != 1)
+  if ((length(mti_res_get_path(D, c("pre","trans","log"))) != 1) &&
+      (length(mti_res_get_path(D, c("flag","logged"))) != 1))
     stop("fold-changes can only be calculated for log-scale data")
   
   ## stat
@@ -124,7 +125,7 @@ mt_post_addFC <- function(D,
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("Calculate foldchanges for %s", statname),
+      logtxt = sprintf("Calculated foldchanges for %s", statname),
       output = NULL
     )
   ## RETURN
