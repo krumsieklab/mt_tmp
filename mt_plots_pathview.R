@@ -126,40 +126,19 @@ mt_plots_pathview <- function(D,
   }else{
     stat <- rd
   }
-  
+
   ## Add color variable
   if(!missing(color.scale)){
     color.scale_q <- enquo(color.scale)
     # add color variable according to input
     stat <- stat %>%
       mutate(color=!!color.scale_q)
-    if(!missing(color.range)) {
-      limit = list(gene=color.range, cpd=color.range)
-    } else {
-      if(!is.null(met.id)) {
-        limit$cpd = max(ceiling(abs(stat$color)), na.rm = TRUE)
-      }
-      if(!is.null(gene.id)) {
-        limit$gene = max(ceiling(abs(stat$color)), na.rm = TRUE)
-      }
-      # limit=list(gene=max(ceiling(abs(stat$color))), cpd=max(ceiling(abs(stat$color))))
-      if(!is.null(cpd.data)) {
-        if(!is.null(rownames(cpd.data))) {
-          limit$gene = max(ceiling(abs(cpd.data)), na.rm = TRUE)
-        }
-      }
-      if(!is.null(gene.data)) {
-        if(!is.null(rownames(gene.data))) {
-          limit$gene = max(ceiling(abs(gene.data)), na.rm = TRUE)
-        }
-      }
-    }
   } else {
     # if not given, set color to 1
     stat <- stat %>%
       mutate(color=1)
   }
-  
+
   ## FILTER METABOLITES
   if(!missing(metab.filter)){
     metab.filter_q <- enquo(metab.filter)
@@ -272,6 +251,7 @@ mt_plots_pathview <- function(D,
       } else {
         ids <- cpd.data
       }
+     
       if(length(ids)!=0) {
         # find metabolite pathway annotations
         m_anno <- lapply(ids, function(x) {
@@ -333,6 +313,31 @@ mt_plots_pathview <- function(D,
         }
       }
   }
+  
+  ## Set color scale limits
+  if(!missing(color.range)) {
+    limit = list(gene=color.range, cpd=color.range)
+  } else {
+    # if(!is.null(met.id)) {
+    #   limit$cpd = max(ceiling(abs(stat$color)), na.rm = TRUE)
+    # }
+    # if(!is.null(gene.id)) {
+    #   limit$gene = max(ceiling(abs(stat$color)), na.rm = TRUE)
+    # }
+    # limit=list(gene=max(ceiling(abs(stat$color))), cpd=max(ceiling(abs(stat$color))))
+    if(!is.null(cpd.data)) {
+      if(!is.null(rownames(cpd.data))) {
+        limit$cpd = max(ceiling(abs(cpd.data)), na.rm = TRUE)
+      }
+    }
+    if(!is.null(gene.data)) {
+      if(!is.null(rownames(gene.data))) {
+        limit$gene = max(ceiling(abs(gene.data)), na.rm = TRUE)
+      }
+    }
+  }
+  if(limit$gene == 0) {limit$gene = 1}
+  if(limit$cpd == 0) {limit$cpd = 1}
 
   # move working directory to kegg.dir (otherwise some files will be saved in the working directory even if another directory is provided)
   wd <- getwd()
@@ -352,7 +357,7 @@ mt_plots_pathview <- function(D,
       pathway.id <- pathway.id[1:min(n.pathways,length(pathway.id))]
       pw_names <- pw_names[1:min(n.pathways,length(pathway.id))]
     }
-    
+
     suppressMessages(
     pv.out <- pathview::pathview(gene.data = gene.data, cpd.data = cpd.data, pathway.id = pathway.id, kegg.dir = save.path,
                                species = species, cpd.idtype = "kegg", gene.idtype = gene.idtype, gene.annotpkg = gene.annotpkg, min.nnodes = min.nnodes, kegg.native = kegg.native,
