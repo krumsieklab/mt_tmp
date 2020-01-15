@@ -20,11 +20,11 @@ mt_modify_mutate <- function(D, dir, varname, term) {
   
   if (dir=="samples") {
     cd <- colData(D) %>% as.data.frame()
-    cd %<>% mutate(!!varname := !!x)
+    cd %<>% dplyr::mutate(!!varname := !!x)
     colData(D) <- DataFrame(cd)
   } else if (dir=="metabolites") {
     rd <- rowData(D) %>% as.data.frame()
-    rd %<>% mutate(!!varname := !!x)
+    rd %<>% dplyr::mutate(!!varname := !!x)
     rowData(D) <- DataFrame(rd)
   } else {
     stop('bug')
