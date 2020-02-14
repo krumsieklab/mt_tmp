@@ -55,11 +55,11 @@ mt_stats_pathway_enrichment_with_differential_analysis <- function(
     distinct(ID, pathway_name)
   
   row.data <- rowData(D) %>% as.data.frame()
+  D.df <- assay(D) %>% as.data.frame()
   if(!("COMP_IDstr" %in% names(row.data))) {
     # If there isnt compound id (eg. if data from WCM core), make our own
     row.data$COMP_IDstr <- paste("cid", seq(nrow(row.data)), sep="")
     
-    D.df <- assay(D) %>% as.data.frame()
     D.df$name <- rownames(D.df)
     nr <- nrow(D.df)
     
@@ -240,14 +240,16 @@ mt_stats_pathway_enrichment_with_differential_analysis <- function(
 
 
 
-if (FALSE) {
+if (TRUE) {
   
   # Example -----------------------------------------------------------------
   mt_logging(console=T) 
   D_pre <- 
     mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
     mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "kegg_db", 
-                          pwdb_name = "KEGG", db_dir = codes.makepath("sharedcodes/packages/metabotools_external/hmdb/")) %>% 
+                          pwdb_name = "KEGG", 
+                          #db_dir = codes.makepath("sharedcodes/packages/metabotools_external/hmdb/")) %>% 
+                          db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb/")) %>% 
     mt_anno_pathways_remove_redundant(met_ID_col = "HMDb_ID", pw_col = "kegg_db") %>% 
     mt_pre_filtermiss(metMax=0.2) %>%
     mt_pre_filtermiss(sampleMax=0.1) %>%
