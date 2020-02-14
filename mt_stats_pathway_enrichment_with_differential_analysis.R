@@ -54,10 +54,30 @@ mt_stats_pathway_enrichment_with_differential_analysis <- function(
     meta_D$pathways[[pw_col]] %>% 
     distinct(ID, pathway_name)
   
+  row.data <- rowData(D) %>% as.data.frame()
+  if(!("COMP_IDstr" %in% names(row.data))) {
+    # If there isnt compound id (eg. if data from WCM core), make our own
+    row.data$COMP_IDstr <- paste("cid", seq(nrow(row.data)), sep="")
+    
+    D.df <- assay(D) %>% as.data.frame()
+    D.df$name <- rownames(D.df)
+    nr <- nrow(D.df)
+    
+    
+    row.data$new.name <- rownames(row.data)
+    D.df <- inner_join(D.df, row.data %>% dplyr::select(new.name, COMP_IDstr),
+                       by=c("name"="new.name"))
+    row.data <- row.data %>% dplyr::select(-new.name)
+    if(nr != nrow(D.df)) {
+      stop("Number of rows changed after merge, something is wrong")
+    }
+    rownames(D.df) <- D.df$COMP_IDstr
+    D.df <- D.df %>% dplyr::select(-c(COMP_IDstr, name))
+  }
+  
   
   geneset <- 
-    rowData(D) %>% 
-    as.data.frame() %>% 
+    row.data %>%
     dplyr::select(COMP_IDstr, !!rlang::sym(pw_col)) %>% 
     filter(!!rlang::sym(pw_col) != "NULL") %>% 
     unnest(!!rlang::sym(pw_col)) %>% 
@@ -104,8 +124,7 @@ mt_stats_pathway_enrichment_with_differential_analysis <- function(
     
     # perform pathway enrichment using the GAGE package
     enrichment_results <- 
-      assay(D) %>% 
-      as.data.frame() %>% 
+      D.df %>%
       gage(gsets = geneset_list,
            ref = ctrl_samples,
            samp = case_samples,
@@ -136,7 +155,7 @@ mt_stats_pathway_enrichment_with_differential_analysis <- function(
     # - calculate mean fold change based on mean log value of cases and ctrls
     
     met_stats <- 
-      assay(D) %>% 
+      D.df %>%
       t() %>% 
       as.data.frame() %>% 
       
