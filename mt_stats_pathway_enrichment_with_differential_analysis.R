@@ -271,7 +271,7 @@ if (TRUE) {
       control_grp_name = "Vehicle", 
       case_grp_name = c("treatment2", "treatment1"),
       method = "gage"
-      )
+    )
   
   metadata(D_pw)$pathways$enrichment_results
 }
