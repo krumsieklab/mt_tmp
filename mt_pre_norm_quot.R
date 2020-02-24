@@ -17,6 +17,7 @@ require(glue)
 #' #' # in the context of a SE pipeline
 #' ... %>% mt_pre_norm_quot() %>% ...    # standard call
 #' ... %>% mt_pre_norm_quot(refsamples = GROUP=="ctrl") %>% ...    # use reference samples where 'GROUP' field in colData is 'ctrl'
+#' #' ... %>% mt_pre_norm_quot(metMax = 0.2) %>% ...    # use only metabolites with <= 20% missing values to compute the reference used for normalization
 #'
 #' @author JK
 #' 
