@@ -24,11 +24,13 @@ mt_pre_norm_quot = function(
   D,                 # 
   vars=1:dim(D)[1],  # vars:
   NAerror=F,         # NAerrors: 
-  refsamples=NULL    # 
+  refsamples=NULL,   # 
+  metMax=1           # maximum rate of missingness in order to include metabolite in reference 
 ) {
   
   # validate and extract arguments
   stopifnot("SummarizedExperiment" %in% class(D))
+  stopifnot(!(metMax<0 || metMax>1))
   X = t(assay(D))
   if (any(unlist(X)[!is.na(unlist(X))]<0)) stop("Matrix contains negative values. Did you input logged data?")
   
@@ -54,7 +56,13 @@ mt_pre_norm_quot = function(
   } else {
     useref = rep(T, ncol(D))
   }
-  
+
+  # compute metabolite missingness rate
+  metmiss <- sapply(1:dim(X)[2], function(k){
+    sum(is.na(X[,k]))/dim(X)[1]
+  })
+  # filter metabolites with missingness rate greater than metMax
+  vars <- vars[metmiss <= metMax]
   # median reference sample
   ref = apply(X[useref,vars],2,function(x)median(x,na.rm=T))
   # get dilution factors
@@ -70,7 +78,7 @@ mt_pre_norm_quot = function(
   metadata(D)$results %<>% 
     mti_generate_result(
       funargs = funargs,
-      logtxt = glue('quotient normalization based on {sum(useref)} reference samples: {enquo(refsamples) %>% as.character()}'),
+      logtxt = glue('quotient normalization based on {sum(useref)} reference samples and {length(vars)} variables: {enquo(refsamples) %>% as.character()}'),
       output = list(dilution=d)
     )
   
