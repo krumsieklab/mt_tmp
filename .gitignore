@@ -42,3 +42,6 @@ examples/test\.html
 examples/test\.RMD
 
 examples/example_simplepipeline\.html
+example_simplepipeline.html
+precalc/hmdb/.Rapp.history
+precalc/pathview/.gitkeep
