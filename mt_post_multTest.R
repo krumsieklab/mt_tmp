@@ -40,11 +40,13 @@ mt_post_multTest <- function(D,
     ## DO CORRECTION
     metadata(D)$results[[stat_id]]$output$table %<>%
                   mutate(p.adj = p.adjust(!!pcolumn, method = method))
-    ## UPDATE LOG ENTRIES
-    metadata(D)$results[[stat_id]]$logtxt %<>%
-                  str_c(., ", multiple testing adjusted (", method, ")")
-    metadata(D)$results[[stat_id]]$logshort %<>%
-                  str_c(., " [", method, "]")
+    
+    
+    # ## UPDATE LOG ENTRIES
+    # metadata(D)$results[[stat_id]]$logtxt %<>%
+    #               str_c(., ", multiple testing adjusted (", method, ")")
+    # metadata(D)$results[[stat_id]]$logshort %<>%
+    #               str_c(., " [", method, "]")
 
     ## add status information & plot
     funargs <- mti_funargs()
