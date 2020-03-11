@@ -6,14 +6,15 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #' Uses univariate approach
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param threshold Number of standard deviations or m/n units to use as threshold to define the outlier, default value set to 4
-#' @param sample_num_correction Whether number of outliers should depend on number of samples or hard sd cutoff
-#'
+#' @param threshold Number of standard deviations or m/n units to use as threshold to define the outlier, if not provided, default is correction by sample size. This parameter is only used if sample_num_correction is False
+#' @param sample_num_correction Whether number of outliers should depend on number of samples or hard sd cutoff. If true, threshold is ignored
+#' @param alpha The percentage of points we will consider outliers based on the assumption of a normal distribution (alpha/2 on either tail). Only used if sample_num_correction is True
+#' 
 #' @return SE with NA values where outliers used to be
 #'
 #' @examples
 #' ... %>%
-#'   mt_pre_outliercorrection(threshold=3) %>%
+#'   mt_pre_outliercorrection(threshold=3, sample_num_correction=F) %>%
 #' ...
 #' 
 #' @author Annalise Schweickart
@@ -21,8 +22,9 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 
 mt_pre_outliercorrection <- function(
   D,            # SummarizedExperiment input
-  threshold=NA,  # threshold for outlier detection (default is 4 standard deviations)
+  threshold=NA,  # threshold for outlier detection
   sample_num_correction = T, # Should the number of outliers be corrected by the sample size
+  alpha = 0.05, # Percent of sample data should be considered an outlier (assuming normal distribution)
   ...   
 ) {
   
@@ -31,9 +33,7 @@ mt_pre_outliercorrection <- function(
   
   X <- t(assay(D))
   X <- scale(X)
-  # 
-  # if(any(is.na(X)))
-  #   stop("Missing values found in the data matrix")
+
   if(is.na(threshold) & sample_num_correction == F){
     stop("Threshold must be provided if not corrected by sample numbers")
   }
