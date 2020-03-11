@@ -39,8 +39,8 @@ mt_pre_outliercorrection <- function(
   }
   if(is.na(threshold)){
     numsamp=nrow(X)
-    alpha=0.05/numsamp
-    threshold = qnorm( 1 - (alpha/2) )
+    tail=alpha/numsamp
+    threshold = qnorm( 1 - (tail/2) )
   }
   # compute univariate outliers
   H <- matrix(F, dim(X)[1], dim(X)[2])
