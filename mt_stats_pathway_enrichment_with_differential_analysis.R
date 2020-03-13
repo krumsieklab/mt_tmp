@@ -245,7 +245,7 @@ if (TRUE) {
   # Example -----------------------------------------------------------------
   mt_logging(console=T) 
   D_pre <- 
-    mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+    mt_files_load_metabolon(codes.makepath("MT/sampledata.xlsx"), "OrigScale") %>%
     mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "kegg_db", 
                           pwdb_name = "KEGG", 
                           #db_dir = codes.makepath("sharedcodes/packages/metabotools_external/hmdb/")) %>% 
