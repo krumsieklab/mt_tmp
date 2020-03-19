@@ -102,7 +102,7 @@ mt_stats_univ_lm <- function(
     f_lm     <- lmerTest::lmer
     f_tidy   <- broom.mixed::tidy
     has_random_eff <- TRUE
-  }else{
+  } else {
     f_lm   <- lm
     f_tidy <- broom::tidy
   }
