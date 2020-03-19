@@ -152,6 +152,13 @@ DT::datatable(df, rownames = FALSE, filter = "top", options = list(pageLength = 
           # result level is this heading +1
           lvl = r[[i]]$output$lvl + 1
         }
+        
+        # special reporting step
+        if (r[[i]]$fun[2]=="text") {
+          # enter text
+          out(r[[i]]$output$text)
+          out("")
+        }
       }
     }
   }
