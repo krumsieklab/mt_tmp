@@ -240,7 +240,7 @@ mt_stats_pathway_enrichment_with_differential_analysis <- function(
 
 
 
-if (TRUE) {
+if (FALSE) {
   
   # Example -----------------------------------------------------------------
   mt_logging(console=T) 
