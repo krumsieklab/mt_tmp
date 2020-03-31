@@ -4,7 +4,7 @@
 library(tidyverse)
 
 l <- list.files(path=codes.makepath("MT"),pattern="*.R$",full.names=T)
-l <- l[!grepl('*examples*|*quickload*',l)]
+l <- l[!grepl('*examples*|*quickload*|*ignore*',l)]
 suppressPackageStartupMessages({
   walk(l, function(x){source(x,echo=F,verbose=F)})
 })
