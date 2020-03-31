@@ -16,7 +16,7 @@ SIMPLIFY = F,
 mc.cleanup = T,
 mc.cores = 3)
 
-save(pwdb,file = codes.makepath("snippets/packages/metabotools_external/pathview/KeggPathways.Rds"))
+save(pwdb,file = data.makepath("MT_precalc/pathview/KeggPathways.Rds"))
 
 
 # download kegg pathways
@@ -33,4 +33,4 @@ SIMPLIFY = F,
 mc.cleanup = T,
 mc.cores = 3)
 
-save(pwdb,file = codes.makepath("snippets/packages/metabotools_external/pathview/KeggPathways_mouse.Rds"))
+save(pwdb,file = data.makepath("MT_precalc/pathview/KeggPathways_mouse.Rds"))

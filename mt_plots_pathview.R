@@ -24,6 +24,7 @@ require(pathview)
 #' @param same.layer logical, controls if node colors are to be plotted in the same layer as the pathway graph. If FALSE, output generation will be faster, but output plots will be larger in size.
 #' @param out.suffix character, the suffix to be added after the pathway name as part of the output graph file. Default out.suffix="pathview".
 #' @param add.pwname.suffix logical, if TRUE will add the pathway name to the output filename. If FALSE, will use what stored in out.suffix for all files. Default add.pwname.to.filename=FALSE.
+#' @param db_path path to the pathway database to read annotations from.
 #' @param \dots  see \code{pathview::pathview} for pathview arguments
 #' @return $result: pathview images
 #' 
@@ -62,6 +63,7 @@ mt_plots_pathview <- function(D,
                              same.layer = TRUE,
                              out.suffix = "pathview",
                              add.pwname.suffix = FALSE,
+                             db_path = data.makepath("MT_precalc/pathview/KeggPathways.Rds"),
 
                              # other pathview::pathview arguments
                              species = "hsa", gene.annotpkg = NULL, min.nnodes = 3, kegg.native = TRUE,
@@ -182,17 +184,9 @@ mt_plots_pathview <- function(D,
   # if no pathway.id list is provided, find annotations for kegg identifiers
   if(missing(pathway.id)) {
     
-    if(species=="hsa") {
-      # load KEGG pathway database
-      load(codes.makepath("snippets/packages/metabotools_external/pathview/KeggPathways.Rds"))
-    } else {
-      if(species=="mmu") {
-        # load KEGG pathway database for mouse
-        load(codes.makepath("snippets/packages/metabotools_external/pathview/KeggPathways_mouse.Rds"))
-      } else {
-        stop("The function only supports hsa and mmu as species")
-      }
-    }
+    # load KEGG pathway database
+    load(db_path)
+    
     # build one big dataframe with all pathway informations
     pwdf <- do.call(rbind, pwdb)
     
