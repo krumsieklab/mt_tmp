@@ -201,7 +201,7 @@ mti_debug_badconsole <- function() {
 mti_add_leftright_gg <- function(gg, left, right) {
   
   # with backward compatibility 
-  if (packageVersion("ggplot2") >= "3.3.0") { # works because strings are comparable
+  if (compareVersion(as.character(packageVersion("ggplot2")),"3.3.0")>=0) { # at least 3.3.0
     # ggplot2 version >= 3.3.0
     ggbld <- ggplot_build(gg)
     xticks =  ggbld$layout$panel_params[[1]]$x$get_breaks() # needed for >=3.3.0
