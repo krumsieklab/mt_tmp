@@ -35,16 +35,13 @@ mt_anno_pathways_HMDB <- function(
   in_col,             # column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
   out_col,            # a new column name for D to output pathway information to
   pwdb_name = "SMP",  # the name of the pathway database to use. Can use either SMP or KEGG for this argument
-  db_dir,             # name of the directory where the parsed HMDB files are stored
+  db_dir = data.makepath("MT_precalc/hmdb/"),   # name of the directory where the parsed HMDB files are stored, default is in precalculated data directory
   db_filename,        # filename of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds
   export_raw_db       # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 ) {
   
   # check arguments
   stopifnot("SummarizedExperiment" %in% class(D))
-  
-  if (missing(db_dir))
-    stop("db_dir must be given to fetch pathway database files from")
   
   if (!dir.exists(db_dir))
     stop(glue::glue("{db_dir} does not exist. input a valid db_dir."))
