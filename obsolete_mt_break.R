@@ -7,8 +7,8 @@
 # authors: JK
 #
 
-require(uuid)
-require(glue)
+library(uuid)
+library(glue)
 
 mt_break <- function(
   D

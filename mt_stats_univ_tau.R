@@ -1,4 +1,4 @@
-require(stats)
+library(stats)
 
 #' Computes Kendall's rank correlation.
 #' If present, NAs will be omitted.

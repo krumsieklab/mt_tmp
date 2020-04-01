@@ -1,4 +1,4 @@
-require(gdata)
+library(gdata)
 
 #' Perform missingness significance analysis.
 #' 

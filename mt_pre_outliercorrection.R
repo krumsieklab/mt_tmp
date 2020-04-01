@@ -1,4 +1,4 @@
-require(limma)
+library(limma)
 source(codes.makepath("MT/mt_internal_helpers.R"))
 
 #' Identifies single outliers in samples.

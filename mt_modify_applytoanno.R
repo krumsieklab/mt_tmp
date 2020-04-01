@@ -1,4 +1,4 @@
-require(gdata) 
+library(gdata) 
 
 #' Apply function to metabolite or sample annotation column
 #'

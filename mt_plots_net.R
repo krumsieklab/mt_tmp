@@ -1,8 +1,8 @@
-require(GGally)
-require(sna)
-require(ggnetwork)
-require(visNetwork)
-require(dils)
+library(GGally)
+library(sna)
+library(ggnetwork)
+library(visNetwork)
+library(dils)
 
 #' Network plotting
 #'

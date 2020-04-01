@@ -1,5 +1,5 @@
-require(limma)
-require(GeneNet)
+library(limma)
+library(GeneNet)
 source(codes.makepath("MT/mt_internal_helpers.R"))
 
 #' Identifies sample outliers.

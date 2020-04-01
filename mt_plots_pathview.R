@@ -1,4 +1,4 @@
-require(pathview)
+library(pathview)
 
 #' mt_plots_pathview
 #'

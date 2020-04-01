@@ -1,8 +1,8 @@
-require(readxl)
-require(stringr)
-require(SummarizedExperiment)
-require(tidyverse)
-require(OlinkAnalyze)
+library(readxl)
+library(stringr)
+library(SummarizedExperiment)
+library(tidyverse)
+library(OlinkAnalyze)
 
 #' Load Olink-format data.
 #' 

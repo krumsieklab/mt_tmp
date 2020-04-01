@@ -1,5 +1,5 @@
-require(purrr)
-require(glue)
+library(purrr)
+library(glue)
 
 #' 'Equalizer' plots.
 #' 

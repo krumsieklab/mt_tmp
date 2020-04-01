@@ -1,4 +1,4 @@
-require(glue)
+library(glue)
 #' Generate p-value qq plot
 #' 
 #' QQ plot against uniform distribution.

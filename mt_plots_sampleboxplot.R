@@ -1,5 +1,5 @@
-require(reshape2)
-require(ggplot2)
+library(reshape2)
+library(ggplot2)
 
 source(codes.makepath("MT/mt_internal_helpers.R"))
 

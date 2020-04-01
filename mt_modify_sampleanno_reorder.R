@@ -1,4 +1,4 @@
-require(gdata) 
+library(gdata) 
 
 #' Reorder a sample annotation.
 #' 

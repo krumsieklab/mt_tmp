@@ -1,4 +1,4 @@
-require(formula.tools)
+library(formula.tools)
 
 #' Univariate GLMs.
 #' 

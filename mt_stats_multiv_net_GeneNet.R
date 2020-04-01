@@ -1,3 +1,6 @@
+library(GeneNet)
+library(igraph)
+
 #' Computes partial correlation matrix using the GeneNet estimator.
 #' 
 #' Implementation according to Schäfer and Strimmer, 2006\cr
@@ -32,9 +35,6 @@ mt_stats_multiv_net_GeneNet = function(
   ## check for NA and throw an error if yes
   if(any(is.na(X)))
     stop("the data matrix contains NAs")
-  
-  require(GeneNet)
-  require(igraph)
   
   # compute partial correlation using GeneNet
   pcor_GeneNet <- ggm.estimate.pcor(as.matrix(X), method = "dynamic")

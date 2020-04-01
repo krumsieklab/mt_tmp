@@ -1,5 +1,5 @@
-require(ggrepel)
-require(openxlsx)
+library(ggrepel)
+library(openxlsx)
 #' Comparative plot between two comparisons.
 #' 
 #' Produces a plot that compares the directed -log10 p-values between two previously executed stats.

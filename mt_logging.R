@@ -17,7 +17,7 @@
 # mti_logstatus()  - logger "mts", for internal status updates of the function
 # mti_logwarning()    - logger "mtw", for warnings
 
-require(logging)
+library(logging)
 
 # helper function that sends an info message to the "mt" logger
 # function also returns the string again, so it can be directly used to store log messages as well

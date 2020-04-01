@@ -1,4 +1,4 @@
-require(sva)
+library(sva)
 #' COMBAT batch correction.
 #' 
 #' Performs batch correction via COMBAT method from \code{sva} package

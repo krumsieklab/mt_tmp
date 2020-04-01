@@ -1,4 +1,4 @@
-require(glue)
+library(glue)
 #' Generate p-value histogram.
 #' 
 #' Either for a given list of statistical results, or all.

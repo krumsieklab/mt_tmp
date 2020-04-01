@@ -1,5 +1,5 @@
-require(SummarizedExperiment)
-require(ggplot2)
+library(SummarizedExperiment)
+library(ggplot2)
 
 #' mt_plots_volcano
 #'

@@ -1,6 +1,6 @@
-require(SummarizedExperiment)
-require(ggplot2)
-require(glue)
+library(SummarizedExperiment)
+library(ggplot2)
+library(glue)
 
 #' mt_plot_boxplot
 #'

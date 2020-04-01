@@ -1,4 +1,4 @@
-require(tictoc)
+library(tictoc)
 
 #' Timing functionality.
 #' 

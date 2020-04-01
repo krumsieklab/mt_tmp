@@ -1,4 +1,4 @@
-require(glue)
+library(glue)
 
 #' Normalize by an external sample annotation, e.g. sample weight, DNA content, etc.
 #'

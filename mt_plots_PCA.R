@@ -1,5 +1,5 @@
-require(ggplot2)
-require(ggrepel)
+library(ggplot2)
+library(ggrepel)
 
 #' 2D PCA of samples.
 #' 

@@ -1,7 +1,7 @@
-require(readxl)
-require(glue)
-require(magrittr)
-require(SummarizedExperiment)
+library(readxl)
+library(glue)
+library(magrittr)
+library(SummarizedExperiment)
 
 #' Load data matrix from Excel file.
 #' 

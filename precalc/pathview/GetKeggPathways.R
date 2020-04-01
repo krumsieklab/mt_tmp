@@ -1,6 +1,6 @@
-require(AnnotationDbi)
-require(org.Hs.eg.db)
-require(graphite)
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+library(graphite)
 
 # download kegg pathways
 pwdb <- pathways(species = "hsapiens", database = "kegg")

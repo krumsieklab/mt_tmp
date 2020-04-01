@@ -71,9 +71,9 @@ output:
   
   #### chunk that loads libraries
   if (!use.plotly) {
-    writechunk('# load libraries\nmt.quickload()\nrequire("DT")')  
+    writechunk('# load libraries\nmt.quickload()\nlibrary("DT")')  
   } else  {
-    writechunk('# load libraries\nmt.quickload()\nrequire("DT")\nrequire("plotly")')  
+    writechunk('# load libraries\nmt.quickload()\nlibrary("DT")\nlibrary("plotly")')  
   }
   #### chunk that loads data
   writechunk(glue('# load data\nload("{readfrom}")\nr <- metadata(D)$results'))

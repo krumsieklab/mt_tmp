@@ -1,7 +1,7 @@
-require(readxl)
-require(stringr)
-require(SummarizedExperiment)
-require(tidyverse)
+library(readxl)
+library(stringr)
+library(SummarizedExperiment)
+library(tidyverse)
 
 #' Load UC Davis-format data.
 #' 

@@ -1,4 +1,4 @@
-require(ggbeeswarm)
+library(ggbeeswarm)
 
 #' Correlate variable with dilution factors from quotient normalization.
 #' 
@@ -60,7 +60,7 @@ mt_plots_qc_dilutionplot <- function(
     if (boxpl)
       p <- p+geom_boxplot()
     if (!boxpl)
-      p <- p+geom_quasirandom()
+      p <- p+ggbeeswarm::geom_quasirandom()
     
   } else {
     if (!is.numeric(vc)) stop(sprintf("'%s' has to be character, factor, or numeric.", comp))
