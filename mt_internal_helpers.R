@@ -200,15 +200,31 @@ mti_debug_badconsole <- function() {
 # add left- and right-aligned labels to gg plot
 mti_add_leftright_gg <- function(gg, left, right) {
   
-  ggbld <- ggplot_build(gg)
-  xticks = ggbld$layout$coord$labels(ggbld$layout$panel_params)[[1]]$x.major_source
-  xticks.minor = ggbld$layout$coord$labels(ggbld$layout$panel_params)[[1]]$x.minor_source
-  xlims = ggbld$layout$panel_params[[1]]$x.range
-  
-  # add positions of annotation labels 
-  xticks = c(xlims[1], xticks, xlims[2])
-  # get breaks labels
-  xtlabs = ggbld$layout$coord$labels(ggbld$layout$panel_params)[[1]]$x.labels
+  # with backward compatibility 
+  if (packageVersion("ggplot2") >= "3.3.0") { # works because strings are comparable
+    # ggplot2 version >= 3.3.0
+    ggbld <- ggplot_build(gg)
+    xticks =  ggbld$layout$panel_params[[1]]$x$get_breaks() # needed for >=3.3.0
+    xticks.minor = ggbld$layout$panel_params[[1]]$x$get_breaks_minor() # needed for >=3.3.0
+    xlims = ggbld$layout$panel_params[[1]]$x.range
+    
+    # add positions of annotation labels 
+    xticks = c(xlims[1], xticks, xlims[2])
+    # get breaks labels
+    xtlabs = ggbld$layout$panel_params[[1]]$x$get_labels() # needed for >=3.3.0
+    
+  } else {
+    # ggplot2 version < 3.3.0
+    ggbld <- ggplot_build(gg)
+    xticks = ggbld$layout$coord$labels(ggbld$layout$panel_params)[[1]]$x.major_source # needed for <3.3.0
+    xticks.minor = ggbld$layout$coord$labels(ggbld$layout$panel_params)[[1]]$x.minor_source # needed for <3.3.0
+    xlims = ggbld$layout$panel_params[[1]]$x.range
+    
+    # add positions of annotation labels 
+    xticks = c(xlims[1], xticks, xlims[2])
+    # get breaks labels
+    xtlabs = ggbld$layout$coord$labels(ggbld$layout$panel_params)[[1]]$x.labels # needed for <3.3.0
+  }
   
   # align with \n
   txt <- c(left, right)
