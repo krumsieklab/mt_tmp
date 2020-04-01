@@ -1,4 +1,4 @@
-require(glue)
+library(glue)
 
 #' Quotient normalization
 #'
@@ -54,6 +54,8 @@ mt_pre_norm_quot = function(
       filter(!!sample_filter_q)
     # define samples to be used
     useref <- (colnames(D) %in% cd$colnames) 
+    # if no samples are left, throw error
+    if (sum(useref) == 0) stop(sprintf("No samples match filter for quotient normalization: %s", quo_name(sample_filter_q)))
   } else {
     useref = rep(T, ncol(D))
   }
