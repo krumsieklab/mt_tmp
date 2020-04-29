@@ -132,7 +132,7 @@ htmltools::tagList(setNames(plotlist, NULL))
 df<-r[[{i}]]$output$table
 # add metabolite names
 rd <- rowData(D)
-df <- cbind(name=rd$name[[1]][match(df$var, rownames(rd))], df)
+df <- cbind(name=as.data.frame(rd)$name[match(df$var, rownames(rd))], df)
 # output
 DT::datatable(df, rownames = FALSE, filter = "top", options = list(pageLength = 20, lengthMenu = c(10*(2^(0:3)), nrow(df)), autoWidth = TRUE, width = 1200, dom = "Bitlrp", buttons = c("copy", "csv", "excel", "pdf", "print")), class = "cell-border stripe", extensions = "Buttons")  %>% DT::formatStyle(columns = c(1:ncol(df)), fontSize = "80%", target= "row", lineHeight="80%")'),
                      params = "results='asis'")
