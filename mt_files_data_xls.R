@@ -15,6 +15,7 @@ library(SummarizedExperiment)
 #' @param samplesInRows  read samples as rows (T) or as columns (F). default: T (samples as rows)
 #' @param ID if samplesInRows==T -> name of sample ID column... must be exactly one
 #'           if samplesInRows==F -> name of metabolite name column... must be exactly one
+#' @param zeroToNA replace zeros by NAs? (default: F)
 #'
 #' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry
 #'
@@ -36,7 +37,8 @@ library(SummarizedExperiment)
 mt_files_data_xls <- function(file,
                               sheet,
                               samplesInRows = T,
-                              ID) {
+                              ID,
+                              zeroToNA=F) {
   
   
   # load excel sheet
@@ -64,6 +66,9 @@ mt_files_data_xls <- function(file,
   rn <- rownames(assay)
   assay <- apply(assay,2,as.numeric)
   rownames(assay) <- rn
+  
+  # zeros to NAs?
+  if (zeroToNA) assay[assay==0] <- NA
   
   # construct SummarizedExperiment
   cd <- data.frame(as.character(colnames(assay)))
