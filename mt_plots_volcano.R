@@ -45,12 +45,12 @@ mt_plots_volcano <- function(D,
     ## rowData
     rd <- rowData(D) %>%
         as.data.frame() %>%
-        mutate(var = rownames(D))
+        dplyr::mutate(var = rownames(D))
     
     ## stat
     data_plot <- mti_get_stat_by_name(D, statname) %>%
         inner_join(rd, by = "var") %>%
-        mutate(xxx = !!x)
+        dplyr::mutate(xxx = !!x)
 
     ## SCALE -log10
     reverselog_trans <- function (base = exp(1)){
@@ -65,7 +65,7 @@ mt_plots_volcano <- function(D,
     if (!missing(hline)) {
       hliney <- mti_get_stat_by_name(D, statname) %>%
         inner_join(rd, by = "var") %>%
-        mutate(xxx = !!x) %>% filter(!!enquo(hline)) %>% .$p.value %>% max()
+        dplyr::mutate(xxx = !!x) %>% dplyr::filter(!!enquo(hline)) %>% .$p.value %>% max()
     } else {
       hliney <- NA
     }
