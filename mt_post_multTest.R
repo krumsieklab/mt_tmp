@@ -39,7 +39,7 @@ mt_post_multTest <- function(D,
 
     ## DO CORRECTION
     metadata(D)$results[[stat_id]]$output$table %<>%
-                  mutate(p.adj = p.adjust(!!pcolumn, method = method))
+                  dplyr::mutate(p.adj = p.adjust(!!pcolumn, method = method))
     
     
     # ## UPDATE LOG ENTRIES

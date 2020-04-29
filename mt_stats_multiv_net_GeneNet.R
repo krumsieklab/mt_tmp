@@ -37,7 +37,7 @@ mt_stats_multiv_net_GeneNet = function(
     stop("the data matrix contains NAs")
   
   # compute partial correlation using GeneNet
-  pcor_GeneNet <- ggm.estimate.pcor(as.matrix(X), method = "dynamic")
+  pcor_GeneNet <- ggm.estimate.pcor(as.matrix(X), method = "dynamic", verbose=FALSE)
   pval_GeneNet <- network.test.edges(pcor_GeneNet)
   
   # create result variables
