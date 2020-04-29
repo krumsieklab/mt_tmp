@@ -19,13 +19,17 @@ mt_modify_mutate <- function(D, dir, varname, term) {
   x <- enquo(term)
   
   if (dir=="samples") {
+    cn <- colnames(D) # mutate destroys colnames
     cd <- colData(D) %>% as.data.frame()
     cd %<>% dplyr::mutate(!!varname := !!x)
     colData(D) <- DataFrame(cd)
+    colnames(D) <- cn
   } else if (dir=="metabolites") {
+    cn <- colnames(D) # mutate destroys colnames
     rd <- rowData(D) %>% as.data.frame()
     rd %<>% dplyr::mutate(!!varname := !!x)
     rowData(D) <- DataFrame(rd)
+    colnames(D) <- cn
   } else {
     stop('bug')
   }
