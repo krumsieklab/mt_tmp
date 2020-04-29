@@ -15,7 +15,8 @@ mt_reporting_quickhtml <- function(
   outfile, 
   title = 'RMD output',
   output.calls=F,
-  start.after=NA
+  start.after=NA,
+  use.plotly=F # EXPERIMENTAL
   ) {
   
   # validate argument
@@ -28,7 +29,8 @@ mt_reporting_quickhtml <- function(
   rmdfile <- sprintf("tmp_%s.RMD", ustr)
   rdsfile <-  sprintf("tmp_%s.rds", ustr)
   # generate RMD
-  D %>% mt_reporting_generateMD(outfile = rmdfile, readfrom = rdsfile, title = title, output.calls = output.calls, start.after=start.after)
+  D %>% mt_reporting_generateMD(
+    outfile = rmdfile, readfrom = rdsfile, title = title, output.calls = output.calls, start.after=start.after, use.plotly = use.plotly)
   # save temp file that will be input for the RMD
   save(D, file=rdsfile)
   # knit
