@@ -20,6 +20,8 @@ mt_plots_pvalqq <- function(
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
   
+  # trick: access argument so that a missing argument error is thrown from here instead of from inside mti_get_stat_by_name
+  comp
   # get statistical result
   res <- mti_get_stat_by_name(D, comp)
 
