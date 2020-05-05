@@ -82,7 +82,7 @@ mt_modify_aggPW <- function(
     # check which variables can be copied [all of this can probable be done simpler]
     copyover <- sapply(colnames(rowData(D)), function(c) {
       # verify variable, there must be only one value for each instance
-      all( (rowData(D) %>% as.data.frame() %>% as.tibble() %>% group_by_(pw) %>% summarise(n_distinct(!!rlang::sym(c))))[[2]] ==1 )
+      all( (rowData(D) %>% as.data.frame() %>% as.tibble() %>% group_by_(pw) %>% dplyr::summarise(n_distinct(!!rlang::sym(c))))[[2]] ==1 )
     })
     # generate new rowData
     rd <- rowData(D) %>% as.data.frame() %>% as.tibble() %>% filter(!duplicated(!!rlang::sym(pw))) %>%

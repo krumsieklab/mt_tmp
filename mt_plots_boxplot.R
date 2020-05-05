@@ -69,7 +69,7 @@ mt_plots_boxplot <- function(D,
   ## rowData
   rd <- rowData(D) %>%
     as.data.frame() %>%
-    mutate(var = rownames(D))
+    dplyr::mutate(var = rownames(D))
   
   ## stat
   if(!missing(statname)){
@@ -92,9 +92,9 @@ mt_plots_boxplot <- function(D,
   if(!missing(metab_sort)){
     metab_sort_q <- enquo(metab_sort)
     stat <- stat %>%
-      arrange(!!metab_sort_q) %>%
+      dplyr::arrange(!!metab_sort_q) %>%
       ## sort according to stat
-      mutate(name = factor(name, levels = unique(name)))
+      dplyr::mutate(name = factor(name, levels = unique(name)))
     mti_logstatus(glue::glue("sorted metabolites: {metab_sort_q}"))
   }
   
