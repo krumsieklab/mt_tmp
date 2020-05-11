@@ -1,6 +1,7 @@
 #' Generate aggregated pathway values.
 #' 
 #' Takes a pathway annotation column of the metabolites (rowData) and builds one representative sample per pathway for each sample.
+#' Also works for overlapping pathway annotations (i.e. where each metabolite can have >1 pathway).
 #'
 #' Implemented approaches:
 #' 1. Eigenmetabolite/eigengene/eigenvalue PCA based approach. Data matrix cannot have NAs.
