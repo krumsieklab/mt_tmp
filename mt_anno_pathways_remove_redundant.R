@@ -70,7 +70,7 @@ mt_anno_pathways_remove_redundant <- function(
                   all_IDs) %>% 
     distinct() %>% 
     group_by(met_ID) %>%
-    summarise(ID = str_c(ID, collapse = ", ")) %>% 
+    dplyr::summarise(ID = str_c(ID, collapse = ", ")) %>% 
     dplyr::mutate(ID = str_split(ID, ", ")) %>% 
     right_join(row_data, by = "met_ID") %>% 
     .$ID

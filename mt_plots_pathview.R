@@ -119,7 +119,7 @@ mt_plots_pathview <- function(D,
   ## rowData
   rd <- rowData(D) %>%
     as.data.frame() %>%
-    mutate(var = rownames(D))
+    dplyr::mutate(var = rownames(D))
   
   ## stat
   if(!missing(statname)){
@@ -134,7 +134,7 @@ mt_plots_pathview <- function(D,
     color.scale_q <- enquo(color.scale)
     # add color variable according to input
     stat <- stat %>%
-      mutate(color=!!color.scale_q)
+      dplyr::mutate(color=!!color.scale_q)
   } else {
     # if not given, set color to 1
     stat <- stat %>%
@@ -351,7 +351,7 @@ mt_plots_pathview <- function(D,
       pathway.id <- pathway.id[1:min(n.pathways,length(pathway.id))]
       pw_names <- pw_names[1:min(n.pathways,length(pathway.id))]
     }
-
+    
     suppressMessages(
     pv.out <- pathview::pathview(gene.data = gene.data, cpd.data = cpd.data, pathway.id = pathway.id, kegg.dir = save.path,
                                species = species, cpd.idtype = "kegg", gene.idtype = gene.idtype, gene.annotpkg = gene.annotpkg, min.nnodes = min.nnodes, kegg.native = kegg.native,
