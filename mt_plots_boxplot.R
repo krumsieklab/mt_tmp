@@ -17,7 +17,7 @@ library(glue)
 #' @param jitter whether to add jitter to boxplot,  default T
 #' @param rows number rows of boxplots in $result
 #' @param cols number columns of boxplots in $result
-#' @param restrict.to.groups whether to filter by groups, default T
+#' @param restrict.to.used.samples whether to filter to the samples that were used in the statistical test, default: T
 #' @param full.info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
 #' @param manual.ylab manual ylabel (default: none)
 #' @param ggadd further elements/functions to add (+) to the ggplot object
@@ -50,7 +50,7 @@ mt_plots_boxplot <- function(D,
                              jitter       = T,
                              rows,
                              cols,
-                             restrict.to.groups=T,
+                             restrict.to.used.samples=T,
                              full.info=F,
                              manual.ylab=NULL,
                              ggadd        = NULL,
@@ -77,7 +77,7 @@ mt_plots_boxplot <- function(D,
       inner_join(rd, by = "var")
   }else{
     stat <- rd
-    restrict.to.groups <- F # not dependend on a stat
+    restrict.to.used.samples <- F # not dependend on a stat
   }
   
   ## FILTER METABOLITES
@@ -105,9 +105,9 @@ mt_plots_boxplot <- function(D,
     mti_format_se_samplewise() %>%
     gather(var, value, one_of(rownames(D)))
   ## filter to groups?
-  if (restrict.to.groups) {
-    filterto <- mti_get_stat_by_name(D, statname, fullstruct=T)$groups
-    dummy <- dummy[dummy[[stat$term[1]]] %in% filterto,]
+  if (restrict.to.used.samples) {
+    filterto <- mti_get_stat_by_name(D, statname, fullstruct=T)$samples.used
+    dummy <- dummy[filterto,]
   }
   
   
