@@ -4,7 +4,9 @@ library(ggnetwork)
 library(visNetwork)
 library(dils)
 
-#' Network plotting
+#' mt_plots_net
+#' 
+#' Creates a network object
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param statname name of the test to take correlations from

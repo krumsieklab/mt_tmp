@@ -29,7 +29,20 @@ library(pathview)
 #' @return $result: pathview images
 #' 
 #' @examples
-#' # TODO
+#' # plot all pathways with at least one significant metabolite from the statistical comparison "comp" in them
+#' mt_plots_pathview(D = D,
+#'                   met.id="KEGG_mapped",
+#'                   statname = "comp",
+#'                   color.scale = -sign(fc)*log10(p.adj), 
+#'                   color.range = -log10(0.01),
+#'                   metab.filter = p.adj < 0.05,
+#'                   show.only.filtered = TRUE,
+#'                   path.database = "./Pathview_database",
+#'                   path.output = "./results/pathview",
+#'                   same.layer = F,
+#'                   add.pwname.suffix = T
+#'                   ) %>%
+#'                   ...
 #'
 #' @author Elisa Benedetti
 #' 
