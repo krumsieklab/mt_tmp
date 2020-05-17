@@ -30,7 +30,8 @@ mt_plots_net <- function(
   D,                               # SummarizedExperiment input
   statname,                        # name of the correlation matrix to plot
   corr_filter = p.value < 0.05,    # filter
-  node_coloring                    # name of the statistical test to use for node coloring
+  node_coloring,                   # name of the statistical test to use for node coloring
+  save.html                        # filename of visnetwork html
 ){
   
   ## check input
