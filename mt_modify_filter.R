@@ -1,4 +1,6 @@
 #' Filter metabolites.
+#' 
+#' Filters metabolites according to an expression. Expression can access entries of rowData.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param metab_filter Logical expression. Can use fields from \code{rowData()}.
@@ -41,6 +43,8 @@ mt_modify_filter_metabolites <- function(D, metab_filter){
 }
 
 #' Filter samples.
+#' 
+#' Filters metabolites according to an expression. Expression can access entries of colData.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param sample_filter Logical expression. Can use fields from \code{colData()}.

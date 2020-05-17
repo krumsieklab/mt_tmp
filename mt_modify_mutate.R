@@ -1,14 +1,21 @@
-#' Title
+#' Create new variable by expression
+#' 
+#' Creates a new variable using dplyr's mutate() mechanism. Formula can use any field in the respective colData/rowData
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param dir direction, "samples" or "metabolites"
 #' @param varname name of new variable
 #' @param term mutate term to forward to dplyr::mutate
 #'
-#' @return
-#' @export
+#' @return SummarizedExperiment with altered colData or rowData, containing a new field.
 #'
-#' @examples
+#' @examples 
+#' # Convert numeric sample annotation field 'num' to factor
+#' ...  %>% 
+#'  mt_modify_mutate(dir="samples", varname="num", term = as.factor(num)) %>% ...
+#' 
+#' @author JK
+#' 
 mt_modify_mutate <- function(D, dir, varname, term) {
   
   # validate arguments

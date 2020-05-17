@@ -1,25 +1,32 @@
-
 #' Markdown-based report generator
-#' 
+#'
 #' Generates a fully automated report version of an entire (linear) pipeline.  
 #' 
 #' Will generate RMD markdown document that can be adapted and then knitted to HTML.
 #'
+#' @param D \code{SummarizedExperiment} input
+#' @param outfile File to be generated
+#' @param readfrom Name of R data file data will be loaded and is supposed to contain SummarizedExperiment "D". Will not actually be loaded in this function, but while knitting the RMD later.
+#' @param title Title of RMD document
+#' @param firstheading Name of first heading
+#' @param use.plotly Output interactive plotly plots? (experimental)
+#' @param output.calls Output full information about all parameters of each function call into RMD?
+#' @param start.after UUID of pipeline step AFTER which to start (default: none, i.e. output entire pipeline) 
+#'
+#' @returns nothing
 #' 
-#' ### Markdown generation
-#' EXAMPLE COMING SOON
-#' 
-#' 
+#' @noRd
 #' @author JK
+#' 
 mt_reporting_generateMD <- function(
-  D,                     # SE
-  outfile = 'MT.RMD',    # output file to write to
-  readfrom = 'mt.rds',   # R data file data will be loaded and is supposed to contain SummarizedExperiment "D"
-  title = 'RMD output',  # title of document
-  firstheading='Output', # name of first heading
-  use.plotly=F,          # output interactive plotly plots?
-  output.calls=F,        # output full information about all parameters of each function call?
-  start.after=NA         # UUID of pipeline step AFTER which to start (default: none, i.e. output entire pipeline) 
+  D,                     
+  outfile = 'MT.RMD',   
+  readfrom = 'mt.rds',   
+  title = 'RMD output',  
+  firstheading='Output', 
+  use.plotly=F,          
+  output.calls=F,        
+  start.after=NA         
 ) {
   
   

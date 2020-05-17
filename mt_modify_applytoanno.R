@@ -1,6 +1,8 @@
 library(gdata) 
 
-#' Apply function to metabolite or sample annotation column
+#' Apply function to metabolite or sample annotation column.
+#' 
+#' Works in the same way as lapply/sapply, with a function to be executed on each entry of a given metabolite or sample annotation.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param annotype "samples" or "metabolites"

@@ -1,4 +1,6 @@
 #' Exponentiate, base 2 by default.
+#' 
+#' Transform the the entire dataset base^x.
 #'
 #' @param D  \code{SummarizedExperiment} input
 #' @param base operation: base^x for every data point

@@ -1,6 +1,8 @@
 library(glue)
 
-#' Normalize by an external sample annotation, e.g. sample weight, DNA content, etc.
+#' Normalize by an external sample annotation
+#' 
+#' Normalize by a field in colData, e.g. sample weight, DNA content, protein content (BRADFORD) etc.
 #'
 #'
 #' @param D \code{SummarizedExperiment} input

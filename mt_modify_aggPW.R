@@ -122,23 +122,6 @@ mt_modify_aggPW <- function(
 }
 
 
-if (F) {
-  
-  #### test code ----
-  mt_logging(console=T) 
-  D <- 
-    mt_files_load_metabolon(codes.makepath("MT/sampledata.xlsx"), "OrigScale") %>% 
-    mt_add_pathways_HMDB(in_col = "HMDb_ID", out_col = "kegg_db", 
-                         pwdb_name = "KEGG", db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb"))
-  
-  D %>% mt_modify_aggPW(pw="kegg_db", method="aggmean")
-  
-  
-  
-  #### ----
-  
-  
-}
 
 
 

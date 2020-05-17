@@ -25,6 +25,9 @@ mt_plots_qc_missingness <- function(
   plot.data = T     # show entire data missingess plot?
 ) {
   
+  # helper function
+  missingness <- function(X)apply(is.na(X),2,sum)/dim(X)[1]
+  
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))  
   
@@ -120,5 +123,4 @@ mt_plots_qc_missingness <- function(
   
 }
 
-# helper function
-missingness <- function(X)apply(is.na(X),2,sum)/dim(X)[1]
+

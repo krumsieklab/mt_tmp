@@ -26,7 +26,7 @@ mt_plots_pvalqq <- function(
   res <- mti_get_stat_by_name(D, comp)
 
   # create plot
-  p <- gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", comp))
+  p <- mti_gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", comp))
   
   # add status information & plot
   funargs <- mti_funargs()
@@ -61,8 +61,8 @@ mt_plots_pvalqq <- function(
 #' @return A ggplot2 plot.
 #' @examples
 #' library(ggplot2)
-#' gg_qqplot(runif(1e2)) + theme_grey(base_size = 24)
-gg_qqplot <- function(ps, ci = 0.95) {
+#' mti_gg_qqplot(runif(1e2)) + theme_grey(base_size = 24)
+mti_gg_qqplot <- function(ps, ci = 0.95) {
   n  <- length(ps)
   df <- data.frame(
     observed = -log10(sort(ps)),
