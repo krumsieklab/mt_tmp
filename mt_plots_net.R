@@ -44,10 +44,12 @@ mt_plots_net <- function(
         as.data.frame() %>%
         mutate(var1 = rownames(D))
   colnames(rd1)[colnames(rd1)=="name"] <- "name1"
+  rd1$name1 %<>% make.names()
   rd2 <- subset(rowData(D), select=which(names(rowData(D))=="name")) %>%
     as.data.frame() %>%
     mutate(var2 = rownames(D))
   colnames(rd2)[colnames(rd2)=="name"] <- "name2"
+  rd2$name2 %<>% make.names()
   
   ## stat
   data_plot <- mti_get_stat_by_name(D, statname) %>%
@@ -121,8 +123,11 @@ mt_plots_net <- function(
     theme(legend.position = "bottom")
 
   # if save.html given, save visnetwork to html
-  if (!missing(save.html)){
-    visSave(graph = p_vis, file = save.html)
+  if (!missing(save.html)) {
+    # due to odd visSave path handling behavior, we need to export to a tmp file first and the move to final location
+    tmpfile = sprintf("tmp_%s.html", uuid::UUIDgenerate())
+    visSave(graph = p_vis, file = tmpfile)
+    file.rename(tmpfile, save.html)
   }
 
   ## add status information & plot
