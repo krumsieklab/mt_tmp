@@ -12,6 +12,7 @@ library(dils)
 #' @param statname name of the test to take correlations from
 #' @param corr_filter filter for correlation values to plot
 #' @param node_coloring name of the test to use for node coloring
+#' @param save.html filename of visnetwork html file. If empty, no html saved
 #' 
 #' @return assay: not altered
 #' @return $result: network ggplot + visnetwork plot
@@ -118,6 +119,10 @@ mt_plots_net <- function(
     theme_blank() +
     theme(legend.position = "bottom")
 
+  # if save.html given, save visnetwork to html
+  if (!missing(save.html)){
+    visSave(graph = p_vis, file = save.html)
+  }
 
   ## add status information & plot
   funargs <- mti_funargs()
