@@ -13,6 +13,7 @@ library(dils)
 #' @param corr_filter filter for correlation values to plot
 #' @param node_coloring name of the test to use for node coloring
 #' @param save.html filename of visnetwork html file. If empty, no html saved
+#' @param height optional size in pixel of the plotting window size. Default 500px.
 #' 
 #' @return assay: not altered
 #' @return $result: network ggplot + visnetwork plot
@@ -20,7 +21,7 @@ library(dils)
 #' @examples
 #' #' # in the context of a SE pipeline
 #' ... %>% mt_plots_net(statsname = "xxx") %>% ...    # standard call
-#' ... %>% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's") %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test
+#' ... %>% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's", save.html="Network.html", height=800) %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
 #'
 #' @author EB
 #' @export
@@ -31,7 +32,8 @@ mt_plots_net <- function(
   statname,                        # name of the correlation matrix to plot
   corr_filter = p.value < 0.05,    # filter
   node_coloring,                   # name of the statistical test to use for node coloring
-  save.html                        # filename of visnetwork html
+  save.html,                       # filename of visnetwork html
+  height = 500                     # size of plotting window
 ){
   
   ## check input
@@ -87,7 +89,7 @@ mt_plots_net <- function(
   ## plot
   e <- edges
   n <- data.frame(id=nodes$label, label= nodes$label, color=nodes$node_color)
-  p_vis <- visNetwork(n,e)
+  p_vis <- visNetwork(n,e, height = height, width = "100%")
   
   # greate ggnetwork object
   df <- list()
