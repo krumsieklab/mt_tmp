@@ -38,7 +38,7 @@ mt_stats_multiv_net_GeneNet = function(
   
   # compute partial correlation using GeneNet
   pcor_GeneNet <- ggm.estimate.pcor(as.matrix(X), method = "dynamic", verbose=FALSE)
-  pval_GeneNet <- network.test.edges(pcor_GeneNet)
+  pval_GeneNet <- network.test.edges(pcor_GeneNet, plot=FALSE)
   
   # create result variables
   node1 <- colnames(pcor_GeneNet)[pval_GeneNet$node1]
