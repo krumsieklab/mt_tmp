@@ -1,12 +1,16 @@
 #' Output information about dataset to log.
+#' 
+#' Leaves a log entry containing the number of samples, metabolites and annotation fields at the current stage of the pipeline.
 #'
-#' @param D 
+#' @param D \code{SummarizedExperiment} input
 #'
 #' @return Nothing - leaves \code{D} unchanged
 #'
 #' @examples
 #'...  %>% 
-#'   mt_logging_tic() %>% ...
+#'   mt_logging_datasetinfo() %>% ...
+#' 
+#' @author JK
 #' 
 mt_logging_datasetinfo <- function(D) {
   

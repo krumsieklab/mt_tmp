@@ -1,6 +1,8 @@
 library(openxlsx)
 
 #' Outputs assay, colData and rowData into an Excel file.
+#' 
+#' Exports the current SummarizedExperiment (not the metadata) to an Excel file.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param file output filename to write to

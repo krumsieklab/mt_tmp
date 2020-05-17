@@ -1,6 +1,8 @@
 library(openxlsx)
 
 #' Export statistical results from pipeline into Excel file.
+#' 
+#' Writes out the statistics data frame with p-values, adjusted p-values, fold changes, test statistics etc. into an Excel sheet.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param file output filename to write to

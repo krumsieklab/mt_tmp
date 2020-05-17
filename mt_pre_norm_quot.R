@@ -9,6 +9,7 @@ library(glue)
 #' @param vars index vector of variables of be used, default: all
 #' @param NAerror T/F, throw error for NA's or just ignore?
 #' @param refsamples expression filtering reference samples from colData
+#' @param metMax maximum fraction of missingness to select metabolites to be used in the reference (default: 1, i.e. all metabolites) 
 #' 
 #' @return assay: quotient-normalized version
 #' @return $result: dilution factors
@@ -23,10 +24,10 @@ library(glue)
 #' 
 mt_pre_norm_quot = function(
   D,                 # 
-  vars=1:dim(D)[1],  # vars:
-  NAerror=F,         # NAerrors: 
+  vars=1:dim(D)[1],  # 
+  NAerror=F,         # 
   refsamples=NULL,   # 
-  metMax=1           # maximum rate of missingness in order to include metabolite in reference 
+  metMax=1           # 
 ) {
   
   # validate and extract arguments
