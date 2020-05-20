@@ -255,6 +255,18 @@ mti_res_get_path <- function(D,path) {
   metadata(D)$results[m]
 }
 
+#' Extract all stats entries.
+#' 
+#' Returns all stats entries from the $results list.
+#'
+#' @param D \code{SummarizedExperiment} input
+#'
+#' @return list if stats results
+#'
+#' @author JK
+#' @noRd
+mti_res_get_stats_entries <- function(D){mti_res_get_path(D,"stats")}
+
 # 
 #' Add left- and right-aligned x axis labels to ggplot
 #' 
