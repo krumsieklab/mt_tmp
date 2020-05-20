@@ -47,7 +47,8 @@ mt_stats_univ_missingness <- function(
   
   # get variable to compare to
   if (!(comp %in% colnames(colData(Ds)))) stop(sprintf("'%s' not found in sample annotations.", comp))
-  vc = mti_fixorder(as.factor(colData(Ds)[[comp]]))
+  fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)} 
+  vc = fixorder(as.factor(colData(Ds)[[comp]]))
   if (length(levels(vc))<2) stop(sprintf("'%s' has less than 2 factor levels",comp))
   
   

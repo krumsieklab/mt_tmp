@@ -32,6 +32,18 @@ mt_modify_aggPW <- function(
   method      # one of: "eigen", "aggmean"
 ) {
   
+  # remove all NAs from a vector
+  # alternatively, replaces NAs with a value
+  removeNAs <- function(v, replaceWith=NULL) {
+    if (!is.null(replaceWith)) {
+      v[is.na(v)] <- replaceWith
+      v
+    } else {
+      v[!is.na(v)]
+    }
+  }
+  
+  
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
   if (!(method %in% c("eigen","aggmean"))) stop("'method' must be either 'eigen' or 'aggmean'")
@@ -43,7 +55,7 @@ mt_modify_aggPW <- function(
   if (!all(sapply(p,class) %in% c("NULL","character"))) stop(sprintf("'%s' has to be a list of character lists", pw))
   
   # collect all pathway names
-  up <- unique(unlist(p)) %>% mti_removeNAs()
+  up <- unique(unlist(p)) %>% removeNAs()
   
   # agg calculation
   X = t(assay(D))
@@ -53,7 +65,7 @@ mt_modify_aggPW <- function(
     if (any(is.na(X))) stop("no NA values allowed for 'eigen' method")
     # calc
     res <- up %>% lapply(function(g) {
-      met <- mti_removeNAs(sapply(p, function(v){g %in% v}), replaceWith=F)
+      met <- removeNAs(sapply(p, function(v){g %in% v}), replaceWith=F)
       pca = prcomp(as.data.frame(X[,met]))
       list(pc1=pca$x[,1],
            expvar=(pca$sdev)^2 / sum(pca$sdev^2) )
@@ -66,7 +78,7 @@ mt_modify_aggPW <- function(
   } else if (method=="aggmean") {
     # aggregated mean
     M <- up %>% sapply(function(g){
-      met <- mti_removeNAs(sapply(p, function(v){g %in% v}), replaceWith=F)
+      met <- removeNAs(sapply(p, function(v){g %in% v}), replaceWith=F)
       apply(as.data.frame(X[,met]),1,mean, na.rm=T  )
     })
     
