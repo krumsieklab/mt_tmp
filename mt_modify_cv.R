@@ -1,3 +1,7 @@
+#' Title
+#' mt_modify cv
+#' 
+#' Description
 #' Calculate CV score
 #'
 #' @param D \code{SummarizedExperiment} input
