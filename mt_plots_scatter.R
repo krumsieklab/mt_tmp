@@ -202,26 +202,3 @@ mt_plots_scatter <- function(D,
   D
 }
 
-
-mti_correctConfounder <- function(D, formula){
-  d <- D %>% mti_format_se_samplewise()
-  d_cor <- rownames(D) %>%
-    map_dfc(function(m){
-      f   <- update.formula(formula, str_c(m, "~."))
-      mod <- lm(f, data = d, na.action = na.exclude)
-      res <- resid(mod)
-      res
-    }) %>%
-    setNames(rownames(D)) %>%
-    as.matrix() %>% t()
-  colnames(d_cor) <- colnames(D)
-  assay(D)        <- d_cor
-  D
-}
-
-
-
-
-
-
-

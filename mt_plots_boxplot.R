@@ -222,34 +222,6 @@ mt_plots_boxplot <- function(D,
 }
 
 
-#' Confounder correction for a SummarizedExperiment
-#'
-#' Used specifically for boxplot function to generate confounder-corrected residuals for plotting.
-#'
-#' @param D \code{SummarizedExperiment} input
-#' @param formula formula for correction
-#'
-#' @returns SummarizedExperiment with corrected data
-#' 
-#' @noRd
-mti_correctConfounder <- function(D, formula){
-  d <- D %>% mti_format_se_samplewise()
-  d_cor <- rownames(D) %>%
-    map_dfc(function(m){
-      f   <- update.formula(formula, str_c(m, "~."))
-      mod <- lm(f, data = d, na.action = na.exclude)
-      res <- resid(mod)
-      res
-    }) %>%
-    setNames(rownames(D)) %>%
-    as.matrix() %>% t()
-  colnames(d_cor) <- colnames(D)
-  assay(D)        <- d_cor
-  D
-}
-
-
-
 
 
 
