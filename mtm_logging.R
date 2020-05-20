@@ -3,9 +3,9 @@ library(logging)
 
 # helper function that sends an info message to the "mt" logger
 # function also returns the string again, so it can be directly used to store log messages as well
-mtm_logmsg <- function(msg) { loginfo(mti_escape_percent(msg), logger="mt"); msg }
-mtm_logstatus <- function(msg) { loginfo(mti_escape_percent(msg), logger="mts"); msg }
-mtm_logwarning <- function(msg) { loginfo(mti_escape_percent(sprintf("WARNING: %s",msg)), logger="mtw"); msg }
+mti_logmsg <- function(msg) { loginfo(mti_escape_percent(msg), logger="mt"); msg }
+mti_logstatus <- function(msg) { loginfo(mti_escape_percent(msg), logger="mts"); msg }
+mti_logwarning <- function(msg) { loginfo(mti_escape_percent(sprintf("WARNING: %s",msg)), logger="mtw"); msg }
 
 # produce sprintf-safe copy of string (create for new loginfo() behaviour, that interprets strings as formats)
 mti_escape_percent <- function(txt) gsub('%','%%',txt)
