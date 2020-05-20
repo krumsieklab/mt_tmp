@@ -103,17 +103,3 @@ mt_anno_pathways_remove_redundant <- function(
   
   D
 }
-
-
-if (FALSE) {
-  # Example -----------------------------------------------------------------
-  mt_logging(console=T) 
-  D_alone <- 
-    mt_files_load_metabolon(codes.makepath("MT/sampledata.xlsx"), "OrigScale") %>% 
-    mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db", 
-                         pwdb_name = "SMP", db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) %>% 
-    mt_anno_pathways_remove_redundant(met_ID_col = "HMDb_ID", pw_col = "smp_db")
-}
-
-
-
