@@ -10,6 +10,7 @@
 #' 
 #' @author Annalise Schweickart
 #' 
+#' @export
 mt_modify_averagesample <- function(
   D,       # SummarizedExperiment input
   groupby   # sample annotation column to compare with

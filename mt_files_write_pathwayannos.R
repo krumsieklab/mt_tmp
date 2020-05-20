@@ -22,6 +22,7 @@ library(openxlsx)
 #' 
 #' @author JK
 #' 
+#' @export
 # explicit package calls :: YES
 mt_files_write_pathwayannos <- function(D, pwfield, file) {
   

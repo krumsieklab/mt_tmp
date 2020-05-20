@@ -22,6 +22,7 @@
 #' 
 #' @author Parviz Gomari
 #' 
+#' @export
 
 library(tidyverse)
 

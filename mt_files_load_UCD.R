@@ -22,6 +22,7 @@ library(tidyverse)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_files_load_UCD <- function(
   file,                 # input xls file
   sheet,                # sheet name or number to read

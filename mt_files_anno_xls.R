@@ -35,6 +35,8 @@ library(SummarizedExperiment)
 #' 
 #' @author JK
 #' 
+#' @export
+
 mt_files_anno_xls <-
   function(D,
            file,

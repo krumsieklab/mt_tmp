@@ -39,6 +39,7 @@ library(glue)
 #'                  ...
 #'                  
 #'  @author Jonas Zierer
+#'  @export
 mt_plots_boxplot <- function(D,
                              x = "x",
                              statname,

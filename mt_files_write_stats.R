@@ -18,6 +18,7 @@ library(openxlsx)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_files_write_stats <- function(D, file, compnames=NULL) {
   
   # verify input arguments

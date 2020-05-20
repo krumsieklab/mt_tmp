@@ -13,6 +13,7 @@ library(sva)
 #'
 #' @author JK
 #' 
+#' @export
 mt_pre_batch_COMBAT = function(
   D,       # SummarizedExperiment input
   batches  # sample annotation column that contains batch info

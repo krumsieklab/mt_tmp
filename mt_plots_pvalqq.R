@@ -1,45 +1,52 @@
 library(glue)
 #' Generate p-value qq plot
-#' 
+#'
 #' QQ plot against uniform distribution.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param comp Name of the statistical result. 
+#' @param comp Name of the statistical result.
 #'
 #' @return $result: plot, p-value histogram
 #'
 #' @examples
 #' ... %>% mt_plots_pvalhist(statnames='comp') %>% ...  # for one
-#' 
+#'
 #' @author JK
+#'
+#' @export
 mt_plots_pvalqq <- function(
   D,
   comp
 ) {
-  
+
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
-  
+
   # trick: access argument so that a missing argument error is thrown from here instead of from inside mti_get_stat_by_name
   comp
   # get statistical result
   res <- mti_get_stat_by_name(D, comp)
 
   # create plot
+<<<<<<< Updated upstream
   p <- mti_gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", comp))
   
+=======
+  p <- gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", comp))
+
+>>>>>>> Stashed changes
   # add status information & plot
   funargs <- mti_funargs()
-  metadata(D)$results %<>% 
+  metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
       logtxt = glue("P-value QQ plot for {paste0(comp, collapse=', ')}"),
       output = p
     )
-  
+
   # return
   D
-  
+
 }
 
 

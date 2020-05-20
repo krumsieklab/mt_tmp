@@ -25,6 +25,7 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #' 
 #' @author JK
 #' 
+#' @export
 mt_pre_filtermiss <- function(
   D,                   # SummarizedExperiment input
   metMax=NA,           # maximum fraction of missing metabolites

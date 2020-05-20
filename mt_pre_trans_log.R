@@ -14,6 +14,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_pre_trans_log <- function(
   D,      # SummarizedExperiment input
   base=2  # base of logging

@@ -22,6 +22,7 @@ library(glue)
 #'
 #' @author JK
 #' 
+#' @export
 mt_pre_norm_quot = function(
   D,                 # 
   vars=1:dim(D)[1],  # 

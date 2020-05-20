@@ -30,6 +30,8 @@ library(ggrepel)
 #' 
 #' @author JK, BGP
 #' 
+#' @export
+#' 
 mt_plots_PCA <- function(
   D,           
   title="PCA",    

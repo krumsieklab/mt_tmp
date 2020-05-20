@@ -17,6 +17,7 @@ library(gdata)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_stats_univ_missingness <- function(
   D,      # SummarizedExperiment input
   comp,   # sample annotation (colData) column to compare against

@@ -26,6 +26,7 @@
 #' 
 #' @author Parviz Gomari
 #' 
+#' @export
 
 library(tidyverse)
 library(gage)

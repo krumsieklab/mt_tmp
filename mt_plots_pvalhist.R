@@ -13,6 +13,8 @@ library(glue)
 #' ... %>% mt_plots_pvalhist(statnames='comp') %>% ...  # for one
 #' 
 #' @author JK
+#' 
+#' @export
 mt_plots_pvalhist <- function(
   D,
   statnames=NULL

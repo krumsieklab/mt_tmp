@@ -17,6 +17,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_files_checksum <- function(D, file, checksum) {
   
   # validate arguments

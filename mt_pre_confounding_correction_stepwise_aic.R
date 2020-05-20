@@ -22,6 +22,8 @@ library(MASS)
 #' 
 #' @author Annalise Schweickart
 #' 
+#' @export
+#' 
 
 mt_pre_confounding_correction_stepwise_aic <- function(
   D,         # SummarizedExperiment input

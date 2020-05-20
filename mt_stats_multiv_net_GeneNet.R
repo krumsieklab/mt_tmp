@@ -20,6 +20,7 @@ library(igraph)
 #' 
 #' @author EB
 #' 
+#' @export
 
 mt_stats_multiv_net_GeneNet = function(
   D,                       # SummarizedExperiment input

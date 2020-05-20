@@ -13,6 +13,7 @@ library(openxlsx)
 #' %>% mt_files_write_xls(file = "out.xlsx") %>%
 #' @author JK, BGP
 #' 
+#' @export
 mt_files_write_xls <- function(D, file) {
   
   # verify that input is a SummarizedExperiment

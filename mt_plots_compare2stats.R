@@ -44,6 +44,7 @@ library(openxlsx)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_plots_compare2stats <- function(
   D1,       # first SE dataset to compare; the one in the %>% pipeline
   stat1,    # name of statistical comparison in first dataset

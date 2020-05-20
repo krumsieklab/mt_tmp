@@ -26,6 +26,7 @@ library(ggplot2)
 #'
 #' @author Jonas Zierer, Jan Krumsiek
 #' 
+#' @export
 mt_plots_volcano <- function(D,
                              x = fc,
                              statname,

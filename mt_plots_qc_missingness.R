@@ -15,6 +15,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_plots_qc_missingness <- function(
   D,         # SummarizedExperiment input
   metMax=NA, # which % to mark on the y axis,

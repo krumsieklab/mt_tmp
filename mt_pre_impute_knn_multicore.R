@@ -23,7 +23,7 @@
 #' 
 #' @author Parviz Gomari
 #' 
-#' 
+#' @export
 
 mt_pre_impute_knn_multicore <- function(D, K=10, mc_cores = 5, verbose=F) {
   

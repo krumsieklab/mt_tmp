@@ -19,6 +19,7 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #' 
 #' @author Annalise Schweickart
 #' 
+#' @export
 
 mt_pre_outliercorrection <- function(
   D,            # SummarizedExperiment input

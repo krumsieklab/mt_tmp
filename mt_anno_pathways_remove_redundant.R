@@ -22,6 +22,7 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #' 
 #' @author Parviz Gomari
 #' 
+#' @export
 
 mt_anno_pathways_remove_redundant <- function(
   D,                  # SummarizedExperiment input

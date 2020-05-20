@@ -17,6 +17,7 @@
 #' 
 #' @author JK, JZ
 #' 
+#' @export
 mt_post_multTest <- function(D,
                              statname,
                              pcolumn = p.value,

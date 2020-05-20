@@ -13,6 +13,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_modify_filter_metabolites <- function(D, metab_filter){
 
     stopifnot("SummarizedExperiment" %in% class(D))

@@ -10,6 +10,7 @@
 #' 
 #' @author Annalise Schweickart
 #' 
+#' @export
 mt_modify_cv <- function(D, qc_samples, col_lab){
   
   stopifnot("SummarizedExperiment" %in% class(D))

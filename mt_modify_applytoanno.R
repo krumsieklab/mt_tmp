@@ -22,6 +22,7 @@ library(gdata)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_modify_applytoanno <- function(
   D,          # SummarizedExperiment input
   annotype,   # "samples" or "metabolites"

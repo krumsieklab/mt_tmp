@@ -31,6 +31,7 @@ library(formula.tools)
 #' 
 #' @author JK, JZ
 #' 
+#' @export
 mt_stats_univ_lm <- function(
   D,              # SummarizedExperiment input
   formula,        # formula defining statistical model, see above.

@@ -25,6 +25,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_modify_aggPW <- function(
   D,          # SummarizedExperiment input
   pw,         # string, column name for pathway annotations

@@ -28,6 +28,7 @@ library(data.table)
 #' 
 #' @author Parviz Gomari
 #' 
+#' @export
 
 # main
 mt_anno_pathways_HMDB <- function(

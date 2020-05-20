@@ -31,6 +31,7 @@ library(rpubchem)
 #' 
 #' @author Parviz Gomari
 #' 
+#' @export
 
 # main
 mt_anno_pathways_graphite <- function(
