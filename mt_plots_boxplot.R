@@ -2,14 +2,14 @@ library(SummarizedExperiment)
 library(ggplot2)
 library(glue)
 
-#' mt_plot_boxplot
+#' Boxplots
 #'
-#' Creates one boxplot per metabolite from SummarizedExperiment and add to metadata
+#' Creates one boxplot plot per metabolite based on given sample annotations
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param x what phenotype (from colData(D)) should be used on x axis, default "x"
 #' @param statname index of the entry in metadata(D)$results that contains statistic object
-#' @param correct_confounder confounders to adjust for before plotting
+#' @param correct_confounder confounders to adjust for before plotting, formula notation
 #' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
 #' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
 #' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}",
@@ -17,7 +17,7 @@ library(glue)
 #' @param jitter whether to add jitter to boxplot,  default T
 #' @param rows number rows of boxplots in $result
 #' @param cols number columns of boxplots in $result
-#' @param restrict.to.groups whether to filter by groups, default T
+#' @param restrict.to.used.samples whether to filter to the samples that were used in the statistical test, default: T
 #' @param full.info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
 #' @param manual.ylab manual ylabel (default: none)
 #' @param ggadd further elements/functions to add (+) to the ggplot object
@@ -50,7 +50,7 @@ mt_plots_boxplot <- function(D,
                              jitter       = T,
                              rows,
                              cols,
-                             restrict.to.groups=T,
+                             restrict.to.used.samples=T,
                              full.info=F,
                              manual.ylab=NULL,
                              ggadd        = NULL,
@@ -69,7 +69,7 @@ mt_plots_boxplot <- function(D,
   ## rowData
   rd <- rowData(D) %>%
     as.data.frame() %>%
-    mutate(var = rownames(D))
+    dplyr::mutate(var = rownames(D))
   
   ## stat
   if(!missing(statname)){
@@ -77,7 +77,7 @@ mt_plots_boxplot <- function(D,
       inner_join(rd, by = "var")
   }else{
     stat <- rd
-    restrict.to.groups <- F # not dependend on a stat
+    restrict.to.used.samples <- F # not dependend on a stat
   }
   
   ## FILTER METABOLITES
@@ -92,9 +92,9 @@ mt_plots_boxplot <- function(D,
   if(!missing(metab_sort)){
     metab_sort_q <- enquo(metab_sort)
     stat <- stat %>%
-      arrange(!!metab_sort_q) %>%
+      dplyr::arrange(!!metab_sort_q) %>%
       ## sort according to stat
-      mutate(name = factor(name, levels = unique(name)))
+      dplyr::mutate(name = factor(name, levels = unique(name)))
     mti_logstatus(glue::glue("sorted metabolites: {metab_sort_q}"))
   }
   
@@ -105,9 +105,9 @@ mt_plots_boxplot <- function(D,
     mti_format_se_samplewise() %>%
     gather(var, value, one_of(rownames(D)))
   ## filter to groups?
-  if (restrict.to.groups) {
-    filterto <- mti_get_stat_by_name(D, statname, fullstruct=T)$groups
-    dummy <- dummy[dummy[[stat$term[1]]] %in% filterto,]
+  if (restrict.to.used.samples) {
+    filterto <- mti_get_stat_by_name(D, statname, fullstruct=T)$samples.used
+    dummy <- dummy[filterto,]
   }
   
   
@@ -220,24 +220,6 @@ mt_plots_boxplot <- function(D,
   ## return
   D
 }
-
-
-mti_correctConfounder <- function(D, formula){
-  d <- D %>% mti_format_se_samplewise()
-  d_cor <- rownames(D) %>%
-    map_dfc(function(m){
-      f   <- update.formula(formula, str_c(m, "~."))
-      mod <- lm(f, data = d, na.action = na.exclude)
-      res <- resid(mod)
-      res
-    }) %>%
-    setNames(rownames(D)) %>%
-    as.matrix() %>% t()
-  colnames(d_cor) <- colnames(D)
-  assay(D)        <- d_cor
-  D
-}
-
 
 
 

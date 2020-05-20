@@ -3,6 +3,42 @@ library(ggplot2)
 library(glue)
 
 
+#' Scatter plots
+#' 
+#' Creates one scatter plot per metabolite based on given sample annotations
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param x what phenotype (from colData(D)) should be used on x axis, default "x"
+#' @param statname index of the entry in metadata(D)$results that contains statistic object
+#' @param correct_confounder confounders to adjust for before plotting, formula notation
+#' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
+#' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
+#' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}",
+#' @param rows number rows of boxplots in $result
+#' @param cols number columns of boxplots in $result
+#' @param fitline add fit line? (default: T)
+#' @param fitline_se add standard error range? (default: T)
+#' @param full.info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
+#' @param ggadd further elements/functions to add (+) to the ggplot object
+#' @param ... 
+#'
+#' @return  $result: plot, scatter plot
+#'
+#' @examples
+#' # scatter plots as overview of results with a result already in 'comp'
+#' # color by "age" variable in colData
+#' mt_plots_boxplot(x                  = age,
+#'                  statname           = "comp",
+#'                  correct_confounder = ~BATCH_MOCK,
+#'                  metab_filter       = p.value<0.01,
+#'                  metab_sort         = p.value,
+#'                  annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
+#'                  rows               = 2,
+#'                  cols               = 2) %>%
+#' 
+#' 
+#' @author JK
+#' 
 mt_plots_scatter <- function(D,
                              x = "x",
                              statname,
@@ -165,27 +201,4 @@ mt_plots_scatter <- function(D,
   ## return
   D
 }
-
-
-mti_correctConfounder <- function(D, formula){
-  d <- D %>% mti_format_se_samplewise()
-  d_cor <- rownames(D) %>%
-    map_dfc(function(m){
-      f   <- update.formula(formula, str_c(m, "~."))
-      mod <- lm(f, data = d, na.action = na.exclude)
-      res <- resid(mod)
-      res
-    }) %>%
-    setNames(rownames(D)) %>%
-    as.matrix() %>% t()
-  colnames(d_cor) <- colnames(D)
-  assay(D)        <- d_cor
-  D
-}
-
-
-
-
-
-
 

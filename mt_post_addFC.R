@@ -99,15 +99,15 @@ mt_post_addFC <- function(D,
   }
   levels_1  <- rlang::sym(levels[1])
   levels_2  <- rlang::sym(levels[2])
-  
+
   ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
   d_fc <- d_fc %>%
     gather(var, value, one_of(rownames(D))) %>%
-    group_by(var,!!outcome_q) %>%
-    summarise(value = combine(value)) %>%
+    dplyr::group_by(var,!!outcome_q) %>%
+    dplyr::summarise(value = combine(value)) %>%
     ungroup() %>%
-    spread(!!outcome_q, value) %>%
-    mutate(fc = !!levels_1 - !!levels_2) %>%
+    tidyr::spread(!!outcome_q, value) %>%
+    dplyr::mutate(fc = !!levels_1 - !!levels_2) %>%
     dplyr::select(var, fc)
   
   ## ADD TO RESULTS

@@ -1,4 +1,6 @@
 #' Set zeros in dataset to NA.
+#' 
+#' Every 0 value in the dataset is replaced by an NA. Used for platforms that represent missing/sub-LOD values as zeros.
 #'
 #' @param D \code{SummarizedExperiment} input
 #'

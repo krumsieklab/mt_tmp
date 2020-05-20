@@ -53,6 +53,7 @@ mt_stats_univ_lm <- function(
     
     filter_q <- enquo(samplefilter)
     Ds <- Ds %>%
+      mutate(tmpsamplenum = 1:nrow(Ds)) %>%
       filter(!!filter_q) %>%
       droplevels()
     # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
@@ -60,6 +61,14 @@ mt_stats_univ_lm <- function(
     if (nrow(Ds)==0) stop("Filtering left 0 rows")
     if (nrow(Ds)==ncol(D)) mti_logwarning('filtering did not filter out any samples')
     
+    # store used samples
+    samples.used <- rep(F, ncol(D))
+    samples.used[Ds$tmpsamplenum] <- T
+    # drop dummy column
+    Ds %<>% dplyr::select(-tmpsamplenum)
+    
+  } else {
+    samples.used = rep(T, ncol(D))
   }
   
   ## save outcome variable
@@ -236,7 +245,8 @@ mt_stats_univ_lm <- function(
         formula = formula,
         name    = name,
         lstobj  = models,
-        groups = outgroups
+        groups = outgroups,
+        samples.used = samples.used
       )
     )
   

@@ -1,6 +1,7 @@
 #' Generate aggregated pathway values.
 #' 
 #' Takes a pathway annotation column of the metabolites (rowData) and builds one representative sample per pathway for each sample.
+#' Also works for overlapping pathway annotations (i.e. where each metabolite can have >1 pathway).
 #'
 #' Implemented approaches:
 #' 1. Eigenmetabolite/eigengene/eigenvalue PCA based approach. Data matrix cannot have NAs.
@@ -30,6 +31,18 @@ mt_modify_aggPW <- function(
   method      # one of: "eigen", "aggmean"
 ) {
   
+  # remove all NAs from a vector
+  # alternatively, replaces NAs with a value
+  removeNAs <- function(v, replaceWith=NULL) {
+    if (!is.null(replaceWith)) {
+      v[is.na(v)] <- replaceWith
+      v
+    } else {
+      v[!is.na(v)]
+    }
+  }
+  
+  
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
   if (!(method %in% c("eigen","aggmean"))) stop("'method' must be either 'eigen' or 'aggmean'")
@@ -41,7 +54,7 @@ mt_modify_aggPW <- function(
   if (!all(sapply(p,class) %in% c("NULL","character"))) stop(sprintf("'%s' has to be a list of character lists", pw))
   
   # collect all pathway names
-  up <- unique(unlist(p)) %>% mti_removeNAs()
+  up <- unique(unlist(p)) %>% removeNAs()
   
   # agg calculation
   X = t(assay(D))
@@ -51,7 +64,7 @@ mt_modify_aggPW <- function(
     if (any(is.na(X))) stop("no NA values allowed for 'eigen' method")
     # calc
     res <- up %>% lapply(function(g) {
-      met <- mti_removeNAs(sapply(p, function(v){g %in% v}), replaceWith=F)
+      met <- removeNAs(sapply(p, function(v){g %in% v}), replaceWith=F)
       pca = prcomp(as.data.frame(X[,met]))
       list(pc1=pca$x[,1],
            expvar=(pca$sdev)^2 / sum(pca$sdev^2) )
@@ -64,7 +77,7 @@ mt_modify_aggPW <- function(
   } else if (method=="aggmean") {
     # aggregated mean
     M <- up %>% sapply(function(g){
-      met <- mti_removeNAs(sapply(p, function(v){g %in% v}), replaceWith=F)
+      met <- removeNAs(sapply(p, function(v){g %in% v}), replaceWith=F)
       apply(as.data.frame(X[,met]),1,mean, na.rm=T  )
     })
     
@@ -82,7 +95,7 @@ mt_modify_aggPW <- function(
     # check which variables can be copied [all of this can probable be done simpler]
     copyover <- sapply(colnames(rowData(D)), function(c) {
       # verify variable, there must be only one value for each instance
-      all( (rowData(D) %>% as.data.frame() %>% as.tibble() %>% group_by_(pw) %>% summarise(n_distinct(!!rlang::sym(c))))[[2]] ==1 )
+      all( (rowData(D) %>% as.data.frame() %>% as.tibble() %>% group_by_(pw) %>% dplyr::summarise(n_distinct(!!rlang::sym(c))))[[2]] ==1 )
     })
     # generate new rowData
     rd <- rowData(D) %>% as.data.frame() %>% as.tibble() %>% filter(!duplicated(!!rlang::sym(pw))) %>%
@@ -121,23 +134,6 @@ mt_modify_aggPW <- function(
 }
 
 
-if (F) {
-  
-  #### test code ----
-  mt_logging(console=T) 
-  D <- 
-    mt_files_load_metabolon(codes.makepath("MT/sampledata.xlsx"), "OrigScale") %>% 
-    mt_add_pathways_HMDB(in_col = "HMDb_ID", out_col = "kegg_db", 
-                         pwdb_name = "KEGG", db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb"))
-  
-  D %>% mt_modify_aggPW(pw="kegg_db", method="aggmean")
-  
-  
-  
-  #### ----
-  
-  
-}
 
 
 

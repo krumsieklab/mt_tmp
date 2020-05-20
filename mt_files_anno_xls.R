@@ -16,6 +16,7 @@ library(SummarizedExperiment)
 #' @param IDanno column in annotation file that contains ID information for mapping
 #' @param IDdata column in existing data for mapping
 #' @param nomaperr # throw error (T) or warning (F) if something does not map. default: F
+#' @param colnames.from # take column from new annotation file and overwite colnames (i.e. sample names) of SE (default: none)
 #'
 #' @return rowData or colData: new annotations added
 #'
@@ -41,7 +42,8 @@ mt_files_anno_xls <-
            annosfor,
            IDanno,
            IDdata = IDanno,
-           nomaperr = F) {
+           nomaperr = F,
+           colnames.from = NA) {
     
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -75,6 +77,14 @@ mt_files_anno_xls <-
     rownames(newdf) <- colnames(D)
     colData(D) <- DataFrame(newdf)
     
+    # colnames.from?
+    if (!is.na(colnames.from)) {
+      # copy field, set colnames
+      cn = newdf[[colnames.from]]
+      colnames(D) = cn
+    }
+    
+    
   } else if (annosfor=="metabolites") {
     # ensure the IDdata column exists
     if (!(IDdata %in% colnames(rowData(D)))) stop(glue("ID column '{IDdata}' does not exist in current metabolite annotations of SE"))
@@ -94,6 +104,11 @@ mt_files_anno_xls <-
     stopifnot(all.equal(newdf[[IDdata]],rowData(D)[[IDdata]])) # to make sure nothing was mixed up
     rownames(newdf) <- rownames(D)
     rowData(D) <- DataFrame(newdf)
+    
+    # colnames.from?
+    if (!is.na(colnames.from)) {
+      stop("colnames.from cannot be used for metabolite annotations")
+    }
   
   } else
     stop("bug")

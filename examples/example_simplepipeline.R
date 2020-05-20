@@ -7,7 +7,6 @@
 # load MT
 mt.quickload()
 
-mt_logging(console=T) 
 D <- 
   # load data
   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%

@@ -8,6 +8,7 @@ library(igraph)
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param name name of the correlation matrix
+#' @param samplefilter term defining which samples to use for GGM calculation (default: all samples)
 #' 
 #' @return original SummarizedExperiment as in input
 #' @return $output: list of pairwise partial correlation coefficients and pvalues, as well as the corresponding variable names
@@ -22,7 +23,8 @@ library(igraph)
 
 mt_stats_multiv_net_GeneNet = function(
   D,                       # SummarizedExperiment input
-  name                     # unique name for this particular partial correlation matrix
+  name,                    # unique name for this particular partial correlation matrix
+  samplefilter
 ) {
   
   # validate and extract arguments
@@ -36,9 +38,34 @@ mt_stats_multiv_net_GeneNet = function(
   if(any(is.na(X)))
     stop("the data matrix contains NAs")
   
+  ## FILTER SAMPLES?
+  if(!missing(samplefilter)) {
+    # merge data with sample info
+    Ds <- D %>% mti_format_se_samplewise() 
+    filter_q <- enquo(samplefilter)
+    Ds <- Ds %>%
+      mutate(tmpsamplenum = 1:nrow(Ds)) %>%
+      filter(!!filter_q) %>%
+      droplevels()
+    # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
+    # did we leave 0 rows?
+    if (nrow(Ds)==0) stop("Filtering left 0 rows")
+    if (nrow(Ds)==ncol(D)) mti_logwarning('filtering did not remove any samples')
+    
+    # store used samples
+    samples.used <- rep(F, ncol(D))
+    samples.used[Ds$tmpsamplenum] <- T
+    
+  } else {
+    samples.used = rep(T, ncol(D))
+  }
+  
+  # filter
+  X <- X[samples.used,]
+  
   # compute partial correlation using GeneNet
-  pcor_GeneNet <- ggm.estimate.pcor(as.matrix(X), method = "dynamic")
-  pval_GeneNet <- network.test.edges(pcor_GeneNet)
+  pcor_GeneNet <- ggm.estimate.pcor(as.matrix(X), method = "dynamic", verbose=FALSE)
+  pval_GeneNet <- network.test.edges(pcor_GeneNet, plot=FALSE)
   
   # create result variables
   node1 <- colnames(pcor_GeneNet)[pval_GeneNet$node1]
