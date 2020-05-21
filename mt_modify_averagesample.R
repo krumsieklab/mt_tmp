@@ -1,19 +1,17 @@
-#' Title
 #' mt-modify_averagesample
-#' 
-#' Description
+#'
 #' Averages duplicate samples.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param groupby name of colData column (sample annotation) by which duplicates can be identified
 #'
-#' @return D with duplicate samples combined 
-#' 
+#' @return D with duplicate samples combined
+#'
 #' @examples
 #' ... %>% mt_modify_averagesample(groupby = "RID") %>% ...
-#' 
+#'
 #' @author Annalise Schweickart
-#' 
+#'
 #' @export
 mt_modify_averagesample <- function(
   D,       # SummarizedExperiment input
@@ -23,7 +21,7 @@ mt_modify_averagesample <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
   if(missing(groupby))
     stop("groupby can't be empty")
-  
+
   # TODO: check that coldata for duplicates are the same, throw mti_logwarning if not
   X <- t(assay(D))
   ave_col <- colData(D)[[groupby]]
@@ -40,15 +38,15 @@ mt_modify_averagesample <- function(
   assay(D) <- t(X)
   D<- D[,-to_remove]
 
-  ## add status information 
+  ## add status information
   funargs <- mti_funargs()
-  metadata(D)$results %<>% 
+  metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
       logtxt = sprintf(' %d duplicate samples combined', length(to_remove))
     )
-  
-  ##return 
-  
+
+  ##return
+
   D
 }
