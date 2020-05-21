@@ -8,6 +8,7 @@ library(stats)
 #' @param var string name of the colData variable to use as ordered categorical variable for the correlation calculation. class(D[[var]]) needs to be numeric.
 #' @param name name under which this comparison will be stored, must be unique to all other statistical results
 #' @param samplefilter optional sample filter condition
+#' @param exactFlag optional to set the exact flag in cor.test function
 #' 
 #' @return original SummarizedExperiment as in input
 #' @return $output: list of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names
@@ -17,14 +18,14 @@ library(stats)
 #'   mt_stats_univ_tau(var = "Stage", samplefilter = (GROUP %in% "Tumor"), name = "tau") %>%
 #' ...
 #' 
-#' @author EB
+#' @author EB, RB
 #' 
 
 mt_stats_univ_tau = function(
   D,
   var,
   name,
-  samplefilter){
+  samplefilter, exactFlag=NULL){
   
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -57,7 +58,7 @@ mt_stats_univ_tau = function(
   # compute association to the phenotype
   rr <- lapply(met, function(x){
     d=cor.test(Ds[,x], Ds[[var]], method="kendall", alternative = "two.sided")
-    list("statistic"=d$estimate, "p.value"=d$p.value)
+    list("statistic"=d$estimate, "p.value"=d$p.value, exact=exactFlag)
   })
   names(rr) <- met
   
