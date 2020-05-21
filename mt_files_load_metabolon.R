@@ -21,6 +21,7 @@ library(tidyverse)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_files_load_metabolon <- function(
   file,           # Metabolon xls file
   sheet,          # sheet name or number to read
@@ -131,13 +132,4 @@ mt_files_load_metabolon <- function(
   # return
   D
   
-}
-
-
-# test code from jan
-if (F) { # never execute automatically
-  file = '/Users/jak2043/work/codes/neo4j/data/metMetabolon/10090_mmu/NonTargeted_Test sample_results_HELM-13-14ML+ CDT_150414.xlsx'
-  sheet = 'OrigScale'
-  
-  D = parseMetabolonFile(file,sheet)
 }

@@ -32,6 +32,8 @@ library(glue)
 #' ...
 #' 
 #' @author JK, MB
+#' 
+#' @export
 mt_plots_equalizer <- function(
   D1,       # SummarizedExperiment input 1, the coarse one
   comp1,    # name of first comparison output to take arguments from, the coarse one [first one has to be the less granular one (e.g. D1 super, D2 sub)]

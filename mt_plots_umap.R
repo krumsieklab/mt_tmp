@@ -24,6 +24,7 @@ library(umap)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_plots_UMAP <- function(
   D,           
   title="UMAP",    

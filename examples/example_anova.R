@@ -7,7 +7,6 @@
 # load MT
 mt.quickload()
 
-mt_logging(console=T) 
 D <- 
   ###### <SAME AS example_simplepipeline.R>
   # load data

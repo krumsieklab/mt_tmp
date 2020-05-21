@@ -18,6 +18,7 @@
 #' 
 #' @author JZ
 #' 
+#' @export
 mt_post_addFC <- function(D,
                           statname,
                           correct_confounder,

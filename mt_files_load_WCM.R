@@ -23,6 +23,7 @@ library(tidyverse)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_files_load_WCM <- function(
   file,          # Metabolon xls file
   sheet,         # sheet name or number to read

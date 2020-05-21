@@ -1,7 +1,9 @@
 #' Log, base 2 by default.
+#' 
+#' Transform the entire dataset log_based(x), i.e. log(x)/log(base)
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param base operation: log(base)/log(x) for every data point
+#' @param base operation: log(x)/log(base) for every data point
 #'
 #' @return assay: logged data
 #'
@@ -12,6 +14,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_pre_trans_log <- function(
   D,      # SummarizedExperiment input
   base=2  # base of logging

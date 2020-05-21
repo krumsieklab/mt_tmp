@@ -16,6 +16,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_pre_impute_knn <- function(D, method="knn.obs.euc.sel", K=10, verbose=F) {
   
   # validate arguments
@@ -23,7 +24,7 @@ mt_pre_impute_knn <- function(D, method="knn.obs.euc.sel", K=10, verbose=F) {
   stopifnot(K%%1==0) # integer number
   
   # impute
-  assay(D) = t( imputeKNN( t(assay(D)), methods=method, K=K, verbose=verbose) )
+  assay(D) = t( mti_imputeKNN( t(assay(D)), methods=method, K=K, verbose=verbose) )
   
   # add status information
   funargs <- mti_funargs()

@@ -1,16 +1,24 @@
-################################################################################
-## CALCULATE METABOLITE RATIOS
-################################################################################
-#' mt_modify_ratios
-#'
+#' Generate metabolite ratios.
 #' 
+#' Transforms the dataset into a new dataset where each 'metabolite' represents a ratio of two metabolites. Warning: For a dataset
+#' with originally p metabolites, this will result in p*(p-1) new variables. (e.g. 500 metabolits becomes 249500 ratios).
+#' 
+#' mt_post_pgain provides a special operation on a ratio data matrix for better interpretation of the resulting p-values.
 #'
-#' @author Jonas Zierer
 #' @import SummarizedExperiment
 #' @importFrom dplyr %>% mutate gather left_join filter arrange
+#'
 #' @param D SummarizedExperiment object
+#' 
+#' @example 
+#' # Transform dataset to tratios
+#' ... %>%  mt_modify_ratios() %>% ... # proceed with statistical analysis
+#'
 #' @return SummarizedExperiment containing pairwise ratios from all variables of input
 #' @export mt_modify_ratios
+#' 
+#' @author Jonas Zierer, JK
+#' 
 mt_modify_ratios <- function(D){
 
     stopifnot("SummarizedExperiment" %in% class(D))

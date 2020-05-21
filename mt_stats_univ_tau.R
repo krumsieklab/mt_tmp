@@ -20,6 +20,7 @@ library(stats)
 #' 
 #' @author EB, RB
 #' 
+#' @export
 
 mt_stats_univ_tau = function(
   D,

@@ -4,12 +4,16 @@ library(ggnetwork)
 library(visNetwork)
 library(dils)
 
-#' Network plotting
+#' mt_plots_net
+#' 
+#' Creates a network object
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param statname name of the test to take correlations from
 #' @param corr_filter filter for correlation values to plot
 #' @param node_coloring name of the test to use for node coloring
+#' @param save.html filename of visnetwork html file. If empty, no html saved
+#' @param height optional size in pixel of the plotting window size. Default 500px.
 #' 
 #' @return assay: not altered
 #' @return $result: network ggplot + visnetwork plot
@@ -17,7 +21,7 @@ library(dils)
 #' @examples
 #' #' # in the context of a SE pipeline
 #' ... %>% mt_plots_net(statsname = "xxx") %>% ...    # standard call
-#' ... %>% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's") %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test
+#' ... %>% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's", save.html="Network.html", height=800) %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
 #'
 #' @author EB
 #' @export
@@ -27,7 +31,9 @@ mt_plots_net <- function(
   D,                               # SummarizedExperiment input
   statname,                        # name of the correlation matrix to plot
   corr_filter = p.value < 0.05,    # filter
-  node_coloring                    # name of the statistical test to use for node coloring
+  node_coloring,                   # name of the statistical test to use for node coloring
+  save.html,                       # filename of visnetwork html
+  height = 500                     # size of plotting window
 ){
   
   ## check input
@@ -40,10 +46,12 @@ mt_plots_net <- function(
         as.data.frame() %>%
         mutate(var1 = rownames(D))
   colnames(rd1)[colnames(rd1)=="name"] <- "name1"
+  rd1$name1 %<>% make.names()
   rd2 <- subset(rowData(D), select=which(names(rowData(D))=="name")) %>%
     as.data.frame() %>%
     mutate(var2 = rownames(D))
   colnames(rd2)[colnames(rd2)=="name"] <- "name2"
+  rd2$name2 %<>% make.names()
   
   ## stat
   data_plot <- mti_get_stat_by_name(D, statname) %>%
@@ -81,7 +89,7 @@ mt_plots_net <- function(
   ## plot
   e <- edges
   n <- data.frame(id=nodes$label, label= nodes$label, color=nodes$node_color)
-  p_vis <- visNetwork(n,e)
+  p_vis <- visNetwork(n,e, height = height, width = "100%")
   
   # greate ggnetwork object
   df <- list()
@@ -116,6 +124,13 @@ mt_plots_net <- function(
     theme_blank() +
     theme(legend.position = "bottom")
 
+  # if save.html given, save visnetwork to html
+  if (!missing(save.html)) {
+    # due to odd visSave path handling behavior, we need to export to a tmp file first and the move to final location
+    tmpfile = sprintf("tmp_%s.html", uuid::UUIDgenerate())
+    visSave(graph = p_vis, file = tmpfile)
+    file.rename(tmpfile, save.html)
+  }
 
   ## add status information & plot
   funargs <- mti_funargs()

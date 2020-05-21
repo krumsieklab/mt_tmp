@@ -5,11 +5,14 @@ library(uuid)
 #'
 #' @param D Summarized experiment input
 #' @param outfile # output HTML file name
+#' @param title Title of RMD document
 #' @param output.calls Output detailed info on function calls? default: F (passed through to mt_reporting_generateMD)
 #' @param start.after UUID of pipeline step AFTER which to start (default: none, i.e. output entire pipeline) (passed through to mt_reporting_generateMD)
+#' @param use.plotly Output interactive plotly plots? (experimental)
 #'
 #' @author JK
 #' 
+#' @export
 mt_reporting_quickhtml <- function(
   D, 
   outfile, 

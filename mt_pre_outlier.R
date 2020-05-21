@@ -26,6 +26,7 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #' 
 #' @author EB, JK
 #' 
+#' @export
 
 mt_pre_outlier <- function(
   D,            # SummarizedExperiment input

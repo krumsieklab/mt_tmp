@@ -1,6 +1,9 @@
 library(openxlsx)
 
-#' Write out all pathway annotations, possible redundant pathways, and metabolite annotations
+#' Write out all pathway annotations, possible redundant pathways, and metabolite annotations.
+#' 
+#' Creates an Excel file that contains detailed metabolite-to-pathway mapping information. Writes out 4 different forms of the mapping information.
+#' Also includes information about which pathways are redundant, i.e. contain the same set of metabolites.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param pwfield name of the pathway annotation field
@@ -19,6 +22,7 @@ library(openxlsx)
 #' 
 #' @author JK
 #' 
+#' @export
 # explicit package calls :: YES
 mt_files_write_pathwayannos <- function(D, pwfield, file) {
   

@@ -15,6 +15,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_plots_qc_missingness <- function(
   D,         # SummarizedExperiment input
   metMax=NA, # which % to mark on the y axis,
@@ -24,6 +25,9 @@ mt_plots_qc_missingness <- function(
   sample.labels=NA, # which column from colData to use as sample labels?
   plot.data = T     # show entire data missingess plot?
 ) {
+  
+  # helper function
+  missingness <- function(X)apply(is.na(X),2,sum)/dim(X)[1]
   
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))  
@@ -120,5 +124,4 @@ mt_plots_qc_missingness <- function(
   
 }
 
-# helper function
-missingness <- function(X)apply(is.na(X),2,sum)/dim(X)[1]
+

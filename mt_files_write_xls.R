@@ -1,6 +1,8 @@
 library(openxlsx)
 
 #' Outputs assay, colData and rowData into an Excel file.
+#' 
+#' Exports the current SummarizedExperiment (not the metadata) to an Excel file.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param file output filename to write to
@@ -11,6 +13,7 @@ library(openxlsx)
 #' %>% mt_files_write_xls(file = "out.xlsx") %>%
 #' @author JK, BGP
 #' 
+#' @export
 mt_files_write_xls <- function(D, file) {
   
   # verify that input is a SummarizedExperiment

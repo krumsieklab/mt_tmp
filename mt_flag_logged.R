@@ -13,6 +13,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_flag_logged <- function(
   D
 ) {

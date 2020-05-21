@@ -15,6 +15,7 @@ library(gdata)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_modify_sampleanno_reorder <- function(
   D,          # SummarizedExperiment input
   field,      # field to access

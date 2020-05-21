@@ -20,6 +20,7 @@ library(ggbeeswarm)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_plots_qc_dilutionplot <- function(
   D,       # SummarizedExperiment input
   comp,    # sample annotation column to compare with

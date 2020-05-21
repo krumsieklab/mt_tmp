@@ -27,6 +27,7 @@
 #' 
 #' @author EB
 #' 
+#' @export
 
 mt_anno_metabolites_HMDB2KEGG <- function(D,
                                           col_input,

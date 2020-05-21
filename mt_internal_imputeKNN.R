@@ -6,7 +6,29 @@
 
 # 18.12.17    - KD,JK
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-imputeKNN <- function(dat,
+
+
+
+#' KNN imputation
+#'
+#' Code from Kiki Do's and Simone Wahl's paper
+#' https://www.ncbi.nlm.nih.gov/pubmed/30830398
+#' 
+#' To reproduce exact setting of winner method from paper:
+#' mti_imputeKNN(dat, methods="knn.obs.euc.sel", K=10)
+#' 
+#' Note: Most parts of this code are currently not used, since we only use the above-mentioned parameter setting in MT.
+#'
+#' @param dat input data matrix
+#' @param methods which variation of KNN imputation to perform
+#' @param cor.var.sel correlation threshold for neighbor selection
+#' @param K number of neighbors to use
+#' @param verbose output status messages?
+#'
+#' @returns imputed data matrix
+#' 
+#' @noRd
+mti_imputeKNN <- function(dat,
                    methods = c("knn.vars","knn.obs","knn.obs.euc","knn.obs.euc.sel"),
                    cor.var.sel = 0.2,
                    K=5,

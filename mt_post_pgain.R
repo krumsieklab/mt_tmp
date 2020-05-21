@@ -15,6 +15,8 @@
 #'  mt_post_pgain(statname="comparison1") %>% ...
 #' 
 #' @author JZ
+#' 
+#' @export
 mt_post_pgain <- function(D,
                              statname,
                              pcolumn = p.value,

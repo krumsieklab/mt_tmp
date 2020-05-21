@@ -25,6 +25,7 @@ fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.
 #' 
 #' @author JK
 #' 
+#' @export
 mt_plots_sampleboxplot <- function(
   D,         # SummarizedExperiment input
   plottitle="Sample boxplot",  

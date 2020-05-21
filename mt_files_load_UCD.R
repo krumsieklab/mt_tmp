@@ -7,7 +7,10 @@ library(tidyverse)
 #' 
 #' Loads data from a UC Davis-format Excel file.
 #'
-#' !!!!!!!!!!!!!!!!!!!!!!!!!!
+#' @param file input Excel file in UCD format
+#' @param sheet name or number of sheet
+#' @param zero.to.NA replace zeros by NAs? (default: T)
+#' @param gen.valid.varnames enforce valid R variable names?
 #'
 #' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry
 #'
@@ -19,10 +22,11 @@ library(tidyverse)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_files_load_UCD <- function(
-  file,                 # Metabolon xls file
+  file,                 # input xls file
   sheet,                # sheet name or number to read
-  zero.to.NA=F,         # set zeros to NAs?
+  zero.to.NA=T,         # set zeros to NAs?
   gen.valid.varnames=F  # enforce valid variable names?
 ) {
   
