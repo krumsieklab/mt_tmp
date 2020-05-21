@@ -9,8 +9,6 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #' @param threshold Number of standard deviations or m/n units to use as threshold to define the outlier, if not provided, default is correction by sample size. This parameter is only used if sample_num_correction is False
 #' @param sample_num_correction Whether number of outliers should depend on number of samples or hard sd cutoff. If true, threshold is ignored
 #' @param alpha The percentage of points we will consider outliers based on the assumption of a normal distribution (alpha/2 on either tail). Only used if sample_num_correction is True
-#' @param byquant Optional, if to flag the outliers in the quantile provided in the quantile parameter
-#' @param quant.thresh If byquant is true provide a quantile
 #' 
 #' @return SE with NA values where outliers used to be
 #'
@@ -19,7 +17,7 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #'   mt_pre_outliercorrection(threshold=3, sample_num_correction=F) %>%
 #' ...
 #' 
-#' @author Annalise Schweickart, RB
+#' @author Annalise Schweickart
 #' 
 
 mt_pre_outliercorrection <- function(
@@ -27,8 +25,6 @@ mt_pre_outliercorrection <- function(
   threshold=NA,  # threshold for outlier detection
   sample_num_correction = T, # Should the number of outliers be corrected by the sample size
   alpha = 0.05, # Percent of sample data should be considered an outlier (assuming normal distribution)
-  byquant=FALSE, # Whether to correct by quantile method
-  quant.thresh=0.025, # Quantile
   ...   
 ) {
   
@@ -41,21 +37,17 @@ mt_pre_outliercorrection <- function(
   if(is.na(threshold) & sample_num_correction == F){
     stop("Threshold must be provided if not corrected by sample numbers")
   }
-  if(byquant==FALSE){
-    if(is.na(threshold)){
-      numsamp=nrow(X)
-      tail=alpha/numsamp
-      threshold = qnorm( 1 - (tail/2) )
-    }
-  } else if (byquant==TRUE){
-    # compute threshold based on the given quantile and sample size
-    threshold <- abs(qnorm((quant.thresh/2)/nrow(X)))
+  if(is.na(threshold)){
+    numsamp=nrow(X)
+    tail=alpha/numsamp
+    threshold = qnorm( 1 - (tail/2) )
   }
   # compute univariate outliers
   H <- matrix(F, dim(X)[1], dim(X)[2])
   H[abs(X)>=threshold] <- T
   # change outliers to NA
   assay(D)[t(H)] <- NA
+  
   # add status information
   funargs <- mti_funargs()
   metadata(D)$results %<>% 
