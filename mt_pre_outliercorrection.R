@@ -19,7 +19,7 @@ source(codes.makepath("MT/mt_internal_helpers.R"))
 #'   mt_pre_outliercorrection(threshold=3, sample_num_correction=F) %>%
 #' ...
 #' 
-#' @author Annalise Schweickart, RB
+#' @author Annalise Schweickart, RB (modified on 2020-05-21)
 #' 
 #' @export
 
