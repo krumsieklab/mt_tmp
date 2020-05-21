@@ -18,7 +18,7 @@ library(stats)
 #'   mt_stats_univ_tau(var = "Stage", samplefilter = (GROUP %in% "Tumor"), name = "tau") %>%
 #' ...
 #' 
-#' @author EB, RB
+#' @author EB, RB (modified on 2020-05-21)
 #' 
 #' @export
 
