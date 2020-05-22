@@ -30,7 +30,7 @@ mt_modify_cv <- function(D, qc_samples, col_lab){
   D_cv <- D[, cd$colnames]
 
   ## Calculate metabolite cv scores
-  rowData(D)[[col_lab]] <- apply(assay(D_cv), 1, function(x) sd(x)/mean(x))
+  rowData(D)[[col_lab]] <- apply(assay(D_cv), 1, function(x) sd(x, na.rm=T)/mean(x, na.rm=T))
 
   ## add status information
   funargs <- mti_funargs()
