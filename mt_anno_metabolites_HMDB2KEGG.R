@@ -1,5 +1,3 @@
-
-
 #' Create KEGG identifiers from HMDB identifiers.
 #' 
 #' Creates annotations and merges them into current SummarizedExperiment. 
@@ -8,7 +6,6 @@
 #' @param D \code{SummarizedExperiment} input
 #' @param col_input string name of the rowData column containing the HMDB identifiers
 #' @param col_output string name of the new rowData column to be created with the KEGG identifiers
-#' @param nomaperr # throw error (T) or warning (F) if something does not map. default: F
 #'
 #' @return rowData: new annotations added
 #'
