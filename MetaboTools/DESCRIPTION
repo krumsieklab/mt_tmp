@@ -6,7 +6,7 @@ Author: Jan Krumsiek, Elisa Benedetti, Richa Batra, Parviz Gomari, Mustafa Buyuk
 Maintainer: Kelsey Chetnik <kelsey.chetnik@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-Depends: R (>= 3.6.1)
+Depends: R (>= 3.6.0)
 Imports:
     data.table,
     dplyr,

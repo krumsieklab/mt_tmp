@@ -7,3 +7,6 @@ mt_anno_pathways_graphite
                         Add pathway information.
 mt_anno_pathways_remove_redundant
                         Remove redundant pathway annotations.
+mt_files_anno_xls       Load annotations from Excel file.
+mt_files_checksum       Validate MD5 checksum of file.
+mt_files_data_xls       Load data matrix from Excel file.
