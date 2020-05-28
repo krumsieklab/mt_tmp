@@ -7,20 +7,11 @@ Maintainer: Kelsey Chetnik <kelsey.chetnik@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 Depends: R (>= 3.6.1)
-Imports:
-    data.table,
-    dplyr,
-    glue,
-    graphite,
-    magrittr,
-    openxlsx,
-    purrr,
-    readr,
-    readxl,
-    stringr,
-    SummarizedExperiment,
-    tidyr
+Imports: data.table, dplyr, glue, graphite, magrittr, openxlsx, purrr,
+        readxl, stringr, SummarizedExperiment, tidyr
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
+NeedsCompilation: no
+Packaged: 2020-05-28 15:11:33 UTC; kelsey
