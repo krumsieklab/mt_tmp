@@ -1,37 +1,35 @@
-library(readxl)
-library(stringr)
-library(SummarizedExperiment)
-library(tidyverse)
-
 #' Load UC Davis-format data.
 #' 
 #' Loads data from a UC Davis-format Excel file.
 #'
 #' @param file input Excel file in UCD format
 #' @param sheet name or number of sheet
-#' @param zero.to.NA replace zeros by NAs? (default: T)
-#' @param gen.valid.varnames enforce valid R variable names?
+#' @param zero_to_NA replace zeros by NAs? (default: T)
+#' @param gen_valid_varnames enforce valid R variable names?
 #'
 #' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry
 #'
 #' @examples
-#' D <- 
+#' \dontrun{D <- 
 #'   # load data
 #'   mt_files_load_UCD(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
-#'   ...
+#'   ...}
 #' 
 #' @author JK
+#' 
+#' @importFrom magrittr %>% %<>%
+#' @import SummarizedExperiment
 #' 
 #' @export
 mt_files_load_UCD <- function(
   file,                 # input xls file
   sheet,                # sheet name or number to read
-  zero.to.NA=T,         # set zeros to NAs?
-  gen.valid.varnames=F  # enforce valid variable names?
+  zero_to_NA=T,         # set zeros to NAs?
+  gen_valid_varnames=F  # enforce valid variable names?
 ) {
   
   # using readxl package:
-  raw = read_excel(path=file, sheet=sheet, col_names = F)
+  raw = readxl::read_excel(path=file, sheet=sheet, col_names = F)
   
   result=list()
   
@@ -58,7 +56,7 @@ mt_files_load_UCD <- function(
   ind <- inds[!is.na(inds)][1]
   metinfo$name <- metinfo[[ind]]
   # fix names
-  if (gen.valid.varnames) colnames(metinfo) <- make.names(colnames(metinfo))
+  if (gen_valid_varnames) colnames(metinfo) <- make.names(colnames(metinfo))
   # store
   result$metinfo <- metinfo
   
@@ -67,7 +65,7 @@ mt_files_load_UCD <- function(
   # extract raw
   sampleinfo <- data.frame(t(raw[1:(imetheader-1),(isampheader):isamplast]), stringsAsFactors = F)
   colnames(sampleinfo) <- sampleinfo[1,]
-  if (gen.valid.varnames) colnames(sampleinfo) <- make.names(colnames(sampleinfo))
+  if (gen_valid_varnames) colnames(sampleinfo) <- make.names(colnames(sampleinfo))
   sampleinfo <- sampleinfo[-1,]
   # store
   result$sampleinfo <- sampleinfo
@@ -76,7 +74,7 @@ mt_files_load_UCD <- function(
   result$data <- t(raw[(imetheader+1):imetlast, (isampheader+1):isamplast]) 
   result$data <- as.data.frame(apply(result$data,2, as.numeric))
   # set zeros to NAs?
-  if (zero.to.NA) {
+  if (zero_to_NA) {
     result$data[result$data==0] = NA
   }
   

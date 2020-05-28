@@ -1,5 +1,3 @@
-library(openxlsx)
-
 #' Write out all pathway annotations, possible redundant pathways, and metabolite annotations.
 #' 
 #' Creates an Excel file that contains detailed metabolite-to-pathway mapping information. Writes out 4 different forms of the mapping information.
@@ -12,18 +10,20 @@ library(openxlsx)
 #' @return Does not change the SummarizedExperiment.
 #'
 #' @examples
-#' ... %>% 
+#' \dontrun{... %>% 
 #' mt_add_pathways(in_col = "KEGG",
 #'     out_col = "kegg_db",
 #'     pw_species = "hsapiens",
 #'     pw_name = "kegg") %>%
 #' mt_anno_pathways_remove_redundant(met_ID_col = "KEGG", pw_col = "kegg_db") %>%
-#' mt_files_write_pathwayannos(pwfield='kegg_db', file='pwannos.xlsx')
+#' mt_files_write_pathwayannos(pwfield='kegg_db', file='pwannos.xlsx')}
 #' 
 #' @author JK
 #' 
+#' @importFrom magrittr %>% %<>%
+#' @import SummarizedExperiment
+#' 
 #' @export
-# explicit package calls :: YES
 mt_files_write_pathwayannos <- function(D, pwfield, file) {
   
   wb <- openxlsx::createWorkbook()
@@ -51,7 +51,7 @@ mt_files_write_pathwayannos <- function(D, pwfield, file) {
   mets.long <- D %>% 
     # build list of pathway IDs seperated by |
     rowData() %>%
-    as.tibble() %>% 
+    tibble::as.tibble() %>% 
     dplyr::select(dplyr::one_of(c("name",pwfield))) %>% 
     dplyr::rename(pw=dplyr::one_of(pwfield)) %>%
     dplyr::mutate(pw_str= sapply(pw, paste, collapse='|')) %>% 
@@ -73,7 +73,7 @@ mt_files_write_pathwayannos <- function(D, pwfield, file) {
   ### generate wide version of metabolites
   mets.wide <- mets.long %>% 
     dplyr::group_by_(pwfield, 'pathway_name') %>% 
-    dplyr::summarise(metabolites = str_c(name, collapse = "|")) %>%
+    dplyr::summarise(metabolites = stringr::str_c(name, collapse = "|")) %>%
     dplyr::select(dplyr::one_of(pwfield,'metabolites'))
   
   ### export long pathway list

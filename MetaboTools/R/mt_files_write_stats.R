@@ -1,5 +1,3 @@
-library(openxlsx)
-
 #' Export statistical results from pipeline into Excel file.
 #' 
 #' Writes out the statistics data frame with p-values, adjusted p-values, fold changes, test statistics etc. into an Excel sheet.
@@ -11,12 +9,15 @@ library(openxlsx)
 #' @return Does not change the SummarizedExperiment.
 #'
 #' @examples
-#' # Write out all results
+#' \dontrun{# Write out all results
 #' ... %>% mt_files_write_stats(file="results.xlsx") %>%
 #' # Write out specific result]
-#' ... %>% mt_files_write_stats(file="results.xlsx", compnames="comp1") %>%
+#' ... %>% mt_files_write_stats(file="results.xlsx", compnames="comp1") %>%}
 #' 
 #' @author JK
+#' 
+#' @importFrom magrittr %>% %<>%
+#' @import SummarizedExperiment
 #' 
 #' @export
 mt_files_write_stats <- function(D, file, compnames=NULL) {
@@ -27,7 +28,7 @@ mt_files_write_stats <- function(D, file, compnames=NULL) {
   
   # get all stats entries
   S <- D %>% mti_res_get_stats_entries()
-  allcomps <- S %>% map("output") %>% map("name") %>% unlist()
+  allcomps <- S %>% purrr::map("output") %>% purrr::map("name") %>% unlist()
   
   # restrict to one or output all?
   if (!is.null(compnames)) {
@@ -58,7 +59,7 @@ mt_files_write_stats <- function(D, file, compnames=NULL) {
     mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("Exported sheets '%s' to Excel file '%s'", 
-                       S %>% map("output") %>% map("name") %>% unlist() %>% paste0(collapse = ', '), file)
+                       S %>% purrr::map("output") %>% purrr::map("name") %>% unlist() %>% paste0(collapse = ', '), file)
     )
   
   

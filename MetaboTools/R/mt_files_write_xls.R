@@ -1,5 +1,3 @@
-library(openxlsx)
-
 #' Outputs assay, colData and rowData into an Excel file.
 #' 
 #' Exports the current SummarizedExperiment (not the metadata) to an Excel file.
@@ -10,8 +8,11 @@ library(openxlsx)
 #' @return Does not change the SummarizedExperiment.
 #'
 #' @examples
-#' %>% mt_files_write_xls(file = "out.xlsx") %>%
+#' \dontrun{%>% mt_files_write_xls(file = "out.xlsx") %>%}
 #' @author JK, BGP
+#' 
+#' @importFrom magrittr %>% %<>%
+#' @import SummarizedExperiment
 #' 
 #' @export
 mt_files_write_xls <- function(D, file) {
@@ -21,14 +22,14 @@ mt_files_write_xls <- function(D, file) {
   stopifnot(is.character(file))
   
   # write out
-  wb <- createWorkbook()
-  addWorksheet(wb,"assay")
-  writeData(wb, "assay", assay(D), rowNames = T, colNames=T)
-  addWorksheet(wb,"rowData")
-  writeData(wb, "rowData", rowData(D) %>% as.data.frame(), rowNames = T)
-  addWorksheet(wb,"colData")
-  writeData(wb, "colData", colData(D) %>% as.data.frame())
-  saveWorkbook (wb, file=file, overwrite=TRUE) 
+  wb <- openxlsx::createWorkbook()
+  openxlsx::addWorksheet(wb,"assay")
+  openxlsx::writeData(wb, "assay", assay(D), rowNames = T, colNames=T)
+  openxlsx::addWorksheet(wb,"rowData")
+  openxlsx::writeData(wb, "rowData", rowData(D) %>% as.data.frame(), rowNames = T)
+  openxlsx::addWorksheet(wb,"colData")
+  openxlsx::writeData(wb, "colData", colData(D) %>% as.data.frame())
+  openxlsx::saveWorkbook (wb, file=file, overwrite=TRUE) 
   
   # add status information
   funargs <- mti_funargs()

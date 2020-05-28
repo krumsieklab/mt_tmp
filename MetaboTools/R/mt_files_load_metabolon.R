@@ -1,8 +1,3 @@
-library(readxl)
-library(stringr)
-library(SummarizedExperiment)
-library(tidyverse)
-
 #' Load Metabolon-format data.
 #' 
 #' Loads data from a Metabolon-format Excel file. Needs to be in the original "Client Data Table" format that they deliver.
@@ -14,12 +9,15 @@ library(tidyverse)
 #' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry
 #'
 #' @examples
-#' D <- 
+#' \dontrun{D <- 
 #'   # load data
 #'   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
-#'   ...
+#'   ...}
 #' 
 #' @author JK
+#' 
+#' @importFrom magrittr %<>%
+#' @import SummarizedExperiment
 #' 
 #' @export
 mt_files_load_metabolon <- function(
@@ -29,7 +27,7 @@ mt_files_load_metabolon <- function(
 ) {
   
   # using readxl package:
-  raw = read_excel(path=file, sheet=sheet, col_names = F)
+  raw = readxl::read_excel(path=file, sheet=sheet, col_names = F)
   
   result=list()
   
@@ -41,14 +39,14 @@ mt_files_load_metabolon <- function(
   isamplast = max(which(apply(is.na(raw),2,sum)<dim(raw)[1]))
   
   # fix overlapping cell
-  overl=str_replace(gsub("\\s+", " ", str_trim(raw[imetheader,isampheader])), "B", "b")
+  overl=stringr::str_replace(gsub("\\s+", " ", stringr::str_trim(raw[imetheader,isampheader])), "B", "b")
   overl=strsplit(overl, " ")[[1]]
   overlmet = overl[2]
   overlsamp = overl[1]
   
   # extract metabolite information
-  result$metinfo <- read_excel(path=file, sheet=sheet, col_names = T,
-                               range = cell_limits(ul = c(imetheader, 1),
+  result$metinfo <- readxl::read_excel(path=file, sheet=sheet, col_names = T,
+                               range = readxl::cell_limits(ul = c(imetheader, 1),
                                                    lr = c(imetlast  , isampheader)))
   result$metinfo <- as.data.frame(result$metinfo)
   
@@ -64,7 +62,7 @@ mt_files_load_metabolon <- function(
   #colnames(result$sampleinfo) = as.list(raw[1:imetheader-1,isampheader])[[1]] # dirty hack, had something to do with the output format of read_excel
   colnames(result$sampleinfo) = c(as.vector(as.matrix(raw[1:imetheader-1,isampheader])),overlsamp) # dirty hack, had something to do with the output format of read_excel
   rownames(result$sampleinfo) = c()
-  result$sampleinfo %<>% mutate_all(parse_guess)
+  result$sampleinfo %<>% dplyr::mutate_all(parse_guess)
     
   # extract data
   result$data <- t(raw[(imetheader+1):imetlast, (isampheader+1):isamplast]) 
@@ -97,7 +95,7 @@ mt_files_load_metabolon <- function(
       # figure out which are different
       l1 = colnames(result$data)
       l2 = colnames(nandf$data)
-      dummy=sapply(1:length(l1), function(i){if(l1[i]!=l2[i]){fprintf('"%s" vs. "%s"\n',l1[i],l2[i])}})
+      dummy=sapply(1:length(l1), function(i){if(l1[i]!=l2[i]){sprintf('"%s" vs. "%s"\n',l1[i],l2[i])}})
       stop('some metabolites are different between data sheet and NaN sheet');
     }
     if (!all.equal(rownames(result$data), rownames(nandf$data)))

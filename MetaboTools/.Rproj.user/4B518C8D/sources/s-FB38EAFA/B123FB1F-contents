@@ -19,6 +19,7 @@ Imports:
     readxl,
     stringr,
     SummarizedExperiment,
+    tibble,
     tidyr
 License: GPL-3
 Encoding: UTF-8
