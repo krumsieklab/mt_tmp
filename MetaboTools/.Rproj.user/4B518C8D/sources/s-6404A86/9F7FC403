@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1590772672532.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3128840898",
+    "id" : "9F7FC403",
+    "lastKnownWriteTime" : 1590774616,
+    "last_content_update" : 1590774616297,
+    "path" : "~/mt/mt_post_addFC.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "15,5",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
