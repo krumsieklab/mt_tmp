@@ -8,18 +8,18 @@
 #'
 #' @return $result: statistical object
 #'
-#' @example
-#' # add p-gains to the result table of the statistical comparison called "comparison1"
+#' @examples
+#' \dontrun{# add p-gains to the result table of the statistical comparison called "comparison1"
 #' ... %>%
 #'  mt_post_pgain(stat_name="comparison1") %>% ...
+#'  }
 #'
 #' @author JZ
 #'
 #' @export
 mt_post_pgain <- function(D,
                              stat_name,
-                             p_col = p.value,
-                             ...){
+                             p_col = p.value){
     p_col <- enquo(p_col)
 
     ## are these ratio results?

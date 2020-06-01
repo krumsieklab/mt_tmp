@@ -1,0 +1,648 @@
+* using log directory ‘/Users/kelsey/mt/MetaboTools.Rcheck’
+* using R version 3.6.1 (2019-07-05)
+* using platform: x86_64-apple-darwin15.6.0 (64-bit)
+* using session charset: UTF-8
+* using options ‘--no-manual --as-cran’
+* checking for file ‘MetaboTools/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘MetaboTools’ version ‘0.1.0’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘MetaboTools’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... WARNING
+'::' or ':::' imports not declared from:
+  ‘GeneNet’ ‘broom’ ‘broom.mixed’ ‘formula.tools’ ‘gage’ ‘lmerTest’
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+mt_files_data_xls: warning in SummarizedExperiment(assay = assay,
+  rowData = metinfo, colData = cd): partial argument match of 'assay'
+  to 'assays'
+mt_files_load_UCD: warning in SummarizedExperiment(assay =
+  t(result$data), colData = result$sampleinfo %>% as.data.frame(),
+  rowData = result$metinfo %>% as.data.frame(), metadata =
+  list(sessionInfo = sessionInfo(), parseInfo = result$info)): partial
+  argument match of 'assay' to 'assays'
+mt_files_load_WCM: warning in SummarizedExperiment(assay =
+  as.matrix(raw), rowData = metinfo, colData = data.frame(ID =
+  colnames(raw)), metadata = list(sessionInfo = sessionInfo())):
+  partial argument match of 'assay' to 'assays'
+mt_files_load_metabolon: warning in SummarizedExperiment(assay =
+  t(result$data), colData = result$sampleinfo, rowData =
+  result$metinfo, metadata = list(sessionInfo = sessionInfo(),
+  parseInfo = result$info)): partial argument match of 'assay' to
+  'assays'
+mt_modify_aggPW: warning in SummarizedExperiment(assay = assay, colData
+  = colData(D), rowData = rd, metadata = metadata(D)): partial argument
+  match of 'assay' to 'assays'
+mt_modify_ratios: warning in SummarizedExperiment(assay = as_ratio,
+  rowData = rd, colData = colData(D), metadata = metadata(D)): partial
+  argument match of 'assay' to 'assays'
+mt_anno_metabolites_HMDB2KEGG: no visible global function definition
+  for ‘data.makepath’
+mt_anno_metabolites_HMDB2KEGG: no visible binding for global variable
+  ‘MetaboliteMapping’
+mt_anno_metabolites_HMDB2KEGG: no visible binding for global variable
+  ‘kegg_id.x’
+mt_anno_metabolites_HMDB2KEGG: no visible binding for global variable
+  ‘kegg_id.y’
+mt_anno_metabolites_HMDB2KEGG: no visible global function definition
+  for ‘read.csv2’
+mt_anno_metabolites_HMDB2KEGG: no visible global function definition
+  for ‘DataFrame’
+mt_anno_metabolites_HMDB2KEGG: no visible global function definition
+  for ‘mti_funargs’
+mt_anno_metabolites_HMDB2KEGG: no visible global function definition
+  for ‘metadata’
+mt_anno_metabolites_HMDB2KEGG: no visible global function definition
+  for ‘mti_generate_result’
+mt_anno_pathways_HMDB: no visible global function definition for
+  ‘data.makepath’
+mt_anno_pathways_HMDB: no visible global function definition for ‘tail’
+mt_anno_pathways_HMDB: no visible global function definition for
+  ‘mti_logstatus’
+mt_anno_pathways_HMDB: no visible binding for global variable ‘HMDB_id’
+mt_anno_pathways_HMDB: no visible binding for global variable
+  ‘pathway_name’
+mt_anno_pathways_HMDB: no visible binding for global variable
+  ‘accession’
+mt_anno_pathways_HMDB: no visible binding for global variable ‘ID’
+mt_anno_pathways_HMDB: no visible global function definition for
+  ‘metadata’
+mt_anno_pathways_HMDB: no visible global function definition for
+  ‘mti_funargs’
+mt_anno_pathways_HMDB: no visible global function definition for
+  ‘mti_generate_result’
+mt_anno_pathways_from_file: no visible global function definition for
+  ‘mti_logstatus’
+mt_anno_pathways_from_file: no visible binding for global variable
+  ‘met_ID’
+mt_anno_pathways_from_file: no visible binding for global variable ‘ID’
+mt_anno_pathways_from_file: no visible global function definition for
+  ‘metadata’
+mt_anno_pathways_from_file: no visible global function definition for
+  ‘mti_funargs’
+mt_anno_pathways_from_file: no visible global function definition for
+  ‘mti_generate_result’
+mt_anno_pathways_graphite: no visible global function definition for
+  ‘mti_logstatus’
+mt_anno_pathways_graphite: no visible global function definition for
+  ‘mcmapply’
+mt_anno_pathways_graphite: no visible binding for global variable ‘src’
+mt_anno_pathways_graphite: no visible binding for global variable
+  ‘dest’
+mt_anno_pathways_graphite: no visible binding for global variable
+  ‘pathway_name’
+mt_anno_pathways_graphite: no visible binding for global variable ‘ID’
+mt_anno_pathways_graphite: no visible binding for global variable ‘tmp’
+mt_anno_pathways_graphite: no visible binding for global variable
+  ‘mappingID’
+mt_anno_pathways_graphite: no visible binding for global variable ‘IDs’
+mt_anno_pathways_graphite: no visible binding for global variable ‘.’
+mt_anno_pathways_graphite: no visible global function definition for
+  ‘metadata’
+mt_anno_pathways_graphite: no visible global function definition for
+  ‘mti_funargs’
+mt_anno_pathways_graphite: no visible global function definition for
+  ‘mti_generate_result’
+mt_anno_pathways_remove_redundant: no visible global function
+  definition for ‘mti_logstatus’
+mt_anno_pathways_remove_redundant: no visible binding for global
+  variable ‘met_ID’
+mt_anno_pathways_remove_redundant: no visible binding for global
+  variable ‘pw_ID’
+mt_anno_pathways_remove_redundant: no visible binding for global
+  variable ‘.’
+mt_anno_pathways_remove_redundant: no visible binding for global
+  variable ‘met_IDs’
+mt_anno_pathways_remove_redundant: no visible binding for global
+  variable ‘pw_idx’
+mt_anno_pathways_remove_redundant: no visible binding for global
+  variable ‘tmp_ID’
+mt_anno_pathways_remove_redundant: no visible binding for global
+  variable ‘all_IDs’
+mt_anno_pathways_remove_redundant: no visible binding for global
+  variable ‘ID’
+mt_anno_pathways_remove_redundant: no visible global function
+  definition for ‘metadata’
+mt_anno_pathways_remove_redundant: no visible binding for global
+  variable ‘pathway_name’
+mt_anno_pathways_remove_redundant: no visible binding for global
+  variable ‘tmp_name’
+mt_anno_pathways_remove_redundant: no visible global function
+  definition for ‘mti_funargs’
+mt_anno_pathways_remove_redundant: no visible global function
+  definition for ‘mti_generate_result’
+mt_files_anno_xls: no visible global function definition for ‘setNames’
+mt_files_anno_xls: no visible global function definition for
+  ‘DataFrame’
+mt_files_anno_xls: no visible global function definition for
+  ‘mti_funargs’
+mt_files_anno_xls: no visible global function definition for ‘metadata’
+mt_files_anno_xls: no visible global function definition for
+  ‘mti_generate_result’
+mt_files_checksum: no visible global function definition for
+  ‘mti_funargs’
+mt_files_checksum: no visible global function definition for ‘metadata’
+mt_files_checksum: no visible global function definition for
+  ‘mti_generate_result’
+mt_files_data_xls: no visible global function definition for
+  ‘mti_funargs’
+mt_files_data_xls: no visible global function definition for ‘metadata’
+mt_files_data_xls: no visible global function definition for
+  ‘mti_generate_result’
+mt_files_load_UCD: no visible global function definition for
+  ‘sessionInfo’
+mt_files_load_UCD: no visible global function definition for
+  ‘mti_funargs’
+mt_files_load_UCD: no visible global function definition for ‘metadata’
+mt_files_load_UCD: no visible global function definition for
+  ‘mti_generate_result’
+mt_files_load_WCM: no visible binding for global variable ‘HMDB’
+mt_files_load_WCM: no visible global function definition for
+  ‘sessionInfo’
+mt_files_load_WCM: no visible global function definition for
+  ‘mti_funargs’
+mt_files_load_WCM: no visible global function definition for ‘metadata’
+mt_files_load_WCM: no visible global function definition for
+  ‘mti_generate_result’
+mt_files_load_metabolon: no visible binding for global variable
+  ‘parse_guess’
+mt_files_load_metabolon: no visible global function definition for
+  ‘parseMetabolonFile’
+mt_files_load_metabolon: no visible global function definition for
+  ‘sessionInfo’
+mt_files_load_metabolon: no visible global function definition for
+  ‘mti_funargs’
+mt_files_load_metabolon: no visible global function definition for
+  ‘metadata’
+mt_files_load_metabolon: no visible global function definition for
+  ‘mti_generate_result’
+mt_files_write_pathwayannos: no visible global function definition for
+  ‘metadata’
+mt_files_write_pathwayannos: no visible binding for global variable ‘.’
+mt_files_write_pathwayannos: no visible binding for global variable
+  ‘all_IDs’
+mt_files_write_pathwayannos: no visible binding for global variable
+  ‘all_pathway_names’
+mt_files_write_pathwayannos: no visible binding for global variable
+  ‘pw’
+mt_files_write_pathwayannos: no visible binding for global variable
+  ‘name’
+mt_files_write_pathwayannos: no visible binding for global variable
+  ‘pw_str’
+mt_files_write_pathwayannos: no visible global function definition for
+  ‘setNames’
+mt_files_write_pathwayannos: no visible binding for global variable
+  ‘pathway_name’
+mt_files_write_pathwayannos: no visible global function definition for
+  ‘mti_funargs’
+mt_files_write_pathwayannos: no visible global function definition for
+  ‘mti_generate_result’
+mt_files_write_stats: no visible global function definition for
+  ‘mti_res_get_stats_entries’
+mt_files_write_stats: no visible global function definition for
+  ‘mti_funargs’
+mt_files_write_stats: no visible global function definition for
+  ‘metadata’
+mt_files_write_stats: no visible global function definition for
+  ‘mti_generate_result’
+mt_files_write_xls: no visible global function definition for
+  ‘mti_funargs’
+mt_files_write_xls: no visible global function definition for
+  ‘metadata’
+mt_files_write_xls: no visible global function definition for
+  ‘mti_generate_result’
+mt_modify_aggPW : <anonymous>: no visible global function definition
+  for ‘prcomp’
+mt_modify_aggPW: no visible binding for global variable ‘name’
+mt_modify_aggPW: no visible global function definition for ‘metadata’
+mt_modify_aggPW: no visible global function definition for
+  ‘mti_funargs’
+mt_modify_aggPW: no visible global function definition for
+  ‘mti_generate_result’
+mt_modify_applytoanno: no visible global function definition for
+  ‘mti_funargs’
+mt_modify_applytoanno: no visible global function definition for
+  ‘metadata’
+mt_modify_applytoanno: no visible global function definition for
+  ‘mti_generate_result’
+mt_modify_averagesample: no visible global function definition for
+  ‘mti_funargs’
+mt_modify_averagesample: no visible global function definition for
+  ‘metadata’
+mt_modify_averagesample: no visible global function definition for
+  ‘mti_generate_result’
+mt_modify_cv : <anonymous>: no visible global function definition for
+  ‘sd’
+mt_modify_cv: no visible global function definition for ‘mti_funargs’
+mt_modify_cv: no visible global function definition for ‘metadata’
+mt_modify_cv: no visible global function definition for
+  ‘mti_generate_result’
+mt_modify_filter_metabolites: no visible global function definition for
+  ‘mti_funargs’
+mt_modify_filter_metabolites: no visible global function definition for
+  ‘metadata’
+mt_modify_filter_metabolites: no visible global function definition for
+  ‘mti_generate_result’
+mt_modify_filter_samples: no visible binding for global variable ‘.’
+mt_modify_filter_samples: no visible global function definition for
+  ‘mti_funargs’
+mt_modify_filter_samples: no visible global function definition for
+  ‘metadata’
+mt_modify_filter_samples: no visible global function definition for
+  ‘mti_generate_result’
+mt_modify_mutate: no visible global function definition for ‘DataFrame’
+mt_modify_mutate: no visible global function definition for
+  ‘mti_funargs’
+mt_modify_mutate: no visible global function definition for ‘metadata’
+mt_modify_mutate: no visible global function definition for
+  ‘mti_generate_result’
+mt_modify_ratios: no visible global function definition for
+  ‘mti_res_get_path’
+mt_modify_ratios: no visible global function definition for
+  ‘mti_logstatus’
+mt_modify_ratios: no visible global function definition for ‘setNames’
+mt_modify_ratios: no visible binding for global variable ‘m1’
+mt_modify_ratios: no visible binding for global variable ‘m2’
+mt_modify_ratios: no visible binding for global variable ‘name’
+mt_modify_ratios: no visible binding for global variable ‘name1’
+mt_modify_ratios: no visible binding for global variable ‘name2’
+mt_modify_ratios: no visible binding for global variable ‘.’
+mt_modify_ratios: no visible global function definition for ‘metadata’
+mt_modify_ratios: no visible global function definition for
+  ‘mti_funargs’
+mt_modify_ratios: no visible global function definition for
+  ‘mti_generate_result’
+mt_modify_sampleanno_reorder: no visible global function definition for
+  ‘mti_funargs’
+mt_modify_sampleanno_reorder: no visible global function definition for
+  ‘metadata’
+mt_modify_sampleanno_reorder: no visible global function definition for
+  ‘mti_generate_result’
+mt_post_addFC: no visible global function definition for
+  ‘mti_res_get_path’
+mt_post_addFC: no visible global function definition for ‘metadata’
+mt_post_addFC: no visible global function definition for ‘map_lgl’
+mt_post_addFC: no visible binding for global variable ‘.’
+mt_post_addFC: no visible global function definition for ‘one_of’
+mt_post_addFC: no visible global function definition for
+  ‘update.formula’
+mt_post_addFC: no visible global function definition for ‘str_c’
+mt_post_addFC: no visible global function definition for ‘terms’
+mt_post_addFC: no visible global function definition for
+  ‘mti_logstatus’
+mt_post_addFC: no visible global function definition for
+  ‘mti_correctConfounder’
+mt_post_addFC: no visible global function definition for
+  ‘mti_format_se_samplewise’
+mt_post_addFC: no visible global function definition for ‘gather’
+mt_post_addFC: no visible binding for global variable ‘var’
+mt_post_addFC: no visible binding for global variable ‘value’
+mt_post_addFC: no visible global function definition for ‘ungroup’
+mt_post_addFC: no visible binding for global variable ‘fc’
+mt_post_addFC: no visible global function definition for ‘left_join’
+mt_post_addFC: no visible global function definition for ‘mti_funargs’
+mt_post_addFC: no visible global function definition for
+  ‘mti_generate_result’
+mt_post_multTest: no visible binding for global variable ‘p.value’
+mt_post_multTest: no visible global function definition for ‘enquo’
+mt_post_multTest: no visible global function definition for ‘metadata’
+mt_post_multTest: no visible global function definition for ‘map_lgl’
+mt_post_multTest: no visible global function definition for ‘p.adjust’
+mt_post_multTest: no visible global function definition for
+  ‘mti_funargs’
+mt_post_multTest: no visible global function definition for
+  ‘mti_generate_result’
+mt_post_pgain: no visible binding for global variable ‘p.value’
+mt_post_pgain: no visible global function definition for ‘enquo’
+mt_post_pgain: no visible global function definition for
+  ‘mti_res_get_path’
+mt_post_pgain: no visible global function definition for ‘metadata’
+mt_post_pgain: no visible global function definition for ‘map_lgl’
+mt_post_pgain: no visible global function definition for ‘mutate’
+mt_post_pgain: no visible global function definition for ‘select’
+mt_post_pgain: no visible binding for global variable ‘var’
+mt_post_pgain: no visible binding for global variable ‘m1’
+mt_post_pgain: no visible binding for global variable ‘m2’
+mt_post_pgain: no visible global function definition for ‘left_join’
+mt_post_pgain: no visible global function definition for ‘filter’
+mt_post_pgain: no visible global function definition for ‘transmute’
+mt_post_pgain: no visible binding for global variable ‘p_single_1’
+mt_post_pgain: no visible binding for global variable ‘p_single_2’
+mt_post_pgain: no visible global function definition for ‘str_c’
+mt_post_pgain: no visible binding for global variable ‘.’
+mt_post_pgain: no visible global function definition for ‘mti_funargs’
+mt_post_pgain: no visible global function definition for
+  ‘mti_generate_result’
+mt_stats_multiv_net_GeneNet: no visible global function definition for
+  ‘mti_format_se_samplewise’
+mt_stats_multiv_net_GeneNet: no visible global function definition for
+  ‘mti_logwarning’
+mt_stats_multiv_net_GeneNet: no visible global function definition for
+  ‘mti_funargs’
+mt_stats_multiv_net_GeneNet: no visible global function definition for
+  ‘metadata’
+mt_stats_multiv_net_GeneNet: no visible global function definition for
+  ‘mti_generate_result’
+mt_stats_pathway_enrichment: no visible global function definition for
+  ‘metadata’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘pw’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘ID’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘pathway_name’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘COMP_IDstr’
+mt_stats_pathway_enrichment: no visible global function definition for
+  ‘mti_get_stat_by_name’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘p.adj’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘significant’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘n_total’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘n_total_sig’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘fc’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘n_pw’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘n_pw_sig’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘s_p’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘ns_p’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘s_np’
+mt_stats_pathway_enrichment: no visible global function definition for
+  ‘fisher.test’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘ns_np’
+mt_stats_pathway_enrichment: no visible binding for global variable ‘.’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘p_value’
+mt_stats_pathway_enrichment: no visible global function definition for
+  ‘p.adjust’
+mt_stats_pathway_enrichment: no visible binding for global variable
+  ‘mean_fc’
+mt_stats_pathway_enrichment: no visible global function definition for
+  ‘mti_funargs’
+mt_stats_pathway_enrichment: no visible global function definition for
+  ‘mti_generate_result’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  global function definition for ‘metadata’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘pw’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘ID’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘pathway_name’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘new.name’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘COMP_IDstr’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘name’
+mt_stats_pathway_enrichment_with_differential_analysis : <anonymous>:
+  no visible binding for global variable ‘.’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘.’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘pathway_ID’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘p.val’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘q.val’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘stat.mean’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘p_value’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘sample_idx’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘met_id’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘vals’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘val_type’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  global function definition for ‘p.adjust’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘p_value_adjusted’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘significant’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘n_total’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘n_total_sig’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘mean_case’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘mean_ctrl’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘n_pw’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘n_pw_sig’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘s_p’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘ns_p’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘s_np’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  global function definition for ‘fisher.test’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  binding for global variable ‘ns_np’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  global function definition for ‘mti_funargs’
+mt_stats_pathway_enrichment_with_differential_analysis: no visible
+  global function definition for ‘mti_generate_result’
+mt_stats_univ_lm: no visible global function definition for
+  ‘mti_res_get_stats_entries’
+mt_stats_univ_lm: no visible global function definition for
+  ‘mti_format_se_samplewise’
+mt_stats_univ_lm: no visible global function definition for
+  ‘mti_logwarning’
+mt_stats_univ_lm: no visible binding for global variable ‘tmpsamplenum’
+mt_stats_univ_lm: no visible global function definition for ‘terms’
+mt_stats_univ_lm: no visible global function definition for
+  ‘mti_logmsg’
+mt_stats_univ_lm: no visible binding for global variable ‘lm’
+mt_stats_univ_lm : f_tidy_tidy: no visible binding for global variable
+  ‘term’
+mt_stats_univ_lm: no visible global function definition for ‘lFormula’
+mt_stats_univ_lm: no visible global function definition for
+  ‘update.formula’
+mt_stats_univ_lm: no visible global function definition for
+  ‘model.matrix’
+mt_stats_univ_lm : do_lm: no visible global function definition for
+  ‘update’
+mt_stats_univ_lm : do_lm: no visible global function definition for
+  ‘setNames’
+mt_stats_univ_lm : do_lm: no visible global function definition for
+  ‘complete.cases’
+mt_stats_univ_lm : do_lm: no visible binding for global variable ‘.’
+mt_stats_univ_lm : do_lm: no visible global function definition for
+  ‘mti_logwarning’
+mt_stats_univ_lm : do_lm: no visible global function definition for
+  ‘update.formula’
+mt_stats_univ_lm : do_lm: no visible global function definition for
+  ‘anova’
+mt_stats_univ_lm: no visible global function definition for ‘setNames’
+mt_stats_univ_lm: no visible binding for global variable ‘term’
+mt_stats_univ_lm: no visible global function definition for
+  ‘mti_funargs’
+mt_stats_univ_lm: no visible global function definition for ‘metadata’
+mt_stats_univ_lm: no visible global function definition for
+  ‘mti_generate_result’
+mt_stats_univ_missingness : <anonymous>: no visible global function
+  definition for ‘fisher.test’
+mt_stats_univ_missingness: no visible global function definition for
+  ‘mti_funargs’
+mt_stats_univ_missingness: no visible global function definition for
+  ‘metadata’
+mt_stats_univ_missingness: no visible global function definition for
+  ‘mti_generate_result’
+mt_stats_univ_tau: no visible binding for global variable ‘stat_name’
+mt_stats_univ_tau: no visible global function definition for
+  ‘mti_res_get_stats_entries’
+mt_stats_univ_tau: no visible global function definition for
+  ‘mti_format_se_samplewise’
+mt_stats_univ_tau: no visible global function definition for
+  ‘mti_logwarning’
+mt_stats_univ_tau : <anonymous>: no visible global function definition
+  for ‘cor.test’
+mt_stats_univ_tau: no visible global function definition for
+  ‘mti_funargs’
+mt_stats_univ_tau: no visible global function definition for ‘metadata’
+mt_stats_univ_tau: no visible global function definition for
+  ‘mti_generate_result’
+Undefined global functions or variables:
+  . COMP_IDstr DataFrame HMDB HMDB_id ID IDs MetaboliteMapping
+  accession all_IDs all_pathway_names anova complete.cases cor.test
+  data.makepath dest enquo fc filter fisher.test gather kegg_id.x
+  kegg_id.y lFormula left_join lm m1 m2 map_lgl mappingID mcmapply
+  mean_case mean_ctrl mean_fc met_ID met_IDs met_id metadata
+  model.matrix mti_correctConfounder mti_format_se_samplewise
+  mti_funargs mti_generate_result mti_get_stat_by_name mti_logmsg
+  mti_logstatus mti_logwarning mti_res_get_path
+  mti_res_get_stats_entries mutate n_pw n_pw_sig n_total n_total_sig
+  name name1 name2 new.name ns_np ns_p one_of p.adj p.adjust p.val
+  p.value p_single_1 p_single_2 p_value p_value_adjusted
+  parseMetabolonFile parse_guess pathway_ID pathway_name prcomp pw
+  pw_ID pw_idx pw_str q.val read.csv2 s_np s_p sample_idx sd select
+  sessionInfo setNames significant src stat.mean stat_name str_c tail
+  term terms tmp tmp_ID tmp_name tmpsamplenum transmute ungroup update
+  update.formula val_type vals value var
+Consider adding
+  importFrom("stats", "anova", "complete.cases", "cor.test", "filter",
+             "fisher.test", "lm", "model.matrix", "p.adjust", "prcomp",
+             "sd", "setNames", "terms", "update", "update.formula",
+             "var")
+  importFrom("utils", "read.csv2", "sessionInfo", "tail")
+to your NAMESPACE file.
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... NOTE
+Rd file 'mt_anno_metabolites_HMDB2KEGG.Rd':
+  \examples lines wider than 100 characters:
+     # Load data, sheet with sample annotations, sheet with metabolite annotations and add KEGG identifiers
+       mt_files_anno_xls(file=file, sheet="metinfo", annosfor="metabolites", IDanno="BIOCHEMICAL", IDdata = "name") %>%
+
+Rd file 'mt_anno_pathways_from_file.Rd':
+  \examples lines wider than 100 characters:
+                                      file = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
+
+Rd file 'mt_files_anno_xls.Rd':
+  \examples lines wider than 100 characters:
+     # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
+       mt_files_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_ID = "SAMPLE_NAME") %>% 
+       mt_files_anno_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_ID="BIOCHEMICAL", data_ID = "name") %>% 
+
+Rd file 'mt_files_checksum.Rd':
+  \examples lines wider than 100 characters:
+     ## Not run: ... %>% mt_files_checksum(file="input.xlsx", checksum="688048bd1eb9c771be0eb49548a6f947") %>% ...
+
+Rd file 'mt_files_data_xls.Rd':
+  \examples lines wider than 100 characters:
+     # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
+       mt_files_anno_xls(file=file, sheet="metinfo", annosfor="metabolites", IDanno="BIOCHEMICAL", IDdata = "name") %>% 
+
+Rd file 'mt_modify_aggPW.Rd':
+  \examples lines wider than 100 characters:
+       mt_anno_pathways_HMDB(in_col = "HMDB", out_col = "kegg_db", pwdb_name = "KEGG", db_dir = codes.makepath("snippets/packages/metabotool ... [TRUNCATED]
+
+Rd file 'mt_modify_sampleanno_reorder.Rd':
+  \examples lines wider than 100 characters:
+     ## Not run: %>% mt_modify_sampleanno_reorder("Group", c('WT_Norm_F','WT_Hyp_F','KO_Norm_F','KO_Hyp_F','WT:KO2_F','WT:WT2_F')) %>%
+
+Rd file 'mt_post_addFC.Rd':
+  \examples lines wider than 100 characters:
+     # add fold-changes to the result table of the statistical comparison called "comparison1", after correcting for variable "age"
+
+These lines will be truncated in the PDF manual.
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'mt_stats_univ_tau'
+  ‘name’
+Documented arguments not in \usage in documentation object 'mt_stats_univ_tau':
+  ‘stat_name’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... WARNING
+Warning: parse error in file 'lines':
+1: unexpected SPECIAL
+626: 
+627: %>%
+     ^
+* checking examples ... ERROR
+Running examples in ‘MetaboTools-Ex.R’ failed
+The error most likely occurred in:
+
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_stats_pathway_enrichment
+> ### Title: Pathway enrichment script using statistical analysis results
+> ###   from metabotools pipeline.
+> ### Aliases: mt_stats_pathway_enrichment
+> 
+> ### ** Examples
+> 
+> %>% mt_stats_pathway_enrichment("kegg_db",
+Error: unexpected SPECIAL in "%>%"
+Execution halted
+* DONE
+Status: 1 ERROR, 3 WARNINGs, 2 NOTEs

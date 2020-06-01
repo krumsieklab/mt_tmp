@@ -10,9 +10,10 @@
 #' @return $result: statistical object
 #'
 #' @examples
-#' # correct the statistical comparison called "Li's" using Benjamini-Hochberg
+#' \dontrun{# correct the statistical comparison called "Li's" using Benjamini-Hochberg
 #' ... %>%
 #'  mt_post_multTest(stat_name="Li's", method="BH") %>% ...
+#'  }
 #'
 #' @author JK, JZ
 #'
@@ -20,8 +21,7 @@
 mt_post_multTest <- function(D,
                              stat_name,
                              p_col = p.value,
-                             method = "bonferroni",
-                             ...){
+                             method = "bonferroni"){
     p_col <- enquo(p_col)
 
     ## stat

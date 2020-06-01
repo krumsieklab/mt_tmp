@@ -12,15 +12,15 @@
     "path" : null,
     "project_path" : null,
     "properties" : {
-        "cacheKey" : "77893789",
+        "cacheKey" : "FBDDC8AC",
         "caption" : "funpackages",
-        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=funpackages&cache_key=77893789",
-        "displayedObservations" : 64,
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=funpackages&cache_key=FBDDC8AC",
+        "displayedObservations" : "53",
         "environment" : "",
         "object" : "funpackages",
-        "preview" : 0,
-        "totalObservations" : 64,
-        "variables" : 3
+        "preview" : "0",
+        "totalObservations" : "53",
+        "variables" : "3"
     },
     "relative_order" : 5,
     "source_on_save" : false,
