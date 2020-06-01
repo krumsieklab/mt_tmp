@@ -27,10 +27,11 @@ Implemented approaches:
 1. Fisher's exact test.
 }
 \examples{
-\%>\% mt_stats_pathway_enrichment("kegg_db",
+\dontrun{\%>\% mt_stats_pathway_enrichment("kegg_db",
                                 grouping_var = "Group",
                                 control_grp_name = "Vehicle",
                                 case_grp_name = c("treatment2", "treatment1") \%>\%
+}
 
 
 }

@@ -34,7 +34,7 @@
 * checking loading without being on the library search path ... OK
 * checking dependencies in R code ... WARNING
 '::' or ':::' imports not declared from:
-  ‘GeneNet’ ‘broom’ ‘broom.mixed’ ‘formula.tools’ ‘gage’ ‘lmerTest’
+  ‘broom’ ‘broom.mixed’ ‘lmerTest’
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
@@ -359,6 +359,123 @@ mt_post_pgain: no visible binding for global variable ‘.’
 mt_post_pgain: no visible global function definition for ‘mti_funargs’
 mt_post_pgain: no visible global function definition for
   ‘mti_generate_result’
+mt_pre_batch_COMBAT: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_batch_COMBAT: no visible global function definition for
+  ‘metadata’
+mt_pre_batch_COMBAT: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_batch_median: no visible global function definition for
+  ‘mti_res_get_path’
+mt_pre_batch_median : <anonymous>: no visible global function
+  definition for ‘median’
+mt_pre_batch_median: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_batch_median: no visible global function definition for
+  ‘metadata’
+mt_pre_batch_median: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_confounding_correction: no visible global function definition
+  for ‘as.formula’
+mt_pre_confounding_correction : fpv: no visible global function
+  definition for ‘pf’
+mt_pre_confounding_correction : <anonymous> : <anonymous>: no visible
+  global function definition for ‘lm’
+mt_pre_confounding_correction: no visible global function definition
+  for ‘mti_funargs’
+mt_pre_confounding_correction: no visible global function definition
+  for ‘metadata’
+mt_pre_confounding_correction: no visible global function definition
+  for ‘mti_generate_result’
+mt_pre_confounding_correction_stepwise_aic: no visible global function
+  definition for ‘read.table’
+mt_pre_confounding_correction_stepwise_aic: no visible global function
+  definition for ‘mclapply’
+mt_pre_confounding_correction_stepwise_aic: no visible global function
+  definition for ‘mti_funargs’
+mt_pre_confounding_correction_stepwise_aic: no visible global function
+  definition for ‘metadata’
+mt_pre_confounding_correction_stepwise_aic: no visible global function
+  definition for ‘mti_generate_result’
+mt_pre_filtermiss: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_filtermiss: no visible global function definition for ‘metadata’
+mt_pre_filtermiss: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_impute_knn: no visible global function definition for
+  ‘mti_imputeKNN’
+mt_pre_impute_knn: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_impute_knn: no visible global function definition for ‘metadata’
+mt_pre_impute_knn: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_impute_knn_multicore: no visible global function definition for
+  ‘mt_internal_imputeKNN_multicore’
+mt_pre_impute_knn_multicore: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_impute_knn_multicore: no visible global function definition for
+  ‘metadata’
+mt_pre_impute_knn_multicore: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_norm_external: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_norm_external: no visible global function definition for
+  ‘metadata’
+mt_pre_norm_external: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_norm_quot: no visible global function definition for
+  ‘mti_logwarning’
+mt_pre_norm_quot : <anonymous>: no visible global function definition
+  for ‘median’
+mt_pre_norm_quot: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_norm_quot: no visible global function definition for ‘metadata’
+mt_pre_norm_quot: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_outlier: no visible global function definition for ‘cor’
+mt_pre_outlier: no visible global function definition for ‘prcomp’
+mt_pre_outlier: no visible global function definition for ‘cov’
+mt_pre_outlier: no visible global function definition for ‘mahalanobis’
+mt_pre_outlier: no visible global function definition for ‘qchisq’
+mt_pre_outlier: no visible global function definition for ‘mti_funargs’
+mt_pre_outlier: no visible global function definition for ‘metadata’
+mt_pre_outlier: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_outliercorrection: no visible global function definition for
+  ‘qnorm’
+mt_pre_outliercorrection: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_outliercorrection: no visible global function definition for
+  ‘metadata’
+mt_pre_outliercorrection: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_trans_exp: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_trans_exp: no visible global function definition for ‘metadata’
+mt_pre_trans_exp: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_trans_log: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_trans_log: no visible global function definition for ‘metadata’
+mt_pre_trans_log: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_trans_relative: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_trans_relative: no visible global function definition for
+  ‘metadata’
+mt_pre_trans_relative: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_trans_scale: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_trans_scale: no visible global function definition for
+  ‘metadata’
+mt_pre_trans_scale: no visible global function definition for
+  ‘mti_generate_result’
+mt_pre_zeroToNA: no visible global function definition for
+  ‘mti_funargs’
+mt_pre_zeroToNA: no visible global function definition for ‘metadata’
+mt_pre_zeroToNA: no visible global function definition for
+  ‘mti_generate_result’
 mt_stats_multiv_net_GeneNet: no visible global function definition for
   ‘mti_format_se_samplewise’
 mt_stats_multiv_net_GeneNet: no visible global function definition for
@@ -544,29 +661,37 @@ mt_stats_univ_tau: no visible global function definition for
 mt_stats_univ_tau: no visible global function definition for ‘metadata’
 mt_stats_univ_tau: no visible global function definition for
   ‘mti_generate_result’
+single_met_covars: no visible global function definition for ‘lm’
+single_met_covars: no visible global function definition for
+  ‘as.formula’
+single_met_covars: no visible global function definition for ‘formula’
+single_met_covars: no visible global function definition for ‘pf’
 Undefined global functions or variables:
   . COMP_IDstr DataFrame HMDB HMDB_id ID IDs MetaboliteMapping
-  accession all_IDs all_pathway_names anova complete.cases cor.test
-  data.makepath dest enquo fc filter fisher.test gather kegg_id.x
-  kegg_id.y lFormula left_join lm m1 m2 map_lgl mappingID mcmapply
-  mean_case mean_ctrl mean_fc met_ID met_IDs met_id metadata
-  model.matrix mti_correctConfounder mti_format_se_samplewise
-  mti_funargs mti_generate_result mti_get_stat_by_name mti_logmsg
-  mti_logstatus mti_logwarning mti_res_get_path
-  mti_res_get_stats_entries mutate n_pw n_pw_sig n_total n_total_sig
-  name name1 name2 new.name ns_np ns_p one_of p.adj p.adjust p.val
-  p.value p_single_1 p_single_2 p_value p_value_adjusted
-  parseMetabolonFile parse_guess pathway_ID pathway_name prcomp pw
-  pw_ID pw_idx pw_str q.val read.csv2 s_np s_p sample_idx sd select
-  sessionInfo setNames significant src stat.mean stat_name str_c tail
-  term terms tmp tmp_ID tmp_name tmpsamplenum transmute ungroup update
+  accession all_IDs all_pathway_names anova as.formula complete.cases
+  cor cor.test cov data.makepath dest enquo fc filter fisher.test
+  formula gather kegg_id.x kegg_id.y lFormula left_join lm m1 m2
+  mahalanobis map_lgl mappingID mclapply mcmapply mean_case mean_ctrl
+  mean_fc median met_ID met_IDs met_id metadata model.matrix
+  mt_internal_imputeKNN_multicore mti_correctConfounder
+  mti_format_se_samplewise mti_funargs mti_generate_result
+  mti_get_stat_by_name mti_imputeKNN mti_logmsg mti_logstatus
+  mti_logwarning mti_res_get_path mti_res_get_stats_entries mutate n_pw
+  n_pw_sig n_total n_total_sig name name1 name2 new.name ns_np ns_p
+  one_of p.adj p.adjust p.val p.value p_single_1 p_single_2 p_value
+  p_value_adjusted parseMetabolonFile parse_guess pathway_ID
+  pathway_name pf prcomp pw pw_ID pw_idx pw_str q.val qchisq qnorm
+  read.csv2 read.table s_np s_p sample_idx sd select sessionInfo
+  setNames significant src stat.mean stat_name str_c tail term terms
+  tmp tmp_ID tmp_name tmpsamplenum transmute ungroup update
   update.formula val_type vals value var
 Consider adding
-  importFrom("stats", "anova", "complete.cases", "cor.test", "filter",
-             "fisher.test", "lm", "model.matrix", "p.adjust", "prcomp",
-             "sd", "setNames", "terms", "update", "update.formula",
-             "var")
-  importFrom("utils", "read.csv2", "sessionInfo", "tail")
+  importFrom("stats", "anova", "as.formula", "complete.cases", "cor",
+             "cor.test", "cov", "filter", "fisher.test", "formula", "lm",
+             "mahalanobis", "median", "model.matrix", "p.adjust", "pf",
+             "prcomp", "qchisq", "qnorm", "sd", "setNames", "terms",
+             "update", "update.formula", "var")
+  importFrom("utils", "read.csv2", "read.table", "sessionInfo", "tail")
 to your NAMESPACE file.
 * checking Rd files ... OK
 * checking Rd metadata ... OK
@@ -607,11 +732,33 @@ Rd file 'mt_post_addFC.Rd':
   \examples lines wider than 100 characters:
      # add fold-changes to the result table of the statistical comparison called "comparison1", after correcting for variable "age"
 
+Rd file 'mt_pre_norm_quot.Rd':
+  \examples lines wider than 100 characters:
+     ... %>% mt_pre_norm_quot(ref_samples = GROUP=="ctrl") %>% ...    # use reference samples where 'GROUP' field in colData is 'ctrl'
+     #' ... %>% mt_pre_norm_quot(met_max = 0.2) %>% ...    # use only metabolites with <= 20% missing values to compute the reference used f ... [TRUNCATED]
+
+Rd file 'mt_pre_outlier.Rd':
+  \examples lines wider than 100 characters:
+     # first identify samples that have more than 50% univariate outliers, then identify multivariate outliers with a leverage >4m/n
+
 These lines will be truncated in the PDF manual.
 * checking Rd cross-references ... OK
 * checking for missing documentation entries ... OK
 * checking for code/documentation mismatches ... OK
 * checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'mt_pre_impute_knn'
+  ‘method’
+Documented arguments not in \usage in documentation object 'mt_pre_impute_knn':
+  ‘methods’
+
+Undocumented arguments in documentation object 'mt_pre_outlier'
+  ‘...’
+Documented arguments not in \usage in documentation object 'mt_pre_outlier':
+  ‘thresh’ ‘perc’ ‘pval’
+
+Undocumented arguments in documentation object 'mt_pre_outliercorrection'
+  ‘...’
+
 Undocumented arguments in documentation object 'mt_stats_univ_tau'
   ‘name’
 Documented arguments not in \usage in documentation object 'mt_stats_univ_tau':
@@ -623,26 +770,21 @@ The \usage entries must correspond to syntactically valid R code.
 See chapter ‘Writing R documentation files’ in the ‘Writing R
 Extensions’ manual.
 * checking Rd contents ... OK
-* checking for unstated dependencies in examples ... WARNING
-Warning: parse error in file 'lines':
-1: unexpected SPECIAL
-626: 
-627: %>%
-     ^
+* checking for unstated dependencies in examples ... OK
 * checking examples ... ERROR
 Running examples in ‘MetaboTools-Ex.R’ failed
 The error most likely occurred in:
 
 > base::assign(".ptime", proc.time(), pos = "CheckExEnv")
-> ### Name: mt_stats_pathway_enrichment
-> ### Title: Pathway enrichment script using statistical analysis results
-> ###   from metabotools pipeline.
-> ### Aliases: mt_stats_pathway_enrichment
+> ### Name: mt_stats_univ_missingness
+> ### Title: Perform missingness significance analysis.
+> ### Aliases: mt_stats_univ_missingness
 > 
 > ### ** Examples
 > 
-> %>% mt_stats_pathway_enrichment("kegg_db",
-Error: unexpected SPECIAL in "%>%"
+> # run on sample field 'Group', name output stats object 'miss'
+> ... %>% mt_stats_univ_missingness(comp_col = 'Group', stat_name='miss') %>% ...
+Error: '...' used in an incorrect context
 Execution halted
 * DONE
-Status: 1 ERROR, 3 WARNINGs, 2 NOTEs
+Status: 1 ERROR, 2 WARNINGs, 2 NOTEs

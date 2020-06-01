@@ -38,6 +38,28 @@ mt_modify_sampleanno_reorder
 mt_post_addFC           Compute fold-change
 mt_post_multTest        Multiple testing correction
 mt_post_pgain           Compute p-gain from metabolite ratio test
+mt_pre_batch_COMBAT     COMBAT batch correction.
+mt_pre_batch_median     Median batch correction.
+mt_pre_confounding_correction
+                        Confounding correction
+mt_pre_confounding_correction_stepwise_aic
+                        Confounding correction using stepwise AIC
+mt_pre_filtermiss       Filter by missingness.
+mt_pre_impute_knn       Impute using kNN method.
+mt_pre_impute_knn_multicore
+                        Impute using kNN method with multi-core
+                        functionality.
+mt_pre_norm_external    Normalize by an external sample annotation
+mt_pre_norm_quot        Quotient normalization
+mt_pre_outlier          Identifies sample outliers.
+mt_pre_outliercorrection
+                        Identifies single outliers in samples.
+mt_pre_trans_exp        Exponentiate, base 2 by default.
+mt_pre_trans_log        Log, base 2 by default.
+mt_pre_trans_relative   Scale each sample relative to the mean of a
+                        given group of samples.
+mt_pre_trans_scale      Scale data, mean 0 / sd 1 by default.
+mt_pre_zeroToNA         Set zeros in dataset to NA.
 mt_stats_multiv_net_GeneNet
                         Computes partial correlation matrix using the
                         GeneNet estimator.
