@@ -13,7 +13,7 @@ library(uuid)
 #' @author JK
 #' 
 #' @export
-mt_reporting_quickhtml <- function(
+mt_reporting_html <- function(
   D, 
   outfile, 
   title = 'RMD output',
