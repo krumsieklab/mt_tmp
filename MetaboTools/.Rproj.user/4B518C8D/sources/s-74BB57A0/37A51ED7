@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591038257966.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "954602861",
+    "id" : "37A51ED7",
+    "lastKnownWriteTime" : 1591038395,
+    "last_content_update" : 1591038395595,
+    "path" : "~/mt/MetaboTools/R/mt_plots_scatter.R",
+    "project_path" : "R/mt_plots_scatter.R",
+    "properties" : {
+        "cursorPosition" : "17,42",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

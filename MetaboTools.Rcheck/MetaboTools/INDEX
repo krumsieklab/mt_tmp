@@ -35,6 +35,26 @@ mt_modify_mutate        Create new variable by expression
 mt_modify_ratios        Generate metabolite ratios.
 mt_modify_sampleanno_reorder
                         Reorder a sample annotation.
+mt_plots_PCA            2D PCA of samples.
+mt_plots_UMAP           2D UMAP of samples.
+mt_plots_boxplot        Boxplots
+mt_plots_compare2stats
+                        Comparative plot between two comparisons.
+mt_plots_equalizer      'Equalizer' plots.
+mt_plots_net            mt_plots_net
+mt_plots_pathview       mt_plots_pathview
+mt_plots_pheatmap       Heatmap plot by pheatmap::pheatmap
+mt_plots_pvalhist       Generate p-value histogram.
+mt_plots_pvalqq         Generate p-value qq plot
+mt_plots_qc_dilutionplot
+                        Correlate variable with dilution factors from
+                        quotient normalization.
+mt_plots_qc_missingness
+                        Visualize missing value structure of dataset.
+mt_plots_sampleboxplot
+                        Boxplot of samples.
+mt_plots_scatter        Scatter plots
+mt_plots_volcano        mt_plots_volcano
 mt_post_addFC           Compute fold-change
 mt_post_multTest        Multiple testing correction
 mt_post_pgain           Compute p-gain from metabolite ratio test

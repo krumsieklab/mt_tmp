@@ -34,7 +34,7 @@ get_calls <- function(filepath) {
 mt.quickload()
 
 # get calls for all functions R of entire directory (no recursive files)
-files = list.files(codes.makepath("MT"), pattern="mt_pre_zeroToNA.R", full.names=T)
+files = list.files(codes.makepath("MT"), pattern="mt_plots_volcano.R", full.names=T)
 print(files)
 
 # parse all function calls from all files, merge into single list

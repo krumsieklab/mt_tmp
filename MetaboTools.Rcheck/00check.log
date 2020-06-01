@@ -34,7 +34,11 @@
 * checking loading without being on the library search path ... OK
 * checking dependencies in R code ... WARNING
 '::' or ':::' imports not declared from:
-  ‘broom’ ‘broom.mixed’ ‘lmerTest’
+  ‘broom’ ‘broom.mixed’ ‘dils’ ‘ggbeeswarm’ ‘ggforce’ ‘ggrepel’
+  ‘lmerTest’ ‘pathview’ ‘pheatmap’ ‘reshape2’ ‘scales’ ‘umap’ ‘uuid’
+  ‘visNetwork’
+Missing or unexported objects:
+  ‘data.table::merge’ ‘grDevices::plain’
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
@@ -304,6 +308,211 @@ mt_modify_sampleanno_reorder: no visible global function definition for
   ‘metadata’
 mt_modify_sampleanno_reorder: no visible global function definition for
   ‘mti_generate_result’
+mt_plots_PCA: no visible global function definition for ‘prcomp’
+mt_plots_PCA: no visible binding for global variable ‘n’
+mt_plots_PCA: no visible binding for global variable ‘.’
+mt_plots_PCA: no visible global function definition for ‘mti_funargs’
+mt_plots_PCA: no visible global function definition for ‘metadata’
+mt_plots_PCA: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_PCA: no visible global function definition for
+  ‘mti_dots_to_str’
+mt_plots_UMAP: no visible binding for global variable ‘umap’
+mt_plots_UMAP: no visible global function definition for ‘mti_funargs’
+mt_plots_UMAP: no visible global function definition for ‘metadata’
+mt_plots_UMAP: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_UMAP: no visible global function definition for
+  ‘mti_dots_to_str’
+mt_plots_boxplot: no visible binding for global variable ‘p.value’
+mt_plots_boxplot: no visible global function definition for
+  ‘mti_logstatus’
+mt_plots_boxplot: no visible global function definition for
+  ‘mti_correctConfounder’
+mt_plots_boxplot: no visible global function definition for
+  ‘mti_get_stat_by_name’
+mt_plots_boxplot: no visible binding for global variable ‘name’
+mt_plots_boxplot: no visible global function definition for
+  ‘mti_format_se_samplewise’
+mt_plots_boxplot: no visible binding for global variable ‘var’
+mt_plots_boxplot: no visible binding for global variable ‘value’
+mt_plots_boxplot: no visible binding for global variable ‘.’
+mt_plots_boxplot : <anonymous>: no visible binding for global variable
+  ‘.’
+mt_plots_boxplot: no visible global function definition for
+  ‘mti_res_get_path’
+mt_plots_boxplot: no visible binding for global variable ‘str_c’
+mt_plots_boxplot: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_boxplot: no visible global function definition for ‘metadata’
+mt_plots_boxplot: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_boxplot: no visible global function definition for
+  ‘mti_dots_to_str’
+mt_plots_compare2stats: no visible global function definition for
+  ‘mti_get_stat_by_name’
+mt_plots_compare2stats: no visible binding for global variable ‘dp1’
+mt_plots_compare2stats: no visible binding for global variable ‘dp2’
+mt_plots_compare2stats: no visible binding for global variable
+  ‘filtered’
+mt_plots_compare2stats: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_compare2stats: no visible global function definition for
+  ‘metadata’
+mt_plots_compare2stats: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_equalizer: no visible binding for global variable ‘p.adj’
+mt_plots_equalizer: no visible global function definition for
+  ‘mti_get_stat_by_name’
+mt_plots_equalizer : <anonymous>: no visible global function definition
+  for ‘na.omit’
+mt_plots_equalizer : mti_plot_equalizer_gg: no visible binding for
+  global variable ‘.’
+mt_plots_equalizer : mti_plot_equalizer_gg: no visible binding for
+  global variable ‘x’
+mt_plots_equalizer : mti_plot_equalizer_gg: no visible binding for
+  global variable ‘FINE’
+mt_plots_equalizer : mti_plot_equalizer_gg: no visible binding for
+  global variable ‘COARSE’
+mt_plots_equalizer : mti_plot_equalizer_gg: no visible binding for
+  global variable ‘xx’
+mt_plots_equalizer : mti_plot_equalizer_gg: no visible binding for
+  global variable ‘yy’
+mt_plots_equalizer : mti_plot_equalizer_gg: no visible binding for
+  global variable ‘y’
+mt_plots_equalizer: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_equalizer: no visible global function definition for
+  ‘metadata’
+mt_plots_equalizer: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_net: no visible binding for global variable ‘p.value’
+mt_plots_net: no visible global function definition for
+  ‘mti_get_stat_by_name’
+mt_plots_net: no visible global function definition for ‘mti_logstatus’
+mt_plots_net: no visible global function definition for ‘%e%<-’
+mt_plots_net: no visible global function definition for ‘%v%<-’
+mt_plots_net: no visible binding for global variable ‘y’
+mt_plots_net: no visible binding for global variable ‘xend’
+mt_plots_net: no visible binding for global variable ‘yend’
+mt_plots_net: no visible binding for global variable ‘pcor’
+mt_plots_net: no visible binding for global variable ‘strength’
+mt_plots_net: no visible binding for global variable ‘vertex.names’
+mt_plots_net: no visible global function definition for ‘mti_funargs’
+mt_plots_net: no visible global function definition for ‘metadata’
+mt_plots_net: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_pathview: no visible global function definition for
+  ‘data.makepath’
+mt_plots_pathview: no visible global function definition for
+  ‘mti_get_stat_by_name’
+mt_plots_pathview: no visible binding for global variable ‘pwdb’
+mt_plots_pathview: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_pathview: no visible global function definition for ‘metadata’
+mt_plots_pathview: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_pheatmap: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_pheatmap: no visible global function definition for ‘metadata’
+mt_plots_pheatmap: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_pvalhist: no visible global function definition for
+  ‘mti_res_get_stats_entries’
+mt_plots_pvalhist : <anonymous>: no visible global function definition
+  for ‘mti_get_stat_by_name’
+mt_plots_pvalhist : <anonymous>: no visible binding for global variable
+  ‘p.value’
+mt_plots_pvalhist: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_pvalhist: no visible global function definition for ‘metadata’
+mt_plots_pvalhist: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_pvalqq: no visible global function definition for
+  ‘mti_get_stat_by_name’
+mt_plots_pvalqq: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_pvalqq: no visible global function definition for ‘metadata’
+mt_plots_pvalqq: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_qc_dilutionplot: no visible global function definition for
+  ‘mti_res_get_path’
+mt_plots_qc_dilutionplot: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_qc_dilutionplot: no visible global function definition for
+  ‘metadata’
+mt_plots_qc_dilutionplot: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_qc_missingness: no visible binding for global variable ‘miss’
+mt_plots_qc_missingness: no visible binding for global variable ‘met’
+mt_plots_qc_missingness: no visible binding for global variable ‘p1’
+mt_plots_qc_missingness: no visible global function definition for
+  ‘fixorder’
+mt_plots_qc_missingness: no visible binding for global variable ‘X1’
+mt_plots_qc_missingness: no visible binding for global variable ‘X2’
+mt_plots_qc_missingness: no visible binding for global variable ‘value’
+mt_plots_qc_missingness: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_qc_missingness: no visible global function definition for
+  ‘metadata’
+mt_plots_qc_missingness: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_sampleboxplot: no visible global function definition for
+  ‘mti_format_se_samplewise’
+mt_plots_sampleboxplot: no visible binding for global variable ‘metab’
+mt_plots_sampleboxplot: no visible binding for global variable ‘value’
+mt_plots_sampleboxplot: no visible binding for global variable
+  ‘merge.primary’
+mt_plots_sampleboxplot: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_sampleboxplot: no visible global function definition for
+  ‘metadata’
+mt_plots_sampleboxplot: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_sampleboxplot: no visible global function definition for
+  ‘mti_dots_to_str’
+mt_plots_scatter: no visible binding for global variable ‘p.value’
+mt_plots_scatter: no visible global function definition for
+  ‘mti_logstatus’
+mt_plots_scatter: no visible global function definition for
+  ‘mti_correctConfounder’
+mt_plots_scatter: no visible global function definition for
+  ‘mti_get_stat_by_name’
+mt_plots_scatter: no visible binding for global variable ‘name’
+mt_plots_scatter: no visible global function definition for
+  ‘mti_format_se_samplewise’
+mt_plots_scatter: no visible binding for global variable ‘var’
+mt_plots_scatter: no visible binding for global variable ‘value’
+mt_plots_scatter: no visible binding for global variable ‘.’
+mt_plots_scatter : <anonymous>: no visible binding for global variable
+  ‘.’
+mt_plots_scatter: no visible binding for global variable ‘str_c’
+mt_plots_scatter: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_scatter: no visible global function definition for ‘metadata’
+mt_plots_scatter: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_scatter: no visible global function definition for
+  ‘mti_dots_to_str’
+mt_plots_volcano: no visible binding for global variable ‘fc’
+mt_plots_volcano: no visible binding for global variable ‘p.value’
+mt_plots_volcano: no visible global function definition for
+  ‘mti_get_stat_by_name’
+mt_plots_volcano: no visible binding for global variable ‘.’
+mt_plots_volcano: no visible binding for global variable ‘xxx’
+mt_plots_volcano: no visible binding for global variable ‘.x’
+mt_plots_volcano: no visible global function definition for
+  ‘mti_logstatus’
+mt_plots_volcano: no visible binding for global variable ‘name’
+mt_plots_volcano: no visible global function definition for
+  ‘mti_add_leftright_gg’
+mt_plots_volcano: no visible global function definition for
+  ‘mti_funargs’
+mt_plots_volcano: no visible global function definition for ‘metadata’
+mt_plots_volcano: no visible global function definition for
+  ‘mti_generate_result’
+mt_plots_volcano: no visible global function definition for
+  ‘mti_dots_to_str’
 mt_post_addFC: no visible global function definition for
   ‘mti_res_get_path’
 mt_post_addFC: no visible global function definition for ‘metadata’
@@ -330,7 +539,6 @@ mt_post_addFC: no visible global function definition for ‘mti_funargs’
 mt_post_addFC: no visible global function definition for
   ‘mti_generate_result’
 mt_post_multTest: no visible binding for global variable ‘p.value’
-mt_post_multTest: no visible global function definition for ‘enquo’
 mt_post_multTest: no visible global function definition for ‘metadata’
 mt_post_multTest: no visible global function definition for ‘map_lgl’
 mt_post_multTest: no visible global function definition for ‘p.adjust’
@@ -339,7 +547,6 @@ mt_post_multTest: no visible global function definition for
 mt_post_multTest: no visible global function definition for
   ‘mti_generate_result’
 mt_post_pgain: no visible binding for global variable ‘p.value’
-mt_post_pgain: no visible global function definition for ‘enquo’
 mt_post_pgain: no visible global function definition for
   ‘mti_res_get_path’
 mt_post_pgain: no visible global function definition for ‘metadata’
@@ -661,36 +868,46 @@ mt_stats_univ_tau: no visible global function definition for
 mt_stats_univ_tau: no visible global function definition for ‘metadata’
 mt_stats_univ_tau: no visible global function definition for
   ‘mti_generate_result’
+mti_gg_qqplot: no visible global function definition for ‘ppoints’
+mti_gg_qqplot: no visible global function definition for ‘qbeta’
+mti_gg_qqplot: no visible binding for global variable ‘expected’
+mti_gg_qqplot: no visible binding for global variable ‘clower’
+mti_gg_qqplot: no visible binding for global variable ‘cupper’
+mti_gg_qqplot: no visible binding for global variable ‘observed’
 single_met_covars: no visible global function definition for ‘lm’
 single_met_covars: no visible global function definition for
   ‘as.formula’
 single_met_covars: no visible global function definition for ‘formula’
 single_met_covars: no visible global function definition for ‘pf’
 Undefined global functions or variables:
-  . COMP_IDstr DataFrame HMDB HMDB_id ID IDs MetaboliteMapping
-  accession all_IDs all_pathway_names anova as.formula complete.cases
-  cor cor.test cov data.makepath dest enquo fc filter fisher.test
-  formula gather kegg_id.x kegg_id.y lFormula left_join lm m1 m2
-  mahalanobis map_lgl mappingID mclapply mcmapply mean_case mean_ctrl
-  mean_fc median met_ID met_IDs met_id metadata model.matrix
-  mt_internal_imputeKNN_multicore mti_correctConfounder
+  %e%<- %v%<- . .x COARSE COMP_IDstr DataFrame FINE HMDB HMDB_id ID IDs
+  MetaboliteMapping X1 X2 accession all_IDs all_pathway_names anova
+  as.formula clower complete.cases cor cor.test cov cupper
+  data.makepath dest dp1 dp2 expected fc filter filtered fisher.test
+  fixorder formula gather kegg_id.x kegg_id.y lFormula left_join lm m1
+  m2 mahalanobis map_lgl mappingID mclapply mcmapply mean_case
+  mean_ctrl mean_fc median merge.primary met met_ID met_IDs met_id
+  metab metadata miss model.matrix mt_internal_imputeKNN_multicore
+  mti_add_leftright_gg mti_correctConfounder mti_dots_to_str
   mti_format_se_samplewise mti_funargs mti_generate_result
   mti_get_stat_by_name mti_imputeKNN mti_logmsg mti_logstatus
-  mti_logwarning mti_res_get_path mti_res_get_stats_entries mutate n_pw
-  n_pw_sig n_total n_total_sig name name1 name2 new.name ns_np ns_p
-  one_of p.adj p.adjust p.val p.value p_single_1 p_single_2 p_value
-  p_value_adjusted parseMetabolonFile parse_guess pathway_ID
-  pathway_name pf prcomp pw pw_ID pw_idx pw_str q.val qchisq qnorm
-  read.csv2 read.table s_np s_p sample_idx sd select sessionInfo
-  setNames significant src stat.mean stat_name str_c tail term terms
-  tmp tmp_ID tmp_name tmpsamplenum transmute ungroup update
-  update.formula val_type vals value var
+  mti_logwarning mti_res_get_path mti_res_get_stats_entries mutate n
+  n_pw n_pw_sig n_total n_total_sig na.omit name name1 name2 new.name
+  ns_np ns_p observed one_of p.adj p.adjust p.val p.value p1 p_single_1
+  p_single_2 p_value p_value_adjusted parseMetabolonFile parse_guess
+  pathway_ID pathway_name pcor pf ppoints prcomp pw pw_ID pw_idx pw_str
+  pwdb q.val qbeta qchisq qnorm read.csv2 read.table s_np s_p
+  sample_idx sd select sessionInfo setNames significant src stat.mean
+  stat_name str_c strength tail term terms tmp tmp_ID tmp_name
+  tmpsamplenum transmute umap ungroup update update.formula val_type
+  vals value var vertex.names x xend xx xxx y yend yy
 Consider adding
   importFrom("stats", "anova", "as.formula", "complete.cases", "cor",
              "cor.test", "cov", "filter", "fisher.test", "formula", "lm",
-             "mahalanobis", "median", "model.matrix", "p.adjust", "pf",
-             "prcomp", "qchisq", "qnorm", "sd", "setNames", "terms",
-             "update", "update.formula", "var")
+             "mahalanobis", "median", "model.matrix", "na.omit",
+             "p.adjust", "pf", "ppoints", "prcomp", "qbeta", "qchisq",
+             "qnorm", "sd", "setNames", "terms", "update",
+             "update.formula", "var")
   importFrom("utils", "read.csv2", "read.table", "sessionInfo", "tail")
 to your NAMESPACE file.
 * checking Rd files ... OK
@@ -728,6 +945,40 @@ Rd file 'mt_modify_sampleanno_reorder.Rd':
   \examples lines wider than 100 characters:
      ## Not run: %>% mt_modify_sampleanno_reorder("Group", c('WT_Norm_F','WT_Hyp_F','KO_Norm_F','KO_Hyp_F','WT:KO2_F','WT:WT2_F')) %>%
 
+Rd file 'mt_plots_PCA.Rd':
+  \examples lines wider than 100 characters:
+     ## PCA scores plot on non-scaled data, with ellipse and extra explained variance plot, and two ggadds (white background and centering o ... [TRUNCATED]
+     mt_plots_PCA(title="PCA scores", show = 'scores', scaledata=F, PCa=1, PCb=2, ellipse=0.95, expvarplot=T, ggadd = theme_bw() + theme(plo ... [TRUNCATED]
+
+Rd file 'mt_plots_boxplot.Rd':
+  \examples lines wider than 100 characters:
+                      annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
+
+Rd file 'mt_plots_compare2stats.Rd':
+  \examples lines wider than 100 characters:
+     # 'comp' is a string that contains the name of a comparison (here both SEs have the same comparison on two datasets)
+     # 'comp' is a string that contains the name of a comparison (here both SEs have the same comparison on two datasets)
+
+Rd file 'mt_plots_equalizer.Rd':
+  \examples lines wider than 100 characters:
+     # sub-pathway analysis must already be stored in D_sub, and this is part of the super-pathway pipeline, with a result already in 'comp'
+
+Rd file 'mt_plots_net.Rd':
+  \examples lines wider than 100 characters:
+     ... %>% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's", save.html="Network.html", height=800) %>% ...  ... [TRUNCATED]
+
+Rd file 'mt_plots_pathview.Rd':
+  \examples lines wider than 100 characters:
+     # plot all pathways with at least one significant metabolite from the statistical comparison "comp" in them
+
+Rd file 'mt_plots_sampleboxplot.Rd':
+  \examples lines wider than 100 characters:
+     ... %>% mt_plots_sampleboxplot(color=group, plottitle='after quotient normalization', logged=T) %>% ...
+
+Rd file 'mt_plots_scatter.Rd':
+  \examples lines wider than 100 characters:
+                      annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
+
 Rd file 'mt_post_addFC.Rd':
   \examples lines wider than 100 characters:
      # add fold-changes to the result table of the statistical comparison called "comparison1", after correcting for variable "age"
@@ -742,10 +993,35 @@ Rd file 'mt_pre_outlier.Rd':
      # first identify samples that have more than 50% univariate outliers, then identify multivariate outliers with a leverage >4m/n
 
 These lines will be truncated in the PDF manual.
-* checking Rd cross-references ... OK
+* checking Rd cross-references ... WARNING
+Missing link or links in documentation object 'mt_plots_pheatmap.Rd':
+  ‘https://github.com/raivokolde/pheatmap’
+
+See section 'Cross-references' in the 'Writing R Extensions' manual.
+
 * checking for missing documentation entries ... OK
 * checking for code/documentation mismatches ... OK
 * checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'mt_plots_boxplot'
+  ‘annotation’
+
+Undocumented arguments in documentation object 'mt_plots_compare2stats'
+  ‘label_column’ ‘point_size’ ‘export.file’
+
+Undocumented arguments in documentation object 'mt_plots_pathview'
+  ‘species’ ‘gene.annotpkg’ ‘min.nnodes’ ‘kegg.native’ ‘map.null’
+  ‘expand.node’ ‘split.group’ ‘map.symbol’ ‘map.cpdname’ ‘node.sum’
+  ‘discrete’ ‘limit’ ‘bins’ ‘both.dirs’ ‘trans.fun’ ‘na.col’
+
+Undocumented arguments in documentation object 'mt_plots_qc_missingness'
+  ‘sampMax’ ‘plot.mets’ ‘plot.samples’ ‘sample.labels’ ‘plot.data’
+
+Undocumented arguments in documentation object 'mt_plots_scatter'
+  ‘annotation’
+
+Undocumented arguments in documentation object 'mt_plots_volcano'
+  ‘xlabel’
+
 Undocumented arguments in documentation object 'mt_pre_impute_knn'
   ‘method’
 Documented arguments not in \usage in documentation object 'mt_pre_impute_knn':
@@ -764,27 +1040,107 @@ Undocumented arguments in documentation object 'mt_stats_univ_tau'
 Documented arguments not in \usage in documentation object 'mt_stats_univ_tau':
   ‘stat_name’
 
+Bad \usage lines found in documentation object 'mt_plots_pheatmap':
+  mt_plots_pheatmap(
+    D,
+    scaledata = F,
+    sym0 = F,
+    fD = function(x) {     if (scaledata)          return(scale(x))     x },
+    color = (grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name =
+      "RdYlBu"))))(100),
+    kmeans_k = NA,
+    breaks = NA,
+    border_color = "grey60",
+    cellwidth = NA,
+    cellheight = NA,
+    scale = "none",
+    cluster_rows = TRUE,
+    cluster_cols = TRUE,
+    clustering_distance_rows = "euclidean",
+    clustering_distance_cols = "euclidean",
+    clustering_method = "complete",
+    clustering_callback = pheatmap:::identity2,
+    cutree_rows = NA,
+    cutree_cols = NA,
+    treeheight_row = ifelse((class(cluster_rows) == "hclust") || cluster_rows, 50, 0),
+    treeheight_col = ifelse((class(cluster_cols) == "hclust") || cluster_cols, 50, 0),
+    legend = TRUE,
+    legend_breaks = NA,
+    legend_labels = NA,
+    annotation_row = NA,
+    annotation_col = NA,
+    annotation_colors = NA,
+    annotation_legend = TRUE,
+    annotation_names_row = TRUE,
+    annotation_names_col = TRUE,
+    drop_levels = TRUE,
+    show_rownames = T,
+    show_colnames = T,
+    main = NA,
+    fontsize = 10,
+    fontsize_row = fontsize,
+    fontsize_col = fontsize,
+    display_numbers = F,
+    number_format = "%.2f",
+    number_color = "grey30",
+    fontsize_number = 0.8 * fontsize,
+    gaps_row = NULL,
+    gaps_col = NULL,
+    labels_row = NULL,
+    labels_col = NULL,
+    filename = NA,
+    width = NA,
+    height = NA,
+    silent = TRUE,
+    na_col = "#DDDDDD",
+    ggadd = NULL,
+    return.gg = T,
+    gg.scale = 1,
+    gg.ymin = 1 - gg.scale,
+    gg.xmin = 1 - gg.scale,
+    gg.xmax = gg.scale,
+    gg.ymax = gg.scale,
+  )
+
 Functions with \usage entries need to have the appropriate \alias
 entries, and all their arguments documented.
 The \usage entries must correspond to syntactically valid R code.
 See chapter ‘Writing R documentation files’ in the ‘Writing R
 Extensions’ manual.
 * checking Rd contents ... OK
-* checking for unstated dependencies in examples ... OK
+* checking for unstated dependencies in examples ... WARNING
+Warning: parse error in file 'lines':
+2: unexpected '@'
+593: 
+594:  @
+      ^
 * checking examples ... ERROR
 Running examples in ‘MetaboTools-Ex.R’ failed
 The error most likely occurred in:
 
 > base::assign(".ptime", proc.time(), pos = "CheckExEnv")
-> ### Name: mt_stats_univ_missingness
-> ### Title: Perform missingness significance analysis.
-> ### Aliases: mt_stats_univ_missingness
+> ### Name: mt_plots_boxplot
+> ### Title: Boxplots
+> ### Aliases: mt_plots_boxplot
 > 
 > ### ** Examples
 > 
-> # run on sample field 'Group', name output stats object 'miss'
-> ... %>% mt_stats_univ_missingness(comp_col = 'Group', stat_name='miss') %>% ...
-Error: '...' used in an incorrect context
+> ## Not run: 
+> ##D # boxplots as overview of results with a result already in 'comp'
+> ##D # color by "Group" variable in colData
+> ##D mt_plots_boxplot(x                  = Group,
+> ##D                  statname           = "comp",
+> ##D                  correct_confounder = ~BATCH_MOCK,
+> ##D                  metab_filter       = p.value<0.01,
+> ##D                  metab_sort         = p.value,
+> ##D                  annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
+> ##D                  rows               = 2,
+> ##D                  cols               = 2) %>%
+> ##D                  ...
+> ## End(Not run)
+> 
+>  @author Jonas Zierer
+Error: unexpected '@' in " @"
 Execution halted
 * DONE
-Status: 1 ERROR, 2 WARNINGs, 2 NOTEs
+Status: 1 ERROR, 4 WARNINGs, 2 NOTEs

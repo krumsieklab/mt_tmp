@@ -605,6 +605,421 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
 base::cat("mt_modify_sampleanno_reorder", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
+nameEx("mt_plots_PCA")
+### * mt_plots_PCA
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_PCA
+### Title: 2D PCA of samples.
+### Aliases: mt_plots_PCA
+
+### ** Examples
+
+## Not run: 
+##D ## PCA on scaledata, color and shape by "Group" variable in colData
+##D ... $>$ mt_plots_PCA(scaledata=T, color=Group, shape=Group, title="PCA - scaled data") %>% ...
+##D ## PCA scores plot on non-scaled data, with ellipse and extra explained variance plot, and two ggadds (white background and centering of title)
+##D mt_plots_PCA(title="PCA scores", show = 'scores', scaledata=F, PCa=1, PCb=2, ellipse=0.95, expvarplot=T, ggadd = theme_bw() + theme(plot.title=element_text(hjust=0.5)))
+## End(Not run)
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_PCA", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_UMAP")
+### * mt_plots_UMAP
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_UMAP
+### Title: 2D UMAP of samples.
+### Aliases: mt_plots_UMAP
+
+### ** Examples
+
+## Not run: 
+##D ## UMAP on scaledata, color and shape by "Group" variable in colData
+##D ... $>$ mt_plots_UMAP(scaledata=T, color=Group, shape=Group, title="UMAP - scaled data") %>% ...
+## End(Not run)
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_UMAP", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_boxplot")
+### * mt_plots_boxplot
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_boxplot
+### Title: Boxplots
+### Aliases: mt_plots_boxplot
+
+### ** Examples
+
+## Not run: 
+##D # boxplots as overview of results with a result already in 'comp'
+##D # color by "Group" variable in colData
+##D mt_plots_boxplot(x                  = Group,
+##D                  statname           = "comp",
+##D                  correct_confounder = ~BATCH_MOCK,
+##D                  metab_filter       = p.value<0.01,
+##D                  metab_sort         = p.value,
+##D                  annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
+##D                  rows               = 2,
+##D                  cols               = 2) %>%
+##D                  ...
+## End(Not run)
+
+ @author Jonas Zierer
+
+ @import ggplot2
+ @importFrom magrittr %>% %<>%
+ @import SummarizedExperiment
+
+ @export
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_boxplot", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_compare2stats")
+### * mt_plots_compare2stats
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_compare2stats
+### Title: Comparative plot between two comparisons.
+### Aliases: mt_plots_compare2stats
+
+### ** Examples
+
+## Not run: 
+##D ## compare two stats from inside the same pipeline
+##D ... %>%
+##D mt_plots_compare2stats(stat1='WT',
+##D   filter1= p.adj<0.1,
+##D   stat2='KO',
+##D   filter2= p.adj<0.1,
+##D   filterop = 'OR'
+##D ) %>% ...
+##D 
+##D ## compare two stats from different pipelines, as part of the pipeline of the second
+##D # 'comp' is a string that contains the name of a comparison (here both SEs have the same comparison on two datasets)
+##D .. %>% mt_plots_compare2stats(
+##D   stat1 = comp, filter1 = p.adj<0.1,
+##D   D2 = firstPipeSE, stat2 = comp, filter2 = p.adj<0.1,
+##D   filterop = "OR") %>% ...
+##D 
+##D ## compare two stats from different pipelines, output as plot object
+##D ## not part of the actual MT pipelines, but separate call
+##D # 'comp' is a string that contains the name of a comparison (here both SEs have the same comparison on two datasets)
+##D gg <- mt_plots_compare2stats(
+##D   D1 = D1, stat1 = comp, filter1 = p.adj<0.1,
+##D   D2 = D2, stat2 = comp, filter2 = p.adj<0.1,
+##D   filterop = "OR", return.plot.only=T)
+## End(Not run)
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_compare2stats", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_equalizer")
+### * mt_plots_equalizer
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_equalizer
+### Title: 'Equalizer' plots.
+### Aliases: mt_plots_equalizer
+
+### ** Examples
+
+## Not run: 
+##D # super-pathway / sub-pathway equalizer
+##D # sub-pathway analysis must already be stored in D_sub, and this is part of the super-pathway pipeline, with a result already in 'comp'
+##D  ... %>%
+##D  mt_plots_equalizer(
+##D   comp1='comp',
+##D   D2=D_sub,
+##D   comp2=='comp',
+##D   legend.fine="sub pathway",
+##D   legend.coarse='super pathway',
+##D   vertline.fine = p.adj < 0.1,
+##D   vertline.coarse = p.adj < 0.1) %>%
+##D ...
+## End(Not run)
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_equalizer", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_net")
+### * mt_plots_net
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_net
+### Title: mt_plots_net
+### Aliases: mt_plots_net
+
+### ** Examples
+
+#' # in the context of a SE pipeline
+... %>% mt_plots_net(statsname = "xxx") %>% ...    # standard call
+... %>% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's", save.html="Network.html", height=800) %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_net", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_pathview")
+### * mt_plots_pathview
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_pathview
+### Title: mt_plots_pathview
+### Aliases: mt_plots_pathview
+
+### ** Examples
+
+## Not run: 
+##D # plot all pathways with at least one significant metabolite from the statistical comparison "comp" in them
+##D mt_plots_pathview(D = D,
+##D                   met.id="KEGG_mapped",
+##D                   statname = "comp",
+##D                   color.scale = -sign(fc)*log10(p.adj),
+##D                   color.range = -log10(0.01),
+##D                   metab.filter = p.adj < 0.05,
+##D                   show.only.filtered = TRUE,
+##D                   path.database = "./Pathview_database",
+##D                   path.output = "./results/pathview",
+##D                   same.layer = F,
+##D                   add.pwname.suffix = T
+##D                   ) %>%
+##D                   ...
+## End(Not run)
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_pathview", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_pheatmap")
+### * mt_plots_pheatmap
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_pheatmap
+### Title: Heatmap plot by pheatmap::pheatmap
+### Aliases: mt_plots_pheatmap
+
+### ** Examples
+
+## Not run: 
+##D D %>%
+##D mt_plots_pheatmap(annotation_row = c("SUPER_PATHWAY", "PLATFORM", "RI"),
+##D                   annotation_col = c("GROUP_DESC","BATCH_MOCK","gender"),
+##D                   fD = function(x) scale(exp(scale(x))),
+##D                   clustering_distance_cols =  "correlation",
+##D                   clustering_distance_rows = "minkowski")
+##D  
+## End(Not run)
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_pheatmap", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_pvalhist")
+### * mt_plots_pvalhist
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_pvalhist
+### Title: Generate p-value histogram.
+### Aliases: mt_plots_pvalhist
+
+### ** Examples
+
+... %>% mt_plots_pvalhist() %>% ...                  # for all
+... %>% mt_plots_pvalhist(statnames='comp') %>% ...  # for one
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_pvalhist", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_pvalqq")
+### * mt_plots_pvalqq
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_pvalqq
+### Title: Generate p-value qq plot
+### Aliases: mt_plots_pvalqq
+
+### ** Examples
+
+## Not run: ... %>% mt_plots_pvalhist(statnames='comp') %>% ...  # for one
+
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_pvalqq", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_qc_dilutionplot")
+### * mt_plots_qc_dilutionplot
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_qc_dilutionplot
+### Title: Correlate variable with dilution factors from quotient
+###   normalization.
+### Aliases: mt_plots_qc_dilutionplot
+
+### ** Examples
+
+%>% mt_plots_qc_dilutionplot(comp="group") %>% # compare with 'group' sample annotation
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_qc_dilutionplot", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_qc_missingness")
+### * mt_plots_qc_missingness
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_qc_missingness
+### Title: Visualize missing value structure of dataset.
+### Aliases: mt_plots_qc_missingness
+
+### ** Examples
+
+%>%  mt_plots_qc_missingness() %>% # without horizontal line
+%>%  mt_plots_qc_missingness(metMax=0.5) %>% # with horizontal line at 50%
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_qc_missingness", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_sampleboxplot")
+### * mt_plots_sampleboxplot
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_sampleboxplot
+### Title: Boxplot of samples.
+### Aliases: mt_plots_sampleboxplot
+
+### ** Examples
+
+## Not run: 
+##D ## sample boxplot, color by colData 'group' variable, with specific title, on log scale,
+##D ... %>% mt_plots_sampleboxplot(color=group, plottitle='after quotient normalization', logged=T) %>% ...
+## End(Not run)
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_sampleboxplot", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_scatter")
+### * mt_plots_scatter
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_scatter
+### Title: Scatter plots
+### Aliases: mt_plots_scatter
+
+### ** Examples
+
+## Not run: 
+##D # scatter plots as overview of results with a result already in 'comp'
+##D # color by "age" variable in colData
+##D mt_plots_boxplot(x                  = age,
+##D                  statname           = "comp",
+##D                  correct_confounder = ~BATCH_MOCK,
+##D                  metab_filter       = p.value<0.01,
+##D                  metab_sort         = p.value,
+##D                  annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
+##D                  rows               = 2,
+##D                  cols               = 2) %>%
+## End(Not run)
+
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_scatter", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("mt_plots_volcano")
+### * mt_plots_volcano
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: mt_plots_volcano
+### Title: mt_plots_volcano
+### Aliases: mt_plots_volcano
+
+### ** Examples
+
+## Not run: 
+##D # Volcano plot as overview of results with a result already in 'comp'
+##D ... %>%
+##D mt_plots_volcano(statname     = "comp",
+##D  metab_filter = p.adj < 0.1,
+##D  colour       = p.value < 0.05) %>%
+##D  ...
+## End(Not run)
+
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("mt_plots_volcano", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
 nameEx("mt_post_addFC")
 ### * mt_post_addFC
 

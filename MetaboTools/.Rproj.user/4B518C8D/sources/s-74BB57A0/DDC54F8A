@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591038259367.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "808461383",
+    "id" : "DDC54F8A",
+    "lastKnownWriteTime" : 1591034511,
+    "last_content_update" : 1591034511,
+    "path" : "~/mt/MetaboTools/R/mt_plots_boxplot.R",
+    "project_path" : "R/mt_plots_boxplot.R",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
