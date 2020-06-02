@@ -1878,7 +1878,7 @@ The following objects are masked from ‘package:base’:
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  25.654 0.419 26.343 0.004 0.006 
+Time elapsed:  25.103 0.467 26.127 0.004 0.007 
 > grDevices::dev.off()
 null device 
           1 

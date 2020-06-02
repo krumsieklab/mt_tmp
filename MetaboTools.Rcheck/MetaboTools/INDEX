@@ -104,3 +104,15 @@ mt_stats_univ_missingness
                         Perform missingness significance analysis.
 mt_stats_univ_tau       Computes Kendall's rank correlation. If
                         present, NAs will be omitted.
+mtm_logging             Logging Function
+mtm_plot_all_tofile     Plot all plots from a pipeline
+mtm_res_get_plots       Extract all plot objects from pipeline
+mtm_res_get_plots_entries
+                        Extract all "plots" $results entries from
+                        pipeline
+mtm_res_get_pre_entries
+                        Extract all "pre" $results entries from
+                        pipeline
+mtm_res_get_stats_entries
+                        Extract all "stats" $results entries from
+                        pipeline

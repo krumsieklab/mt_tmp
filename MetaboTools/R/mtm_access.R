@@ -18,18 +18,15 @@ mtm_res_get_plots_entries <- function(D){mti_res_get_path(D,"plots")}
 #'
 #' @noMd
 mtm_res_get_stats_entries <- function(D){mti_res_get_path(D,"stats")}
- 
-
 
 #' Extract all plot objects from pipeline
-#' 
+#'
 #' Differs from mtm_res_get_plots_entries in that that function extracts full result structures, and this one returns just the plots
 #'
 #' @param D SummarizedExperiment
 #' @param unlist Unlist all plots into one long list (default: T)
 #'
 #' @noMd
-#' 
 mtm_res_get_plots <- function(D,unlist=T){
   l=sapply(mti_res_get_path(D,"plots"),'[[','output',simplify=F)
   if(unlist) l <- unlist(l,recursive=F)
@@ -37,7 +34,7 @@ mtm_res_get_plots <- function(D,unlist=T){
 }
 
 #' Plot all plots from a pipeline
-#' 
+#'
 #' Opens a device (default: PDF), plots all plots, closes device.
 #' Works either on list of plots, or on SE
 #'
@@ -46,7 +43,6 @@ mtm_res_get_plots <- function(D,unlist=T){
 #' @param ... Further paramaters to be passed to dev() function.
 #'
 #' @noMd
-#' 
 mtm_plot_all_tofile <- function(input, dev=pdf, ...) {
   if ("SummarizedExperiment" %in% class(input)) {
     plots <- mti_multi_get_unique_plots(input)

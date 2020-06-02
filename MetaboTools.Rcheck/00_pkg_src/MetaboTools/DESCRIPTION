@@ -9,13 +9,13 @@ Description: More about what it does (maybe more than one line)
 Depends: R (>= 3.6.0), magrittr, SummarizedExperiment
 Imports: broom, broom.mixed, data.table, dils, dplyr, formula.tools,
         gage, gdata, GeneNet, ggbeeswarm, ggforce, ggnetwork, ggplot2,
-        ggrepel, glue, graphite, limma, lmerTest, MASS, network,
-        openxlsx, pathview, pheatmap, purrr, readr, readxl, reshape2,
-        rlang, rmarkdown, scales, stringr, sva, tibble, tictoc, tidyr,
-        umap, uuid, visNetwork
+        ggrepel, glue, graphite, limma, lmerTest, logging, MASS,
+        network, openxlsx, pathview, pheatmap, purrr, readr, readxl,
+        reshape2, rlang, rmarkdown, S4Vectors, scales, stringr, sva,
+        tibble, tictoc, tidyr, umap, uuid, visNetwork
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
 NeedsCompilation: no
-Packaged: 2020-06-02 14:48:41 UTC; kelsey
+Packaged: 2020-06-02 16:40:25 UTC; kelsey

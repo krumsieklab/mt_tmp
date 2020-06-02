@@ -72,40 +72,16 @@ mt_anno_metabolites_HMDB2KEGG: no visible global function definition
   for ‘read.csv2’
 mt_anno_metabolites_HMDB2KEGG: no visible global function definition
   for ‘DataFrame’
-mt_anno_metabolites_HMDB2KEGG: no visible global function definition
-  for ‘mti_funargs’
-mt_anno_metabolites_HMDB2KEGG: no visible global function definition
-  for ‘metadata’
-mt_anno_metabolites_HMDB2KEGG: no visible global function definition
-  for ‘mti_generate_result’
 mt_anno_pathways_HMDB: no visible global function definition for
   ‘data.makepath’
 mt_anno_pathways_HMDB: no visible global function definition for ‘tail’
-mt_anno_pathways_HMDB: no visible global function definition for
-  ‘mti_logstatus’
 mt_anno_pathways_HMDB: no visible binding for global variable ‘HMDB_id’
 mt_anno_pathways_HMDB: no visible binding for global variable
   ‘pathway_name’
 mt_anno_pathways_HMDB: no visible binding for global variable
   ‘accession’
 mt_anno_pathways_HMDB: no visible binding for global variable ‘ID’
-mt_anno_pathways_HMDB: no visible global function definition for
-  ‘metadata’
-mt_anno_pathways_HMDB: no visible global function definition for
-  ‘mti_funargs’
-mt_anno_pathways_HMDB: no visible global function definition for
-  ‘mti_generate_result’
-mt_anno_pathways_from_file: no visible global function definition for
-  ‘mti_logstatus’
 mt_anno_pathways_from_file: no visible binding for global variable ‘ID’
-mt_anno_pathways_from_file: no visible global function definition for
-  ‘metadata’
-mt_anno_pathways_from_file: no visible global function definition for
-  ‘mti_funargs’
-mt_anno_pathways_from_file: no visible global function definition for
-  ‘mti_generate_result’
-mt_anno_pathways_graphite: no visible global function definition for
-  ‘mti_logstatus’
 mt_anno_pathways_graphite: no visible global function definition for
   ‘mcmapply’
 mt_anno_pathways_graphite: no visible binding for global variable ‘src’
@@ -119,14 +95,6 @@ mt_anno_pathways_graphite: no visible binding for global variable
   ‘mappingID’
 mt_anno_pathways_graphite: no visible binding for global variable ‘IDs’
 mt_anno_pathways_graphite: no visible binding for global variable ‘.’
-mt_anno_pathways_graphite: no visible global function definition for
-  ‘metadata’
-mt_anno_pathways_graphite: no visible global function definition for
-  ‘mti_funargs’
-mt_anno_pathways_graphite: no visible global function definition for
-  ‘mti_generate_result’
-mt_anno_pathways_remove_redundant: no visible global function
-  definition for ‘mti_logstatus’
 mt_anno_pathways_remove_redundant: no visible binding for global
   variable ‘.’
 mt_anno_pathways_remove_redundant: no visible binding for global
@@ -139,63 +107,24 @@ mt_anno_pathways_remove_redundant: no visible binding for global
   variable ‘all_IDs’
 mt_anno_pathways_remove_redundant: no visible binding for global
   variable ‘ID’
-mt_anno_pathways_remove_redundant: no visible global function
-  definition for ‘metadata’
 mt_anno_pathways_remove_redundant: no visible binding for global
   variable ‘pathway_name’
 mt_anno_pathways_remove_redundant: no visible binding for global
   variable ‘tmp_name’
-mt_anno_pathways_remove_redundant: no visible global function
-  definition for ‘mti_funargs’
-mt_anno_pathways_remove_redundant: no visible global function
-  definition for ‘mti_generate_result’
 mt_files_anno_xls: no visible global function definition for ‘setNames’
 mt_files_anno_xls: no visible global function definition for
   ‘DataFrame’
-mt_files_anno_xls: no visible global function definition for
-  ‘mti_funargs’
-mt_files_anno_xls: no visible global function definition for ‘metadata’
-mt_files_anno_xls: no visible global function definition for
-  ‘mti_generate_result’
-mt_files_checksum: no visible global function definition for
-  ‘mti_funargs’
-mt_files_checksum: no visible global function definition for ‘metadata’
-mt_files_checksum: no visible global function definition for
-  ‘mti_generate_result’
-mt_files_data_xls: no visible global function definition for
-  ‘mti_funargs’
-mt_files_data_xls: no visible global function definition for ‘metadata’
-mt_files_data_xls: no visible global function definition for
-  ‘mti_generate_result’
 mt_files_load_UCD: no visible global function definition for
   ‘sessionInfo’
-mt_files_load_UCD: no visible global function definition for
-  ‘mti_funargs’
-mt_files_load_UCD: no visible global function definition for ‘metadata’
-mt_files_load_UCD: no visible global function definition for
-  ‘mti_generate_result’
 mt_files_load_WCM: no visible binding for global variable ‘HMDB’
 mt_files_load_WCM: no visible global function definition for
   ‘sessionInfo’
-mt_files_load_WCM: no visible global function definition for
-  ‘mti_funargs’
-mt_files_load_WCM: no visible global function definition for ‘metadata’
-mt_files_load_WCM: no visible global function definition for
-  ‘mti_generate_result’
 mt_files_load_metabolon: no visible binding for global variable
   ‘parse_guess’
 mt_files_load_metabolon: no visible global function definition for
   ‘parseMetabolonFile’
 mt_files_load_metabolon: no visible global function definition for
   ‘sessionInfo’
-mt_files_load_metabolon: no visible global function definition for
-  ‘mti_funargs’
-mt_files_load_metabolon: no visible global function definition for
-  ‘metadata’
-mt_files_load_metabolon: no visible global function definition for
-  ‘mti_generate_result’
-mt_files_write_pathwayannos: no visible global function definition for
-  ‘metadata’
 mt_files_write_pathwayannos: no visible binding for global variable ‘.’
 mt_files_write_pathwayannos: no visible binding for global variable
   ‘all_IDs’
@@ -211,91 +140,15 @@ mt_files_write_pathwayannos: no visible global function definition for
   ‘setNames’
 mt_files_write_pathwayannos: no visible binding for global variable
   ‘pathway_name’
-mt_files_write_pathwayannos: no visible global function definition for
-  ‘mti_funargs’
-mt_files_write_pathwayannos: no visible global function definition for
-  ‘mti_generate_result’
-mt_files_write_stats: no visible global function definition for
-  ‘mti_res_get_stats_entries’
-mt_files_write_stats: no visible global function definition for
-  ‘mti_funargs’
-mt_files_write_stats: no visible global function definition for
-  ‘metadata’
-mt_files_write_stats: no visible global function definition for
-  ‘mti_generate_result’
-mt_files_write_xls: no visible global function definition for
-  ‘mti_funargs’
-mt_files_write_xls: no visible global function definition for
-  ‘metadata’
-mt_files_write_xls: no visible global function definition for
-  ‘mti_generate_result’
-mt_flag_logged: no visible global function definition for ‘mti_funargs’
-mt_flag_logged: no visible global function definition for ‘metadata’
-mt_flag_logged: no visible global function definition for
-  ‘mti_generate_result’
-mt_logging_datasetinfo: no visible global function definition for
-  ‘mti_funargs’
-mt_logging_datasetinfo: no visible global function definition for
-  ‘metadata’
-mt_logging_datasetinfo: no visible global function definition for
-  ‘mti_generate_result’
-mt_logging_tic: no visible global function definition for ‘mti_funargs’
-mt_logging_tic: no visible global function definition for ‘metadata’
-mt_logging_tic: no visible global function definition for
-  ‘mti_generate_result’
-mt_logging_toc: no visible global function definition for ‘mti_funargs’
-mt_logging_toc: no visible global function definition for ‘metadata’
-mt_logging_toc: no visible global function definition for
-  ‘mti_generate_result’
+mt_internal_imputeKNN_multicore: no visible global function definition
+  for ‘cor’
 mt_modify_aggPW : <anonymous>: no visible global function definition
   for ‘prcomp’
 mt_modify_aggPW: no visible binding for global variable ‘name’
-mt_modify_aggPW: no visible global function definition for ‘metadata’
-mt_modify_aggPW: no visible global function definition for
-  ‘mti_funargs’
-mt_modify_aggPW: no visible global function definition for
-  ‘mti_generate_result’
-mt_modify_applytoanno: no visible global function definition for
-  ‘mti_funargs’
-mt_modify_applytoanno: no visible global function definition for
-  ‘metadata’
-mt_modify_applytoanno: no visible global function definition for
-  ‘mti_generate_result’
-mt_modify_averagesample: no visible global function definition for
-  ‘mti_funargs’
-mt_modify_averagesample: no visible global function definition for
-  ‘metadata’
-mt_modify_averagesample: no visible global function definition for
-  ‘mti_generate_result’
 mt_modify_cv : <anonymous>: no visible global function definition for
   ‘sd’
-mt_modify_cv: no visible global function definition for ‘mti_funargs’
-mt_modify_cv: no visible global function definition for ‘metadata’
-mt_modify_cv: no visible global function definition for
-  ‘mti_generate_result’
-mt_modify_filter_metabolites: no visible global function definition for
-  ‘mti_funargs’
-mt_modify_filter_metabolites: no visible global function definition for
-  ‘metadata’
-mt_modify_filter_metabolites: no visible global function definition for
-  ‘mti_generate_result’
 mt_modify_filter_samples: no visible binding for global variable ‘.’
-mt_modify_filter_samples: no visible global function definition for
-  ‘mti_funargs’
-mt_modify_filter_samples: no visible global function definition for
-  ‘metadata’
-mt_modify_filter_samples: no visible global function definition for
-  ‘mti_generate_result’
 mt_modify_mutate: no visible global function definition for ‘DataFrame’
-mt_modify_mutate: no visible global function definition for
-  ‘mti_funargs’
-mt_modify_mutate: no visible global function definition for ‘metadata’
-mt_modify_mutate: no visible global function definition for
-  ‘mti_generate_result’
-mt_modify_ratios: no visible global function definition for
-  ‘mti_res_get_path’
-mt_modify_ratios: no visible global function definition for
-  ‘mti_logstatus’
 mt_modify_ratios: no visible global function definition for ‘setNames’
 mt_modify_ratios: no visible binding for global variable ‘m1’
 mt_modify_ratios: no visible binding for global variable ‘m2’
@@ -303,73 +156,23 @@ mt_modify_ratios: no visible binding for global variable ‘name’
 mt_modify_ratios: no visible binding for global variable ‘name1’
 mt_modify_ratios: no visible binding for global variable ‘name2’
 mt_modify_ratios: no visible binding for global variable ‘.’
-mt_modify_ratios: no visible global function definition for ‘metadata’
-mt_modify_ratios: no visible global function definition for
-  ‘mti_funargs’
-mt_modify_ratios: no visible global function definition for
-  ‘mti_generate_result’
-mt_modify_sampleanno_reorder: no visible global function definition for
-  ‘mti_funargs’
-mt_modify_sampleanno_reorder: no visible global function definition for
-  ‘metadata’
-mt_modify_sampleanno_reorder: no visible global function definition for
-  ‘mti_generate_result’
 mt_plots_PCA: no visible global function definition for ‘prcomp’
 mt_plots_PCA: no visible binding for global variable ‘n’
 mt_plots_PCA: no visible binding for global variable ‘.’
-mt_plots_PCA: no visible global function definition for ‘mti_funargs’
-mt_plots_PCA: no visible global function definition for ‘metadata’
-mt_plots_PCA: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_PCA: no visible global function definition for
-  ‘mti_dots_to_str’
 mt_plots_UMAP: no visible binding for global variable ‘umap’
-mt_plots_UMAP: no visible global function definition for ‘mti_funargs’
-mt_plots_UMAP: no visible global function definition for ‘metadata’
-mt_plots_UMAP: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_UMAP: no visible global function definition for
-  ‘mti_dots_to_str’
 mt_plots_boxplot: no visible binding for global variable ‘p.value’
-mt_plots_boxplot: no visible global function definition for
-  ‘mti_logstatus’
-mt_plots_boxplot: no visible global function definition for
-  ‘mti_correctConfounder’
-mt_plots_boxplot: no visible global function definition for
-  ‘mti_get_stat_by_name’
 mt_plots_boxplot: no visible binding for global variable ‘name’
-mt_plots_boxplot: no visible global function definition for
-  ‘mti_format_se_samplewise’
 mt_plots_boxplot: no visible binding for global variable ‘var’
 mt_plots_boxplot: no visible binding for global variable ‘value’
 mt_plots_boxplot: no visible binding for global variable ‘.’
 mt_plots_boxplot : <anonymous>: no visible binding for global variable
   ‘.’
-mt_plots_boxplot: no visible global function definition for
-  ‘mti_res_get_path’
 mt_plots_boxplot: no visible binding for global variable ‘str_c’
-mt_plots_boxplot: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_boxplot: no visible global function definition for ‘metadata’
-mt_plots_boxplot: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_boxplot: no visible global function definition for
-  ‘mti_dots_to_str’
-mt_plots_compare2stats: no visible global function definition for
-  ‘mti_get_stat_by_name’
 mt_plots_compare2stats: no visible binding for global variable ‘dp1’
 mt_plots_compare2stats: no visible binding for global variable ‘dp2’
 mt_plots_compare2stats: no visible binding for global variable
   ‘filtered’
-mt_plots_compare2stats: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_compare2stats: no visible global function definition for
-  ‘metadata’
-mt_plots_compare2stats: no visible global function definition for
-  ‘mti_generate_result’
 mt_plots_equalizer: no visible binding for global variable ‘p.adj’
-mt_plots_equalizer: no visible global function definition for
-  ‘mti_get_stat_by_name’
 mt_plots_equalizer : <anonymous>: no visible global function definition
   for ‘na.omit’
 mt_plots_equalizer : mti_plot_equalizer_gg: no visible binding for
@@ -386,16 +189,7 @@ mt_plots_equalizer : mti_plot_equalizer_gg: no visible binding for
   global variable ‘yy’
 mt_plots_equalizer : mti_plot_equalizer_gg: no visible binding for
   global variable ‘y’
-mt_plots_equalizer: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_equalizer: no visible global function definition for
-  ‘metadata’
-mt_plots_equalizer: no visible global function definition for
-  ‘mti_generate_result’
 mt_plots_net: no visible binding for global variable ‘p.value’
-mt_plots_net: no visible global function definition for
-  ‘mti_get_stat_by_name’
-mt_plots_net: no visible global function definition for ‘mti_logstatus’
 mt_plots_net: no visible global function definition for ‘%e%<-’
 mt_plots_net: no visible global function definition for ‘%v%<-’
 mt_plots_net: no visible binding for global variable ‘y’
@@ -404,51 +198,11 @@ mt_plots_net: no visible binding for global variable ‘yend’
 mt_plots_net: no visible binding for global variable ‘pcor’
 mt_plots_net: no visible binding for global variable ‘strength’
 mt_plots_net: no visible binding for global variable ‘vertex.names’
-mt_plots_net: no visible global function definition for ‘mti_funargs’
-mt_plots_net: no visible global function definition for ‘metadata’
-mt_plots_net: no visible global function definition for
-  ‘mti_generate_result’
 mt_plots_pathview: no visible global function definition for
   ‘data.makepath’
-mt_plots_pathview: no visible global function definition for
-  ‘mti_get_stat_by_name’
 mt_plots_pathview: no visible binding for global variable ‘pwdb’
-mt_plots_pathview: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_pathview: no visible global function definition for ‘metadata’
-mt_plots_pathview: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_pheatmap: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_pheatmap: no visible global function definition for ‘metadata’
-mt_plots_pheatmap: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_pvalhist: no visible global function definition for
-  ‘mti_res_get_stats_entries’
-mt_plots_pvalhist : <anonymous>: no visible global function definition
-  for ‘mti_get_stat_by_name’
 mt_plots_pvalhist : <anonymous>: no visible binding for global variable
   ‘p.value’
-mt_plots_pvalhist: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_pvalhist: no visible global function definition for ‘metadata’
-mt_plots_pvalhist: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_pvalqq: no visible global function definition for
-  ‘mti_get_stat_by_name’
-mt_plots_pvalqq: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_pvalqq: no visible global function definition for ‘metadata’
-mt_plots_pvalqq: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_qc_dilutionplot: no visible global function definition for
-  ‘mti_res_get_path’
-mt_plots_qc_dilutionplot: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_qc_dilutionplot: no visible global function definition for
-  ‘metadata’
-mt_plots_qc_dilutionplot: no visible global function definition for
-  ‘mti_generate_result’
 mt_plots_qc_missingness: no visible binding for global variable ‘miss’
 mt_plots_qc_missingness: no visible binding for global variable ‘met’
 mt_plots_qc_missingness: no visible binding for global variable ‘p1’
@@ -457,71 +211,24 @@ mt_plots_qc_missingness: no visible global function definition for
 mt_plots_qc_missingness: no visible binding for global variable ‘X1’
 mt_plots_qc_missingness: no visible binding for global variable ‘X2’
 mt_plots_qc_missingness: no visible binding for global variable ‘value’
-mt_plots_qc_missingness: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_qc_missingness: no visible global function definition for
-  ‘metadata’
-mt_plots_qc_missingness: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_sampleboxplot: no visible global function definition for
-  ‘mti_format_se_samplewise’
 mt_plots_sampleboxplot: no visible binding for global variable ‘metab’
 mt_plots_sampleboxplot: no visible binding for global variable ‘value’
 mt_plots_sampleboxplot: no visible binding for global variable
   ‘merge.primary’
-mt_plots_sampleboxplot: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_sampleboxplot: no visible global function definition for
-  ‘metadata’
-mt_plots_sampleboxplot: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_sampleboxplot: no visible global function definition for
-  ‘mti_dots_to_str’
 mt_plots_scatter: no visible binding for global variable ‘p.value’
-mt_plots_scatter: no visible global function definition for
-  ‘mti_logstatus’
-mt_plots_scatter: no visible global function definition for
-  ‘mti_correctConfounder’
-mt_plots_scatter: no visible global function definition for
-  ‘mti_get_stat_by_name’
 mt_plots_scatter: no visible binding for global variable ‘name’
-mt_plots_scatter: no visible global function definition for
-  ‘mti_format_se_samplewise’
 mt_plots_scatter: no visible binding for global variable ‘var’
 mt_plots_scatter: no visible binding for global variable ‘value’
 mt_plots_scatter: no visible binding for global variable ‘.’
 mt_plots_scatter : <anonymous>: no visible binding for global variable
   ‘.’
 mt_plots_scatter: no visible binding for global variable ‘str_c’
-mt_plots_scatter: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_scatter: no visible global function definition for ‘metadata’
-mt_plots_scatter: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_scatter: no visible global function definition for
-  ‘mti_dots_to_str’
 mt_plots_volcano: no visible binding for global variable ‘fc’
 mt_plots_volcano: no visible binding for global variable ‘p.value’
-mt_plots_volcano: no visible global function definition for
-  ‘mti_get_stat_by_name’
 mt_plots_volcano: no visible binding for global variable ‘.’
 mt_plots_volcano: no visible binding for global variable ‘xxx’
 mt_plots_volcano: no visible binding for global variable ‘.x’
-mt_plots_volcano: no visible global function definition for
-  ‘mti_logstatus’
 mt_plots_volcano: no visible binding for global variable ‘name’
-mt_plots_volcano: no visible global function definition for
-  ‘mti_add_leftright_gg’
-mt_plots_volcano: no visible global function definition for
-  ‘mti_funargs’
-mt_plots_volcano: no visible global function definition for ‘metadata’
-mt_plots_volcano: no visible global function definition for
-  ‘mti_generate_result’
-mt_plots_volcano: no visible global function definition for
-  ‘mti_dots_to_str’
-mt_post_addFC: no visible global function definition for
-  ‘mti_res_get_path’
-mt_post_addFC: no visible global function definition for ‘metadata’
 mt_post_addFC: no visible global function definition for ‘map_lgl’
 mt_post_addFC: no visible binding for global variable ‘.’
 mt_post_addFC: no visible global function definition for ‘one_of’
@@ -529,33 +236,16 @@ mt_post_addFC: no visible global function definition for
   ‘update.formula’
 mt_post_addFC: no visible global function definition for ‘str_c’
 mt_post_addFC: no visible global function definition for ‘terms’
-mt_post_addFC: no visible global function definition for
-  ‘mti_logstatus’
-mt_post_addFC: no visible global function definition for
-  ‘mti_correctConfounder’
-mt_post_addFC: no visible global function definition for
-  ‘mti_format_se_samplewise’
 mt_post_addFC: no visible global function definition for ‘gather’
 mt_post_addFC: no visible binding for global variable ‘var’
 mt_post_addFC: no visible binding for global variable ‘value’
 mt_post_addFC: no visible global function definition for ‘ungroup’
 mt_post_addFC: no visible binding for global variable ‘fc’
 mt_post_addFC: no visible global function definition for ‘left_join’
-mt_post_addFC: no visible global function definition for ‘mti_funargs’
-mt_post_addFC: no visible global function definition for
-  ‘mti_generate_result’
 mt_post_multTest: no visible binding for global variable ‘p.value’
-mt_post_multTest: no visible global function definition for ‘metadata’
 mt_post_multTest: no visible global function definition for ‘map_lgl’
 mt_post_multTest: no visible global function definition for ‘p.adjust’
-mt_post_multTest: no visible global function definition for
-  ‘mti_funargs’
-mt_post_multTest: no visible global function definition for
-  ‘mti_generate_result’
 mt_post_pgain: no visible binding for global variable ‘p.value’
-mt_post_pgain: no visible global function definition for
-  ‘mti_res_get_path’
-mt_post_pgain: no visible global function definition for ‘metadata’
 mt_post_pgain: no visible global function definition for ‘map_lgl’
 mt_post_pgain: no visible global function definition for ‘mutate’
 mt_post_pgain: no visible global function definition for ‘select’
@@ -569,152 +259,28 @@ mt_post_pgain: no visible binding for global variable ‘p_single_1’
 mt_post_pgain: no visible binding for global variable ‘p_single_2’
 mt_post_pgain: no visible global function definition for ‘str_c’
 mt_post_pgain: no visible binding for global variable ‘.’
-mt_post_pgain: no visible global function definition for ‘mti_funargs’
-mt_post_pgain: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_batch_COMBAT: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_batch_COMBAT: no visible global function definition for
-  ‘metadata’
-mt_pre_batch_COMBAT: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_batch_median: no visible global function definition for
-  ‘mti_res_get_path’
 mt_pre_batch_median : <anonymous>: no visible global function
   definition for ‘median’
-mt_pre_batch_median: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_batch_median: no visible global function definition for
-  ‘metadata’
-mt_pre_batch_median: no visible global function definition for
-  ‘mti_generate_result’
 mt_pre_confounding_correction: no visible global function definition
   for ‘as.formula’
 mt_pre_confounding_correction : fpv: no visible global function
   definition for ‘pf’
 mt_pre_confounding_correction : <anonymous> : <anonymous>: no visible
   global function definition for ‘lm’
-mt_pre_confounding_correction: no visible global function definition
-  for ‘mti_funargs’
-mt_pre_confounding_correction: no visible global function definition
-  for ‘metadata’
-mt_pre_confounding_correction: no visible global function definition
-  for ‘mti_generate_result’
 mt_pre_confounding_correction_stepwise_aic: no visible global function
   definition for ‘read.table’
 mt_pre_confounding_correction_stepwise_aic: no visible global function
   definition for ‘mclapply’
-mt_pre_confounding_correction_stepwise_aic: no visible global function
-  definition for ‘mti_funargs’
-mt_pre_confounding_correction_stepwise_aic: no visible global function
-  definition for ‘metadata’
-mt_pre_confounding_correction_stepwise_aic: no visible global function
-  definition for ‘mti_generate_result’
-mt_pre_filtermiss: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_filtermiss: no visible global function definition for ‘metadata’
-mt_pre_filtermiss: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_impute_knn: no visible global function definition for
-  ‘mti_imputeKNN’
-mt_pre_impute_knn: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_impute_knn: no visible global function definition for ‘metadata’
-mt_pre_impute_knn: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_impute_knn_multicore: no visible global function definition for
-  ‘mt_internal_imputeKNN_multicore’
-mt_pre_impute_knn_multicore: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_impute_knn_multicore: no visible global function definition for
-  ‘metadata’
-mt_pre_impute_knn_multicore: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_norm_external: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_norm_external: no visible global function definition for
-  ‘metadata’
-mt_pre_norm_external: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_norm_quot: no visible global function definition for
-  ‘mti_logwarning’
 mt_pre_norm_quot : <anonymous>: no visible global function definition
   for ‘median’
-mt_pre_norm_quot: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_norm_quot: no visible global function definition for ‘metadata’
-mt_pre_norm_quot: no visible global function definition for
-  ‘mti_generate_result’
 mt_pre_outlier: no visible global function definition for ‘cor’
 mt_pre_outlier: no visible global function definition for ‘prcomp’
 mt_pre_outlier: no visible global function definition for ‘cov’
 mt_pre_outlier: no visible global function definition for ‘mahalanobis’
 mt_pre_outlier: no visible global function definition for ‘qchisq’
-mt_pre_outlier: no visible global function definition for ‘mti_funargs’
-mt_pre_outlier: no visible global function definition for ‘metadata’
-mt_pre_outlier: no visible global function definition for
-  ‘mti_generate_result’
 mt_pre_outliercorrection: no visible global function definition for
   ‘qnorm’
-mt_pre_outliercorrection: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_outliercorrection: no visible global function definition for
-  ‘metadata’
-mt_pre_outliercorrection: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_trans_exp: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_trans_exp: no visible global function definition for ‘metadata’
-mt_pre_trans_exp: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_trans_log: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_trans_log: no visible global function definition for ‘metadata’
-mt_pre_trans_log: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_trans_relative: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_trans_relative: no visible global function definition for
-  ‘metadata’
-mt_pre_trans_relative: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_trans_scale: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_trans_scale: no visible global function definition for
-  ‘metadata’
-mt_pre_trans_scale: no visible global function definition for
-  ‘mti_generate_result’
-mt_pre_zeroToNA: no visible global function definition for
-  ‘mti_funargs’
-mt_pre_zeroToNA: no visible global function definition for ‘metadata’
-mt_pre_zeroToNA: no visible global function definition for
-  ‘mti_generate_result’
-mt_reporting_generateMD: no visible global function definition for
-  ‘metadata’
 mt_reporting_generateMD: no visible binding for global variable ‘.’
-mt_reporting_heading: no visible global function definition for
-  ‘mti_funargs’
-mt_reporting_heading: no visible global function definition for
-  ‘metadata’
-mt_reporting_heading: no visible global function definition for
-  ‘mti_generate_result’
-mt_reporting_text: no visible global function definition for
-  ‘mti_funargs’
-mt_reporting_text: no visible global function definition for ‘metadata’
-mt_reporting_text: no visible global function definition for
-  ‘mti_generate_result’
-mt_stats_multiv_net_GeneNet: no visible global function definition for
-  ‘mti_format_se_samplewise’
-mt_stats_multiv_net_GeneNet: no visible global function definition for
-  ‘mti_logwarning’
-mt_stats_multiv_net_GeneNet: no visible global function definition for
-  ‘mti_funargs’
-mt_stats_multiv_net_GeneNet: no visible global function definition for
-  ‘metadata’
-mt_stats_multiv_net_GeneNet: no visible global function definition for
-  ‘mti_generate_result’
-mt_stats_pathway_enrichment: no visible global function definition for
-  ‘metadata’
 mt_stats_pathway_enrichment: no visible binding for global variable
   ‘pw’
 mt_stats_pathway_enrichment: no visible binding for global variable
@@ -723,8 +289,6 @@ mt_stats_pathway_enrichment: no visible binding for global variable
   ‘pathway_name’
 mt_stats_pathway_enrichment: no visible binding for global variable
   ‘COMP_IDstr’
-mt_stats_pathway_enrichment: no visible global function definition for
-  ‘mti_get_stat_by_name’
 mt_stats_pathway_enrichment: no visible binding for global variable
   ‘p.adj’
 mt_stats_pathway_enrichment: no visible binding for global variable
@@ -756,12 +320,6 @@ mt_stats_pathway_enrichment: no visible global function definition for
   ‘p.adjust’
 mt_stats_pathway_enrichment: no visible binding for global variable
   ‘mean_fc’
-mt_stats_pathway_enrichment: no visible global function definition for
-  ‘mti_funargs’
-mt_stats_pathway_enrichment: no visible global function definition for
-  ‘mti_generate_result’
-mt_stats_pathway_enrichment_with_differential_analysis: no visible
-  global function definition for ‘metadata’
 mt_stats_pathway_enrichment_with_differential_analysis: no visible
   binding for global variable ‘pw’
 mt_stats_pathway_enrichment_with_differential_analysis: no visible
@@ -824,20 +382,8 @@ mt_stats_pathway_enrichment_with_differential_analysis: no visible
   global function definition for ‘fisher.test’
 mt_stats_pathway_enrichment_with_differential_analysis: no visible
   binding for global variable ‘ns_np’
-mt_stats_pathway_enrichment_with_differential_analysis: no visible
-  global function definition for ‘mti_funargs’
-mt_stats_pathway_enrichment_with_differential_analysis: no visible
-  global function definition for ‘mti_generate_result’
-mt_stats_univ_lm: no visible global function definition for
-  ‘mti_res_get_stats_entries’
-mt_stats_univ_lm: no visible global function definition for
-  ‘mti_format_se_samplewise’
-mt_stats_univ_lm: no visible global function definition for
-  ‘mti_logwarning’
 mt_stats_univ_lm: no visible binding for global variable ‘tmpsamplenum’
 mt_stats_univ_lm: no visible global function definition for ‘terms’
-mt_stats_univ_lm: no visible global function definition for
-  ‘mti_logmsg’
 mt_stats_univ_lm: no visible binding for global variable ‘lm’
 mt_stats_univ_lm : f_tidy_tidy: no visible binding for global variable
   ‘term’
@@ -854,46 +400,44 @@ mt_stats_univ_lm : do_lm: no visible global function definition for
   ‘complete.cases’
 mt_stats_univ_lm : do_lm: no visible binding for global variable ‘.’
 mt_stats_univ_lm : do_lm: no visible global function definition for
-  ‘mti_logwarning’
-mt_stats_univ_lm : do_lm: no visible global function definition for
   ‘update.formula’
 mt_stats_univ_lm : do_lm: no visible global function definition for
   ‘anova’
 mt_stats_univ_lm: no visible global function definition for ‘setNames’
 mt_stats_univ_lm: no visible binding for global variable ‘term’
-mt_stats_univ_lm: no visible global function definition for
-  ‘mti_funargs’
-mt_stats_univ_lm: no visible global function definition for ‘metadata’
-mt_stats_univ_lm: no visible global function definition for
-  ‘mti_generate_result’
 mt_stats_univ_missingness : <anonymous>: no visible global function
   definition for ‘fisher.test’
-mt_stats_univ_missingness: no visible global function definition for
-  ‘mti_funargs’
-mt_stats_univ_missingness: no visible global function definition for
-  ‘metadata’
-mt_stats_univ_missingness: no visible global function definition for
-  ‘mti_generate_result’
 mt_stats_univ_tau: no visible binding for global variable ‘stat_name’
-mt_stats_univ_tau: no visible global function definition for
-  ‘mti_res_get_stats_entries’
-mt_stats_univ_tau: no visible global function definition for
-  ‘mti_format_se_samplewise’
-mt_stats_univ_tau: no visible global function definition for
-  ‘mti_logwarning’
 mt_stats_univ_tau : <anonymous>: no visible global function definition
   for ‘cor.test’
-mt_stats_univ_tau: no visible global function definition for
-  ‘mti_funargs’
-mt_stats_univ_tau: no visible global function definition for ‘metadata’
-mt_stats_univ_tau: no visible global function definition for
-  ‘mti_generate_result’
+mti_add_leftright_gg: no visible global function definition for
+  ‘compareVersion’
+mti_add_leftright_gg: no visible global function definition for
+  ‘packageVersion’
+mti_correctConfounder : <anonymous>: no visible binding for global
+  variable ‘na.exclude’
+mti_correctConfounder: no visible global function definition for
+  ‘setNames’
 mti_gg_qqplot: no visible global function definition for ‘ppoints’
 mti_gg_qqplot: no visible global function definition for ‘qbeta’
 mti_gg_qqplot: no visible binding for global variable ‘expected’
 mti_gg_qqplot: no visible binding for global variable ‘clower’
 mti_gg_qqplot: no visible binding for global variable ‘cupper’
 mti_gg_qqplot: no visible binding for global variable ‘observed’
+mti_imputeKNN: no visible global function definition for
+  ‘complete.cases’
+mti_imputeKNN: no visible global function definition for ‘sd’
+mti_imputeKNN : <anonymous>: no visible global function definition for
+  ‘na.omit’
+mti_imputeKNN: no visible global function definition for ‘cov’
+mti_imputeKNN: no visible global function definition for ‘cor’
+mtm_logging: no visible binding for global variable ‘writeToConsole’
+mtm_plot_all_tofile: no visible binding for global variable ‘pdf’
+mtm_plot_all_tofile: no visible global function definition for
+  ‘mti_multi_get_unique_plots’
+mtm_plot_all_tofile: no visible binding for global variable ‘plot’
+mtm_plot_all_tofile: no visible global function definition for
+  ‘dev.off’
 single_met_covars: no visible global function definition for ‘lm’
 single_met_covars: no visible global function definition for
   ‘as.formula’
@@ -902,33 +446,33 @@ single_met_covars: no visible global function definition for ‘pf’
 Undefined global functions or variables:
   %e%<- %v%<- . .x COARSE COMP_IDstr DataFrame FINE HMDB HMDB_id ID IDs
   MetaboliteMapping X1 X2 accession all_IDs all_pathway_names anova
-  as.formula clower complete.cases cor cor.test cov cupper
-  data.makepath dest dp1 dp2 expected fc filter filtered fisher.test
-  fixorder formula gather lFormula left_join lm m1 m2 mahalanobis
-  map_lgl mappingID mclapply mcmapply mean_case mean_ctrl mean_fc
-  median merge.primary met met_IDs met_id metab metadata miss
-  model.matrix mt_internal_imputeKNN_multicore mti_add_leftright_gg
-  mti_correctConfounder mti_dots_to_str mti_format_se_samplewise
-  mti_funargs mti_generate_result mti_get_stat_by_name mti_imputeKNN
-  mti_logmsg mti_logstatus mti_logwarning mti_res_get_path
-  mti_res_get_stats_entries mutate n n_pw n_pw_sig n_total n_total_sig
-  na.omit name name1 name2 new.name ns_np ns_p observed one_of
-  out_col.x out_col.y p.adj p.adjust p.val p.value p1 p_single_1
-  p_single_2 p_value p_value_adjusted parseMetabolonFile parse_guess
-  pathway_ID pathway_name pcor pf ppoints prcomp pw pw_idx pw_str pwdb
-  q.val qbeta qchisq qnorm read.csv2 read.table s_np s_p sample_idx sd
-  select sessionInfo setNames significant src stat.mean stat_name str_c
+  as.formula clower compareVersion complete.cases cor cor.test cov
+  cupper data.makepath dest dev.off dp1 dp2 expected fc filter filtered
+  fisher.test fixorder formula gather lFormula left_join lm m1 m2
+  mahalanobis map_lgl mappingID mclapply mcmapply mean_case mean_ctrl
+  mean_fc median merge.primary met met_IDs met_id metab miss
+  model.matrix mti_multi_get_unique_plots mutate n n_pw n_pw_sig
+  n_total n_total_sig na.exclude na.omit name name1 name2 new.name
+  ns_np ns_p observed one_of out_col.x out_col.y p.adj p.adjust p.val
+  p.value p1 p_single_1 p_single_2 p_value p_value_adjusted
+  packageVersion parseMetabolonFile parse_guess pathway_ID pathway_name
+  pcor pdf pf plot ppoints prcomp pw pw_idx pw_str pwdb q.val qbeta
+  qchisq qnorm read.csv2 read.table s_np s_p sample_idx sd select
+  sessionInfo setNames significant src stat.mean stat_name str_c
   strength tail term terms tmp tmp_ID tmp_name tmpsamplenum transmute
   umap ungroup update update.formula val_type vals value var
-  vertex.names x xend xx xxx y yend yy
+  vertex.names writeToConsole x xend xx xxx y yend yy
 Consider adding
+  importFrom("grDevices", "dev.off", "pdf")
+  importFrom("graphics", "plot")
   importFrom("stats", "anova", "as.formula", "complete.cases", "cor",
              "cor.test", "cov", "filter", "fisher.test", "formula", "lm",
-             "mahalanobis", "median", "model.matrix", "na.omit",
-             "p.adjust", "pf", "ppoints", "prcomp", "qbeta", "qchisq",
-             "qnorm", "sd", "setNames", "terms", "update",
+             "mahalanobis", "median", "model.matrix", "na.exclude",
+             "na.omit", "p.adjust", "pf", "ppoints", "prcomp", "qbeta",
+             "qchisq", "qnorm", "sd", "setNames", "terms", "update",
              "update.formula", "var")
-  importFrom("utils", "read.csv2", "read.table", "sessionInfo", "tail")
+  importFrom("utils", "compareVersion", "packageVersion", "read.csv2",
+             "read.table", "sessionInfo", "tail")
 to your NAMESPACE file.
 * checking Rd files ... WARNING
 checkRd: (7) mt_plots_pheatmap.Rd:90: Tag \href is invalid in a \code block
