@@ -36,84 +36,100 @@ mt_plots_volcano <- function(D,
                              hline,
                              ggadd=NULL, 
                              ...){
-    x <- enquo(x)
-    
-    ## check input
-    stopifnot("SummarizedExperiment" %in% class(D))
-    if(missing(statname))
-        stop("statname must be given for volcanoplot")
-
-    ## rowData
-    rd <- rowData(D) %>%
-        as.data.frame() %>%
-        dplyr::mutate(var = rownames(D))
-    
-    ## stat
-    data_plot <- mti_get_stat_by_name(D, statname) %>%
-        inner_join(rd, by = "var") %>%
-        dplyr::mutate(xxx = !!x)
-
-    ## SCALE -log10
-    reverselog_trans <- function (base = exp(1)){
-        trans <- function(x) -log(x, base)
-        inv <- function(x) base^(-x)
-        scales::trans_new(paste0("reverselog-", format(base)), trans, inv, 
-                          scales::log_breaks(base = base),
-                          domain = c(1e-100, Inf))
-    }
-    
-    ## determine if and where to draw hline
-    if (!missing(hline)) {
-      hliney <- mti_get_stat_by_name(D, statname) %>%
-        inner_join(rd, by = "var") %>%
-        dplyr::mutate(xxx = !!x) %>% dplyr::filter(!!enquo(hline)) %>% .$p.value %>% max()
-    } else {
-      hliney <- NA
-    }
-    
-    ## CREATE PLOT
-    p <- data_plot %>%
-        ## do plot
-        ggplot(aes(x = xxx, y = p.value)) +
-        # vline?
-        (if(!is.na(vline)){geom_vline(xintercept = c(-vline, vline), linetype='dashed', color='#F8766D')}else{NULL}) +
-        # hline?
-        (if(!is.na(hliney)){geom_hline(yintercept = hliney, linetype='dashed', color='#F8766D')}else{NULL}) +
-        # points
-        geom_point(aes(...)) +
-        scale_y_continuous(trans = reverselog_trans(10),
-                           breaks = scales::trans_breaks("log10", function(x) 10^x),
-                           labels = scales::trans_format("log10", scales::math_format(10^.x))) +
-        labs(x = xlabel, y = "p-value") +
-        ggtitle(statname)
-
-    ## ADD METABOLITE LABELS
-    if(!missing(metab_filter)){
-        mti_logstatus("add label")
-        metab_filter_q <- enquo(metab_filter)
-        data_annotate <- data_plot %>%
-            filter(!!metab_filter_q)
-        p <- p + ggrepel::geom_text_repel(data = data_annotate,
-                           aes(label = name))
-    }
-    
-    ## ADD AXIS GROUPS
-    d <- mti_get_stat_by_name(D, statname, fullstruct=T)
-    if ("groups" %in% names(d) && length(d$groups)==2) {
-      p <- mti_add_leftright_gg(p, paste0(d$groups[1],' high'), paste0(d$groups[2],' high'))
-    }
-
-    # add custom elements?
-    if (!is.null(ggadd)) p <- p+ggadd
-    
-    ## add status information & plot
-    funargs <- mti_funargs()
-    metadata(D)$results %<>% 
-                  mti_generate_result(
-                      funargs = funargs,
-                      logtxt = sprintf("volcano plot, aes: %s", mti_dots_to_str(...)),
-                      output = list(p)
-                  )
-    ## return
-    D
+  x <- enquo(x)
+  
+  ## check input
+  stopifnot("SummarizedExperiment" %in% class(D))
+  if(missing(statname))
+    stop("statname must be given for volcanoplot")
+  
+  ## rowData
+  rd <- rowData(D) %>%
+    as.data.frame() %>%
+    dplyr::mutate(var = rownames(D))
+  
+  ## stat
+  data_plot <- mti_get_stat_by_name(D, statname) %>%
+    inner_join(rd, by = "var") %>%
+    dplyr::mutate(xxx = !!x)
+  
+  ## SCALE -log10
+  reverselog_trans <- function (base = exp(1)){
+    trans <- function(x) -log(x, base)
+    inv <- function(x) base^(-x)
+    scales::trans_new(paste0("reverselog-", format(base)), trans, inv, 
+                      scales::log_breaks(base = base),
+                      domain = c(1e-100, Inf))
+  }
+  
+  ## determine if and where to draw hline
+  if (!missing(hline)) {
+    hliney <- mti_get_stat_by_name(D, statname) %>%
+      inner_join(rd, by = "var") %>%
+      dplyr::mutate(xxx = !!x) %>% dplyr::filter(!!enquo(hline)) %>% .$p.value %>% max()
+  } else {
+    hliney <- NA
+  }
+  
+  ## CREATE PLOT
+  p <- data_plot %>%
+    ## do plot
+    ggplot(aes(x = xxx, y = p.value)) +
+    # vline?
+    (if(!is.na(vline)){geom_vline(xintercept = c(-vline, vline), linetype='dashed', color='#F8766D')}else{NULL}) +
+    # hline?
+    (if(!is.na(hliney)){geom_hline(yintercept = hliney, linetype='dashed', color='#F8766D')}else{NULL}) +
+    # points
+    geom_point(aes(...)) +
+    scale_y_continuous(trans = reverselog_trans(10),
+                       breaks = scales::trans_breaks("log10", function(x) 10^x),
+                       labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+    labs(x = xlabel, y = "p-value") +
+    ggtitle(statname)
+  
+  ## ADD METABOLITE LABELS
+  if(!missing(metab_filter)){
+    mti_logstatus("add label")
+    metab_filter_q <- enquo(metab_filter)
+    data_annotate <- data_plot %>%
+      filter(!!metab_filter_q)
+    p <- p + ggrepel::geom_text_repel(data = data_annotate,
+                                      aes(label = name))
+  }
+  
+  ## ADD AXIS GROUPS
+  d <- mti_get_stat_by_name(D, statname, fullstruct=T)
+  if ("groups" %in% names(d) && length(d$groups)==2) {
+    p <- mti_add_leftright_gg(p, paste0(d$groups[1],' high'), paste0(d$groups[2],' high'))
+  }
+  
+  # add custom elements?
+  if (!is.null(ggadd)) p <- p+ggadd
+  
+  # all the environment for quoted variables leads explosion of the object size
+  # problem is also not that simple to just find those variables and clean up the
+  # respective environment which I did, which did not solve the problem. 
+  # best solution so far is to wrap plot, get rid of everything else 
+  p <- local(
+    # transformartion of images into blank panel
+    ggplot2::ggplot(data.frame(x = 0:1, y = 0:1), aes_(x = ~x, y = ~y)) + 
+      ggplot2::geom_blank() + 
+      ggplot2::scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) + 
+      ggplot2::scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) + 
+      ggplot2::annotation_custom(gg_grob, xmin = 0, xmax = 1 , ymin = 0, ymax = 1) + 
+      ggplot2::theme_void(),
+    as.environment(list(gg_grob =ggplotGrob(p))) %>% {parent.env(.)=.GlobalEnv;.})
+  
+  
+  ## add status information & plot
+  funargs <- mti_funargs()
+  metadata(D)$results %<>% 
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf("volcano plot, aes: %s", mti_dots_to_str(...)),
+      output = list(p)
+    )
+  ## return
+  D
 }
+
