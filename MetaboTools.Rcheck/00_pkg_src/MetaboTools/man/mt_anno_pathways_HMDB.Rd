@@ -10,7 +10,7 @@ mt_anno_pathways_HMDB(
   out_col,
   pwdb_name = "SMP",
   db_dir = data.makepath("MT_precalc/hmdb/"),
-  db_filename,
+  db_file,
   export_raw_db
 )
 }
@@ -25,12 +25,12 @@ mt_anno_pathways_HMDB(
 
 \item{db_dir}{Name of the directory where the parsed HMDB files are stored}
 
-\item{db_filename}{Filename of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds}
+\item{db_file}{File name of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds}
 
 \item{export_raw_db}{OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.}
 }
 \value{
-column out_col in SE containing pathway annotation for metabolites
+rowData: new pathway annotation for metabolites
 
 $pathways: a dataframe of pathway information
 }

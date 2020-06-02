@@ -8,10 +8,10 @@
 #' @param out_col A new column name for D to output pathway information to
 #' @param pwdb_name Name of the pathway database to use. Can use either SMP or KEGG for this argument
 #' @param db_dir Name of the directory where the parsed HMDB files are stored
-#' @param db_filename Filename of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds
+#' @param db_file File name of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds
 #' @param export_raw_db OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 #'
-#' @return column out_col in SE containing pathway annotation for metabolites
+#' @return rowData: new pathway annotation for metabolites
 #' @return $pathways: a dataframe of pathway information
 #'
 #' @examples
@@ -37,7 +37,7 @@ mt_anno_pathways_HMDB <- function(
   out_col,            # a new column name for D to output pathway information to
   pwdb_name = "SMP",  # the name of the pathway database to use. Can use either SMP or KEGG for this argument
   db_dir = data.makepath("MT_precalc/hmdb/"),   # name of the directory where the parsed HMDB files are stored, default is in precalculated data directory
-  db_filename,        # filename of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds
+  db_file,        # filename of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds
   export_raw_db       # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 ) {
 
@@ -47,12 +47,12 @@ mt_anno_pathways_HMDB <- function(
   if (!dir.exists(db_dir))
     stop(glue::glue("{db_dir} does not exist. input a valid db_dir."))
 
-  if (missing(db_filename)) {
+  if (missing(db_file)) {
     # NOTE: taking the tail work only for HMDB versions below 9, since
     # list.files sorts the names alphabetically. Current HMDB version
     # is 4.0
-    db_filename <- list.files(db_dir,pattern='*.rds') %>% tail(1)
-    if (length(db_filename) == 0)
+    db_file <- list.files(db_dir,pattern='*.rds') %>% tail(1)
+    if (length(db_file) == 0)
       stop(glue::glue("no pathway files were found in {db_dir}"))
   }
 
@@ -63,9 +63,9 @@ mt_anno_pathways_HMDB <- function(
     stop(glue::glue("in_col is invalid. please enter an existing column name."))
 
   # HMDB IDs here pertain to secondary accessions
-  mti_logstatus(glue::glue("reading the {pwdb_name} database from {db_filename}"))
+  mti_logstatus(glue::glue("reading the {pwdb_name} database from {db_file}"))
   pwdb <-
-    readr::read_rds(file.path(db_dir, db_filename)) %>%
+    readr::read_rds(file.path(db_dir, db_file)) %>%
     dplyr::select(HMDB_id, ID = pwdb_name, pathway_name, accession)
 
   # create a dataframe that enables the mapping between pathway

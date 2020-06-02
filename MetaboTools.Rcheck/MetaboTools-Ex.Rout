@@ -180,9 +180,9 @@ The following objects are masked from ‘package:base’:
 > ##D       mt_anno_pathways_from_file(in_col = "HMDb_ID",
 > ##D                                  out_col = "janpw",
 > ##D                                  file = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
-> ##D                                  met_ID_col = "HMDB_id",
-> ##D                                  pw_ID_col = "SMP",
-> ##D                                  pw_name_col = "pathway_name") %>%
+> ##D                                  met_ID = "HMDB_id",
+> ##D                                  pw_ID = "SMP",
+> ##D                                  pw_name = "pathway_name") %>%
 > ##D ...
 > ## End(Not run)
 > 
@@ -211,7 +211,7 @@ The following objects are masked from ‘package:base’:
 > ##D                     out_col = "humancyc_db",
 > ##D                     pwdb_species = "hsapiens",
 > ##D                     pwdb_name = "humancyc",
-> ##D                     n_cpus = 5) %>%
+> ##D                     n_cores = 5) %>%
 > ##D ...
 > ## End(Not run)
 > 
@@ -238,7 +238,7 @@ The following objects are masked from ‘package:base’:
 > ##D ... %>%
 > ##D   mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db",
 > ##D   pwdb_name = "SMP", db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) %>%
-> ##D   mt_anno_pathways_remove_redundant(met_ID_col = "HMDb_ID", pw_ID_col = "smp_db") %>%
+> ##D   mt_anno_pathways_remove_redundant(met_ID = "HMDb_ID", pw_ID = "smp_db") %>%
 > ##D ...
 > ## End(Not run)
 > 
@@ -485,6 +485,107 @@ The following objects are masked from ‘package:base’:
 > 
 > base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
 > base::cat("mt_files_write_xls", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_flag_logged")
+> ### * mt_flag_logged
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_flag_logged
+> ### Title: Actively flags data as logged.
+> ### Aliases: mt_flag_logged
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # simply insert into pipeline
+> ##D ... %>% mt_flag_logged() %>%
+> ##D ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_flag_logged", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_logging_datasetinfo")
+> ### * mt_logging_datasetinfo
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_logging_datasetinfo
+> ### Title: Output information about dataset to log.
+> ### Aliases: mt_logging_datasetinfo
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ...  %>%
+> ##D   mt_logging_datasetinfo() %>% ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_logging_datasetinfo", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_logging_tic")
+> ### * mt_logging_tic
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_logging_tic
+> ### Title: Timing functionality.
+> ### Aliases: mt_logging_tic
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D %>%
+> ##D   mt_logging_tic() %>%
+> ##D   ... %>% ... # pipeline steps
+> ##D   ... %>% ... # pipeline steps
+> ##D   ... %>% ... # pipeline steps
+> ##D   mt_logging_toc()
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_logging_tic", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_logging_toc")
+> ### * mt_logging_toc
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_logging_toc
+> ### Title: Timing functionality.
+> ### Aliases: mt_logging_toc
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D %>%
+> ##D   mt_logging_tic() %>%
+> ##D   ... %>% ... # pipeline steps
+> ##D   ... %>% ... # pipeline steps
+> ##D   ... %>% ... # pipeline steps
+> ##D   mt_logging_toc()
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_logging_toc", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("mt_modify_aggPW")
 > ### * mt_modify_aggPW
@@ -762,8 +863,1028 @@ The following objects are masked from ‘package:base’:
 > ##D                  rows               = 2,
 > ##D                  cols               = 2) %>%
 > ##D                  ...
+> ##D  
 > ## End(Not run)
 > 
->  @author Jonas Zierer
-Error: unexpected '@' in " @"
-Execution halted
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_boxplot", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_compare2stats")
+> ### * mt_plots_compare2stats
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_compare2stats
+> ### Title: Comparative plot between two comparisons.
+> ### Aliases: mt_plots_compare2stats
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ## compare two stats from inside the same pipeline
+> ##D ... %>%
+> ##D mt_plots_compare2stats(stat1='WT',
+> ##D   filter1= p.adj<0.1,
+> ##D   stat2='KO',
+> ##D   filter2= p.adj<0.1,
+> ##D   filterop = 'OR'
+> ##D ) %>% ...
+> ##D 
+> ##D ## compare two stats from different pipelines, as part of the pipeline of the second
+> ##D # 'comp' is a string that contains the name of a comparison (here both SEs have the same comparison on two datasets)
+> ##D .. %>% mt_plots_compare2stats(
+> ##D   stat1 = comp, filter1 = p.adj<0.1,
+> ##D   D2 = firstPipeSE, stat2 = comp, filter2 = p.adj<0.1,
+> ##D   filterop = "OR") %>% ...
+> ##D 
+> ##D ## compare two stats from different pipelines, output as plot object
+> ##D ## not part of the actual MT pipelines, but separate call
+> ##D # 'comp' is a string that contains the name of a comparison (here both SEs have the same comparison on two datasets)
+> ##D gg <- mt_plots_compare2stats(
+> ##D   D1 = D1, stat1 = comp, filter1 = p.adj<0.1,
+> ##D   D2 = D2, stat2 = comp, filter2 = p.adj<0.1,
+> ##D   filterop = "OR", return.plot.only=T)
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_compare2stats", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_equalizer")
+> ### * mt_plots_equalizer
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_equalizer
+> ### Title: 'Equalizer' plots.
+> ### Aliases: mt_plots_equalizer
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # super-pathway / sub-pathway equalizer
+> ##D # sub-pathway analysis must already be stored in D_sub, and this is part of the super-pathway pipeline, with a result already in 'comp'
+> ##D  ... %>%
+> ##D  mt_plots_equalizer(
+> ##D   comp1='comp',
+> ##D   D2=D_sub,
+> ##D   comp2=='comp',
+> ##D   legend.fine="sub pathway",
+> ##D   legend.coarse='super pathway',
+> ##D   vertline.fine = p.adj < 0.1,
+> ##D   vertline.coarse = p.adj < 0.1) %>%
+> ##D ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_equalizer", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_net")
+> ### * mt_plots_net
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_net
+> ### Title: mt_plots_net
+> ### Aliases: mt_plots_net
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D #' # in the context of a SE pipeline
+> ##D ... %>% mt_plots_net(statsname = "xxx") %>% ...    # standard call
+> ##D ... %>% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's", save.html="Network.html", height=800) %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_net", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_pathview")
+> ### * mt_plots_pathview
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_pathview
+> ### Title: mt_plots_pathview
+> ### Aliases: mt_plots_pathview
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # plot all pathways with at least one significant metabolite from the statistical comparison "comp" in them
+> ##D mt_plots_pathview(D = D,
+> ##D                   met.id="KEGG_mapped",
+> ##D                   statname = "comp",
+> ##D                   color.scale = -sign(fc)*log10(p.adj),
+> ##D                   color.range = -log10(0.01),
+> ##D                   metab.filter = p.adj < 0.05,
+> ##D                   show.only.filtered = TRUE,
+> ##D                   path.database = "./Pathview_database",
+> ##D                   path.output = "./results/pathview",
+> ##D                   same.layer = F,
+> ##D                   add.pwname.suffix = T
+> ##D                   ) %>%
+> ##D                   ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_pathview", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_pheatmap")
+> ### * mt_plots_pheatmap
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_pheatmap
+> ### Title: Heatmap plot by pheatmap::pheatmap
+> ### Aliases: mt_plots_pheatmap
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D D %>%
+> ##D mt_plots_pheatmap(annotation_row = c("SUPER_PATHWAY", "PLATFORM", "RI"),
+> ##D                   annotation_col = c("GROUP_DESC","BATCH_MOCK","gender"),
+> ##D                   fD = function(x) scale(exp(scale(x))),
+> ##D                   clustering_distance_cols =  "correlation",
+> ##D                   clustering_distance_rows = "minkowski")
+> ##D  
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_pheatmap", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_pvalhist")
+> ### * mt_plots_pvalhist
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_pvalhist
+> ### Title: Generate p-value histogram.
+> ### Aliases: mt_plots_pvalhist
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ... %>% mt_plots_pvalhist() %>% ...                  # for all
+> ##D ... %>% mt_plots_pvalhist(statnames='comp') %>% ...  # for one
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_pvalhist", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_pvalqq")
+> ### * mt_plots_pvalqq
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_pvalqq
+> ### Title: Generate p-value qq plot
+> ### Aliases: mt_plots_pvalqq
+> 
+> ### ** Examples
+> 
+> ## Not run: ... %>% mt_plots_pvalhist(statnames='comp') %>% ...  # for one
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_pvalqq", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_qc_dilutionplot")
+> ### * mt_plots_qc_dilutionplot
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_qc_dilutionplot
+> ### Title: Correlate variable with dilution factors from quotient
+> ###   normalization.
+> ### Aliases: mt_plots_qc_dilutionplot
+> 
+> ### ** Examples
+> 
+> ## Not run: %>% mt_plots_qc_dilutionplot(comp="group") %>% # compare with 'group' sample annotation
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_qc_dilutionplot", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_qc_missingness")
+> ### * mt_plots_qc_missingness
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_qc_missingness
+> ### Title: Visualize missing value structure of dataset.
+> ### Aliases: mt_plots_qc_missingness
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D %>%  mt_plots_qc_missingness() %>% # without horizontal line
+> ##D %>%  mt_plots_qc_missingness(metMax=0.5) %>% # with horizontal line at 50%
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_qc_missingness", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_sampleboxplot")
+> ### * mt_plots_sampleboxplot
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_sampleboxplot
+> ### Title: Boxplot of samples.
+> ### Aliases: mt_plots_sampleboxplot
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ## sample boxplot, color by colData 'group' variable, with specific title, on log scale,
+> ##D ... %>% mt_plots_sampleboxplot(color=group, plottitle='after quotient normalization', logged=T) %>% ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_sampleboxplot", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_scatter")
+> ### * mt_plots_scatter
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_scatter
+> ### Title: Scatter plots
+> ### Aliases: mt_plots_scatter
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # scatter plots as overview of results with a result already in 'comp'
+> ##D # color by "age" variable in colData
+> ##D mt_plots_boxplot(x                  = age,
+> ##D                  statname           = "comp",
+> ##D                  correct_confounder = ~BATCH_MOCK,
+> ##D                  metab_filter       = p.value<0.01,
+> ##D                  metab_sort         = p.value,
+> ##D                  annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
+> ##D                  rows               = 2,
+> ##D                  cols               = 2) %>%
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_scatter", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_plots_volcano")
+> ### * mt_plots_volcano
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_plots_volcano
+> ### Title: mt_plots_volcano
+> ### Aliases: mt_plots_volcano
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # Volcano plot as overview of results with a result already in 'comp'
+> ##D ... %>%
+> ##D mt_plots_volcano(statname     = "comp",
+> ##D  metab_filter = p.adj < 0.1,
+> ##D  colour       = p.value < 0.05) %>%
+> ##D  ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_plots_volcano", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_post_addFC")
+> ### * mt_post_addFC
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_post_addFC
+> ### Title: Compute fold-change
+> ### Aliases: mt_post_addFC
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # add fold-changes to the result table of the statistical comparison called "comparison1", after correcting for variable "age"
+> ##D ... %>%
+> ##D  mt_post_addFC(stat_name="comparison1", correct_confounder=age) %>% ...
+> ##D  
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_post_addFC", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_post_multTest")
+> ### * mt_post_multTest
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_post_multTest
+> ### Title: Multiple testing correction
+> ### Aliases: mt_post_multTest
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # correct the statistical comparison called "Li's" using Benjamini-Hochberg
+> ##D ... %>%
+> ##D  mt_post_multTest(stat_name="Li's", method="BH") %>% ...
+> ##D  
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_post_multTest", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_post_pgain")
+> ### * mt_post_pgain
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_post_pgain
+> ### Title: Compute p-gain from metabolite ratio test
+> ### Aliases: mt_post_pgain
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # add p-gains to the result table of the statistical comparison called "comparison1"
+> ##D ... %>%
+> ##D  mt_post_pgain(stat_name="comparison1") %>% ...
+> ##D  
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_post_pgain", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_batch_COMBAT")
+> ### * mt_pre_batch_COMBAT
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_batch_COMBAT
+> ### Title: COMBAT batch correction.
+> ### Aliases: mt_pre_batch_COMBAT
+> 
+> ### ** Examples
+> 
+> ## Not run: ... %>% mt_pre_batch_COMBAT(batches="BATCH") %>% ...
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_batch_COMBAT", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_batch_median")
+> ### * mt_pre_batch_median
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_batch_median
+> ### Title: Median batch correction.
+> ### Aliases: mt_pre_batch_median
+> 
+> ### ** Examples
+> 
+> ## Not run: ... %>% mt_pre_batch_median(batches="BATCH") %>% ...
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_batch_median", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_confounding_correction")
+> ### * mt_pre_confounding_correction
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_confounding_correction
+> ### Title: Confounding correction
+> ### Aliases: mt_pre_confounding_correction
+> 
+> ### ** Examples
+> 
+> 
+>  ## Not run: 
+> ##D # not run
+> ##D  #... %>% mt_pre_confounding_correction( formula = ~batch + age, strata = "RUN_DAY" )
+> ##D  
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_confounding_correction", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_confounding_correction_stepwise_aic")
+> ### * mt_pre_confounding_correction_stepwise_aic
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_confounding_correction_stepwise_aic
+> ### Title: Confounding correction using stepwise AIC
+> ### Aliases: mt_pre_confounding_correction_stepwise_aic
+> 
+> ### ** Examples
+> 
+>  ## Not run: 
+> ##D #... %>% mt_pre_confounding_correction_stepwise_aic(id_col = "RID", med_file = meds,
+> ##D                          to_remove = c( "Med.Anticholinesterases", "Med.NMDAAntag"), n_cores = 10)
+> ##D  
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_confounding_correction_stepwise_aic", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_filtermiss")
+> ### * mt_pre_filtermiss
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_filtermiss
+> ### Title: Filter by missingness.
+> ### Aliases: mt_pre_filtermiss
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # first remove samples with >10% missingness, then metabolites with >20% missingness
+> ##D ... %>%
+> ##D   mt_pre_filtermiss(sample_max=0.1) %>%
+> ##D   mt_pre_filtermiss(met_max=0.2) %>%
+> ##D ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_filtermiss", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_impute_knn")
+> ### * mt_pre_impute_knn
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_impute_knn
+> ### Title: Impute using kNN method.
+> ### Aliases: mt_pre_impute_knn
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # in the context of a SE pipeline
+> ##D ... %>% mt_pre_impute_knn() %>% ...    # standard call
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_impute_knn", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_impute_knn_multicore")
+> ### * mt_pre_impute_knn_multicore
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_impute_knn_multicore
+> ### Title: Impute using kNN method with multi-core functionality.
+> ### Aliases: mt_pre_impute_knn_multicore
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # in the context of a SE pipeline
+> ##D ... %>% mt_pre_impute_knn_multicore() %>% ...    # standard call
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_impute_knn_multicore", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_norm_external")
+> ### * mt_pre_norm_external
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_norm_external
+> ### Title: Normalize by an external sample annotation
+> ### Aliases: mt_pre_norm_external
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D #' # in the context of a SE pipeline
+> ##D ... %>% mt_pre_norm_quot(field='DNA') %>% ...    # normalize by values in field DNA
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_norm_external", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_norm_quot")
+> ### * mt_pre_norm_quot
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_norm_quot
+> ### Title: Quotient normalization
+> ### Aliases: mt_pre_norm_quot
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D #' # in the context of a SE pipeline
+> ##D ... %>% mt_pre_norm_quot() %>% ...    # standard call
+> ##D ... %>% mt_pre_norm_quot(ref_samples = GROUP=="ctrl") %>% ...    # use reference samples where 'GROUP' field in colData is 'ctrl'
+> ##D #' ... %>% mt_pre_norm_quot(met_max = 0.2) %>% ...    # use only metabolites with <= 20% missing values to compute the reference used for normalization
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_norm_quot", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_outlier")
+> ### * mt_pre_outlier
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_outlier
+> ### Title: Identifies sample outliers.
+> ### Aliases: mt_pre_outlier
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # first identify samples that have more than 50% univariate outliers, then identify multivariate outliers with a leverage >4m/n
+> ##D ... %>%
+> ##D   mt_pre_outlier(method="univariate", thresh=4, perc=0.5) %>%
+> ##D   mt_pre_outlier(method="leverage", thresh=4) %>%
+> ##D   mt_pre_outlier(method="mahalanobis", pval=0.01) %>%
+> ##D ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_outlier", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_outliercorrection")
+> ### * mt_pre_outliercorrection
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_outliercorrection
+> ### Title: Identifies single outliers in samples.
+> ### Aliases: mt_pre_outliercorrection
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ... %>%
+> ##D   mt_pre_outliercorrection(threshold=3, sample_num_correction=F) %>%
+> ##D ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_outliercorrection", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_trans_exp")
+> ### * mt_pre_trans_exp
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_trans_exp
+> ### Title: Exponentiate, base 2 by default.
+> ### Aliases: mt_pre_trans_exp
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # in the context of a SE pipeline
+> ##D ... %>% mt_pre_trans_exp() %>% ...    # standard call, base 2
+> ##D ... %>% mt_pre_trans_exp(base=10) %>% ...    # base 10
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_trans_exp", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_trans_log")
+> ### * mt_pre_trans_log
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_trans_log
+> ### Title: Log, base 2 by default.
+> ### Aliases: mt_pre_trans_log
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # in the context of a SE pipeline
+> ##D ... %>% mt_pre_trans_log() %>% ...    # standard call, base 2
+> ##D ... %>% mt_pre_trans_log(base=10) %>% ...    # base 10
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_trans_log", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_trans_relative")
+> ### * mt_pre_trans_relative
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_trans_relative
+> ### Title: Scale each sample relative to the mean of a given group of
+> ###   samples.
+> ### Aliases: mt_pre_trans_relative
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # normalize to control group, data not logged
+> ##D ... %>% mt_pre_trans_relative(ref_samples = GROUP=="ctrl", is_logged=F) %>% ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_trans_relative", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_trans_scale")
+> ### * mt_pre_trans_scale
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_trans_scale
+> ### Title: Scale data, mean 0 / sd 1 by default.
+> ### Aliases: mt_pre_trans_scale
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # in the context of a SE pipeline
+> ##D ... %>% mt_pre_trans_scale() %>% ...    # standard call, center and scale
+> ##D ... %>% mt_pre_trans_scale(scale=F) %>% ...    # only mean centering
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_trans_scale", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_pre_zeroToNA")
+> ### * mt_pre_zeroToNA
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_pre_zeroToNA
+> ### Title: Set zeros in dataset to NA.
+> ### Aliases: mt_pre_zeroToNA
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # in the context of a SE pipeline
+> ##D ... %>% mt_pre_zeroToNA() %>% ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_pre_zeroToNA", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_reporting_heading")
+> ### * mt_reporting_heading
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_reporting_heading
+> ### Title: Store heading that will be added to report later.
+> ### Aliases: mt_reporting_heading
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ... %>%
+> ##D # add first and second level of heading
+> ##D mt_reporting_heading("Preprocessing") %>%
+> ##D mt_reporting_heading("Part 1", lvl=2) %>%
+> ##D ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_reporting_heading", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_reporting_text")
+> ### * mt_reporting_text
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_reporting_text
+> ### Title: Store heading that will be added to report later.
+> ### Aliases: mt_reporting_text
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ... %>%
+> ##D # add first and second level of heading
+> ##D mt_reporting_text("Preprocessing") %>%
+> ##D mt_reporting_text("Data were first filtered for missing values, then normalized and log-transformed") %>%
+> ##D ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_reporting_text", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_stats_multiv_net_GeneNet")
+> ### * mt_stats_multiv_net_GeneNet
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_stats_multiv_net_GeneNet
+> ### Title: Computes partial correlation matrix using the GeneNet estimator.
+> ### Aliases: mt_stats_multiv_net_GeneNet
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ... %>%
+> ##D   mt_stats_multiv_net_GeneNet(stat_name ="pcor") %>%
+> ##D ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_stats_multiv_net_GeneNet", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_stats_pathway_enrichment")
+> ### * mt_stats_pathway_enrichment
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_stats_pathway_enrichment
+> ### Title: Pathway enrichment script using statistical analysis results
+> ###   from metabotools pipeline.
+> ### Aliases: mt_stats_pathway_enrichment
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D %>% mt_stats_pathway_enrichment("kegg_db",
+> ##D                                 grouping_var = "Group",
+> ##D                                 control_grp_name = "Vehicle",
+> ##D                                 case_grp_name = c("treatment2", "treatment1") %>%
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_stats_pathway_enrichment", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_stats_pathway_enrichment_with_differential_analysis")
+> ### * mt_stats_pathway_enrichment_with_differential_analysis
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_stats_pathway_enrichment_with_differential_analysis
+> ### Title: Pathway enrichment using different methods.
+> ### Aliases: mt_stats_pathway_enrichment_with_differential_analysis
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D %>% mt_stats_pathway_enrichment("kegg_db",
+> ##D                                 grp_col = "Group",
+> ##D                                 ctrl_grp = "Vehicle",
+> ##D                                 case_grp = c("treatment2", "treatment1") %>%
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_stats_pathway_enrichment_with_differential_analysis", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_stats_univ_lm")
+> ### * mt_stats_univ_lm
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_stats_univ_lm
+> ### Title: Univariate GLMs.
+> ### Aliases: mt_stats_univ_lm
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # run lm with no confounders, "Group" as outcome
+> ##D # filter to groups "Li_2" and "Li_5"
+> ##D # name the comparison "Li's"
+> ##D ... %>%
+> ##D  mt_stats_univ_lm(
+> ##D    formula      = ~ Group,
+> ##D    sample_filter = (Group %in% c("Li_2","Li_5")),
+> ##D    stat_name         = "Li's"
+> ##D  ) %>% ...
+> ##D  
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_stats_univ_lm", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_stats_univ_missingness")
+> ### * mt_stats_univ_missingness
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_stats_univ_missingness
+> ### Title: Perform missingness significance analysis.
+> ### Aliases: mt_stats_univ_missingness
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # run on sample field 'Group', name output stats object 'miss'
+> ##D ... %>% mt_stats_univ_missingness(comp_col = 'Group', stat_name='miss') %>% ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_stats_univ_missingness", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("mt_stats_univ_tau")
+> ### * mt_stats_univ_tau
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: mt_stats_univ_tau
+> ### Title: Computes Kendall's rank correlation. If present, NAs will be
+> ###   omitted.
+> ### Aliases: mt_stats_univ_tau
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ... %>%
+> ##D   mt_stats_univ_tau(var = "Stage", sample_filter = (GROUP %in% "Tumor"), name = "tau") %>%
+> ##D ...
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("mt_stats_univ_tau", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  25.654 0.419 26.343 0.004 0.006 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

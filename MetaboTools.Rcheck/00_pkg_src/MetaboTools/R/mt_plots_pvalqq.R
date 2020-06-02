@@ -79,8 +79,8 @@ mti_gg_qqplot <- function(ps, ci = 0.95) {
     clower   = -log10(qbeta(p = (1 - ci) / 2, shape1 = 1:n, shape2 = n:1)),
     cupper   = -log10(qbeta(p = (1 + ci) / 2, shape1 = 1:n, shape2 = n:1))
   )
-  log10Pe <- expression(paste("Expected -log"[10], grDevices::plain(P)))
-  log10Po <- expression(paste("Observed -log"[10], grDevices::plain(P)))
+  log10Pe <- expression(paste("Expected -log"[10], plain(P)))
+  log10Po <- expression(paste("Observed -log"[10], plain(P)))
   ggplot(df) +
     geom_ribbon(
       mapping = aes(x = expected, ymin = clower, ymax = cupper),

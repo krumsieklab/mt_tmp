@@ -8,12 +8,12 @@
 #' @param out_col A new column name for D to output pathway information to
 #' @param file Path where the pathway annotation flat file is stored
 #' @param sheet Sheet name or number or number to read in flat file
-#' @param met_ID_col Flat file colname: this column should contain metabolite IDs
-#' @param pw_ID_col Flat file colname: this column should contain pathway IDs
-#' @param pw_name_col Flat file colname: this column should contain pathway names
+#' @param met_ID Flat file colname: this column should contain metabolite IDs
+#' @param pw_ID Flat file colname: this column should contain pathway IDs
+#' @param pw_name Flat file colname: this column should contain pathway names
 #' @param export_raw_db OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 #'
-#' @return column out_col in SE containing pathway annotation for metabolites
+#' @return rowData: new pathway annotation for metabolites
 #' @return $pathways: a dataframe of pathway information
 #'
 #' @examples
@@ -22,9 +22,9 @@
 #'       mt_anno_pathways_from_file(in_col = "HMDb_ID",
 #'                                  out_col = "janpw",
 #'                                  file = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
-#'                                  met_ID_col = "HMDB_id",
-#'                                  pw_ID_col = "SMP",
-#'                                  pw_name_col = "pathway_name") %>%
+#'                                  met_ID = "HMDB_id",
+#'                                  pw_ID = "SMP",
+#'                                  pw_name = "pathway_name") %>%
 #' ...}
 #'
 #' @author Parviz Gomari
@@ -42,9 +42,9 @@ mt_anno_pathways_from_file <- function(
   out_col,            # a new column name for D to output pathway information to
   file,           # path where the pathway annotation flat file is stored
   sheet,              # sheet name or number or number to read in flat file
-  met_ID_col,         # flat file colname: this column should contain metabolite IDs
-  pw_ID_col,          # flat file colname: this column should contain pathway IDs
-  pw_name_col,        # flat file colname: this column should contain pathway names
+  met_ID,         # flat file colname: this column should contain metabolite IDs
+  pw_ID,          # flat file colname: this column should contain pathway IDs
+  pw_name,        # flat file colname: this column should contain pathway names
   export_raw_db       # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 ) {
 
@@ -65,7 +65,7 @@ mt_anno_pathways_from_file <- function(
   # check file colnames
   pwdb <- readxl::read_excel(path=file, sheet=sheet)
 
-  flatfile_cols <- c(met_ID_col, pw_ID_col, pw_name_col)
+  flatfile_cols <- c(met_ID, pw_ID, pw_name)
   valid_names <- flatfile_cols %in% names(pwdb)
   if (!all(valid_names)) {
     invalid_names <- flatfile_cols[!valid_names]
@@ -75,9 +75,9 @@ mt_anno_pathways_from_file <- function(
   }
 
   pwdb %<>%
-    dplyr::select(met_ID = !!met_ID_col,
-                  ID = !!pw_ID_col,
-                  pathway_name = !!pw_name_col)
+    dplyr::select(met_ID = !!met_ID,
+                  ID = !!pw_ID,
+                  pathway_name = !!pw_name)
 
   # create a dataframe that enables the mapping between pathway
   # names and IDs. Included also are num_total, num_measured,

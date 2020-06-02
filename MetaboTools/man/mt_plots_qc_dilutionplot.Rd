@@ -26,7 +26,8 @@ $result: plot, comparison with dilution factors
 }
 }
 \examples{
-\%>\% mt_plots_qc_dilutionplot(comp="group") \%>\% # compare with 'group' sample annotation
+\dontrun{\%>\% mt_plots_qc_dilutionplot(comp="group") \%>\% # compare with 'group' sample annotation
+}
 
 }
 \author{

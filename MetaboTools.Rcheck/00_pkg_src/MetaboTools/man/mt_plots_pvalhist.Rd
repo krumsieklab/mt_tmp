@@ -18,8 +18,9 @@ $result: plot, p-value histogram
 Either for a given list of statistical results, or all.
 }
 \examples{
-... \%>\% mt_plots_pvalhist() \%>\% ...                  # for all
+\dontrun{... \%>\% mt_plots_pvalhist() \%>\% ...                  # for all
 ... \%>\% mt_plots_pvalhist(statnames='comp') \%>\% ...  # for one
+}
 
 }
 \author{

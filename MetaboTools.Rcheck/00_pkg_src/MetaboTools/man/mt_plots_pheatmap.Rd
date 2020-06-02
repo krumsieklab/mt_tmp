@@ -86,10 +86,8 @@ mt_plots_pheatmap(
  @return object \code{SummarizedExperiment}, see \code{metabotools} conventions for the details}
 }
 \description{
-Heatmap plot by pheatmap::pheatmap
-}
-\note{
 all \code{pheatmap::pheatmap} arguments can be passed
+\code{\href{https://github.com/raivokolde/pheatmap}{GitHub}}
 }
 \examples{
 \dontrun{D \%>\%
@@ -100,9 +98,6 @@ mt_plots_pheatmap(annotation_row = c("SUPER_PATHWAY", "PLATFORM", "RI"),
                   clustering_distance_rows = "minkowski")
  }
 
-}
-\references{
-\code{\link{https://github.com/raivokolde/pheatmap}}
 }
 \author{
 mubu

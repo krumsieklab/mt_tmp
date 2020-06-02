@@ -21,6 +21,11 @@ mt_files_write_stats    Export statistical results from pipeline into
                         Excel file.
 mt_files_write_xls      Outputs assay, colData and rowData into an
                         Excel file.
+mt_flag_logged          Actively flags data as logged.
+mt_logging_datasetinfo
+                        Output information about dataset to log.
+mt_logging_tic          Timing functionality.
+mt_logging_toc          Timing functionality.
 mt_modify_aggPW         Generate aggregated pathway values.
 mt_modify_applytoanno   Apply function to metabolite or sample
                         annotation column.
@@ -80,6 +85,12 @@ mt_pre_trans_relative   Scale each sample relative to the mean of a
                         given group of samples.
 mt_pre_trans_scale      Scale data, mean 0 / sd 1 by default.
 mt_pre_zeroToNA         Set zeros in dataset to NA.
+mt_reporting_heading    Store heading that will be added to report
+                        later.
+mt_reporting_html       Generates markdown-based HTML output from
+                        SummarizedExperiment
+mt_reporting_text       Store heading that will be added to report
+                        later.
 mt_stats_multiv_net_GeneNet
                         Computes partial correlation matrix using the
                         GeneNet estimator.

@@ -35,9 +35,10 @@ $result: network ggplot + visnetwork plot
 Creates a network object
 }
 \examples{
-#' # in the context of a SE pipeline
+\dontrun{#' # in the context of a SE pipeline
 ... \%>\% mt_plots_net(statsname = "xxx") \%>\% ...    # standard call
 ... \%>\% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's", save.html="Network.html", height=800) \%>\% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
+}
 
 }
 \author{

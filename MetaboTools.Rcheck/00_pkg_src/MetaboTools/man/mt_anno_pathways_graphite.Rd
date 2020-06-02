@@ -10,7 +10,7 @@ mt_anno_pathways_graphite(
   out_col,
   pwdb_species,
   pwdb_name,
-  n_cpus = 2,
+  n_cores = 2,
   export_raw_db
 )
 }
@@ -25,12 +25,12 @@ mt_anno_pathways_graphite(
 
 \item{pwdb_name}{The name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species}
 
-\item{n_cpus}{Number of cores to use for parallelizaion (used in convertIdentifiers)}
+\item{n_cores}{Number of cores to use for parallelizaion (used in convertIdentifiers)}
 
 \item{export_raw_db}{# OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.}
 }
 \value{
-column out_col in SE containing pathway annotation for metabolites
+rowData: new pathway annotation for metabolites
 
 $pathways: a dataframe of pathway information
 }
@@ -45,7 +45,7 @@ data structure using the graphite package.
                     out_col = "humancyc_db",
                     pwdb_species = "hsapiens",
                     pwdb_name = "humancyc",
-                    n_cpus = 5) \%>\%
+                    n_cores = 5) \%>\%
 ...}
 
 }

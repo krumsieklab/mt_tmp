@@ -28,8 +28,9 @@ Creates two plots:
 2. sorted missing value % plot
 }
 \examples{
-\%>\%  mt_plots_qc_missingness() \%>\% # without horizontal line
+\dontrun{\%>\%  mt_plots_qc_missingness() \%>\% # without horizontal line
 \%>\%  mt_plots_qc_missingness(metMax=0.5) \%>\% # with horizontal line at 50\%
+}
 
 }
 \author{

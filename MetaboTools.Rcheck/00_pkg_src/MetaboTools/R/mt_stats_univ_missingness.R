@@ -10,8 +10,9 @@
 #' @return $result: statistics object
 #'
 #' @examples
-#' # run on sample field 'Group', name output stats object 'miss'
+#' \dontrun{# run on sample field 'Group', name output stats object 'miss'
 #' ... %>% mt_stats_univ_missingness(comp_col = 'Group', stat_name='miss') %>% ...
+#' }
 #'
 #' @author JK
 #'
@@ -19,6 +20,7 @@
 #' @import SummarizedExperiment
 #'
 #' @export
+
 mt_stats_univ_missingness <- function(
   D,      # SummarizedExperiment input
   comp_col,   # sample annotation (colData) column to compare against

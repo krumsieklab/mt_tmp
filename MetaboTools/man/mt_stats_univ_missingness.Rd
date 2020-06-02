@@ -22,8 +22,9 @@ $result: statistics object
 This function will determine if NAs significantly accumulate in one of the sample groups. It is recommended that this function is run without prior missing value filtering.
 }
 \examples{
-# run on sample field 'Group', name output stats object 'miss'
+\dontrun{# run on sample field 'Group', name output stats object 'miss'
 ... \%>\% mt_stats_univ_missingness(comp_col = 'Group', stat_name='miss') \%>\% ...
+}
 
 }
 \author{

@@ -8,7 +8,7 @@
 #' @param correct_confounder confounders to adjust for before plotting, formula notation
 #' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
 #' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
-#' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}",
+#' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}"
 #' @param text.size text size of the annotations
 #' @param jitter whether to add jitter to boxplot,  default T
 #' @param rows number rows of boxplots in $result
@@ -32,15 +32,16 @@
 #'                  annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
 #'                  rows               = 2,
 #'                  cols               = 2) %>%
-#'                  ...}
+#'                  ...
+#'  }
 #'
-#'  @author Jonas Zierer
+#' @author Jonas Zierer
 #'
-#'  @import ggplot2
-#'  @importFrom magrittr %>% %<>%
-#'  @import SummarizedExperiment
+#' @import ggplot2
+#' @importFrom magrittr %>% %<>%
+#' @import SummarizedExperiment
 #'
-#'  @export
+#' @export
 
 mt_plots_boxplot <- function(D,
                              x = "x",

@@ -37,6 +37,10 @@ if OR -> three colors, a third one where only one stat matches the criterion}
 
 \item{plot_title}{optional param for plot title}
 
+\item{label_column}{optional argument on which column in the statistical results df to use for labeling points}
+
+\item{point_size}{size of the points on the ggplot}
+
 \item{return.plot.only}{return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.}
 }
 \value{

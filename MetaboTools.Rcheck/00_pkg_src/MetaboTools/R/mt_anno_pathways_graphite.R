@@ -8,10 +8,10 @@
 #' @param out_col A new column name for D to output pathway information to
 #' @param pwdb_species Name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species
 #' @param pwdb_name The name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species
-#' @param n_cpus Number of cores to use for parallelizaion (used in convertIdentifiers)
+#' @param n_cores Number of cores to use for parallelizaion (used in convertIdentifiers)
 #' @param export_raw_db # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 #'
-#' @return column out_col in SE containing pathway annotation for metabolites
+#' @return rowData: new pathway annotation for metabolites
 #' @return $pathways: a dataframe of pathway information
 #'
 #' @examples
@@ -21,7 +21,7 @@
 #'                     out_col = "humancyc_db",
 #'                     pwdb_species = "hsapiens",
 #'                     pwdb_name = "humancyc",
-#'                     n_cpus = 5) %>%
+#'                     n_cores = 5) %>%
 #' ...}
 #'
 #' @author Parviz Gomari
@@ -38,7 +38,7 @@ mt_anno_pathways_graphite <- function(
   out_col,       # name of the column to output pathway information to in D
   pwdb_species,    # name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species
   pwdb_name,       # the name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species
-  n_cpus = 2,    # number of cores to use for parallelizaion (used in convertIdentifiers)
+  n_cores = 2,    # number of cores to use for parallelizaion (used in convertIdentifiers)
   export_raw_db  # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 ) {
 
@@ -55,7 +55,7 @@ mt_anno_pathways_graphite <- function(
   pwdb <- graphite::pathways(species = pwdb_species, database = pwdb_name)
 
   # use given number of cores, this should be part of input
-  options(Ncpus = n_cpus)
+  options(Ncpus = n_cores)
 
   # convert from ChEBI IDs (given by graphite) to our labelings ID
   mti_logstatus(glue::glue("converting graphite ChEBI IDs to {in_col} IDs"))
@@ -78,7 +78,7 @@ mt_anno_pathways_graphite <- function(
     names(pwdb),
     SIMPLIFY = F,
     mc.cleanup = T,
-    mc.cores = n_cpus)
+    mc.cores = n_cores)
 
   # convert the pathway list into a dataframe
   pwdb <-

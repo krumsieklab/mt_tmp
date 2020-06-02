@@ -56,14 +56,14 @@ mt_anno_metabolites_HMDB2KEGG <- function(D,
 
   # join with automatic metabolite mapping
   newdf <- df %>%
-    dplyr::left_join(MetaboliteMapping[,c("secondary_accessions","kegg_id")], by = c("MappingIDs" = "secondary_accessions")) %>%
-    dplyr::left_join(MetaboliteMapping[,c("accession","kegg_id")], by=c("MappingIDs" = "accession")) %>%
+    dplyr::left_join(MetaboliteMapping[,c("secondary_accessions","out_col")], by = c("MappingIDs" = "secondary_accessions")) %>%
+    dplyr::left_join(MetaboliteMapping[,c("accession","out_col")], by=c("MappingIDs" = "accession")) %>%
     dplyr::distinct()
   # merge KEGG identifiers
-  newdf[[out_col]] <- newdf$kegg_id.x
-  newdf[[out_col]] [is.na(newdf[[out_col]])] <- newdf$kegg_id.y[is.na(newdf[[out_col]])]
+  newdf[[out_col]] <- newdf$out_col.x
+  newdf[[out_col]] [is.na(newdf[[out_col]])] <- newdf$out_col.y[is.na(newdf[[out_col]])]
   # drop redundant columns
-  newdf <- subset(newdf, select=-c(kegg_id.x,kegg_id.y))
+  newdf <- subset(newdf, select=-c(out_col.x,out_col.y))
 
   # go back to original name
   # rename in_col for left_join use

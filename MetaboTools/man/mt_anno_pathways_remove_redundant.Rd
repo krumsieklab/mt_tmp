@@ -4,17 +4,17 @@
 \alias{mt_anno_pathways_remove_redundant}
 \title{Remove redundant pathway annotations.}
 \usage{
-mt_anno_pathways_remove_redundant(D, met_ID_col, pw_ID_col)
+mt_anno_pathways_remove_redundant(D, met_ID, pw_ID)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{met_ID_col}{Column containing metabolite IDs}
+\item{met_ID}{Column containing metabolite IDs}
 
-\item{pw_ID_col}{Column containing pathways IDs}
+\item{pw_ID}{Column containing pathways IDs}
 }
 \value{
-redundant pathway annotation from SE pw_ID_col column will be filtered.
+rowData: redundant pathway annotation from SE pw_ID column will be filtered.
 }
 \description{
 Remove identical pathways from an existing SummarizedExperiment
@@ -25,7 +25,7 @@ data structure that has a column of pathway annotations.
 \dontrun{... \%>\%
   mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db",
   pwdb_name = "SMP", db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) \%>\%
-  mt_anno_pathways_remove_redundant(met_ID_col = "HMDb_ID", pw_ID_col = "smp_db") \%>\%
+  mt_anno_pathways_remove_redundant(met_ID = "HMDb_ID", pw_ID = "smp_db") \%>\%
 ...}
 
 }

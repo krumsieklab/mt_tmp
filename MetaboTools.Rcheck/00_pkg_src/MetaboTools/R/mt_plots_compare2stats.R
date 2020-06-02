@@ -11,6 +11,8 @@
 #' @param filterop  if AND -> two colors, one for those where both stats match the criterion, and one where they don't
 #'                  if OR -> three colors, a third one where only one stat matches the criterion
 #' @param plot_title optional param for plot title
+#' @param   label_column optional argument on which column in the statistical results df to use for labeling points
+#' @param point_size size of the points on the ggplot
 #' @param return.plot.only return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.
 #'
 #' @return $result: plot, p-value histogram
@@ -85,10 +87,8 @@ mt_plots_compare2stats <- function(
   s1t$filtered1 <- s1t$var %in% (s1t %>% dplyr::filter(!!filter1q))$var
   s2t$dp2 <- -log10(s2t$p.value) * sign(s2t$statistic)
   s2t$filtered2 <- s2t$var %in% (s2t %>% dplyr::filter(!!filter2q))$var
-  st <- data.table::merge(s1t, s2t, by='var')
-
-
-  st <- data.table::merge(st, rowData(D1), by.x="var", by.y='row.names', all.x=T) # add names
+  st <- merge(s1t, s2t, by='var')
+  st <- merge(st, rowData(D1), by.x="var", by.y='row.names', all.x=T) # add names
 
 
   # combine filters

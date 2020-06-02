@@ -32,13 +32,7 @@
 * checking whether the namespace can be loaded with stated dependencies ... OK
 * checking whether the namespace can be unloaded cleanly ... OK
 * checking loading without being on the library search path ... OK
-* checking dependencies in R code ... WARNING
-'::' or ':::' imports not declared from:
-  ‘broom’ ‘broom.mixed’ ‘dils’ ‘ggbeeswarm’ ‘ggforce’ ‘ggrepel’
-  ‘lmerTest’ ‘pathview’ ‘pheatmap’ ‘reshape2’ ‘scales’ ‘umap’ ‘uuid’
-  ‘visNetwork’
-Missing or unexported objects:
-  ‘data.table::merge’ ‘grDevices::plain’
+* checking dependencies in R code ... OK
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
@@ -71,9 +65,9 @@ mt_anno_metabolites_HMDB2KEGG: no visible global function definition
 mt_anno_metabolites_HMDB2KEGG: no visible binding for global variable
   ‘MetaboliteMapping’
 mt_anno_metabolites_HMDB2KEGG: no visible binding for global variable
-  ‘kegg_id.x’
+  ‘out_col.x’
 mt_anno_metabolites_HMDB2KEGG: no visible binding for global variable
-  ‘kegg_id.y’
+  ‘out_col.y’
 mt_anno_metabolites_HMDB2KEGG: no visible global function definition
   for ‘read.csv2’
 mt_anno_metabolites_HMDB2KEGG: no visible global function definition
@@ -103,8 +97,6 @@ mt_anno_pathways_HMDB: no visible global function definition for
   ‘mti_generate_result’
 mt_anno_pathways_from_file: no visible global function definition for
   ‘mti_logstatus’
-mt_anno_pathways_from_file: no visible binding for global variable
-  ‘met_ID’
 mt_anno_pathways_from_file: no visible binding for global variable ‘ID’
 mt_anno_pathways_from_file: no visible global function definition for
   ‘metadata’
@@ -135,10 +127,6 @@ mt_anno_pathways_graphite: no visible global function definition for
   ‘mti_generate_result’
 mt_anno_pathways_remove_redundant: no visible global function
   definition for ‘mti_logstatus’
-mt_anno_pathways_remove_redundant: no visible binding for global
-  variable ‘met_ID’
-mt_anno_pathways_remove_redundant: no visible binding for global
-  variable ‘pw_ID’
 mt_anno_pathways_remove_redundant: no visible binding for global
   variable ‘.’
 mt_anno_pathways_remove_redundant: no visible binding for global
@@ -240,6 +228,24 @@ mt_files_write_xls: no visible global function definition for
 mt_files_write_xls: no visible global function definition for
   ‘metadata’
 mt_files_write_xls: no visible global function definition for
+  ‘mti_generate_result’
+mt_flag_logged: no visible global function definition for ‘mti_funargs’
+mt_flag_logged: no visible global function definition for ‘metadata’
+mt_flag_logged: no visible global function definition for
+  ‘mti_generate_result’
+mt_logging_datasetinfo: no visible global function definition for
+  ‘mti_funargs’
+mt_logging_datasetinfo: no visible global function definition for
+  ‘metadata’
+mt_logging_datasetinfo: no visible global function definition for
+  ‘mti_generate_result’
+mt_logging_tic: no visible global function definition for ‘mti_funargs’
+mt_logging_tic: no visible global function definition for ‘metadata’
+mt_logging_tic: no visible global function definition for
+  ‘mti_generate_result’
+mt_logging_toc: no visible global function definition for ‘mti_funargs’
+mt_logging_toc: no visible global function definition for ‘metadata’
+mt_logging_toc: no visible global function definition for
   ‘mti_generate_result’
 mt_modify_aggPW : <anonymous>: no visible global function definition
   for ‘prcomp’
@@ -683,6 +689,20 @@ mt_pre_zeroToNA: no visible global function definition for
 mt_pre_zeroToNA: no visible global function definition for ‘metadata’
 mt_pre_zeroToNA: no visible global function definition for
   ‘mti_generate_result’
+mt_reporting_generateMD: no visible global function definition for
+  ‘metadata’
+mt_reporting_generateMD: no visible binding for global variable ‘.’
+mt_reporting_heading: no visible global function definition for
+  ‘mti_funargs’
+mt_reporting_heading: no visible global function definition for
+  ‘metadata’
+mt_reporting_heading: no visible global function definition for
+  ‘mti_generate_result’
+mt_reporting_text: no visible global function definition for
+  ‘mti_funargs’
+mt_reporting_text: no visible global function definition for ‘metadata’
+mt_reporting_text: no visible global function definition for
+  ‘mti_generate_result’
 mt_stats_multiv_net_GeneNet: no visible global function definition for
   ‘mti_format_se_samplewise’
 mt_stats_multiv_net_GeneNet: no visible global function definition for
@@ -884,23 +904,23 @@ Undefined global functions or variables:
   MetaboliteMapping X1 X2 accession all_IDs all_pathway_names anova
   as.formula clower complete.cases cor cor.test cov cupper
   data.makepath dest dp1 dp2 expected fc filter filtered fisher.test
-  fixorder formula gather kegg_id.x kegg_id.y lFormula left_join lm m1
-  m2 mahalanobis map_lgl mappingID mclapply mcmapply mean_case
-  mean_ctrl mean_fc median merge.primary met met_ID met_IDs met_id
-  metab metadata miss model.matrix mt_internal_imputeKNN_multicore
-  mti_add_leftright_gg mti_correctConfounder mti_dots_to_str
-  mti_format_se_samplewise mti_funargs mti_generate_result
-  mti_get_stat_by_name mti_imputeKNN mti_logmsg mti_logstatus
-  mti_logwarning mti_res_get_path mti_res_get_stats_entries mutate n
-  n_pw n_pw_sig n_total n_total_sig na.omit name name1 name2 new.name
-  ns_np ns_p observed one_of p.adj p.adjust p.val p.value p1 p_single_1
+  fixorder formula gather lFormula left_join lm m1 m2 mahalanobis
+  map_lgl mappingID mclapply mcmapply mean_case mean_ctrl mean_fc
+  median merge.primary met met_IDs met_id metab metadata miss
+  model.matrix mt_internal_imputeKNN_multicore mti_add_leftright_gg
+  mti_correctConfounder mti_dots_to_str mti_format_se_samplewise
+  mti_funargs mti_generate_result mti_get_stat_by_name mti_imputeKNN
+  mti_logmsg mti_logstatus mti_logwarning mti_res_get_path
+  mti_res_get_stats_entries mutate n n_pw n_pw_sig n_total n_total_sig
+  na.omit name name1 name2 new.name ns_np ns_p observed one_of
+  out_col.x out_col.y p.adj p.adjust p.val p.value p1 p_single_1
   p_single_2 p_value p_value_adjusted parseMetabolonFile parse_guess
-  pathway_ID pathway_name pcor pf ppoints prcomp pw pw_ID pw_idx pw_str
-  pwdb q.val qbeta qchisq qnorm read.csv2 read.table s_np s_p
-  sample_idx sd select sessionInfo setNames significant src stat.mean
-  stat_name str_c strength tail term terms tmp tmp_ID tmp_name
-  tmpsamplenum transmute umap ungroup update update.formula val_type
-  vals value var vertex.names x xend xx xxx y yend yy
+  pathway_ID pathway_name pcor pf ppoints prcomp pw pw_idx pw_str pwdb
+  q.val qbeta qchisq qnorm read.csv2 read.table s_np s_p sample_idx sd
+  select sessionInfo setNames significant src stat.mean stat_name str_c
+  strength tail term terms tmp tmp_ID tmp_name tmpsamplenum transmute
+  umap ungroup update update.formula val_type vals value var
+  vertex.names x xend xx xxx y yend yy
 Consider adding
   importFrom("stats", "anova", "as.formula", "complete.cases", "cor",
              "cor.test", "cov", "filter", "fisher.test", "formula", "lm",
@@ -910,7 +930,8 @@ Consider adding
              "update.formula", "var")
   importFrom("utils", "read.csv2", "read.table", "sessionInfo", "tail")
 to your NAMESPACE file.
-* checking Rd files ... OK
+* checking Rd files ... WARNING
+checkRd: (7) mt_plots_pheatmap.Rd:90: Tag \href is invalid in a \code block
 * checking Rd metadata ... OK
 * checking Rd line widths ... NOTE
 Rd file 'mt_anno_metabolites_HMDB2KEGG.Rd':
@@ -992,13 +1013,12 @@ Rd file 'mt_pre_outlier.Rd':
   \examples lines wider than 100 characters:
      # first identify samples that have more than 50% univariate outliers, then identify multivariate outliers with a leverage >4m/n
 
+Rd file 'mt_reporting_text.Rd':
+  \examples lines wider than 100 characters:
+     mt_reporting_text("Data were first filtered for missing values, then normalized and log-transformed") %>%
+
 These lines will be truncated in the PDF manual.
-* checking Rd cross-references ... WARNING
-Missing link or links in documentation object 'mt_plots_pheatmap.Rd':
-  ‘https://github.com/raivokolde/pheatmap’
-
-See section 'Cross-references' in the 'Writing R Extensions' manual.
-
+* checking Rd cross-references ... OK
 * checking for missing documentation entries ... OK
 * checking for code/documentation mismatches ... OK
 * checking Rd \usage sections ... WARNING
@@ -1006,7 +1026,7 @@ Undocumented arguments in documentation object 'mt_plots_boxplot'
   ‘annotation’
 
 Undocumented arguments in documentation object 'mt_plots_compare2stats'
-  ‘label_column’ ‘point_size’ ‘export.file’
+  ‘export.file’
 
 Undocumented arguments in documentation object 'mt_plots_pathview'
   ‘species’ ‘gene.annotpkg’ ‘min.nnodes’ ‘kegg.native’ ‘map.null’
@@ -1108,39 +1128,7 @@ The \usage entries must correspond to syntactically valid R code.
 See chapter ‘Writing R documentation files’ in the ‘Writing R
 Extensions’ manual.
 * checking Rd contents ... OK
-* checking for unstated dependencies in examples ... WARNING
-Warning: parse error in file 'lines':
-2: unexpected '@'
-593: 
-594:  @
-      ^
-* checking examples ... ERROR
-Running examples in ‘MetaboTools-Ex.R’ failed
-The error most likely occurred in:
-
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
-> ### Name: mt_plots_boxplot
-> ### Title: Boxplots
-> ### Aliases: mt_plots_boxplot
-> 
-> ### ** Examples
-> 
-> ## Not run: 
-> ##D # boxplots as overview of results with a result already in 'comp'
-> ##D # color by "Group" variable in colData
-> ##D mt_plots_boxplot(x                  = Group,
-> ##D                  statname           = "comp",
-> ##D                  correct_confounder = ~BATCH_MOCK,
-> ##D                  metab_filter       = p.value<0.01,
-> ##D                  metab_sort         = p.value,
-> ##D                  annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
-> ##D                  rows               = 2,
-> ##D                  cols               = 2) %>%
-> ##D                  ...
-> ## End(Not run)
-> 
->  @author Jonas Zierer
-Error: unexpected '@' in " @"
-Execution halted
+* checking for unstated dependencies in examples ... OK
+* checking examples ... OK
 * DONE
-Status: 1 ERROR, 4 WARNINGs, 2 NOTEs
+Status: 2 WARNINGs, 2 NOTEs

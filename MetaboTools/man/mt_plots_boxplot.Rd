@@ -71,13 +71,10 @@ mt_plots_boxplot(x                  = Group,
                  annotation         = "{sprintf('P-value: \%.1e', p.value)}\nStatistic: {sprintf('\%.2f', statistic)}",
                  rows               = 2,
                  cols               = 2) \%>\%
-                 ...}
+                 ...
+ }
 
- @author Jonas Zierer
-
- @import ggplot2
- @importFrom magrittr \%>\% \%<>\%
- @import SummarizedExperiment
-
- @export
+}
+\author{
+Jonas Zierer
 }

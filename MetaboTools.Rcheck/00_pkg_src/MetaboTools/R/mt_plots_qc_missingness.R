@@ -10,8 +10,9 @@
 #' @return $result: plot, two plots
 #'
 #' @examples
-#' %>%  mt_plots_qc_missingness() %>% # without horizontal line
+#' \dontrun{%>%  mt_plots_qc_missingness() %>% # without horizontal line
 #' %>%  mt_plots_qc_missingness(metMax=0.5) %>% # with horizontal line at 50%
+#' }
 #'
 #' @author JK
 #'

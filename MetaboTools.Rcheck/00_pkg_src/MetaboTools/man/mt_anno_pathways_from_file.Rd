@@ -10,9 +10,9 @@ mt_anno_pathways_from_file(
   out_col,
   file,
   sheet,
-  met_ID_col,
-  pw_ID_col,
-  pw_name_col,
+  met_ID,
+  pw_ID,
+  pw_name,
   export_raw_db
 )
 }
@@ -27,16 +27,16 @@ mt_anno_pathways_from_file(
 
 \item{sheet}{Sheet name or number or number to read in flat file}
 
-\item{met_ID_col}{Flat file colname: this column should contain metabolite IDs}
+\item{met_ID}{Flat file colname: this column should contain metabolite IDs}
 
-\item{pw_ID_col}{Flat file colname: this column should contain pathway IDs}
+\item{pw_ID}{Flat file colname: this column should contain pathway IDs}
 
-\item{pw_name_col}{Flat file colname: this column should contain pathway names}
+\item{pw_name}{Flat file colname: this column should contain pathway names}
 
 \item{export_raw_db}{OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.}
 }
 \value{
-column out_col in SE containing pathway annotation for metabolites
+rowData: new pathway annotation for metabolites
 
 $pathways: a dataframe of pathway information
 }
@@ -50,9 +50,9 @@ data structure using a flat file.
       mt_anno_pathways_from_file(in_col = "HMDb_ID",
                                  out_col = "janpw",
                                  file = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
-                                 met_ID_col = "HMDB_id",
-                                 pw_ID_col = "SMP",
-                                 pw_name_col = "pathway_name") \%>\%
+                                 met_ID = "HMDB_id",
+                                 pw_ID = "SMP",
+                                 pw_name = "pathway_name") \%>\%
 ...}
 
 }
