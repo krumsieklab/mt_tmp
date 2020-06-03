@@ -70,7 +70,7 @@ mt_anno_metabolites_HMDB2KEGG <- function(D,
   names(newdf)[which(names(newdf)=="MappingIDs")] <- in_col
 
   # overwrite entries stored in the manually curated file
-  dd <- read.csv2(file=data.makepath("MT_precalc/pathview/MetaboliteMapping_manual.csv"), sep=",")
+  dd <- utils::read.csv2(file=data.makepath("MT_precalc/pathview/MetaboliteMapping_manual.csv"), sep=",")
   dd$Name <- as.character(dd$Name)
   dd$HMDB <- as.character(dd$HMDB)
   dd$KEGG <- as.character(dd$KEGG)

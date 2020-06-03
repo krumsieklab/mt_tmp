@@ -171,13 +171,13 @@ mt_stats_pathway_enrichment_with_differential_analysis <- function(
       dplyr::select(-sample_idx) %>%
 
       # Calculate p-values and the group means
-      dplyr::summarise_if(is.numeric, list(p_value = ~ t.test(. ~ .data$grp)$p.value,
-                                    mean_ctrl = ~ t.test(. ~ .data$grp)$estimate %>% as.numeric() %>% .[1],
-                                    mean_case = ~ t.test(. ~ .data$grp)$estimate %>% as.numeric() %>% .[2])) %>%
+      dplyr::summarise_if(is.numeric, list(p_value = ~ stats::t.test(. ~ .data$grp)$p.value,
+                                    mean_ctrl = ~ stats::t.test(. ~ .data$grp)$estimate %>% as.numeric() %>% .[1],
+                                    mean_case = ~ stats::t.test(. ~ .data$grp)$estimate %>% as.numeric() %>% .[2])) %>%
       tidyr::gather(met_id, vals) %>%
       tidyr::separate(met_id, c("met_id", "val_type"), "_", extra = "merge") %>%
       tidyr::spread(val_type, vals) %>%
-      dplyr::mutate(p_value_adjusted = p.adjust(p_value, method = "fdr"))
+      dplyr::mutate(p_value_adjusted = stats::p.adjust(p_value, method = "fdr"))
 
     enrichment_results <-
       met_stats %>%
@@ -205,7 +205,7 @@ mt_stats_pathway_enrichment_with_differential_analysis <- function(
                     ns_np = n_total - (s_p + ns_p + s_np)) %>%
       dplyr::rowwise() %>%
       dplyr::mutate(p_value =
-                      fisher.test(matrix(c(s_p, s_np, ns_p, ns_np), nrow = 2)) %>%
+                      stats::fisher.test(matrix(c(s_p, s_np, ns_p, ns_np), nrow = 2)) %>%
                       .$p.value) %>%
       dplyr::ungroup() %>%
       dplyr::rename(ID = !!rlang::sym(pw_col)) %>%
@@ -213,7 +213,7 @@ mt_stats_pathway_enrichment_with_differential_analysis <- function(
       dplyr::transmute(pathway_name,
                        pathway_ID = ID,
                        p_value,
-                       p_value_adjusted = p.adjust(p_value, method = "fdr"),
+                       p_value_adjusted = stats::p.adjust(p_value, method = "fdr"),
                        mean_foldchange = mean_case - mean_ctrl) %>%
       dplyr::arrange(p_value)
 

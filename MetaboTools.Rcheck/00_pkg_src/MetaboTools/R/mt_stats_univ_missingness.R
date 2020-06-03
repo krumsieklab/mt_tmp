@@ -76,7 +76,7 @@ mt_stats_univ_missingness <- function(
       rownames(tab)[2] = "FALSE"
     }
     # run test
-    test <- fisher.test(tab)
+    test <- stats::fisher.test(tab)
     if (!("estimate" %in% names(test))) test$estimate=NA
     # construct extra fields
     ex <- gdata::unmatrix(tab)

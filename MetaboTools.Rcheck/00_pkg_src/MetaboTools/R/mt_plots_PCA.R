@@ -70,7 +70,7 @@ mt_plots_PCA <- function(
   if (scaledata) X <- scale(X) #By default, the scale R-function: mean-centers and scales to unit variance the X matrix
 
   # PCA
-  pca <- prcomp(x=as.matrix(X), center=F, scale=F)
+  pca <- stats::prcomp(x=as.matrix(X), center=F, scale=F)
   expvar = (pca$sdev)^2 / sum(pca$sdev^2)
   # assemble data frame, two PCS and sample info
   if (show=='scores') df = data.frame(x = pca$x[,PCa], y = pca$x[,PCb], colData(D)) # scores and colData

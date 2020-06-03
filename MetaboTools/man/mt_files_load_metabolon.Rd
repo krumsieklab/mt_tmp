@@ -20,7 +20,7 @@ Produces an initial SummarizedExperiment, with assay, colData, rowData, and meta
 Loads data from a Metabolon-format Excel file. Needs to be in the original "Client Data Table" format that they deliver.
 }
 \examples{
-\dontrun{D <- 
+\dontrun{D <-
   # load data
   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") \%>\%
   ...}

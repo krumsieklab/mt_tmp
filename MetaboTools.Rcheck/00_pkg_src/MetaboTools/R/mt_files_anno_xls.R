@@ -1,6 +1,6 @@
 #' Load annotations from Excel file.
-#' 
-#' Loads annotations and merges them into current SummarizedExperiment. 
+#'
+#' Loads annotations and merges them into current SummarizedExperiment.
 #' Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
 #' Can load annotations for both metabolites (rowData) and samples (colData)
 #'
@@ -17,22 +17,22 @@
 #'
 #' @examples
 #' # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
-#' \dontrun{D <- 
+#' \dontrun{D <-
 #'   # load raw data
-#'   mt_files_data_xls(file=file, sheet="data", samplesInRows=T, ID="SAMPLE_NAME") %>% 
+#'   mt_files_data_xls(file=file, sheet="data", samplesInRows=T, ID="SAMPLE_NAME") %>%
 #'   # sample annotations from metabolomics run
-#'   mt_files_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_ID = "SAMPLE_NAME") %>% 
+#'   mt_files_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_ID = "SAMPLE_NAME") %>%
 #'   # sample annotations from clinical table
-#'   mt_files_anno_xls(file=file, sheet="clinicals", anno_type="samples", anno_ID="SAMPLE_NAME") %>% 
+#'   mt_files_anno_xls(file=file, sheet="clinicals", anno_type="samples", anno_ID="SAMPLE_NAME") %>%
 #'   # metabolite annotations`
-#'   mt_files_anno_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_ID="BIOCHEMICAL", data_ID = "name") %>% 
+#'   mt_files_anno_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_ID="BIOCHEMICAL", data_ID = "name") %>%
 #'   ...}
-#' 
+#'
 #' @author JK
-#' 
+#'
 #' @importFrom magrittr %<>%
 #' @import SummarizedExperiment
-#' 
+#'
 #' @export
 
 mt_files_anno_xls <-
@@ -44,25 +44,25 @@ mt_files_anno_xls <-
            data_ID = anno_ID,
            no_map_err = F,
            col_names = NA) {
-    
+
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
   if (!(anno_type %in% c("samples","metabolites"))) stop("anno_type must be either 'samples' or 'metabolites'")
-  
+
   # load excel sheet
   df <- as.data.frame(readxl::read_excel(path=file,sheet=sheet,col_names=T))
   # ensure that sample ID column exists
   if (!(anno_ID %in% colnames(df))) stop(glue::glue("sample ID column '{anno_ID}' does not exist in '{basename(file)}, sheet '{sheet}'"))
   if (any(is.na(df[[anno_ID]]))) stop(glue::glue("sample ID column '{anno_ID}' contains empty cells, '{basename(file)}, sheet '{sheet}'"))
   rownames(df) <- df[[anno_ID]]
-  
+
   # slightly different behavior for samples or metabolites
   if (anno_type=="samples") {
     # ensure the data_ID column exists
     if (!(data_ID %in% colnames(colData(D)))) stop(glue::glue("ID column '{data_ID}' does not exist in current sample annotations of SE"))
     # check that all samples are found in the colnames of the existing dataset
     m <- match(df[[anno_ID]], colData(D)[[data_ID]])
-    if (any(is.na(m))) { 
+    if (any(is.na(m))) {
       msg <- sprintf("The following sample IDs could not be found in the existing data matrix: %s",paste0(df[[data_ID]][is.na(m)],collapse=","))
       if (no_map_err) stop(msg)
       # else warning(msg)
@@ -71,60 +71,60 @@ mt_files_anno_xls <-
     df[[anno_ID]] %<>% as.character()
     colData(D)[[data_ID]] %<>% as.character()
     # merge data frames
-    newdf <- dplyr::left_join(data.frame(colData(D), check.names=F), df, by = setNames(anno_ID,data_ID))
+    newdf <- dplyr::left_join(data.frame(colData(D), check.names=F), df, by = stats::setNames(anno_ID,data_ID))
     newdf[[anno_ID]] <- newdf[[data_ID]] # make sure anno column name also exists (if different from data column name)
     stopifnot(all.equal(newdf[[data_ID]],colData(D)[[data_ID]])) # to make sure nothing was mixed up
     rownames(newdf) <- colnames(D)
     colData(D) <- DataFrame(newdf)
-    
+
     # col_names?
     if (!is.na(col_names)) {
       # copy field, set colnames
       cn = newdf[[col_names]]
       colnames(D) = cn
     }
-    
-    
+
+
   } else if (anno_type=="metabolites") {
     # ensure the data_ID column exists
     if (!(data_ID %in% colnames(rowData(D)))) stop(glue::glue("ID column '{data_ID}' does not exist in current metabolite annotations of SE"))
     # check that all metabolites are found in the $name column of the existing dataset
     m <- match(df[[anno_ID]], rowData(D)[[data_ID]])
-    if (any(is.na(m))) { 
+    if (any(is.na(m))) {
       msg <- sprintf("The following metabolite IDs could not be found in the existing data matrix: %s",paste0(df[[data_ID]][is.na(m)],collapse=","))
       if (no_map_err) stop(msg)
       # else warning(msg)
-    } 
+    }
     # make everything a string
     df[[anno_ID]] %<>% as.character()
     rowData(D)[[data_ID]] %<>% as.character()
     # merge data frames
-    newdf <- dplyr::left_join(data.frame(rowData(D)), df, by = setNames(anno_ID,data_ID))
+    newdf <- dplyr::left_join(data.frame(rowData(D)), df, by = stats::setNames(anno_ID,data_ID))
     newdf[[anno_ID]] <- newdf[[data_ID]] # make sure anno column name also exists (if different from data column name)
     stopifnot(all.equal(newdf[[data_ID]],rowData(D)[[data_ID]])) # to make sure nothing was mixed up
     rownames(newdf) <- rownames(D)
     rowData(D) <- DataFrame(newdf)
-    
+
     # col_names?
     if (!is.na(col_names)) {
       stop("col_names cannot be used for metabolite annotations")
     }
-  
+
   } else
     stop("bug")
-  
+
   # add status information
   funargs <- mti_funargs()
-  metadata(D)$results %<>% 
+  metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
       logtxt = glue::glue("loaded {anno_type} annotations from Excel file '{basename(file)}, sheet '{sheet}'")
     )
-  
+
   # return
   D
-  
-  
+
+
 }
 
 

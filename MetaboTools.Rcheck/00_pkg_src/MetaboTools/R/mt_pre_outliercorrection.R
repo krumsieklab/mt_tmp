@@ -46,11 +46,11 @@ mt_pre_outliercorrection <- function(
     if(is.na(threshold)){
       numsamp=nrow(X)
       tail=alpha/numsamp
-      threshold = qnorm( 1 - (tail/2) )
+      threshold = stats::qnorm( 1 - (tail/2) )
     }
   } else if (by_quant==TRUE){
     # compute threshold based on the given quantile and sample size
-    threshold <- abs(qnorm((quant_thresh/2)/nrow(X)))
+    threshold <- abs(stats::qnorm((quant_thresh/2)/nrow(X)))
   }
   # compute univariate outliers
   H <- matrix(F, dim(X)[1], dim(X)[2])

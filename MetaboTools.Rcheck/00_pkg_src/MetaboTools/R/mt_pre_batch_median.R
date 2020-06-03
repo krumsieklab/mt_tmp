@@ -44,7 +44,7 @@ mt_pre_batch_median = function(
   for (i in 1:length(levels(b))) {
     batch = levels(b)[i]
     # median normalize
-    Xnorm = apply(X[b==batch,,drop=F],2,function(c){c/median(c,na.rm=T)})
+    Xnorm = apply(X[b==batch,,drop=F],2,function(c){c/stats::median(c,na.rm=T)})
     X[b==batch,] = Xnorm
   }
 

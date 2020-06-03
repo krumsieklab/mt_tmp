@@ -94,7 +94,7 @@ mt_stats_pathway_enrichment <- function(
                   ns_np = n_total - (s_p + ns_p + s_np)) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(p_value =
-                    fisher.test(matrix(c(s_p, s_np, ns_p, ns_np), nrow = 2)) %>%
+                    stats::fisher.test(matrix(c(s_p, s_np, ns_p, ns_np), nrow = 2)) %>%
                     .$p.value) %>%
     dplyr::ungroup() %>%
     dplyr::rename(ID = !!rlang::sym(pw_col)) %>%
@@ -102,7 +102,7 @@ mt_stats_pathway_enrichment <- function(
     dplyr::transmute(pathway_name,
                      pathway_ID = ID,
                      p_value,
-                     p_value_adjusted = p.adjust(p_value, method = "fdr"),
+                     p_value_adjusted = stats::p.adjust(p_value, method = "fdr"),
                      mean_foldchange = mean_fc) %>%
     dplyr::arrange(p_value)
 

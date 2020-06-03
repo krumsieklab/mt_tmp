@@ -69,7 +69,7 @@ mt_modify_aggPW <- function(
     # calc
     res <- up %>% lapply(function(g) {
       met <- removeNAs(sapply(p, function(v){g %in% v}), replaceWith=F)
-      pca = prcomp(as.data.frame(X[,met]))
+      pca = stats::prcomp(as.data.frame(X[,met]))
       list(pc1=pca$x[,1],
            expvar=(pca$sdev)^2 / sum(pca$sdev^2) )
     })

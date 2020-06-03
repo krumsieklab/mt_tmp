@@ -34,7 +34,7 @@ mt_post_addFC <- function(D,
     stop("stat_name must be given")
   ## FIND ENTRY
   stat_id <- metadata(D)$results %>%
-    map_lgl(~"stats" %in% .x$fun && .x$output$name == stat_name) %>%
+    purrr::map_lgl(~"stats" %in% .x$fun && .x$output$name == stat_name) %>%
     which()
   if(length(stat_id) == 0)
     stop("stat element with name ", stat_name, " does not exist")
@@ -66,8 +66,8 @@ mt_post_addFC <- function(D,
 
   ## CORRECT FOR CONFOUNDER
   formula    <- metadata(D)$results[[ stat_id ]]$output$formula
-  confounder <- update.formula(formula, str_c(".~.-", outcome))
-  confounder_terms <- attr(terms(confounder), "term.labels")
+  confounder <- stats::update.formula(formula, stringr::str_c(".~.-", outcome))
+  confounder_terms <- attr(stats::terms(confounder), "term.labels")
   if(length(confounder_terms) > 0){
     mti_logstatus(glue::glue("correcting for {confounder}"))
     D <- mti_correctConfounder(D, confounder)
@@ -102,7 +102,7 @@ mt_post_addFC <- function(D,
 
   ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
   d_fc <- d_fc %>%
-    gather(var, value, one_of(rownames(D))) %>%
+    tidyr::gather(var, value, one_of(rownames(D))) %>%
     dplyr::group_by(var,!!outcome_q) %>%
     dplyr::summarise(value = combine(value)) %>%
     ungroup() %>%

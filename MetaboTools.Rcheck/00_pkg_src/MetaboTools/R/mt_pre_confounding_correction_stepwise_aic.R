@@ -35,7 +35,7 @@ mt_pre_confounding_correction_stepwise_aic <- function(
   n_cores = 1  # number of cores to use in parallelization
 ) {
   ## Load medication data, remove Alzheimer's related meds
-  meds <- read.table(med_file, header = T, sep = "\t")
+  meds <- utils::read.table(med_file, header = T, sep = "\t")
   meds <- meds[,!colnames(meds)%in%to_remove]
 
   X <- data.frame(cbind(colData(D)[[id_col]], t(assay(D))))
@@ -44,7 +44,7 @@ mt_pre_confounding_correction_stepwise_aic <- function(
   meds.log <- NULL
 
   #parallelization step
-  outlist <- mclapply(colnames(model.data[2:ncol(X)]), function(met) single_met_covars(
+  outlist <- parallel::mclapply(colnames(model.data[2:ncol(X)]), function(met) single_met_covars(
     met,
     id_col,
     meds,
@@ -97,9 +97,9 @@ single_met_covars <- function(
 ){
   ## Select medications via backward-selection
   form <- paste(metabolite, "~", paste(colnames(meds)[2:ncol(meds)], collapse="+"))
-  mod <- lm(as.formula(form), data = model.data)
+  mod <- stats::lm(stats::as.formula(form), data = model.data)
   stepmod <- MASS::stepAIC(mod, direction = "backward", trace=0, k = log(nrow(model.data)))
-  selected.covars <- as.character(formula(stepmod)[3])
+  selected.covars <- as.character(stats::formula(stepmod)[3])
 
   ## if no medications are selected
   if(selected.covars=="1"){
@@ -110,7 +110,7 @@ single_met_covars <- function(
   }else{
     selected.covars <- unlist(strsplit(selected.covars, split="+", fixed=TRUE))
     selected.covars <- paste(gsub(" ", "", selected.covars), collapse=";")
-    fit.pval <- signif(pf(summary(stepmod)$fstatistic[1], summary(stepmod)$fstatistic[2], summary(stepmod)$fstatistic[3], lower.tail = FALSE), 3)
+    fit.pval <- signif(stats::pf(summary(stepmod)$fstatistic[1], summary(stepmod)$fstatistic[2], summary(stepmod)$fstatistic[3], lower.tail = FALSE), 3)
     fit.rsq <- signif(summary(stepmod)$r.squared, 3)
     met.vec <- stepmod$residuals[match(X[[id_col]], model.data[[id_col]])] + stepmod$coefficients["(Intercept)"]
   }

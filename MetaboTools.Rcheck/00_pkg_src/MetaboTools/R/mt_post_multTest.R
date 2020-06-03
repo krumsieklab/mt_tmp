@@ -22,7 +22,7 @@ mt_post_multTest <- function(D,
                              stat_name,
                              p_col = p.value,
                              method = "bonferroni"){
-    p_col <- enquo(p_col)
+    p_col <- dplyr::enquo(p_col)
 
     ## stat
     if(missing(stat_name))
@@ -30,7 +30,7 @@ mt_post_multTest <- function(D,
 
     ## FIND ENTRY
     stat_id <- metadata(D)$results %>%
-                         map_lgl(~"stats" %in% .x$fun && .x$output$name == stat_name) %>%
+                         purrr::map_lgl(~"stats" %in% .x$fun && .x$output$name == stat_name) %>%
                          which()
     if(length(stat_id) == 0)
         stop("stat element with name ", stat_name, " does not exist")
@@ -39,7 +39,7 @@ mt_post_multTest <- function(D,
 
     ## DO CORRECTION
     metadata(D)$results[[stat_id]]$output$table %<>%
-                  dplyr::mutate(p.adj = p.adjust(!!p_col, method = method))
+                  dplyr::mutate(p.adj = stats::p.adjust(!!p_col, method = method))
 
 
     # ## UPDATE LOG ENTRIES

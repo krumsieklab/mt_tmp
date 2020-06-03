@@ -199,7 +199,7 @@ mti_correctConfounder <- function(D, formula){
       res <- stats::resid(mod)
       res
     }) %>%
-    setNames(rownames(D)) %>%
+    stats::setNames(rownames(D)) %>%
     as.matrix() %>% t()
   colnames(d_cor) <- colnames(D)
   assay(D)        <- d_cor
@@ -280,7 +280,7 @@ mti_res_get_stats_entries <- function(D){mti_res_get_path(D,"stats")}
 mti_add_leftright_gg <- function(gg, left, right) {
 
   # with backward compatibility
-  if (compareVersion(as.character(packageVersion("ggplot2")),"3.3.0")>=0) { # at least 3.3.0
+  if (utils::compareVersion(as.character(utils::packageVersion("ggplot2")),"3.3.0")>=0) { # at least 3.3.0
     # ggplot2 version >= 3.3.0
     ggbld <- ggplot2::ggplot_build(gg)
     xticks =  ggbld$layout$panel_params[[1]]$x$get_breaks() # needed for >=3.3.0

@@ -36,7 +36,7 @@ mt_modify_ratios <- function(D){
 
     ## CREATE RATIOS
     as_ratio <- purrr::map(1:(nrow(as)-1), ~ sweep(as[(.x+1):nrow(as), , drop = F], 2, as[.x,], "-")) %>%
-        setNames(rownames(as)[1:(nrow(as)-1)])
+        stats::setNames(rownames(as)[1:(nrow(as)-1)])
 
     ## CREATE NEW ROWDATA
     rd <- D %>%

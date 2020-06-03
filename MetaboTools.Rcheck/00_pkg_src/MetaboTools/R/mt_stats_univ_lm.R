@@ -75,7 +75,7 @@ mt_stats_univ_lm <- function(
   }
 
   ## save outcome variable
-  outvar       <- attr(terms(formula, keep.order = T),"term.labels")[1]
+  outvar       <- attr(stats::terms(formula, keep.order = T),"term.labels")[1]
   outvar_label <- outvar
   is_interaction <- FALSE
   if(stringr::str_detect(outvar, ":")){
@@ -131,9 +131,9 @@ mt_stats_univ_lm <- function(
   if (!is.null(formula.tools::lhs(formula))) stop("Left-hand side of formula must be empty")
   ## will crash sort of meaningfully if variables don't exist
   if(has_random_eff){
-    mm <- lFormula(update.formula(formula, stringr::str_c(rownames(D)[[1]], "~.")), Ds)
+    mm <- lFormula(stats::update.formula(formula, stringr::str_c(rownames(D)[[1]], "~.")), Ds)
   }else{
-    mm <- model.matrix(formula,Ds)
+    mm <- stats::model.matrix(formula,Ds)
   }
 
   ## check if anova is necessary for interaction effects
@@ -147,7 +147,7 @@ mt_stats_univ_lm <- function(
     })%>%
       expand.grid() %>%
       apply(MARGIN = 1, stringr::str_c, collapse = ":")
-    if(length(intersect(colnames(mm), interactions)) > 1){
+    if(length(dplyr::intersect(colnames(mm), interactions)) > 1){
       do_anova <- TRUE
       stop("for interactions effects between factors, individual terms should be included")
     }
@@ -158,21 +158,21 @@ mt_stats_univ_lm <- function(
   ## does checks to minimise errors
   do_lm <- function(m){
     ## run glm with updated formula
-    form <- update(formula, sprintf("%s~.",m))
+    form <- stats::update(formula, sprintf("%s~.",m))
     ## check for constant confounders
-    trms <- attr(terms(formula), "term.labels") %>%
+    trms <- attr(stats::terms(formula), "term.labels") %>%
       purrr::discard(~stringr::str_detect(.x, ":")) %>%
       c(m)
     clss <- purrr::map_chr(trms, ~class(Ds[[.x]])) %>%
-      setNames(trms)
+      stats::setNames(trms)
     ## subset to complete data
     d <- Ds %>%
       dplyr::select(dplyr::one_of(trms), !!rlang::sym(m)) %>%
-      dplyr::filter(complete.cases(.))
+      dplyr::filter(stats::complete.cases(.))
     ## check for invariant vonfounders
     conf_invar_num <- clss %>%
       purrr::keep(~.x %in% c("integer", "numeric")) %>%
-      purrr::imap(~var(d[[.y]])) %>%
+      purrr::imap(~stats::var(d[[.y]])) %>%
       purrr::keep(~.x == 0)
     conf_invar_fct <- clss %>%
       purrr::discard(~.x %in% c("integer", "numeric")) %>%
@@ -191,7 +191,7 @@ mt_stats_univ_lm <- function(
       }
       for(c in names(conf_invar)){
         mti_logwarning(glue::glue("confounder {c} invariant for metabolite {m}, removing from formula"))
-        form <- update.formula(form, stringr::str_c(". ~ . -", c))
+        form <- stats::update.formula(form, stringr::str_c(". ~ . -", c))
       }
     }
 
@@ -203,7 +203,7 @@ mt_stats_univ_lm <- function(
     terms <- mod$terms
     ## DO ANOVA IF MULTIPLE FACTOR LEVELS
     if(do_anova)
-      mod <- anova(mod)
+      mod <- stats::anova(mod)
     ## attach linear model terms as attribute to the variable
     ## (only way to make this compatible for both lm and anova, because they are very different data structures)
     attr(mod, 'terms') <- terms
@@ -213,7 +213,7 @@ mt_stats_univ_lm <- function(
 
   ## run tests for all metabolites
   models <- parallel::mclapply(rownames(D), do_lm, mc.cores = n_cpus) %>%
-    setNames(rownames(D))
+    stats::setNames(rownames(D))
 
   # broom it up, subselect to term, rename term
   if (do_anova) {

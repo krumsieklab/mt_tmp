@@ -39,7 +39,7 @@ mt_pre_confounding_correction <- function(
 
   # covariates of samples
   dfc = colData(D)
-  frm = as.formula(paste0(c("y",as.character(formula)), collapse = ""))
+  frm = stats::as.formula(paste0(c("y",as.character(formula)), collapse = ""))
   if(!is.null(strata)) strata = dfc[,strata]
   else strata = rep(1, nrow(dfc))
 
@@ -60,14 +60,14 @@ mt_pre_confounding_correction <- function(
   # function that returns fit p value
   fpv<- function(fit){
     f <- summary(fit)$fstatistic
-    p <- pf(f[1],f[2],f[3],lower.tail=F)
+    p <- stats::pf(f[1],f[2],f[3],lower.tail=F)
     log(unname(p))
   }
 
   # run correction
   lm.fits <- apply(X %>% t,2, function(y){
     pocs = lapply(unique(sort(strata)) %>% {names(.)=. ; .},
-                  function(i) lm(frm, data.frame(y=y, dfc)[strata==i,]))
+                  function(i) stats::lm(frm, data.frame(y=y, dfc)[strata==i,]))
 
     # indices to go back original indices
     rh = unlist(lapply(pocs, fresid))[order(order(strata))]
@@ -79,7 +79,7 @@ mt_pre_confounding_correction <- function(
   # # overall effect of covariates to each variable as lm pvalue
   # p.lms  <- sapply(lm.fits, function(fit){
   #   f <- summary(fit)$fstatistic
-  #   p <- pf(f[1],f[2],f[3],lower.tail=F)
+  #   p <- stats::pf(f[1],f[2],f[3],lower.tail=F)
   #   log(unname(p))
   # })
 

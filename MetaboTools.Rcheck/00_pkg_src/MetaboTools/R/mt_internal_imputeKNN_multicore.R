@@ -46,7 +46,7 @@ mt_internal_imputeKNN_multicore <- function(dat,
   if(verbose)message(paste0("Number of imcomplete observations: ", length(incom_obs)))
 
   # calculate correlation matrix using pairwise complete observations pairwise.complete.obs
-  Cor <- cor(dat,use="p")
+  Cor <- stats::cor(dat,use="p")
 
 
   dist_path <- "tmp/distance_matrices/"

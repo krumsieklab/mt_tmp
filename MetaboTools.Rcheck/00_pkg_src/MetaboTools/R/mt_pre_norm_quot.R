@@ -72,9 +72,9 @@ mt_pre_norm_quot = function(
   # filter metabolites with missingness rate greater than met_max
   vars <- vars[metmiss <= met_max]
   # median reference sample
-  ref = apply(X[useref,vars],2,function(x)median(x,na.rm=T))
+  ref = apply(X[useref,vars],2,function(x)stats::median(x,na.rm=T))
   # get dilution factors
-  d = apply(X[,vars],1,  function(s) median(as.numeric(s/ref),na.rm=T))
+  d = apply(X[,vars],1,  function(s) stats::median(as.numeric(s/ref),na.rm=T))
   # apply to each sample  (for each row=sample, divide values by median dilution factor)
   Y = t(sapply(1:dim(X)[1], function(i)unlist(X[i,]/d[i])))
 

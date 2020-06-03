@@ -49,11 +49,11 @@ mt_pre_outlier <- function(
   if (reduce_dim) {
     ## Calculate the number of "independent features"
     ## As in Li and Ji, Heredity, 2005
-    cordat <- cor(X)
+    cordat <- stats::cor(X)
     eigenvals <- eigen(cordat)$values
     Meff <- sum( as.numeric(eigenvals >= 1) + (eigenvals - floor(eigenvals)) )
     ## reduce
-    pca <- prcomp(X)
+    pca <- stats::prcomp(X)
     X <- pca[]
   }
 
@@ -102,12 +102,12 @@ mt_pre_outlier <- function(
     if(is.null(args$pval)) args$pval <- 0.01
 
     # Calculate covariance matrix
-    cov_mat <- cov(X)
+    cov_mat <- stats::cov(X)
     # Get mahalanobis distance
-    score <- mahalanobis(X, colMeans(X), cov_mat)
+    score <- stats::mahalanobis(X, colMeans(X), cov_mat)
     # Define outliers based on threshold
     out <- rep(FALSE,length(score))
-    out[score > qchisq(1 - args$pval/nrow(X), df=ncol(X))] <- TRUE
+    out[score > stats::qchisq(1 - args$pval/nrow(X), df=ncol(X))] <- TRUE
 
   } else {
     stop("BUG")
@@ -157,7 +157,7 @@ mt_pre_outlier <- function(
 # # Calculate covariance matrix and inverse
 # C <- corpcor::cov.shrink(X, verbose=F) %>% apply(2, as.vector)
 # # Get mahalanobis distance
-# score <- mahalanobis(X, colMeans(X), C)
+# score <- stats::mahalanobis(X, colMeans(X), C)
 #
 #
 # # # Xc <- scale(X, scale=F, center=T)
@@ -167,4 +167,4 @@ mt_pre_outlier <- function(
 # # i=5; t(Xc[i,]) %*% Ci %*% Xc[i,]
 # # Define outliers based on threshold
 # out <- rep(FALSE,length(score))
-# out[score > qchisq(1 - args$pval/nrow(X), df=ncol(X))] <- TRUE
+# out[score > stats::qchisq(1 - args$pval/nrow(X), df=ncol(X))] <- TRUE

@@ -75,9 +75,9 @@ mti_gg_qqplot <- function(ps, ci = 0.95) {
   n  <- length(ps)
   df <- data.frame(
     observed = -log10(sort(ps)),
-    expected = -log10(ppoints(n)),
-    clower   = -log10(qbeta(p = (1 - ci) / 2, shape1 = 1:n, shape2 = n:1)),
-    cupper   = -log10(qbeta(p = (1 + ci) / 2, shape1 = 1:n, shape2 = n:1))
+    expected = -log10(stats::ppoints(n)),
+    clower   = -log10(stats::qbeta(p = (1 - ci) / 2, shape1 = 1:n, shape2 = n:1)),
+    cupper   = -log10(stats::qbeta(p = (1 + ci) / 2, shape1 = 1:n, shape2 = n:1))
   )
   log10Pe <- expression(paste("Expected -log"[10], plain(P)))
   log10Po <- expression(paste("Observed -log"[10], plain(P)))

@@ -21,7 +21,7 @@ Creates an Excel file that contains detailed metabolite-to-pathway mapping infor
 Also includes information about which pathways are redundant, i.e. contain the same set of metabolites.
 }
 \examples{
-\dontrun{... \%>\% 
+\dontrun{... \%>\%
 mt_add_pathways(in_col = "KEGG",
     out_col = "kegg_db",
     pw_species = "hsapiens",

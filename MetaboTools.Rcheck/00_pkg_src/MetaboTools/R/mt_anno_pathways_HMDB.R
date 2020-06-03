@@ -51,7 +51,7 @@ mt_anno_pathways_HMDB <- function(
     # NOTE: taking the tail work only for HMDB versions below 9, since
     # list.files sorts the names alphabetically. Current HMDB version
     # is 4.0
-    db_file <- list.files(db_dir,pattern='*.rds') %>% tail(1)
+    db_file <- list.files(db_dir,pattern='*.rds') %>% utils::tail(1)
     if (length(db_file) == 0)
       stop(glue::glue("no pathway files were found in {db_dir}"))
   }

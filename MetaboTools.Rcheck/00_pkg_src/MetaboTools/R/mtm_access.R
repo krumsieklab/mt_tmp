@@ -42,6 +42,9 @@ mtm_res_get_plots <- function(D,unlist=T){
 #' @param dev Device to plot to (default: PDF)
 #' @param ... Further paramaters to be passed to dev() function.
 #'
+#' @importFrom grDevices dev.off() pdf
+#' @importFrom graphics plot
+#'
 #' @noMd
 mtm_plot_all_tofile <- function(input, dev=pdf, ...) {
   if ("SummarizedExperiment" %in% class(input)) {

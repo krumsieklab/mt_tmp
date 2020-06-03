@@ -52,9 +52,9 @@ mti_imputeKNN <- function(dat,
       if(verbose)message("Proceeding var... ")
       for (j in incom.vars) {
         if(verbose)cat(paste(j," "))
-        comobs <- complete.cases(dat[,j])
+        comobs <- stats::complete.cases(dat[,j])
         Mean <- mean(dat[,j],na.rm=T)
-        SD <- sd(dat[,j],na.rm=T)
+        SD <- stats::sd(dat[,j],na.rm=T)
         if(any(!is.na(D2[,j]))) {
           KNNvars <- order(D2[,j],na.last=NA)
           KNNvars <- KNNvars[sapply(KNNvars, function(jj) any(!is.na(dat[!comobs,jj])))]
@@ -69,7 +69,7 @@ mti_imputeKNN <- function(dat,
               if(any(!is.na(dattmp_sel))) ret <- sum((dattmp_sel*SD+Mean)*exp(-D2[KNNvars_sel,j]),na.rm=T)/sum(exp(-D2[KNNvars_sel,j])[!is.na(dattmp_sel)],na.rm=T) else ret <- na.omit(dattmp_all)[1]*SD+Mean
               ret})
           if(any(is.na(dattmp[,j]))) {
-            still.incom <-  !complete.cases(dattmp[,j])
+            still.incom <-  !stats::complete.cases(dattmp[,j])
             dattmp[still.incom,j] <- mean(dattmp[!still.incom,j],na.rm=T) }
           datimp[,j] <- dattmp[,j]
       }
@@ -79,16 +79,16 @@ mti_imputeKNN <- function(dat,
       # yaImpute::yai verwendet nur ganz complete obs! --> manuell!
       # dasselbe gilt f?r mahalanobis und mahalanobis.dist[StatMatch], wobei letzteres wenigstens ganze Matrix macht
       #--> manuell
-      Sx <- cov(dat, use = "p")
+      Sx <- stats::cov(dat, use = "p")
       if(any(is.na(Sx))) {
         submatrix <- dat[-c(which(colSums(is.na(Sx))>0))]
-        Sx <- cov(submatrix, use = "p")}
+        Sx <- stats::cov(submatrix, use = "p")}
       incom.obs <- which(apply(dat,1,function(x) any(is.na(x))))
       if(verbose)message(paste0("Number of imcomplete observations: ", length(incom.obs)))
       if(verbose)message("Proceeding obs... ")
       for (i in incom.obs){
         if(verbose)cat(paste(i," "))
-        comvars <-  complete.cases(as.numeric(dat[i,]))
+        comvars <-  stats::complete.cases(as.numeric(dat[i,]))
         datpart <- dat[,comvars]
         obs_i <- as.numeric(datpart[i,])
         Sx_i <- Sx[colnames(datpart),colnames(datpart)]
@@ -110,7 +110,7 @@ mti_imputeKNN <- function(dat,
               ret})
 
           if(any(is.na(dattmp[i,]))) {        # weil z.B. D2 NAs enth?lt, ODER weil keine gemeinsam obs vars unter den KNN
-            still.incom <-  !complete.cases(as.numeric(dattmp[i,]))
+            still.incom <-  !stats::complete.cases(as.numeric(dattmp[i,]))
             dattmp[i,still.incom] <- apply(dattmp[,still.incom,drop=F],2,mean,na.rm=T)}   # wenn das nicht geht, mean ?ber alle vars
 
           datimp[i,] <- dattmp[i,]
@@ -125,7 +125,7 @@ mti_imputeKNN <- function(dat,
       D2[D2==0] <- NA
       for (i in incom.obs){
         if(verbose)cat(paste(i," "))
-        comvars <-  complete.cases(as.numeric(dat[i,]))
+        comvars <-  stats::complete.cases(as.numeric(dat[i,]))
         if(any(!is.na(D2[i,]))) {
           KNNids <- order(D2[i,],na.last=NA)
           KNNids <- KNNids[sapply(KNNids,function(j) any(!is.na(dat[j,!comvars])))]
@@ -142,7 +142,7 @@ mti_imputeKNN <- function(dat,
               ret})
 
           if(any(is.na(dattmp[i,]))) {        # weil z.B. D2 NAs enth?lt, ODER weil keine gemeinsam obs vars unter den KNN
-            still.incom <-  !complete.cases(as.numeric(dattmp[i,]))
+            still.incom <-  !stats::complete.cases(as.numeric(dattmp[i,]))
             dattmp[i,still.incom] <- apply(dattmp[,still.incom,drop=F],2,mean,na.rm=T)}   # wenn das nicht geht, mean ?ber alle vars
 
           datimp[i,] <- dattmp[i,]
@@ -155,7 +155,7 @@ mti_imputeKNN <- function(dat,
       incom.vars <- which(apply(dat,2,function(x) any(is.na(x))))
       if(verbose)message(paste0("Number of imcomplete observations: ", length(incom.obs)))
       if(verbose)message("Proceeding obs... ")
-      Cor <- cor(dat,use="p")
+      Cor <- stats::cor(dat,use="p")
       D2list <- lapply(incom.vars, function(j) {
         varsel <- which(abs(Cor[j,])>cor.var.sel)    # ist j selbst dabei, ist aber ok
         if(length(varsel)>10) varsel <- order(abs(Cor[j,]),decreasing=T)[1:11]
@@ -169,7 +169,7 @@ mti_imputeKNN <- function(dat,
       names(D2list) <- incom.vars
       for (i in incom.obs){
         if(verbose)cat(paste(i," "))
-        comvars <-  complete.cases(as.numeric(dat[i,]))
+        comvars <-  stats::complete.cases(as.numeric(dat[i,]))
         dattmp <-  dat
         for (j in which(!comvars)) {
           D2 <- D2list[[as.character(j)]]

@@ -43,15 +43,15 @@ mt_files_data_xls: warning in SummarizedExperiment(assay = assay,
 mt_files_load_UCD: warning in SummarizedExperiment(assay =
   t(result$data), colData = result$sampleinfo %>% as.data.frame(),
   rowData = result$metinfo %>% as.data.frame(), metadata =
-  list(sessionInfo = sessionInfo(), parseInfo = result$info)): partial
-  argument match of 'assay' to 'assays'
+  list(sessionInfo = utils::sessionInfo(), parseInfo = result$info)):
+  partial argument match of 'assay' to 'assays'
 mt_files_load_WCM: warning in SummarizedExperiment(assay =
   as.matrix(raw), rowData = metinfo, colData = data.frame(ID =
-  colnames(raw)), metadata = list(sessionInfo = sessionInfo())):
+  colnames(raw)), metadata = list(sessionInfo = utils::sessionInfo())):
   partial argument match of 'assay' to 'assays'
 mt_files_load_metabolon: warning in SummarizedExperiment(assay =
   t(result$data), colData = result$sampleinfo, rowData =
-  result$metinfo, metadata = list(sessionInfo = sessionInfo(),
+  result$metinfo, metadata = list(sessionInfo = utils::sessionInfo(),
   parseInfo = result$info)): partial argument match of 'assay' to
   'assays'
 mt_modify_aggPW: warning in SummarizedExperiment(assay = assay, colData
@@ -69,12 +69,9 @@ mt_anno_metabolites_HMDB2KEGG: no visible binding for global variable
 mt_anno_metabolites_HMDB2KEGG: no visible binding for global variable
   ‘out_col.y’
 mt_anno_metabolites_HMDB2KEGG: no visible global function definition
-  for ‘read.csv2’
-mt_anno_metabolites_HMDB2KEGG: no visible global function definition
   for ‘DataFrame’
 mt_anno_pathways_HMDB: no visible global function definition for
   ‘data.makepath’
-mt_anno_pathways_HMDB: no visible global function definition for ‘tail’
 mt_anno_pathways_HMDB: no visible binding for global variable ‘HMDB_id’
 mt_anno_pathways_HMDB: no visible binding for global variable
   ‘pathway_name’
@@ -111,20 +108,13 @@ mt_anno_pathways_remove_redundant: no visible binding for global
   variable ‘pathway_name’
 mt_anno_pathways_remove_redundant: no visible binding for global
   variable ‘tmp_name’
-mt_files_anno_xls: no visible global function definition for ‘setNames’
 mt_files_anno_xls: no visible global function definition for
   ‘DataFrame’
-mt_files_load_UCD: no visible global function definition for
-  ‘sessionInfo’
 mt_files_load_WCM: no visible binding for global variable ‘HMDB’
-mt_files_load_WCM: no visible global function definition for
-  ‘sessionInfo’
 mt_files_load_metabolon: no visible binding for global variable
   ‘parse_guess’
 mt_files_load_metabolon: no visible global function definition for
   ‘parseMetabolonFile’
-mt_files_load_metabolon: no visible global function definition for
-  ‘sessionInfo’
 mt_files_write_pathwayannos: no visible binding for global variable ‘.’
 mt_files_write_pathwayannos: no visible binding for global variable
   ‘all_IDs’
@@ -136,27 +126,17 @@ mt_files_write_pathwayannos: no visible binding for global variable
   ‘name’
 mt_files_write_pathwayannos: no visible binding for global variable
   ‘pw_str’
-mt_files_write_pathwayannos: no visible global function definition for
-  ‘setNames’
 mt_files_write_pathwayannos: no visible binding for global variable
   ‘pathway_name’
-mt_internal_imputeKNN_multicore: no visible global function definition
-  for ‘cor’
-mt_modify_aggPW : <anonymous>: no visible global function definition
-  for ‘prcomp’
 mt_modify_aggPW: no visible binding for global variable ‘name’
-mt_modify_cv : <anonymous>: no visible global function definition for
-  ‘sd’
 mt_modify_filter_samples: no visible binding for global variable ‘.’
 mt_modify_mutate: no visible global function definition for ‘DataFrame’
-mt_modify_ratios: no visible global function definition for ‘setNames’
 mt_modify_ratios: no visible binding for global variable ‘m1’
 mt_modify_ratios: no visible binding for global variable ‘m2’
 mt_modify_ratios: no visible binding for global variable ‘name’
 mt_modify_ratios: no visible binding for global variable ‘name1’
 mt_modify_ratios: no visible binding for global variable ‘name2’
 mt_modify_ratios: no visible binding for global variable ‘.’
-mt_plots_PCA: no visible global function definition for ‘prcomp’
 mt_plots_PCA: no visible binding for global variable ‘n’
 mt_plots_PCA: no visible binding for global variable ‘.’
 mt_plots_UMAP: no visible binding for global variable ‘umap’
@@ -229,22 +209,14 @@ mt_plots_volcano: no visible binding for global variable ‘.’
 mt_plots_volcano: no visible binding for global variable ‘xxx’
 mt_plots_volcano: no visible binding for global variable ‘.x’
 mt_plots_volcano: no visible binding for global variable ‘name’
-mt_post_addFC: no visible global function definition for ‘map_lgl’
 mt_post_addFC: no visible binding for global variable ‘.’
 mt_post_addFC: no visible global function definition for ‘one_of’
-mt_post_addFC: no visible global function definition for
-  ‘update.formula’
-mt_post_addFC: no visible global function definition for ‘str_c’
-mt_post_addFC: no visible global function definition for ‘terms’
-mt_post_addFC: no visible global function definition for ‘gather’
 mt_post_addFC: no visible binding for global variable ‘var’
 mt_post_addFC: no visible binding for global variable ‘value’
 mt_post_addFC: no visible global function definition for ‘ungroup’
 mt_post_addFC: no visible binding for global variable ‘fc’
 mt_post_addFC: no visible global function definition for ‘left_join’
 mt_post_multTest: no visible binding for global variable ‘p.value’
-mt_post_multTest: no visible global function definition for ‘map_lgl’
-mt_post_multTest: no visible global function definition for ‘p.adjust’
 mt_post_pgain: no visible binding for global variable ‘p.value’
 mt_post_pgain: no visible global function definition for ‘map_lgl’
 mt_post_pgain: no visible global function definition for ‘mutate’
@@ -259,27 +231,6 @@ mt_post_pgain: no visible binding for global variable ‘p_single_1’
 mt_post_pgain: no visible binding for global variable ‘p_single_2’
 mt_post_pgain: no visible global function definition for ‘str_c’
 mt_post_pgain: no visible binding for global variable ‘.’
-mt_pre_batch_median : <anonymous>: no visible global function
-  definition for ‘median’
-mt_pre_confounding_correction: no visible global function definition
-  for ‘as.formula’
-mt_pre_confounding_correction : fpv: no visible global function
-  definition for ‘pf’
-mt_pre_confounding_correction : <anonymous> : <anonymous>: no visible
-  global function definition for ‘lm’
-mt_pre_confounding_correction_stepwise_aic: no visible global function
-  definition for ‘read.table’
-mt_pre_confounding_correction_stepwise_aic: no visible global function
-  definition for ‘mclapply’
-mt_pre_norm_quot : <anonymous>: no visible global function definition
-  for ‘median’
-mt_pre_outlier: no visible global function definition for ‘cor’
-mt_pre_outlier: no visible global function definition for ‘prcomp’
-mt_pre_outlier: no visible global function definition for ‘cov’
-mt_pre_outlier: no visible global function definition for ‘mahalanobis’
-mt_pre_outlier: no visible global function definition for ‘qchisq’
-mt_pre_outliercorrection: no visible global function definition for
-  ‘qnorm’
 mt_reporting_generateMD: no visible binding for global variable ‘.’
 mt_stats_pathway_enrichment: no visible binding for global variable
   ‘pw’
@@ -309,15 +260,11 @@ mt_stats_pathway_enrichment: no visible binding for global variable
   ‘ns_p’
 mt_stats_pathway_enrichment: no visible binding for global variable
   ‘s_np’
-mt_stats_pathway_enrichment: no visible global function definition for
-  ‘fisher.test’
 mt_stats_pathway_enrichment: no visible binding for global variable
   ‘ns_np’
 mt_stats_pathway_enrichment: no visible binding for global variable ‘.’
 mt_stats_pathway_enrichment: no visible binding for global variable
   ‘p_value’
-mt_stats_pathway_enrichment: no visible global function definition for
-  ‘p.adjust’
 mt_stats_pathway_enrichment: no visible binding for global variable
   ‘mean_fc’
 mt_stats_pathway_enrichment_with_differential_analysis: no visible
@@ -355,8 +302,6 @@ mt_stats_pathway_enrichment_with_differential_analysis: no visible
 mt_stats_pathway_enrichment_with_differential_analysis: no visible
   binding for global variable ‘val_type’
 mt_stats_pathway_enrichment_with_differential_analysis: no visible
-  global function definition for ‘p.adjust’
-mt_stats_pathway_enrichment_with_differential_analysis: no visible
   binding for global variable ‘p_value_adjusted’
 mt_stats_pathway_enrichment_with_differential_analysis: no visible
   binding for global variable ‘significant’
@@ -379,58 +324,23 @@ mt_stats_pathway_enrichment_with_differential_analysis: no visible
 mt_stats_pathway_enrichment_with_differential_analysis: no visible
   binding for global variable ‘s_np’
 mt_stats_pathway_enrichment_with_differential_analysis: no visible
-  global function definition for ‘fisher.test’
-mt_stats_pathway_enrichment_with_differential_analysis: no visible
   binding for global variable ‘ns_np’
 mt_stats_univ_lm: no visible binding for global variable ‘tmpsamplenum’
-mt_stats_univ_lm: no visible global function definition for ‘terms’
 mt_stats_univ_lm: no visible binding for global variable ‘lm’
 mt_stats_univ_lm : f_tidy_tidy: no visible binding for global variable
   ‘term’
 mt_stats_univ_lm: no visible global function definition for ‘lFormula’
-mt_stats_univ_lm: no visible global function definition for
-  ‘update.formula’
-mt_stats_univ_lm: no visible global function definition for
-  ‘model.matrix’
-mt_stats_univ_lm : do_lm: no visible global function definition for
-  ‘update’
-mt_stats_univ_lm : do_lm: no visible global function definition for
-  ‘setNames’
-mt_stats_univ_lm : do_lm: no visible global function definition for
-  ‘complete.cases’
 mt_stats_univ_lm : do_lm: no visible binding for global variable ‘.’
-mt_stats_univ_lm : do_lm: no visible global function definition for
-  ‘update.formula’
-mt_stats_univ_lm : do_lm: no visible global function definition for
-  ‘anova’
-mt_stats_univ_lm: no visible global function definition for ‘setNames’
 mt_stats_univ_lm: no visible binding for global variable ‘term’
-mt_stats_univ_missingness : <anonymous>: no visible global function
-  definition for ‘fisher.test’
 mt_stats_univ_tau: no visible binding for global variable ‘stat_name’
-mt_stats_univ_tau : <anonymous>: no visible global function definition
-  for ‘cor.test’
-mti_add_leftright_gg: no visible global function definition for
-  ‘compareVersion’
-mti_add_leftright_gg: no visible global function definition for
-  ‘packageVersion’
 mti_correctConfounder : <anonymous>: no visible binding for global
   variable ‘na.exclude’
-mti_correctConfounder: no visible global function definition for
-  ‘setNames’
-mti_gg_qqplot: no visible global function definition for ‘ppoints’
-mti_gg_qqplot: no visible global function definition for ‘qbeta’
 mti_gg_qqplot: no visible binding for global variable ‘expected’
 mti_gg_qqplot: no visible binding for global variable ‘clower’
 mti_gg_qqplot: no visible binding for global variable ‘cupper’
 mti_gg_qqplot: no visible binding for global variable ‘observed’
-mti_imputeKNN: no visible global function definition for
-  ‘complete.cases’
-mti_imputeKNN: no visible global function definition for ‘sd’
 mti_imputeKNN : <anonymous>: no visible global function definition for
   ‘na.omit’
-mti_imputeKNN: no visible global function definition for ‘cov’
-mti_imputeKNN: no visible global function definition for ‘cor’
 mtm_logging: no visible binding for global variable ‘writeToConsole’
 mtm_plot_all_tofile: no visible binding for global variable ‘pdf’
 mtm_plot_all_tofile: no visible global function definition for
@@ -438,41 +348,25 @@ mtm_plot_all_tofile: no visible global function definition for
 mtm_plot_all_tofile: no visible binding for global variable ‘plot’
 mtm_plot_all_tofile: no visible global function definition for
   ‘dev.off’
-single_met_covars: no visible global function definition for ‘lm’
-single_met_covars: no visible global function definition for
-  ‘as.formula’
-single_met_covars: no visible global function definition for ‘formula’
-single_met_covars: no visible global function definition for ‘pf’
 Undefined global functions or variables:
   %e%<- %v%<- . .x COARSE COMP_IDstr DataFrame FINE HMDB HMDB_id ID IDs
-  MetaboliteMapping X1 X2 accession all_IDs all_pathway_names anova
-  as.formula clower compareVersion complete.cases cor cor.test cov
+  MetaboliteMapping X1 X2 accession all_IDs all_pathway_names clower
   cupper data.makepath dest dev.off dp1 dp2 expected fc filter filtered
-  fisher.test fixorder formula gather lFormula left_join lm m1 m2
-  mahalanobis map_lgl mappingID mclapply mcmapply mean_case mean_ctrl
-  mean_fc median merge.primary met met_IDs met_id metab miss
-  model.matrix mti_multi_get_unique_plots mutate n n_pw n_pw_sig
-  n_total n_total_sig na.exclude na.omit name name1 name2 new.name
-  ns_np ns_p observed one_of out_col.x out_col.y p.adj p.adjust p.val
-  p.value p1 p_single_1 p_single_2 p_value p_value_adjusted
-  packageVersion parseMetabolonFile parse_guess pathway_ID pathway_name
-  pcor pdf pf plot ppoints prcomp pw pw_idx pw_str pwdb q.val qbeta
-  qchisq qnorm read.csv2 read.table s_np s_p sample_idx sd select
-  sessionInfo setNames significant src stat.mean stat_name str_c
-  strength tail term terms tmp tmp_ID tmp_name tmpsamplenum transmute
-  umap ungroup update update.formula val_type vals value var
-  vertex.names writeToConsole x xend xx xxx y yend yy
+  fixorder lFormula left_join lm m1 m2 map_lgl mappingID mcmapply
+  mean_case mean_ctrl mean_fc merge.primary met met_IDs met_id metab
+  miss mti_multi_get_unique_plots mutate n n_pw n_pw_sig n_total
+  n_total_sig na.exclude na.omit name name1 name2 new.name ns_np ns_p
+  observed one_of out_col.x out_col.y p.adj p.val p.value p1 p_single_1
+  p_single_2 p_value p_value_adjusted parseMetabolonFile parse_guess
+  pathway_ID pathway_name pcor pdf plot pw pw_idx pw_str pwdb q.val
+  s_np s_p sample_idx select significant src stat.mean stat_name str_c
+  strength term tmp tmp_ID tmp_name tmpsamplenum transmute umap ungroup
+  val_type vals value var vertex.names writeToConsole x xend xx xxx y
+  yend yy
 Consider adding
   importFrom("grDevices", "dev.off", "pdf")
   importFrom("graphics", "plot")
-  importFrom("stats", "anova", "as.formula", "complete.cases", "cor",
-             "cor.test", "cov", "filter", "fisher.test", "formula", "lm",
-             "mahalanobis", "median", "model.matrix", "na.exclude",
-             "na.omit", "p.adjust", "pf", "ppoints", "prcomp", "qbeta",
-             "qchisq", "qnorm", "sd", "setNames", "terms", "update",
-             "update.formula", "var")
-  importFrom("utils", "compareVersion", "packageVersion", "read.csv2",
-             "read.table", "sessionInfo", "tail")
+  importFrom("stats", "filter", "lm", "na.exclude", "na.omit", "var")
 to your NAMESPACE file.
 * checking Rd files ... WARNING
 checkRd: (7) mt_plots_pheatmap.Rd:90: Tag \href is invalid in a \code block
