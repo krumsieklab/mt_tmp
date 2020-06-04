@@ -1,58 +1,0 @@
-
-# function from
-# https://community.rstudio.com/t/is-there-a-way-to-extract-the-names-of-all-functions-in-an-r-script/51905/2
-# fix: added "if (!missing(part)) {" line, JanK, 5/26/20
-
-get_calls <- function(filepath) {
-  code <- parse(filepath)
-  tokens <- as.list(code)
-  calls <- c()
-  while (TRUE) {
-    any_unpacked <- FALSE
-    for (ii in seq_along(tokens)) {
-      part <- tokens[[ii]]
-      # Calls always have the function name as the first element
-      if (!missing(part)) {
-        if (is.call(part)) {
-          fun_token <- part[[1]]
-          calls <- c(calls, deparse(fun_token))
-        }
-        # Expressions have a length
-        if (length(part) > 1) {
-          tokens[[ii]] <- as.list(part)
-          any_unpacked <- TRUE
-        }
-      }
-    }
-    tokens <- unlist(tokens)
-    if (!any_unpacked) break
-  }
-  unique(calls)
-}
-
-# so that all functions are sourced
-#mt.quickload()
-source("/Users/kelsey/mt/quickload.R")
-
-# get calls for all functions R of entire directory (no recursive files)
-files = list.files("/Users/kelsey/mt/MetaboTools/R", pattern="mt_post_multTest.R", full.names=T)
-print(files)
-
-# parse all function calls from all files, merge into single list
-funs = sapply(files, get_calls) %>% unlist() %>% unique()
-
-# check where each is coming from
-# if find returns more than one, there's masked calls, the first element is always the one R uses
-funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
-  rownames_to_column() %>%
-  {colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
-  mutate(package=gsub("package:","",find_result)) # to remove "package:"
-
-
-# show
-View(funpackages)
-
-# remove all base calls an no-package calls (internal functions)
-View(funpackages %>% filter(package!="base"))
-# also remove stats and utils internal packages
-View(funpackages %>% filter(package!="base") %>% filter(package!="stats") %>% filter(package!="utils"))
