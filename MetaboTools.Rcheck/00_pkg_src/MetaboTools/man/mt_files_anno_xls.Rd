@@ -36,21 +36,21 @@ mt_files_anno_xls(
 rowData or colData: new annotations added
 }
 \description{
-Loads annotations and merges them into current SummarizedExperiment. 
+Loads annotations and merges them into current SummarizedExperiment.
 Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
 Can load annotations for both metabolites (rowData) and samples (colData)
 }
 \examples{
 # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
-\dontrun{D <- 
+\dontrun{D <-
   # load raw data
-  mt_files_data_xls(file=file, sheet="data", samplesInRows=T, ID="SAMPLE_NAME") \%>\% 
+  mt_files_data_xls(file=file, sheet="data", samplesInRows=T, ID="SAMPLE_NAME") \%>\%
   # sample annotations from metabolomics run
-  mt_files_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_ID = "SAMPLE_NAME") \%>\% 
+  mt_files_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_ID = "SAMPLE_NAME") \%>\%
   # sample annotations from clinical table
-  mt_files_anno_xls(file=file, sheet="clinicals", anno_type="samples", anno_ID="SAMPLE_NAME") \%>\% 
+  mt_files_anno_xls(file=file, sheet="clinicals", anno_type="samples", anno_ID="SAMPLE_NAME") \%>\%
   # metabolite annotations`
-  mt_files_anno_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_ID="BIOCHEMICAL", data_ID = "name") \%>\% 
+  mt_files_anno_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_ID="BIOCHEMICAL", data_ID = "name") \%>\%
   ...}
 
 }

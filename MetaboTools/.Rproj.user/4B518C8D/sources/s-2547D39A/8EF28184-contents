@@ -1,0 +1,512 @@
+mt.quickload()
+getwd()
+setwd("/Users/kelsey/")
+mt_logging(console=T)
+D <-
+# load data
+mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+# timing start
+mt_logging_tic() %>%
+###
+# heading
+mt_reporting_heading("Preprocessing") %>%
+mt_reporting_heading("Part 1", lvl=2) %>%
+# sample boxplot
+mt_plots_sampleboxplot() %>%
+# missingness plot
+mt_plots_qc_missingness() %>%
+# filter metabolites with >20% missing values, then samples with >10% missing values
+mt_pre_filtermiss(metMax=0.2) %>%
+mt_pre_filtermiss(sampleMax=0.1) %>%
+# batch correction by variable BATCH_MOCK
+mt_pre_batch_median(batches = "BATCH_MOCK") %>%
+# heading
+mt_reporting_heading("Part 2", lvl=2) %>%
+# quotient normalization
+mt_pre_norm_quot() %>%
+# check if there is any correlation between normalization factors and outcomes (bad sign if so)
+mt_plots_qc_dilutionplot(comp="num1") %>%
+mt_plots_qc_dilutionplot(comp="Group") %>%
+# logging
+mt_pre_trans_log() %>%
+# KNN imputation
+mt_pre_impute_knn()
+D <- D %>%
+###### </SAME AS example_simplepipeline.R>
+### heading
+mt_reporting_heading("Statistics") %>%
+# linear model, differential test on Group
+mt_stats_univ_lm(
+formula      = ~ Group,
+samplefilter = (Group %in% c("treatment1","treatment2")),
+name         = "comp",
+mc.cores     = 1
+) %>%
+# add fold change
+mt_post_addFC(statname = "comp") %>%
+# add multiple testing correction
+mt_post_multTest(statname = "comp", method = "BH") %>%
+# p-value histogram
+mt_plots_pvalhist() %>%
+# Volcano plot as overview of results
+mt_plots_volcano(statname     = "comp",
+x = statistic,
+metab_filter = p.adj < 0.1,
+colour       = p.value < 0.05)
+#### part 3, create pathview plots ----
+D <- D %>%
+# add column to rowData with KEGG identifiers (computed from HMDB)
+mt_anno_metabolites_HMDB2KEGG(col_input = "HMDb_ID", col_output = "KEGG_identifiers")
+D <- D %>%
+# plot all metabolites in the top 5 most frequent pathway annotations
+mt_plots_pathview(met.id="KEGG_identifiers",
+n.pathways = 5,
+# kegg pathway files will be created in a folder called "Pathview_database" inside the current working directory
+path.database = "./Pathview_database",
+# output will be created in a folder called "Pathview_output1" inside the current working directory
+path.output = "./Pathview_output1",
+# set to false to speed-up (output files will be bigger in size)
+same.layer = FALSE)
+D %>% mt_reporting_quickhtml(outfile="Desktop/KC_example_pathview.html", output.calls = T)
+D <-
+# load data
+mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+{.}
+library(magrittr)
+mt.quickload()
+D <-
+# load data
+mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+{.}
+D2 <- D %>%
+mt_anno_pathways_from_file(in_col = "HMDb_ID",
+out_col = "janpw",
+file = data.makepath("MT_precalc/hmdb/hmdb_preprocessed_4.0.xlsx"),
+sheet = "hmdb",
+met_ID_col = "HMDB_id",
+pw_ID_col = "SMP",
+pw_name_col = "pathway_name")
+library(data.table)
+library(readxl)
+library(tidyverse)
+D2 <- D %>%
+mt_anno_pathways_from_file(in_col = "HMDb_ID",
+out_col = "janpw",
+file = data.makepath("MT_precalc/hmdb/hmdb_preprocessed_4.0.xlsx"),
+sheet = "hmdb",
+met_ID_col = "HMDB_id",
+pw_ID_col = "SMP",
+pw_name_col = "pathway_name")
+D2 <- D2 %>% mt_anno_pathways_remove_redundant(met_ID_col = "HMDb_ID", pw_col = "janpw")
+D1 <- D %>%
+mt_anno_pathways_from_file(in_col = "HMDb_ID",
+out_col = "janpw",
+file = data.makepath("MT_precalc/hmdb/hmdb_preprocessed_4.0.xlsx"),
+sheet = "hmdb",
+met_ID_col = "HMDB_id",
+pw_ID_col = "SMP",
+pw_name_col = "pathway_name")
+D2 <- D1 %>% mt_anno_pathways_remove_redundant(met_ID_col = "HMDb_ID", pw_col = "janpw")
+rowData(D1)
+View(rowData(D1))
+View(rowData(D2))
+get_calls <- function(filepath) {
+code <- parse(filepath)
+tokens <- as.list(code)
+calls <- c()
+while (TRUE) {
+any_unpacked <- FALSE
+for (ii in seq_along(tokens)) {
+part <- tokens[[ii]]
+# Calls always have the function name as the first element
+if (!missing(part)) {
+if (is.call(part)) {
+fun_token <- part[[1]]
+calls <- c(calls, deparse(fun_token))
+}
+# Expressions have a length
+if (length(part) > 1) {
+tokens[[ii]] <- as.list(part)
+any_unpacked <- TRUE
+}
+}
+}
+tokens <- unlist(tokens)
+if (!any_unpacked) break
+}
+unique(calls)
+}
+files = list.files(codes.makepath("MT"), pattern="mt_anno_*.R", full.names=T)
+print(files)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_anno_?*.R", full.names=T)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_anno_(.*?).R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+?unique
+explicitPackages <- funpackages[funpackages$package %in% c("dplyr", "GenomicRanges", "IRanges", "magrittr", "purrr", "readr", "stringr")==F]
+explicitPackages <- funpackages[funpackages$package %in% c("dplyr", "GenomicRanges", "IRanges", "magrittr", "purrr", "readr", "stringr")==F,]
+explicitPackages <- funpackages[funpackages$package %in% c("dplyr", "GenomicRanges", "IRanges", "magrittr", "purrr", "readr", "stringr", "SummarizedExperiment", "tidyr")==F,]
+View(explicitPackages)
+library(graphite)
+?pathways
+?convertIdentifiers
+?pathwayId
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_anno_pathways_from_file.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+?intersect
+?%>%
+??%>%
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_anno_pathways_from_file.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_anno_pathways_graphite.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+?if_else
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_anno_pathways_HMDB.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_anno_pathways_remove_redundant.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="MetaboTools/R/mt_anno_metabolites_HMDB2KEGG.R", full.names=T)
+print(files)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="/MetaboTools/R/mt_anno_metabolites_HMDB2KEGG.R", full.names=T)
+print(files)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT/MetaboTools/R"), pattern="mt_anno_metabolites_HMDB2KEGG.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+roxygen2::roxygenize()
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_checksum.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_anno_xls.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+colnames(D)
+colnames(D1)
+?colnames
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_checksum.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_data_xls.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+?make.names
+?column_to_rownames
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_data_xls.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_load_metabolon.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+?parseMetabolon
+?parseMetabolonFile
+?frpintf
+?fpintf
+?fprintf
+??fprintf
+??parseMetabolonFile
+?sprintf
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_load_UCD.R", full.names=T)
+print(files)
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_load_UCD.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_load_WCM.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_write_pathwayannos.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+library(openxlsx)
+??add_sheet
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_write_stats.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# get calls for all functions R of entire directory (no recursive files)
+files = list.files(codes.makepath("MT"), pattern="mt_files_write_xls.R", full.names=T)
+print(files)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+# parse all function calls from all files, merge into single list
+funs = sapply(files, get_calls) %>% unlist() %>% unique()
+# check where each is coming from
+# if find returns more than one, there's masked calls, the first element is always the one R uses
+funpackages <- sapply(funs, function(fun){find(fun)[1]}) %>% as.data.frame() %>%
+rownames_to_column() %>%
+{colnames(.)<-c("fun","find_result");.} %>% # because dplry has no good way to set a list of column names
+mutate(package=gsub("package:","",find_result)) # to remove "package:"
+# show
+View(funpackages)
+search()
+.rs.restartR()

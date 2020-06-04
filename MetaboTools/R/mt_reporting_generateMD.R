@@ -82,9 +82,9 @@ output:
 
   #### chunk that loads libraries
   if (!use.plotly) {
-    writechunk('# load libraries\nmt.quickload()\nlibrary("DT")')
+    writechunk('# load libraries\nlibrary(MetaboTools)\n')
   } else  {
-    writechunk('# load libraries\nmt.quickload()\nlibrary("DT")\nlibrary("plotly")')
+    writechunk('# load libraries\nlibrary(MetaboTools)\nlibrary("plotly")')
   }
   #### chunk that loads data
   writechunk(glue::glue('# load data\nload("{readfrom}")\nr <- metadata(D)$results'))
@@ -144,7 +144,7 @@ df<-r[[{i}]]$output$table
 # add metabolite names
 rd <- rowData(D)
 df <- cbind(name=as.data.frame(rd)$name[match(df$var, rownames(rd))], df) %>%
-  arrange(p.value)
+  dplyr::arrange(p.value)
 # output
 DT::datatable(df, rownames = FALSE, filter = "top", options = list(pageLength = 20, lengthMenu = c(10*(2^(0:3)), nrow(df)), autoWidth = TRUE, width = 1200, dom = "Bitlrp", buttons = c("copy", "csv", "excel", "pdf", "print")), class = "cell-border stripe", extensions = "Buttons")  %>% DT::formatStyle(columns = c(1:ncol(df)), fontSize = "80%", target= "row", lineHeight="80%")'),
                      params = "results='asis'")

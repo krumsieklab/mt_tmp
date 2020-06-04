@@ -317,5 +317,16 @@ mti_add_leftright_gg <- function(gg, left, right) {
 }
 
 
+#' ADD TITLE
+#'
+#' ADD DESCRIPTION
+#'
+#' @param x ADD PARAM DESCRIPTION
+#'
+#' @return ADD RETURN DESCRIPTION
+#'
+#' @author whoWroteIt?
+#' @noRd
+fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)} # fix order of a factor
 
 

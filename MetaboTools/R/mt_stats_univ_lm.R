@@ -12,7 +12,7 @@
 #' @param formula left-hand side of formula to be put into glm function.
 #' @param stat_name name under which this comparison will be stored, must be unique to all other statistical results
 #' @param sample_filter term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison
-#' @param n_cpus number of cores to use for mclapply... default: 1. More than one core will not work on Windows platforms.
+#' @param n_cores number of cores to use for mclapply... default: 1. More than one core will not work on Windows platforms.
 #'
 #' @return $result: statistics object
 #'
@@ -20,7 +20,7 @@
 #' @import SummarizedExperiment
 #'
 #' @examples
-#' \dontrun{# run lm with no confounders, "Group" as outcome
+#' \donttest{# run lm with no confounders, "Group" as outcome
 #' # filter to groups "Li_2" and "Li_5"
 #' # name the comparison "Li's"
 #' ... %>%
@@ -39,7 +39,7 @@ mt_stats_univ_lm <- function(
   formula,        # formula defining statistical model, see above.
   stat_name,           # name of comparison,
   sample_filter,
-  n_cpus = 1
+  n_cores = 1
 ) {
 
   # validate arguments
@@ -212,7 +212,7 @@ mt_stats_univ_lm <- function(
   }
 
   ## run tests for all metabolites
-  models <- parallel::mclapply(rownames(D), do_lm, mc.cores = n_cpus) %>%
+  models <- parallel::mclapply(rownames(D), do_lm, mc.cores = n_cores) %>%
     stats::setNames(rownames(D))
 
   # broom it up, subselect to term, rename term

@@ -62,7 +62,7 @@ mt_files_load_metabolon <- function(
   #colnames(result$sampleinfo) = as.list(raw[1:imetheader-1,isampheader])[[1]] # dirty hack, had something to do with the output format of read_excel
   colnames(result$sampleinfo) = c(as.vector(as.matrix(raw[1:imetheader-1,isampheader])),overlsamp) # dirty hack, had something to do with the output format of read_excel
   rownames(result$sampleinfo) = c()
-  result$sampleinfo %<>% dplyr::mutate_all(parse_guess)
+  result$sampleinfo %<>% dplyr::mutate_all(readr::parse_guess)
 
   # extract data
   result$data <- t(raw[(imetheader+1):imetlast, (isampheader+1):isamplast])

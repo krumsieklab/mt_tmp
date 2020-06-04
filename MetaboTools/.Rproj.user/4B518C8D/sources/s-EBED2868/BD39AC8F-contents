@@ -1,4 +1,0 @@
-roxygen2::roxygenize()
-devtools::document()
-
-devtools::install_gitlab(repo="krumsieklab/mt@dev_RPackage", subdir = "MetaboTools", auth_token="Pu5Uchv42UeusgNNjUyz")

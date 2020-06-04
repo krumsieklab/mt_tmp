@@ -22,7 +22,7 @@ Produces an initial SummarizedExperiment, with assay, colData, rowData, and meta
 Loads data from a UC Davis-format Excel file.
 }
 \examples{
-\dontrun{D <- 
+\dontrun{D <-
   # load data
   mt_files_load_UCD(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") \%>\%
   ...}

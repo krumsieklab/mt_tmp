@@ -204,7 +204,7 @@ mt_plots_boxplot <- function(D,
       if(fill_page > 0){
         mti_logstatus(glue::glue("add {fill_page} blanks to fill page"))
         spaces <- purrr::map(1:fill_page, ~rep(" ", .x)) %>%
-          purrr::map_chr(str_c, collapse = "")
+          purrr::map_chr(stringr::str_c, collapse = "")
         p[[ pages ]] <- p[[ pages ]] +
           geom_blank(data = data.frame(name = spaces))
       }

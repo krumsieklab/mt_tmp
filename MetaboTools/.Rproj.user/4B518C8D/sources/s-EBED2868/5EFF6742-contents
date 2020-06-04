@@ -1,5 +1,0 @@
-Sys.setenv(PATH=paste("/anaconda3/bin", Sys.getenv("PATH"), sep=":"))
-codes.makepath <- function(p){file.path("/Users/kelsey/mt/MetaboTools/R",p)}
-data.makepath <- function(p){file.path("/Users/kelsey/Box/shareddata",p)}
-mt.quickload <- function()source(codes.makepath("quickload.R"))
-

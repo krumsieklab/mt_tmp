@@ -4,7 +4,7 @@
 \alias{mt_stats_univ_lm}
 \title{Univariate GLMs.}
 \usage{
-mt_stats_univ_lm(D, formula, stat_name, sample_filter, n_cpus = 1)
+mt_stats_univ_lm(D, formula, stat_name, sample_filter, n_cores = 1)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
@@ -15,7 +15,7 @@ mt_stats_univ_lm(D, formula, stat_name, sample_filter, n_cpus = 1)
 
 \item{sample_filter}{term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison}
 
-\item{n_cpus}{number of cores to use for mclapply... default: 1. More than one core will not work on Windows platforms.}
+\item{n_cores}{number of cores to use for mclapply... default: 1. More than one core will not work on Windows platforms.}
 }
 \value{
 $result: statistics object
@@ -31,7 +31,7 @@ Computes univariate GLM for each metabolite.
 }
 }
 \examples{
-\dontrun{# run lm with no confounders, "Group" as outcome
+\donttest{# run lm with no confounders, "Group" as outcome
 # filter to groups "Li_2" and "Li_5"
 # name the comparison "Li's"
 ... \%>\%

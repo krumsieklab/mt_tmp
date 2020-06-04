@@ -35,8 +35,6 @@ mt_plots_sampleboxplot <- function(
   ...        # additional arguments directly passed to aes() of ggplot
 ) {
 
-  fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)} # fix order of a factor
-
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
 
