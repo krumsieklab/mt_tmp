@@ -1,5 +1,10 @@
-# filepath: path of file to be previewed
-# filename: name of file to be previewed
+#' previews how roxygen header looks like once rendered to html 
+#'
+#' filepath: path of file to be previewed
+#' filename: name of file to be previewed
+#'
+#' authors: mubu
+#'
 preview_roxygen <- function(filepath, filename, rm.temp=T){
   require(roxygen2)
   require(Rdpack)
