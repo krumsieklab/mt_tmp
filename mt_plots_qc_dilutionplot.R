@@ -73,6 +73,9 @@ mt_plots_qc_dilutionplot <- function(
   
   if (!is.null(ggadd)) p <- p+ggadd
   
+  # fix ggplot environment
+  p <- mti_fix_ggplot_env(p)
+  
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>% 

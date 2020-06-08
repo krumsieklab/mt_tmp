@@ -103,7 +103,7 @@ mt_plots_boxplot <- function(D,
   
   ## CREATE PLOT
   dummy <- D %>%
-    mti_format_se_samplewise() %>%
+    mti_format_se_samplewise() %>% # NOTE: No explosion of dataset size due to active restriction - 6/2/20, JK
     gather(var, value, one_of(rownames(D)))
   ## filter to groups?
   if (restrict.to.used.samples) {
@@ -205,10 +205,16 @@ mt_plots_boxplot <- function(D,
         p[[ pages ]] <- p[[ pages ]] +
           geom_blank(data = data.frame(name = spaces))
       }
-    }else{
-      p <- list(p + facet_wrap(.~name, scales = "free_y"))
+     }else{
+      p <- p + facet_wrap(.~name, scales = "free_y")
+      # fix ggplot environment
+      p <- list(p)
     }
   }
+  
+  # fix ggplot environments
+  p <- lapply(p, mti_fix_ggplot_env)
+  
   
   ## add status information & plot
   funargs <- mti_funargs()

@@ -100,7 +100,7 @@ mt_plots_scatter <- function(D,
   
   ## CREATE PLOT
   dummy <- D %>%
-    mti_format_se_samplewise() %>%
+    mti_format_se_samplewise() %>% # NOTE: No explosion of dataset size due to active restriction - 6/2/20, JK
     gather(var, value, one_of(rownames(D)))
   
   
@@ -113,11 +113,7 @@ mt_plots_scatter <- function(D,
       vars <- c(vars, q %>% lapply(function(x){x %>% as.character() %>% gsub("~","",.)}) %>% unlist() %>% as.vector())
     }
     vars <- unique(vars)
-    
-    # make sure the main outcome variable x is a factor
-    mainvar <- x %>% as.character() %>% gsub("~","",.)
-    dummy[[mainvar]] <- as.factor(dummy[[mainvar]])
-    
+
     #
     plottitle <- ifelse(missing(statname),"",statname)
     p <- dummy %>%
@@ -150,7 +146,6 @@ mt_plots_scatter <- function(D,
       labs(x = quo_name(x), y="metabolite") +
       ggtitle(plottitle)
   }
-  
   
   ## ADD ANNOTATION
   if(!missing(annotation)){
@@ -185,8 +180,13 @@ mt_plots_scatter <- function(D,
         p[[ pages ]] <- p[[ pages ]] +
           geom_blank(data = data.frame(name = spaces))
       }
+      # fix ggplot environments
+      p <- lapply(p, mti_fix_ggplot_env)
     }else{
-      p <- list(p + facet_wrap(.~name, scales = "free_y"))
+      p <- p + facet_wrap(.~name, scales = "free_y")
+      # fix ggplot environment
+      p <- mti_fix_ggplot_env(p)
+      p <- list(p)
     }
   }
   

@@ -47,6 +47,10 @@ mt_plots_volcano <- function(D,
   rd <- rowData(D) %>%
     as.data.frame() %>%
     dplyr::mutate(var = rownames(D))
+  # remove rows not needed for plotting
+  vars <- c(mti_extract_variables(c(enquo(x), enquo(metab_filter), quos(...))),"var","name")
+  rd <- rd[,colnames(rd) %in% vars,drop=F]
+  
   
   ## stat
   data_plot <- mti_get_stat_by_name(D, statname) %>%
@@ -70,6 +74,9 @@ mt_plots_volcano <- function(D,
   } else {
     hliney <- NA
   }
+  
+  ## sanity check that there is something to plot
+  if (all(is.na(data_plot$p.value))) stop("All p-values for Volcano plot are NA")
   
   ## CREATE PLOT
   p <- data_plot %>%
@@ -106,20 +113,8 @@ mt_plots_volcano <- function(D,
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
   
-  # all the environment for quoted variables leads explosion of the object size
-  # problem is also not that simple to just find those variables and clean up the
-  # respective environment which I did, which did not solve the problem. 
-  # best solution so far is to wrap plot, get rid of everything else 
-  p <- local(
-    # transformartion of images into blank panel
-    ggplot2::ggplot(data.frame(x = 0:1, y = 0:1), aes_(x = ~x, y = ~y)) + 
-      ggplot2::geom_blank() + 
-      ggplot2::scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) + 
-      ggplot2::scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) + 
-      ggplot2::annotation_custom(gg_grob, xmin = 0, xmax = 1 , ymin = 0, ymax = 1) + 
-      ggplot2::theme_void(),
-    as.environment(list(gg_grob =ggplotGrob(p))) %>% {parent.env(.)=.GlobalEnv;.})
-  
+  # fix ggplot environment
+  p <- mti_fix_ggplot_env(p)
   
   ## add status information & plot
   funargs <- mti_funargs()

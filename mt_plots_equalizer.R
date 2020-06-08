@@ -162,6 +162,8 @@ mt_plots_equalizer <- function(
     p <- p + xlab(xlabel)
   }
   
+  # fix ggplot environment
+  p <- mti_fix_ggplot_env(p)
 
   # add status information & plot
   funargs <- mti_funargs()

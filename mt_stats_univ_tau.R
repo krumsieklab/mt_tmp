@@ -39,7 +39,7 @@ mt_stats_univ_tau = function(
   if (name %in% unlist(mti_res_get_stats_entries(D) %>% map("output") %>% map("name"))) stop(sprintf("stat element with name '%s' already exists",name))
   
   # merge data with sample info
-  Ds <- D %>% mti_format_se_samplewise() 
+  Ds <- D %>% mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
   
   ## FILTER SAMPLES
   if(!missing(samplefilter)) {

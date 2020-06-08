@@ -124,6 +124,9 @@ mt_plots_compare2stats <- function(
     
   }
   
+  # fix ggplot environment
+  p <- mti_fix_ggplot_env(p)
+  
   ## export to file?
   if (!is.null(export.file)) {
     # can't handle list columns, drop those

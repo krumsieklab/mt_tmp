@@ -134,6 +134,9 @@ mt_plots_PCA_mult <- function(D,
     ##         geom_text(data = data.label,
     ##                   aes_string(label = ol_col), size = ol_size)
     ## }
+    
+    # fix ggplot environment
+    p <- mti_fix_ggplot_env(p)
 
     ## add status information & plot
     funargs <- mti_funargs()
