@@ -1,7 +1,7 @@
 #' Quotient normalization
 #'
 #' Implementation according to Dieterle et al., 2006\cr
-#' https://www.ncbi.nlm.nih.gov/pubmed/16808434
+#' \href{https://www.ncbi.nlm.nih.gov/pubmed/16808434}
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param vars index vector of variables of be used, default: all
