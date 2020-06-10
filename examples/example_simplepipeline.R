@@ -44,7 +44,9 @@ D <-
   mt_plots_sampleboxplot(color=Group, plottitle = 'final') %>%
   # PCA, colored by some rowData() fields... this function shows 2 PCs
   mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
-
+  # heatmap
+  mt_plots_pheatmap(scaledata = T) %>% 
+  
   ###
   mt_reporting_heading("Statistics") %>%
   # linear model, differential test on Group

@@ -102,11 +102,11 @@ mt_plots_scatter <- function(D,
 
   ## CREATE PLOT
   dummy <- D %>%
-    mti_format_se_samplewise() %>%
-    tidyr::gather(var, value, dplyr::one_of(rownames(D)))
-
-
-  if (!full.info) {
+    mti_format_se_samplewise() %>% # NOTE: No explosion of dataset size due to active restriction - 6/2/20, JK
+    tidry::gather(var, value, dplyr::one_of(rownames(D)))
+  
+  
+  if (!full.info) { 
     # filter down only to the variables needed for plotting
     # need to parse x and ... list
     vars <- x %>% as.character() %>% gsub("~","",.)
@@ -116,7 +116,8 @@ mt_plots_scatter <- function(D,
     }
     vars <- unique(vars)
 
-    # make sure the main outcome variable x is a factor
+    # NOTE TO SELF: check if Jan meant to delete this - KC (06/10/20)
+	# make sure the main outcome variable x is a factor
     mainvar <- x %>% as.character() %>% gsub("~","",.)
     dummy[[mainvar]] <- as.factor(dummy[[mainvar]])
 
@@ -152,8 +153,7 @@ mt_plots_scatter <- function(D,
       labs(x = dplyr::quo_name(x), y="metabolite") +
       ggtitle(plottitle)
   }
-
-
+  
   ## ADD ANNOTATION
   if(!missing(annotation)){
     data_annotate <- stat %>%
@@ -187,8 +187,13 @@ mt_plots_scatter <- function(D,
         p[[ pages ]] <- p[[ pages ]] +
           geom_blank(data = data.frame(name = spaces))
       }
+      # fix ggplot environments
+      p <- lapply(p, mti_fix_ggplot_env)
     }else{
-      p <- list(p + facet_wrap(.~name, scales = "free_y"))
+      p <- p + facet_wrap(.~name, scales = "free_y")
+      # fix ggplot environment
+      p <- mti_fix_ggplot_env(p)
+      p <- list(p)
     }
   }
 

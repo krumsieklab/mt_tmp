@@ -5,6 +5,7 @@
 #' @param D \code{SummarizedExperiment} input
 #' @param file output filename to write to
 #' @param compnames Names of one or more statistical comparison to be written out. If NULL, will export all.
+#' @param sort.by.p Automatically sort by p-values? (default: False)
 #'
 #' @return Does not change the SummarizedExperiment.
 #'
@@ -20,7 +21,7 @@
 #' @import SummarizedExperiment
 #' 
 #' @export
-mt_files_write_stats <- function(D, file, compnames=NULL) {
+mt_files_write_stats <- function(D, file, compnames=NULL, sort.by.p=F) {
   
   # verify input arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -47,6 +48,11 @@ mt_files_write_stats <- function(D, file, compnames=NULL) {
   for (i in 1:length(S)) {
     # add to workbook
     df <- S[[i]]$output$table
+    # sort?
+    if (sort.by.p) {
+      df %<>% arrange(p.value)
+    }
+    # output
     name <- S[[i]]$output$name
     ws=openxlsx::addWorksheet(wb,sheetName=name)
     openxlsx::writeData(wb=wb, sheet=name, x=df)

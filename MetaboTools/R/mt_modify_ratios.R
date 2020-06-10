@@ -25,6 +25,7 @@ mt_modify_ratios <- function(D){
     stopifnot("SummarizedExperiment" %in% class(D))
 
     as <- assay(D)
+    p <- nrow(D)
     ## as <- matrix(1:(4*2), nrow = 4, ncol = 2, dimnames = list(letters[23:26], letters[1:2]))
 
     ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
@@ -82,7 +83,7 @@ mt_modify_ratios <- function(D){
     metadata(D)$results %<>%
                   mti_generate_result(
                       funargs = funargs,
-                      logtxt = sprintf("Create Metabolite Ratios"),
+                      logtxt = sprintf("created %d metabolite ratios out of %d metabolites", nrow(D), p),
                       output = NULL
                   )
     D

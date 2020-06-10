@@ -191,7 +191,7 @@ mti_dots_to_str <- function(...) {
 #'
 #' @noRd
 mti_correctConfounder <- function(D, formula){
-  d <- D %>% mti_format_se_samplewise()
+  d <- D %>% mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
   d_cor <- rownames(D) %>%
     purrr::map_dfc(function(m){
       f   <- stats::update.formula(formula, stringr::str_c(m, "~."))
@@ -316,6 +316,43 @@ mti_add_leftright_gg <- function(gg, left, right) {
 
 }
 
+
+# extracts variables from a list of terms
+mti_extract_variables <- function(lst) { 
+  # filter down only to the variables needed for plotting
+  # need to parse x and ... list
+  # browser()
+  # q <- quos(...)
+  vars = c()
+  if (length(q) > 0) {
+    vars <- lst %>% unlist() %>% lapply(function(x){x %>% all.vars()}) %>% unlist() %>% as.vector()
+  }
+  vars <- unique(vars)
+  
+  # return
+  vars
+}
+
+
+
+# Fixes the problem of exploding environments when saving ggplots to files
+# 
+# Magic code by Mustafa (- JK)
+mti_fix_ggplot_env <- function(p) {
+  # all the environment for quoted variables leads explosion of the object size
+  # problem is also not that simple to just find those variables and clean up the
+  # respective environment which I did, which did not solve the problem. 
+  # best solution so far is to wrap plot, get rid of everything else 
+  local(
+    # transformartion of images into blank panel
+    ggplot2::ggplot(data.frame(x = 0:1, y = 0:1), aes_(x = ~x, y = ~y)) + 
+      ggplot2::geom_blank() + 
+      ggplot2::scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) + 
+      ggplot2::scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) + 
+      ggplot2::annotation_custom(gg_grob, xmin = 0, xmax = 1 , ymin = 0, ymax = 1) + 
+      ggplot2::theme_void(),
+    as.environment(list(gg_grob =ggplotGrob(p))) %>% {parent.env(.)=.GlobalEnv;.})
+}
 
 #' ADD TITLE
 #'

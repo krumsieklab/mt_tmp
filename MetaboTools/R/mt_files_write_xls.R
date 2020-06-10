@@ -21,6 +21,10 @@ mt_files_write_xls <- function(D, file) {
   stopifnot("SummarizedExperiment" %in% class(D))
   stopifnot(is.character(file))
   
+  # rowdata lists must be collapsed
+  rd = rowData(D) %>% as.data.frame()
+  rd[] <- lapply(rd, function(x){if(is.list(x)){paste(x%>%unlist(),collapse="|")}else{x}})
+  
   # write out
   wb <- openxlsx::createWorkbook()
   openxlsx::addWorksheet(wb,"assay")

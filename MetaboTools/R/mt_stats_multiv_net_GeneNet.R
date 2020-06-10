@@ -42,8 +42,8 @@ mt_stats_multiv_net_GeneNet = function(
   ## FILTER SAMPLES?
   if(!missing(sample_filter)) {
     # merge data with sample info
-    Ds <- D %>% mti_format_se_samplewise()
-    filter_q <- dplyr::enquo(sample_filter)
+    Ds <- D %>% mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
+    filter_q <- dplyr::enquo(samplefilter)
     Ds <- Ds %>%
       dplyr::mutate(tmpsamplenum = 1:nrow(Ds)) %>%
       dplyr::filter(!!filter_q) %>%

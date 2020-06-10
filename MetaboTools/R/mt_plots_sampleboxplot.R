@@ -44,11 +44,14 @@ mt_plots_sampleboxplot <- function(
     assay(Dplot) <- log2(assay(Dplot))
     ylabel = sprintf("%s [log2]", ylabel)
   }
-
+  
+  # merge with sample annotations, only keep the ones that were actually used
+  cd <- Dplot %>% colData() %>% as.data.frame() %>% tibble::rownames_to_column("merge.primary")
+  keep <- c(mti_extract_variables(quos(...)), "merge.primary")
+  cd <- cd[,colnames(cd) %in% keep,drop=F]
+  df <- cbind(cd, t(assay(Dplot)))
   # generate ggplot
-  p <- Dplot %>%
-    mti_format_se_samplewise() %>%
-    tidyr::gather(metab, value, dplyr::one_of(rownames(D))) %>%
+  p <- df %>%  tidyr::gather(metab, value, dplyr::one_of(rownames(Dplot))) %>%
     ggplot(aes(x = merge.primary, y = value, ...)) +
     geom_boxplot() +
     ylab(ylabel) +
@@ -61,7 +64,10 @@ mt_plots_sampleboxplot <- function(
 
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
-
+  
+  # fix ggplot environment
+  p <- mti_fix_ggplot_env(p)
+  
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>%

@@ -32,7 +32,10 @@ mt_plots_pvalqq <- function(
 
   # create plot
   p <- mti_gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", comp))
-
+  
+  # fix ggplot environment
+  p <- mti_fix_ggplot_env(p)
+  
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>%
