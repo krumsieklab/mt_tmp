@@ -16,6 +16,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_pre_trans_relative <- function(
   D,        # SummarizedExperiment input
   refsamples,

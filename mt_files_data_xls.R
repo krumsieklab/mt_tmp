@@ -34,6 +34,7 @@ library(SummarizedExperiment)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_files_data_xls <- function(file,
                               sheet,
                               samplesInRows = T,

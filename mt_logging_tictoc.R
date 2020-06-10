@@ -18,6 +18,7 @@ library(tictoc)
 #'
 #' @author JK
 #' 
+#' @export
 mt_logging_tic <- function(D) {
   
   # validate argument
@@ -56,6 +57,7 @@ mt_logging_tic <- function(D) {
 #'
 #' @author JK
 #' 
+#' @export
 mt_logging_toc <- function(D) {
   
   # validate argument

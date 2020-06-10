@@ -22,6 +22,8 @@ library(MASS)
 #' 
 #' @author Annalise Schweickart
 #' 
+#' @export
+#' 
 
 mt_pre_confounding_correction_stepwise_aic <- function(
   D,         # SummarizedExperiment input
@@ -68,6 +70,28 @@ mt_pre_confounding_correction_stepwise_aic <- function(
   D
 }
 
+
+#' Title
+#' single_met_covars
+#'
+#' Description
+#' Perfrom medication correction for single metabolite
+#'
+#' @param metabolite data from a single metabolite
+#' @param id_col column containing metabolite ids
+#' @param meds dataframe containing medication information
+#' @param model.data merged dataframe of metabolite and medication information
+#' @param X dataframe of metabolite ids and assay information
+#'
+#' @returns list where first element is corrected metabolite and second element is a list of the metabolite, the medications that are covariates and the model's p-value and r-squared value
+#' 
+#' @examples
+#' 
+#'  single_met_covars(met,id_col,meds,model.data,X)
+#' 
+#' 
+#' @author Annalise Schweickart
+#' 
 single_met_covars <- function(
   metabolite,
   id_col,

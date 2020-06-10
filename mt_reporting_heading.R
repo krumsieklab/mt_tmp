@@ -17,6 +17,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_reporting_heading <- function(
   D,
   strtitle,

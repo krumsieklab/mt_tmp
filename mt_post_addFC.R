@@ -18,6 +18,7 @@
 #' 
 #' @author JZ
 #' 
+#' @export
 mt_post_addFC <- function(D,
                           statname,
                           correct_confounder,
@@ -75,12 +76,9 @@ mt_post_addFC <- function(D,
   
   ## EXTRACT DATA
   if(is.factor(colData(D)[[outcome]]))model[[outcome]] <- as.factor(model[[outcome]])
-  # d_fc <- mti_format_se_samplewise(D) %>%
-  #     ## use only levels that were used in stat
-  #     inner_join(model, by = outcome)
-  d_fc <- mti_format_se_samplewise(D) 
+  d_fc <- cbind(colData(D)[,outcome,drop=F],t(assay(D))) %>% as.data.frame() 
   keep <- d_fc[[outcome]] %in% model[[outcome]]
-  d_fc <- d_fc[keep,]
+  d_fc <- d_fc[keep,,drop=F]
   d_fc[[outcome]] <- as.factor(d_fc[[outcome]])
   d_fc[[outcome]] <- droplevels(d_fc[[outcome]])
   

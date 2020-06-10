@@ -12,6 +12,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_logging_datasetinfo <- function(D) {
   
   # validate argument

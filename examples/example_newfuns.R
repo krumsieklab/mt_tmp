@@ -4,7 +4,6 @@ mt.quickload()
 
 #### part 1, needed preprocessing steps ----
 
-mt_logging(console=T) 
 D <- 
   # load data
   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
@@ -65,7 +64,7 @@ D1 %>% mt_reporting_quickhtml("example3.html")
 
 # # mutate examples, stored
 # D %>% mt_modify_mutate(dir='samples', varname='new', term=num2^2) %>% colData()
-D %>% mt_modify_mutate(dir='samples', varname='new', term= quo(grepl("Vehicle", Group))) %>% colData()
+D %>% mt_modify_mutate(dir='samples', varname='new', term= grepl("Vehicle", Group)) %>% colData()
 
 # D %>% mt_modify_mutate(dir='metabolites', varname='new2', term=MASS-100) %>% rowData()
 

@@ -30,6 +30,8 @@ library(ggrepel)
 #' 
 #' @author JK, BGP
 #' 
+#' @export
+#' 
 mt_plots_PCA <- function(
   D,           
   title="PCA",    
@@ -91,6 +93,10 @@ mt_plots_PCA <- function(
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
   
+  # fix ggplot environment
+  p <- mti_fix_ggplot_env(p)
+  
+  
   # add explained variance plot?
   plotlist <- list(p)
   if (expvarplot) {
@@ -104,7 +110,7 @@ mt_plots_PCA <- function(
       geom_text(aes(label=sprintf('%.1f%%',expdf$expvar)), vjust=-0.3, size=3.5) + 
       scale_x_discrete(limits=1:nrow(expdf))
     # add to list of plots for results
-    plotlist[[2]] <- newp
+    plotlist[[2]] <- mti_fix_ggplot_env(newp)
   }
   
   # prep output matrices

@@ -20,6 +20,7 @@ library(igraph)
 #' 
 #' @author EB
 #' 
+#' @export
 
 mt_stats_multiv_net_GeneNet = function(
   D,                       # SummarizedExperiment input
@@ -41,7 +42,7 @@ mt_stats_multiv_net_GeneNet = function(
   ## FILTER SAMPLES?
   if(!missing(samplefilter)) {
     # merge data with sample info
-    Ds <- D %>% mti_format_se_samplewise() 
+    Ds <- D %>% mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
     filter_q <- enquo(samplefilter)
     Ds <- Ds %>%
       mutate(tmpsamplenum = 1:nrow(Ds)) %>%

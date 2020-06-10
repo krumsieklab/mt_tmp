@@ -22,6 +22,7 @@
 #' 
 #' @author Parviz Gomari
 #' 
+#' @export
 
 library(tidyverse)
 
@@ -118,48 +119,3 @@ mt_stats_pathway_enrichment <- function(
   
   D
 }
-
-
-
-if (FALSE) {
-  
-  # Example -----------------------------------------------------------------
-  mt_logging(console=T) 
-  D_pre <- 
-    mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
-    mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "kegg_db", 
-                          pwdb_name = "KEGG", db_dir = codes.makepath("sharedcodes/packages/metabotools_external/hmdb/")) %>% 
-    mt_anno_pathways_remove_redundant(met_ID_col = "HMDb_ID", pw_col = "kegg_db") %>% 
-    mt_pre_filtermiss(metMax=0.2) %>%
-    mt_pre_filtermiss(sampleMax=0.1) %>%
-    # batch correction by variable BATCH_MOCK
-    mt_pre_batch_median(batches = "BATCH_MOCK") %>%
-    # quotient normalization
-    mt_pre_norm_quot() %>%
-    # logging
-    mt_pre_trans_log() %>%
-    # KNN imputation
-    mt_pre_impute_knn() %>% 
-    # linear model, differential test on Group
-    mt_stats_univ_lm(
-      formula      = ~ Group, 
-      samplefilter = (Group %in% c("treatment1","treatment2")),
-      name         = "comp",
-      mc.cores     = 1
-    ) %>%
-    # add fold changes to result tables
-    mt_post_addFC(statname = "comp") %>%
-    # add multiple testing correction
-    mt_post_multTest(statname = "comp", method = "BH")
-  
-  
-  D_pw <- 
-    D_pre %>% 
-    mt_stats_pathway_enrichment("kegg_db",
-                                stat_name = "comp",
-                                cutoff = 0.4)
-  
-  metadata(D_pw)$pathways$enrichment_results
-  
-}
-

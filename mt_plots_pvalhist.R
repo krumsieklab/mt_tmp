@@ -13,6 +13,8 @@ library(glue)
 #' ... %>% mt_plots_pvalhist(statnames='comp') %>% ...  # for one
 #' 
 #' @author JK
+#' 
+#' @export
 mt_plots_pvalhist <- function(
   D,
   statnames=NULL
@@ -31,12 +33,17 @@ mt_plots_pvalhist <- function(
     breaks <- pretty(range(st$p.value), n = nclass.FD(st$p.value), min.n = 1)
     bwidth <- breaks[2]-breaks[1]
     # histogram
-    st %>% 
+    p <- st %>% 
         ggplot(aes(x=p.value)) +
         geom_histogram(binwidth=bwidth,fill="white",colour="black") +
         xlim(0,1) +
         ggtitle(glue("'{statname}' p-values"))
+    # fix ggplot environment
+    p <- mti_fix_ggplot_env(p)
+    p
     })
+  
+  
   
 
   # add status information & plot

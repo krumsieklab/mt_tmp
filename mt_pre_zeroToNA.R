@@ -12,6 +12,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_pre_zeroToNA <- function(
   D      # SummarizedExperiment input
 ) {

@@ -13,18 +13,23 @@ library(openxlsx)
 #' %>% mt_files_write_xls(file = "out.xlsx") %>%
 #' @author JK, BGP
 #' 
+#' @export
 mt_files_write_xls <- function(D, file) {
   
   # verify that input is a SummarizedExperiment
   stopifnot("SummarizedExperiment" %in% class(D))
   stopifnot(is.character(file))
   
+  # rowdata lists must be collapsed
+  rd = rowData(D) %>% as.data.frame()
+  rd[] <- lapply(rd, function(x){if(is.list(x)){paste(x%>%unlist(),collapse="|")}else{x}})
+  
   # write out
   wb <- createWorkbook()
   addWorksheet(wb,"assay")
   writeData(wb, "assay", assay(D), rowNames = T, colNames=T)
   addWorksheet(wb,"rowData")
-  writeData(wb, "rowData", rowData(D) %>% as.data.frame(), rowNames = T)
+  writeData(wb, "rowData", rd, rowNames = T)
   addWorksheet(wb,"colData")
   writeData(wb, "colData", colData(D) %>% as.data.frame())
   saveWorkbook (wb, file=file, overwrite=TRUE) 

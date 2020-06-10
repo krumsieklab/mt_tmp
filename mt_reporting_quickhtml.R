@@ -12,6 +12,7 @@ library(uuid)
 #'
 #' @author JK
 #' 
+#' @export
 mt_reporting_quickhtml <- function(
   D, 
   outfile, 

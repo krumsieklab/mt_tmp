@@ -44,6 +44,7 @@ library(openxlsx)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_plots_compare2stats <- function(
   D1,       # first SE dataset to compare; the one in the %>% pipeline
   stat1,    # name of statistical comparison in first dataset
@@ -122,6 +123,9 @@ mt_plots_compare2stats <- function(
     p <- p + ggtitle(plot_title)
     
   }
+  
+  # fix ggplot environment
+  p <- mti_fix_ggplot_env(p)
   
   ## export to file?
   if (!is.null(export.file)) {

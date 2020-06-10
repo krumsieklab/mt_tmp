@@ -16,6 +16,7 @@
 #' 
 #' @author EB
 #' 
+#' @export
 mt_reporting_text <- function(
   D,
   text

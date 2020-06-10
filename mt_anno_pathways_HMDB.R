@@ -28,6 +28,7 @@ library(data.table)
 #' 
 #' @author Parviz Gomari
 #' 
+#' @export
 
 # main
 mt_anno_pathways_HMDB <- function(
@@ -162,15 +163,3 @@ mt_anno_pathways_HMDB <- function(
   
   D
 }
-
-
-
-if (FALSE) {
-  # Example -----------------------------------------------------------------
-  mt_logging(console=T) 
-  D_alone <- 
-    mt_files_load_metabolon(codes.makepath("MTs/sampledata.xlsx"), "OrigScale") %>% 
-    mt_add_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db", 
-                         pwdb_name = "SMP", db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb"))
-}
-

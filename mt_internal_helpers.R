@@ -8,7 +8,17 @@
 
 library(uuid)
 
-#
+#' Return stats output by name.
+#' 
+#' Finds a named statistical result from a mt_stats... function and returns the $output$table dataframe.
+#'
+#' @param D SummarizedExperiment
+#' @param name Name of statistical comparison
+#' @param fullstruct optional, output entire $output structure, not just the $table inside.
+#'
+#' @return $output$table dataframe
+#' @noRd
+#' 
 mti_get_stat_by_name <- function(D, name, fullstruct=F){
   stopifnot("SummarizedExperiment" %in% class(D))
   
@@ -41,7 +51,17 @@ mti_get_stat_by_name <- function(D, name, fullstruct=F){
   output
 }
 
-# safely add to end of list, even if list does not exist
+#' Safely add to end of list, even if list does not exist
+#' 
+#' Adds an item to the end of a list, even if the list is empty or NULL
+#'
+#' @param lst list to be extended
+#' @param element element to be added
+#' @param oname name of the new element
+#'
+#' @return extended list
+#'
+#' @noRd
 mti_add_to_list <- function(lst, element, oname) {
   # init if needed
   if (is.null(lst) || length(lst)==0) lst=c()
@@ -52,33 +72,48 @@ mti_add_to_list <- function(lst, element, oname) {
   lst
 }
 
-# either throws an error if an annotation field does not exist, or returns the annotation vector
-# can be set to throw error if argument is not factor or vector of strings
-mti_get_sample_anno <- function(D, strarg, requireFactor=F) {
-  if (!(strarg %in% colnames(colData(D)))) stop(sprintf("'%s' not found in sample annotations",strarg))
-  v = colData(D)[[strarg]]
-  if (requireFactor && !(is.factor(v) || is.character(v))) stop(sprintf("'%s' is neither factor or vector of strings",strarg))
-  v
-}
 
-# returns data frame as samples X variables, merges all sample annotations, and adds sample rownames as "merge.primary" field
-mti_format_se_samplewise <- function(se){
-  cbind(colData(se),
-        t(assay(se))) %>%
+#' Concatenate data matrix with sample annotations
+#' 
+#' Returns data frame as samples X variables, merges all sample annotations, and adds sample rownames as "merge.primary" field
+#'
+#' @param D SummarizedExperiment input
+#'
+#' @return Concatenated dataframe
+#'
+#' @noRd
+#' 
+mti_format_se_samplewise <- function(D){
+  cbind(colData(D),
+        t(assay(D))) %>%
     as.data.frame() %>%
     rownames_to_column("merge.primary")
 }
 
 
-# helper to generate metadata(.)$results entry
-# will automatically generate fun and args fields, and send logtxt through logmsg()
+#' Helper function to generate metadata(.)$results entry
+#' 
+#' Automatically generates fun and args fields, and sends logtxt through logmsg()
+#'
+#' @param lst result list, function should be used like this:  metadata(D)$results %<>% mti_generate_result(...)
+#' @param funargs output from mti_funargs() that should be collected by calling function
+#' @param logtxt log text describing what the function did
+#' @param logshort shorter version of log text for printing; especially important for preprocessing funs... if not given, logtxt will be used
+#' @param output output structure of that function (e.g. plot, statistical results)... default is NULL (i.e. no output)
+#' @param output2 optional second output... default is NULL
+#'
+#' @return list ready to be stored in metadata()$results
+#' @export
+#'
+#' @noRd
+#' 
 mti_generate_result <- function(
-  lst,              # output list, function should be used like this:  metadata(D)$results %<>% mti_generate_result(...)
-  funargs,          # output from mti_funargs() that should be collected by calling function
-  logtxt="",        # log text describing what the function did
-  logshort=logtxt,  # shorter version of log text for printing; especially important for preprocessing funs... if not given, logtxt will be used
-  output=NULL,      # output structure of that function (e.g. plot, statistical results)... default is NULL (i.e. no output)
-  output2=NULL     # optional second output
+  lst,              # 
+  funargs,          # 
+  logtxt="",        # 
+  logshort=logtxt,  # 
+  output=NULL,      # 
+  output2=NULL     # 
 ) {
   
   # ensure structure of funargs
@@ -103,10 +138,19 @@ mti_generate_result <- function(
   )
 }
 
-# returns list of all arguments supplied to function 
-# removes first argument $D if it exists
-# remove mt from function name list
-# returns list of $fun, already exploded, and $args
+
+#' Return list of all arguments supplied to function 
+#' 
+#' Removes first argument $D if it exists.
+#' Removes "mt" from function name list
+#' Returns list of $fun, already exploded (e.g. c("plots","boxplot")), and $args
+#'
+#' @param ... Not actually used (TODO delete?). Accesses arguments of parent function
+#'
+#' @return List of arguments, see description.
+#'
+#' @noRd
+#' 
 mti_funargs <- function(...) {
   call <- evalq(match.call(expand.dots = FALSE), parent.frame(1))
   formals <- evalq(formals(), parent.frame(1))
@@ -130,38 +174,71 @@ mti_funargs <- function(...) {
 }
 
 
-# turns ... argument into key1=value1, key2=value2 etc.
+#' Turns ... argument into string, key1=value1, key2=value2 etc.
+#'
+#' @param ... Arbitary list of input arguments
+#'
+#' @return String key/value list.
+#'
+#' @noRd
+#' 
 mti_dots_to_str <- function(...) {
   l = eval(substitute(alist(...)))
   paste(sapply(names(l), function(k){sprintf('%s=%s',k,as.character(l[[k]]))}), collapse = ', ')
 }
 
-# fix order of a factor (in the order it appears in the vector)
-mti_fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)} 
 
-# generate extractor for $results entry, filter on top level function name
-mti_res_get_toplevel <- function(D,str){metadata(D)$results[sapply(sapply(metadata(D)$results,'[[', 'fun',simplify=F), '[[', 1,simplify=F)==str]}
-# extracts all preprocessing $results entries
-mti_res_get_pre_entries  <- function(D){mti_res_get_toplevel(D,"pre")}
-# extracts all plotting $results entries
-mti_res_get_plot_entries <- function(D){mti_res_get_toplevel(D,"plots")}
-# extracts all stats entries
-mti_res_get_stats_entries <- function(D){mti_res_get_toplevel(D,"stats")}
-# extract plots only, not entire $results structure
-mti_res_get_plots <- function(D,unlist=T){
-  l=sapply(mti_res_get_toplevel(D,"plots"),'[[','output',simplify=F)
-  if(unlist) l <- unlist(l,recursive=F)
-  l
-}
-# return all unique plots from multiple SummarizedExperiments
-mti_multi_get_unique_plots <- function(...) {
-  L <- list(...)
-  allplots <- unlist(map(L, ~mti_res_get_plots(.,unlist=T)), recursive = F)
-  unique(allplots)
+#' Confounder correction for a SummarizedExperiment
+#'
+#' Used specifically for boxplot function to generate confounder-corrected residuals for plotting.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param formula formula for correction
+#'
+#' @returns SummarizedExperiment with corrected data
+#' 
+#' @noRd
+#' 
+mti_correctConfounder <- function(D, formula){
+  d <- D %>% mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
+  d_cor <- rownames(D) %>%
+    map_dfc(function(m){
+      f   <- update.formula(formula, str_c(m, "~."))
+      mod <- lm(f, data = d, na.action = na.exclude)
+      res <- resid(mod)
+      res
+    }) %>%
+    setNames(rownames(D)) %>%
+    as.matrix() %>% t()
+  colnames(d_cor) <- colnames(D)
+  assay(D)        <- d_cor
+  D
 }
 
-# extract a certain "path" of entries, e.g. c("pre","norm")  [sorry for the code, but it works]
+
+#' Extract results from a "path" of entries in metadata
+#' 
+#' Extracts metadata()$results entries in a given namespace of arbitrary depth. See examples below.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param path path, list of strings
+#'
+#' @returns SummarizedExperiment with corrected data
+#' 
+#' @examples 
+#' # get all result entries for plots
+#' D %>% mti_res_get_path("plots")
+#' # get all result entries for stats
+#' D %>% mti_res_get_path("stats")
+#' # check if quotient normalization has been performed
+#' q <- D%>% mti_res_get_path(c("pre","norm","quot"))
+#' if (length(q)==0) stop("No quotient normalization performed.")
+#' 
+#' @author JK
+#' @noRd
+#' 
 mti_res_get_path <- function(D,path) {
+  # [sorry for the code, but it works]s
   labels <- lapply(metadata(D)$results,'[[', 'fun')
   m <- rep(T,length(labels))
   # exclude non-matches
@@ -178,26 +255,36 @@ mti_res_get_path <- function(D,path) {
   metadata(D)$results[m]
 }
 
+#' Extract all stats entries.
+#' 
+#' Returns all stats entries from the $results list.
+#'
+#' @param D \code{SummarizedExperiment} input
+#'
+#' @return list if stats results
+#'
+#' @author JK
+#' @noRd
+mti_res_get_stats_entries <- function(D){mti_res_get_path(D,"stats")}
 
-# remove all NAs from a vector
-# alternatively, replaces NAs with a value
-mti_removeNAs <- function(v, replaceWith=NULL) {
-  if (!is.null(replaceWith)) {
-    v[is.na(v)] <- replaceWith
-    v
-  } else {
-    v[!is.na(v)]
-  }
-}
-
-
-# tester function that just writes to stdout and stderr without flags to suppress it
-mti_debug_badconsole <- function() {
-  write("prints to stderr", stderr())
-  write("prints to stdout", stdout())
-}
-
-# add left- and right-aligned labels to gg plot
+# 
+#' Add left- and right-aligned x axis labels to ggplot
+#' 
+#' ggplot is missing the functionality to add x-axis labels that are left- and right-aligned. This function adds those.
+#'
+#' @param ggplot object 
+#' @param left text on the left
+#' @param right text on the right
+#' 
+#' @example 
+#' # To demonstrate function behavior on empty plot:
+#' (ggplot(mapping = aes(x=0,y=0)) + geom_point()) %>% mti_add_leftright_gg("left label","right label")
+#'
+#' @return ggplot object
+#'
+#' @author MB, JK
+#' @noRd
+#' 
 mti_add_leftright_gg <- function(gg, left, right) {
   
   # with backward compatibility 
@@ -238,44 +325,41 @@ mti_add_leftright_gg <- function(gg, left, right) {
 }
 
 
-# open device, plot all, close device
-# works either on list of plots, or on SE
-mti_plot_all_tofile <- function(input, dev=pdf, ...) {
-  if ("SummarizedExperiment" %in% class(input)) {
-    plots <- mti_multi_get_unique_plots(input)
-  } else {
-    plots <- input
+# extracts variables from a list of terms
+mti_extract_variables <- function(lst) { 
+  # filter down only to the variables needed for plotting
+  # need to parse x and ... list
+  # browser()
+  # q <- quos(...)
+  vars = c()
+  if (length(q) > 0) {
+    vars <- lst %>% unlist() %>% lapply(function(x){x %>% all.vars()}) %>% unlist() %>% as.vector()
   }
-  dev(...)
-  sapply(plots,plot)
-  dev.off()
+  vars <- unique(vars)
+  
+  # return
+  vars
 }
 
 
 
-# # completely suppresses a functions outputs
-# mti_silent <- function(...) {
-#   
-#   zz <- file("/dev/null", open = "wt")
-#   sink(file=zz, type = "output")
-#   sink(file=zz, type = "message")
+# Fixes the problem of exploding environments when saving ggplots to files
 # 
-#   pf <- parent.frame()
-#   evalVis <- function(expr) withVisible(eval(expr, pf))
-#   for (i in seq_along(args)) {
-#     expr <- args[[i]]
-#     tmp <- switch(mode(expr), expression = lapply(expr, evalVis), 
-#                   call = , name = list(evalVis(expr)), stop("bad argument"))
-#     for (item in tmp) if (item$visible) 
-#       print(item$value)
-#   }
-#   sink()
-#   sink()
-#   
-#   
-#   
-#   
-# }
-# 
-# 
-# 
+# Magic code by Mustafa (- JK)
+mti_fix_ggplot_env <- function(p) {
+  # all the environment for quoted variables leads explosion of the object size
+  # problem is also not that simple to just find those variables and clean up the
+  # respective environment which I did, which did not solve the problem. 
+  # best solution so far is to wrap plot, get rid of everything else 
+  local(
+    # transformartion of images into blank panel
+    ggplot2::ggplot(data.frame(x = 0:1, y = 0:1), aes_(x = ~x, y = ~y)) + 
+      ggplot2::geom_blank() + 
+      ggplot2::scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) + 
+      ggplot2::scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) + 
+      ggplot2::annotation_custom(gg_grob, xmin = 0, xmax = 1 , ymin = 0, ymax = 1) + 
+      ggplot2::theme_void(),
+    as.environment(list(gg_grob =ggplotGrob(p))) %>% {parent.env(.)=.GlobalEnv;.})
+}
+
+

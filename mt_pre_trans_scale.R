@@ -13,6 +13,7 @@
 #' 
 #' @author JK
 #' 
+#' @export
 mt_pre_trans_scale <- function(
   D,        # SummarizedExperiment input
   center=T, # mean 0?

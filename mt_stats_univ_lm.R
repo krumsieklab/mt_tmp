@@ -31,6 +31,7 @@ library(formula.tools)
 #' 
 #' @author JK, JZ
 #' 
+#' @export
 mt_stats_univ_lm <- function(
   D,              # SummarizedExperiment input
   formula,        # formula defining statistical model, see above.
@@ -46,7 +47,7 @@ mt_stats_univ_lm <- function(
   if (name %in% unlist(mti_res_get_stats_entries(D) %>% map("output") %>% map("name"))) stop(sprintf("stat element with name '%s' already exists",name))
   
   # merge data with sample info
-  Ds <- D %>% mti_format_se_samplewise() 
+  Ds <- D %>% mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
   
   ## FILTER SAMPLES
   if(!missing(samplefilter)) {
@@ -95,6 +96,10 @@ mt_stats_univ_lm <- function(
       if (length(levels( Ds[[ v]] ))!=2){
         # stop(sprintf("factor outcomes must have exactly two levels, '%s' has %d", o, length(levels(v))))
         do_anova <- TRUE
+        # sanity check: if there are more than 30 levels: crash
+        if (length(levels( Ds[[ v]] ))>30) {
+          stop(sprintf("More than 30 factors in outcome '%s'... forgot to convert string to numeric?",v))
+        }
       }
       # remember the level name of the second (will be deleted later on)
       outvar_term[o] <- str_c(outvar[o], levels(Ds[[ v ]])[2])
@@ -234,6 +239,13 @@ mt_stats_univ_lm <- function(
     outgroups <- NULL
   }
   
+  ## remove environments from all models (blows up when saving to file)
+  for (i in 1:length(models)) {
+    attr(models[[i]], "terms") <- NULL
+    attr(models[[i]]$model,"terms") <- NULL
+    models[[i]]$terms <- NULL
+  }
+  
   ## add status information & results
   funargs <- mti_funargs()
   metadata(D)$results %<>% 
@@ -242,7 +254,7 @@ mt_stats_univ_lm <- function(
       logtxt = sprintf("univariate lm, %s", as.character(formula)),
       output = list(
         table   = tab,
-        formula = formula,
+        formula = dput(formula) %>% as.character(),
         name    = name,
         lstobj  = models,
         groups = outgroups,

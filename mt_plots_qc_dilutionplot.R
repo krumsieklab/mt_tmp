@@ -20,6 +20,7 @@ library(ggbeeswarm)
 #' 
 #' @author JK
 #' 
+#' @export
 mt_plots_qc_dilutionplot <- function(
   D,       # SummarizedExperiment input
   comp,    # sample annotation column to compare with
@@ -71,6 +72,9 @@ mt_plots_qc_dilutionplot <- function(
   }
   
   if (!is.null(ggadd)) p <- p+ggadd
+  
+  # fix ggplot environment
+  p <- mti_fix_ggplot_env(p)
   
   # add status information & plot
   funargs <- mti_funargs()

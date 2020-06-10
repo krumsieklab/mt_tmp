@@ -31,6 +31,7 @@ library(rpubchem)
 #' 
 #' @author Parviz Gomari
 #' 
+#' @export
 
 # main
 mt_anno_pathways_graphite <- function(
@@ -169,15 +170,3 @@ mt_anno_pathways_graphite <- function(
   
   D
 }
-
-
-
-if (F) {
-  # Example -----------------------------------------------------------------
-  mt_logging(console=T) 
-  D_alone <- 
-    mt_files_load_metabolon(codes.makepath("MT/sampledata.xlsx"), "OrigScale") %>% 
-    mt_anno_pathways_graphite(in_col = "KEGG", out_col = "humancyc_db", pw_species = "hsapiens", pw_name = "humancyc", n_cpus = 5)
-}
-
-

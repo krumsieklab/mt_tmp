@@ -45,3 +45,6 @@ examples/example_simplepipeline\.html
 example_simplepipeline.html
 precalc/hmdb/.Rapp.history
 precalc/pathview/.gitkeep
+examples/example3.html
+examples/example_missingness.html
+examples/example_quant_outcome.html

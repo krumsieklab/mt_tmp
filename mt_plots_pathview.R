@@ -26,6 +26,7 @@ library(pathview)
 #' @param add.pwname.suffix logical, if TRUE will add the pathway name to the output filename. If FALSE, will use what stored in out.suffix for all files. Default add.pwname.to.filename=FALSE.
 #' @param db_path path to the pathway database to read annotations from.
 #' @param \dots  see \code{pathview::pathview} for pathview arguments
+#' 
 #' @return $result: pathview images
 #' 
 #' @examples
@@ -46,6 +47,7 @@ library(pathview)
 #'
 #' @author Elisa Benedetti
 #' 
+#' @export
 mt_plots_pathview <- function(D,
                              # only one between gene.id and gene.data can be given
                              gene.id = NULL,

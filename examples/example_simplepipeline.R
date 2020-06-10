@@ -7,7 +7,6 @@
 # load MT
 mt.quickload()
 
-mt_logging(console=T) 
 D <- 
   # load data
   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
@@ -45,6 +44,8 @@ D <-
   mt_plots_sampleboxplot(color=Group, plottitle = 'final') %>%
   # PCA, colored by some rowData() fields... this function shows 2 PCs
   mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
+  # heatmap
+  mt_plots_pheatmap(scaledata = T) %>% 
   
   ###
   mt_reporting_heading("Statistics") %>%

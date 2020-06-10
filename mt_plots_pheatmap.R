@@ -1,31 +1,32 @@
-##' 
-##' Heatmap plot by pheatmap::pheatmap 
-##' 
-##' 
-##' @param D summarized experiment object
-##' @param scaledata scaling the data, TRUE by default
-##' @param sym0 make color scale symmetric around 0? (should only be used for scaled data), default: F 
-##' @param fD function to transform/scale \code{t(assay(D))}, ie \code{mat = fD(t(assay(D)))} will be plotted
+#' 
+#' Heatmap plot by pheatmap::pheatmap 
+#' 
+#' 
+#' @param D summarized experiment object
+#' @param scaledata scaling the data, TRUE by default
+#' @param sym0 make color scale symmetric around 0? (should only be used for scaled data), default: F 
+#' @param fD function to transform/scale \code{t(assay(D))}, ie \code{mat = fD(t(assay(D)))} will be plotted
 
-##' @param return.gg should pheatmap object be converted to gg object, TRUE for default.
-##' @param gg.scale scaling of plot to be converted to gg object
-##' @param ggadd  further elements/functions to add (+) to the ggplot object
+#' @param return.gg should pheatmap object be converted to gg object, TRUE for default.
+#' @param gg.scale scaling of plot to be converted to gg object
+#' @param ggadd  further elements/functions to add (+) to the ggplot object
 
-##' @param \dots  see \code{pheatmap::pheatmap} for pheatmap arguments 
-##' @return object \code{SummarizedExperiment}, see \code{metabotools} conventions for the details
-##' @note all \code{pheatmap::pheatmap} arguments can be passed 
-##' @author mubu
-##' @references \code{\link{https://github.com/raivokolde/pheatmap}}
-##' @keywords ~heatmap ~pheatmap
-##' @examples 
-##' 
-##' D %>%
-##' mt_plots_pheatmap(annotation_row = c("SUPER_PATHWAY", "PLATFORM", "RI"), 
-##'                   annotation_col = c("GROUP_DESC","BATCH_MOCK","gender"), 
-##'                   fD = function(x) scale(exp(scale(x))),
-##'                   clustering_distance_cols =  "correlation",
-##'                   clustering_distance_rows = "minkowski")
-##' 
+#' @param \dots  see \code{pheatmap::pheatmap} for pheatmap arguments 
+#' @return object \code{SummarizedExperiment}, see \code{metabotools} conventions for the details
+#' @note all \code{pheatmap::pheatmap} arguments can be passed 
+#' @author mubu
+#' @references \code{\link{https://github.com/raivokolde/pheatmap}}
+#' @keywords ~heatmap ~pheatmap
+#' @examples 
+#' 
+#' D %>%
+#' mt_plots_pheatmap(annotation_row = c("SUPER_PATHWAY", "PLATFORM", "RI"), 
+#'                   annotation_col = c("GROUP_DESC","BATCH_MOCK","gender"), 
+#'                   fD = function(x) scale(exp(scale(x))),
+#'                   clustering_distance_cols =  "correlation",
+#'                   clustering_distance_rows = "minkowski")
+#' 
+#' @export
 
 
 mt_plots_pheatmap <- function(D, scaledata=F, sym0=F, fD = function(x){ if(scaledata) return(scale(x)); x}, # metabotools arguments
@@ -106,6 +107,10 @@ mt_plots_pheatmap <- function(D, scaledata=F, sym0=F, fD = function(x){ if(scale
     # add custom elements?
     if (!is.null(ggadd)) re <- re+ggadd
   }
+  
+  # fix ggplot environment
+  re <- mti_fix_ggplot_env(re)
+  
   
   # add status information & plot
   funargs <- mti_funargs()

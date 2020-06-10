@@ -15,6 +15,8 @@
 #'  mt_post_pgain(statname="comparison1") %>% ...
 #' 
 #' @author JZ
+#' 
+#' @export
 mt_post_pgain <- function(D,
                              statname,
                              pcolumn = p.value,
@@ -41,15 +43,16 @@ mt_post_pgain <- function(D,
     ## DO CORRECTION
     rd <- rowData(D) %>%
         as.data.frame() %>%
-        mutate(var = rownames(D)) %>%
-        select(var, m1, m2)
+        dplyr::mutate(var = rownames(D)) %>%
+        dplyr::select(var, m1, m2)
     res <- metadata(D)$results[[ stat_id ]]$output$table %>%
                      left_join(rd, by = "var")
     res <- res %>%
-        left_join(res %>% filter(is.na(m2)) %>% transmute(m1 = var, p_single_1 = p.value), by = "m1") %>%
-        left_join(res %>% filter(is.na(m2)) %>% transmute(m2 = var, p_single_2 = p.value), by = "m2") %>%
-        mutate(pgain = pmin(p_single_1, p_single_2) / p.value) %>%
-        select(-m1, -m2, -p_single_1, -p_single_2)
+        dplyr::left_join(res %>% filter(is.na(m2)) %>% transmute(m1 = var, p_single_1 = p.value), by = "m1") %>%
+        dplyr::left_join(res %>% filter(is.na(m2)) %>% transmute(m2 = var, p_single_2 = p.value), by = "m2") %>%
+        dplyr::mutate(pgain = pmin(p_single_1, p_single_2) / p.value) %>%
+        # dplyr::select(-m1, -m2, -p_single_1, -p_single_2)
+        {.}
 
     ## update results table
     metadata(D)$results[[ stat_id ]]$output$table <- res
@@ -60,7 +63,7 @@ mt_post_pgain <- function(D,
     metadata(D)$results %<>% 
                   mti_generate_result(
                       funargs = funargs,
-                      logtxt = sprintf("Calculate p-gains for '%s'", statname),
+                      logtxt = sprintf("Calculated p-gains for '%s'", statname),
                       output = NULL
                   )
     ## RETURN
