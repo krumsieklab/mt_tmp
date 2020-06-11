@@ -84,9 +84,9 @@ mt_plots_pathview <- function(D,
                              db_path = data.makepath("MT_precalc/pathview/KeggPathways.Rds"),
 
                              # other pathview::pathview arguments
-                             species = "hsa", gene.annotpkg = NULL, min.nnodes = 3, kegg.native = TRUE,
-                             map.null = TRUE, expand.node = FALSE, split.group = FALSE, map.symbol = TRUE, map.cpdname = TRUE, node.sum = "sum",
-                             discrete=list(gene=FALSE,cpd=FALSE), limit = list(gene = 1, cpd = 1), bins = list(gene = 10, cpd = 10),
+                             species = "hsa", gene.annotpkg = NULL, min.nnodes = 1, kegg.native = TRUE,
+                             map.null = TRUE, expand.node = TRUE, split.group = TRUE, map.symbol = FALSE, map.cpdname = TRUE, node.sum = "median", 
+                             discrete=list(gene=FALSE,cpd=FALSE), limit = list(gene = 1, cpd = 1), bins = list(gene = 10, cpd = 10), 
                              both.dirs = list(gene = TRUE, cpd = TRUE), trans.fun = list(gene = NULL, cpd = NULL), na.col = "transparent"
                              ) {
 
@@ -362,46 +362,54 @@ mt_plots_pathview <- function(D,
     file.create(paste0(getwd(),"/NO_RESULTS_AFTER_FILTERING.txt",sep=""))
     pv.out <- NULL
   } else {
-
+    
+    # removing problematic pathways from list if present -> they throw a weird error
+    pathway.id <- pathway.id[!(pathway.id %in% c("mmu05206","mmu04666","mmu04723"))]
+    
     if(!missing(n.pathways)) {
       if(n.pathways>length(pathway.id))
         warning(sprintf("n.pathway is %i, but there are only %i pathways, so %i pathways will be used", n.pathways, length(pathway.id), length(pathway.id)))
       pathway.id <- pathway.id[1:min(n.pathways,length(pathway.id))]
       pw_names <- pw_names[1:min(n.pathways,length(pathway.id))]
     }
-
-    suppressMessages(
-    pv.out <- pathview(gene.data = gene.data, cpd.data = cpd.data, pathway.id = pathway.id, kegg.dir = save.path,
-                       species = species, cpd.idtype = "kegg", gene.idtype = gene.idtype, gene.annotpkg = gene.annotpkg, min.nnodes = min.nnodes, kegg.native = kegg.native,
-                       map.null = map.null, expand.node = expand.node, split.group = split.group, map.symbol = map.symbol, map.cpdname = map.cpdname, node.sum = node.sum,
-                       discrete = discrete, limit = limit, bins = bins,
-                       both.dirs = both.dirs, trans.fun = trans.fun, low = low, mid = mid, high = high, na.col = na.col,
-                       same.layer = same.layer, out.suffix = out.suffix)
-    )
-
-    # if add.pwname.suffix is TRUE, change output filename with pathway name
-    if(add.pwname.suffix) {
-      filelist <- list.files(".",pattern=".png")
-      sapply(filelist, FUN=function(x){
+    
+    # print(sprintf("%d pathways detected", length(pathway.id)))
+    
+    lapply(1:length(pathway.id), function(x) {
+      # print(sprintf("pathway %d, %s", x, pathway.id[x]))
+      suppressMessages(
+        pv.out <- pathview::pathview(gene.data = gene.data, cpd.data = cpd.data, pathway.id = pathway.id[x], kegg.dir = save.path,
+                                     species = species, cpd.idtype = cpd.idtype, gene.idtype = gene.idtype, gene.annotpkg = gene.annotpkg, min.nnodes = min.nnodes, kegg.native = kegg.native,
+                                     map.null = map.null, expand.node = expand.node, split.group = split.group, map.symbol = map.symbol, map.cpdname = map.cpdname, node.sum = node.sum, 
+                                     discrete = discrete, limit = limit, bins = bins, 
+                                     both.dirs = both.dirs, trans.fun = trans.fun, low = low, mid = mid, high = high, na.col = na.col,
+                                     same.layer = same.layer, out.suffix = out.suffix)
+      )
+      # add pathway rank and name to filename 
+      if(add.pwname.suffix) {
+        fname <- list.files(".",pattern=pathway.id[x])
         # isolate pathway name from filename
-        m <- pw_names[names(pw_names)==substr(x, 1, 8)]
+        m <- pw_names[names(pw_names)==substr(fname[length(fname)], 1, 8)]
         m <- gsub('[[:punct:]]+','',m)
-        m <- stringr::str_replace_all(m," ","_")
-        file.rename(from=x,to=sub(pattern=out.suffix,replacement=m,x))
-      })
-    }
+        m <- str_replace_all(m," ","_")
+        file.rename(from=fname,to=sub(pattern=sprintf("%s.%s",pathway.id[x], out.suffix),replacement=sprintf("%d_%s.%s",x,m,pathway.id[x]),fname))
+      }
+    }) %>% invisible()
   }
 
   setwd(wd)
-
+  
+  n_pw <- ifelse((!missing(pathway.id)),length(pathway.id),0)
+  nn <- ifelse((!missing(pathway.id)),pw_names,NA)
+  
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("Pathway images saved in %s", path.output),
+      logtxt = sprintf("%d Pathway images saved in %s", n_pw, path.output),
       output = NULL,
-      output2 = pv.out
+      output2 = nn
     )
 
   # return
