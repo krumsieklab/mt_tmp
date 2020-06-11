@@ -61,7 +61,7 @@ D <-
   # p-value histogram
   mt_plots_pvalhist() %>%
   # Volcano plot as overview of results
-  mt_plots_volcano(statname     = "comp",
+  mt_plots_volcano(stat_name     = "comp",
                    x = statistic,
                    metab_filter = p.adj < 0.1,
                    colour       = p.value < 0.05) %>%
@@ -71,7 +71,7 @@ D <-
   mt_reporting_heading("All boxplots") %>%
   # boxplots
   mt_plots_boxplot(
-    statname           = "comp",
+    stat_name           = "comp",
     x                  = Group,
     fill               = Group,
     metab_filter       = p.adj<0.05,

@@ -4,7 +4,7 @@
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param x what value shall be plotted on x (default: fc)
-#' @param statname name of the statistics object to plot
+#' @param stat_name name of the statistics object to plot
 #' @param metab_filter if given, filter will be applied to data and remaining varaibles will be labelled in plot
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param vline where to draw vertical line (for fold-change), has to be single value. default: none
@@ -16,7 +16,7 @@
 #' @examples
 #' \dontrun{# Volcano plot as overview of results with a result already in 'comp'
 #' ... %>%
-#' mt_plots_volcano(statname     = "comp",
+#' mt_plots_volcano(stat_name     = "comp",
 #'  metab_filter = p.adj < 0.1,
 #'  colour       = p.value < 0.05) %>%
 #'  ...}
@@ -31,7 +31,7 @@
 
 mt_plots_volcano <- function(D,
                              x = fc,
-                             statname,
+                             stat_name,
                              metab_filter = p.value < 0.05,
                              xlabel=gsub("~","",as.character(x)),
                              vline=NA,
@@ -39,47 +39,47 @@ mt_plots_volcano <- function(D,
                              ggadd=NULL,
                              ...){
   x <- dplyr::enquo(x)
-  
+
   ## check input
   stopifnot("SummarizedExperiment" %in% class(D))
-  if(missing(statname))
-    stop("statname must be given for volcanoplot")
-  
+  if(missing(stat_name))
+    stop("stat_name must be given for volcanoplot")
+
   ## rowData
   rd <- rowData(D) %>%
     as.data.frame() %>%
     dplyr::mutate(var = rownames(D))
   # remove rows not needed for plotting
-  vars <- c(mti_extract_variables(c(enquo(x), enquo(metab_filter), quos(...))),"var","name")
+  vars <- c(mti_extract_variables(c(dplyr::enquo(x), dplyr::enquo(metab_filter), quos(...))),"var","name")
   rd <- rd[,colnames(rd) %in% vars,drop=F]
-  
-  
+
+
   ## stat
-  data_plot <- mti_get_stat_by_name(D, statname) %>%
+  data_plot <- mti_get_stat_by_name(D, stat_name) %>%
     dplyr::inner_join(rd, by = "var") %>%
     dplyr::mutate(xxx = !!x)
-  
+
   ## SCALE -log10
   reverselog_trans <- function (base = exp(1)){
     trans <- function(x) -log(x, base)
     inv <- function(x) base^(-x)
-    scales::trans_new(paste0("reverselog-", format(base)), trans, inv, 
+    scales::trans_new(paste0("reverselog-", format(base)), trans, inv,
                       scales::log_breaks(base = base),
                       domain = c(1e-100, Inf))
   }
-  
+
   ## determine if and where to draw hline
   if (!missing(hline)) {
-    hliney <- mti_get_stat_by_name(D, statname) %>%
+    hliney <- mti_get_stat_by_name(D, stat_name) %>%
       dplyr::inner_join(rd, by = "var") %>%
       dplyr::mutate(xxx = !!x) %>% dplyr::filter(!!dplyr::enquo(hline)) %>% .$p.value %>% max()
   } else {
     hliney <- NA
   }
-  
+
   ## sanity check that there is something to plot
   if (all(is.na(data_plot$p.value))) stop("All p-values for Volcano plot are NA")
-  
+
   ## CREATE PLOT
   p <- data_plot %>%
     ## do plot
@@ -94,33 +94,33 @@ mt_plots_volcano <- function(D,
                        breaks = scales::trans_breaks("log10", function(x) 10^x),
                        labels = scales::trans_format("log10", scales::math_format(10^.x))) +
     labs(x = xlabel, y = "p-value") +
-    ggtitle(statname)
-  
+    ggtitle(stat_name)
+
   ## ADD METABOLITE LABELS
   if(!missing(metab_filter)){
     mti_logstatus("add label")
-    metab_filter_q <- enquo(metab_filter)
+    metab_filter_q <- dplyr::enquo(metab_filter)
     data_annotate <- data_plot %>%
-      filter(!!metab_filter_q)
+      dplyr::filter(!!metab_filter_q)
     p <- p + ggrepel::geom_text_repel(data = data_annotate,
                                       aes(label = name))
   }
-  
+
   ## ADD AXIS GROUPS
-  d <- mti_get_stat_by_name(D, statname, fullstruct=T)
+  d <- mti_get_stat_by_name(D, stat_name, fullstruct=T)
   if ("groups" %in% names(d) && length(d$groups)==2) {
     p <- mti_add_leftright_gg(p, paste0(d$groups[1],' high'), paste0(d$groups[2],' high'))
   }
-  
+
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
-  
+
   # fix ggplot environment
   p <- mti_fix_ggplot_env(p)
-  
+
   ## add status information & plot
   funargs <- mti_funargs()
-  metadata(D)$results %<>% 
+  metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("volcano plot, aes: %s", mti_dots_to_str(...)),

@@ -45,8 +45,8 @@ D <-
   # PCA, colored by some rowData() fields... this function shows 2 PCs
   mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
   # heatmap
-  mt_plots_pheatmap(scaledata = T) %>% 
-  
+  mt_plots_pheatmap(scaledata = T) %>%
+
   ###
   mt_reporting_heading("Statistics") %>%
   # linear model, differential test on Group
@@ -63,7 +63,7 @@ D <-
   # p-value histogram
   mt_plots_pvalhist() %>%
   # Volcano plot as overview of results
-  mt_plots_volcano(statname     = "comp",
+  mt_plots_volcano(stat_name     = "comp",
                    metab_filter = p.adj < 0.1,
                    colour       = p.value < 0.05) %>%
 
@@ -71,7 +71,7 @@ D <-
   # heading
   mt_reporting_heading("All boxplots") %>%
   # boxplots
-  mt_plots_boxplot(statname           = "comp",
+  mt_plots_boxplot(stat_name           = "comp",
                    x                  = Group,
                    fill               = Group,
                    correct_confounder = ~BATCH_MOCK,

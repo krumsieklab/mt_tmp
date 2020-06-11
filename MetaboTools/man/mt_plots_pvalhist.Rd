@@ -4,12 +4,12 @@
 \alias{mt_plots_pvalhist}
 \title{Generate p-value histogram.}
 \usage{
-mt_plots_pvalhist(D, statnames = NULL)
+mt_plots_pvalhist(D, stat_names = NULL)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{statnames}{Name of the statistical results. If not given, will generate histogram for all.}
+\item{stat_names}{Name of the statistical results. If not given, will generate histogram for all.}
 }
 \value{
 $result: plot, p-value histogram
@@ -19,7 +19,7 @@ Either for a given list of statistical results, or all.
 }
 \examples{
 \dontrun{... \%>\% mt_plots_pvalhist() \%>\% ...                  # for all
-... \%>\% mt_plots_pvalhist(statnames='comp') \%>\% ...  # for one
+... \%>\% mt_plots_pvalhist(stat_names='comp') \%>\% ...  # for one
 }
 
 }

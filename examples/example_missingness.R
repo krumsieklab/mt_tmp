@@ -25,7 +25,7 @@ D <-
   mt_post_multTest(stat_name = "miss", method = "BH") %>%
 
   # Volcano plot (with statistic)
-  mt_plots_volcano(statname     = "miss",
+  mt_plots_volcano(stat_name     = "miss",
                    x = statistic,
                    metab_filter = p.value < 0.05,
                    colour       = p.value < 0.05) %>%

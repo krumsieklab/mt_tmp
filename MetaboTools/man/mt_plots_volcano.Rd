@@ -7,7 +7,7 @@
 mt_plots_volcano(
   D,
   x = fc,
-  statname,
+  stat_name,
   metab_filter = p.value < 0.05,
   xlabel = gsub("~", "", as.character(x)),
   vline = NA,
@@ -21,7 +21,7 @@ mt_plots_volcano(
 
 \item{x}{what value shall be plotted on x (default: fc)}
 
-\item{statname}{name of the statistics object to plot}
+\item{stat_name}{name of the statistics object to plot}
 
 \item{metab_filter}{if given, filter will be applied to data and remaining varaibles will be labelled in plot}
 
@@ -42,7 +42,7 @@ Creates a volcano plot
 \examples{
 \dontrun{# Volcano plot as overview of results with a result already in 'comp'
 ... \%>\%
-mt_plots_volcano(statname     = "comp",
+mt_plots_volcano(stat_name     = "comp",
  metab_filter = p.adj < 0.1,
  colour       = p.value < 0.05) \%>\%
  ...}

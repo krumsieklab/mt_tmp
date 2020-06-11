@@ -5,13 +5,13 @@
 #' 2. sorted missing value % plot
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param metMax Which missingness to mark on the y axis (default: NA = no line)
+#' @param met_max Which missingness to mark on the y axis (default: NA = no line)
 #'
 #' @return $result: plot, two plots
 #'
 #' @examples
 #' \dontrun{%>%  mt_plots_qc_missingness() %>% # without horizontal line
-#' %>%  mt_plots_qc_missingness(metMax=0.5) %>% # with horizontal line at 50%
+#' %>%  mt_plots_qc_missingness(met_max=0.5) %>% # with horizontal line at 50%
 #' }
 #'
 #' @author JK
@@ -24,8 +24,8 @@
 
 mt_plots_qc_missingness <- function(
   D,         # SummarizedExperiment input
-  metMax=NA, # which % to mark on the y axis,
-  sampMax=NA, # which % to mark on the y axis,
+  met_max=NA, # which % to mark on the y axis,
+  samp_max=NA, # which % to mark on the y axis,
   plot.mets = T,    # show metabolite missingness plot?
   plot.samples = F, # show sample missingness plot?
   sample.labels=NA, # which column from colData to use as sample labels?
@@ -58,8 +58,8 @@ mt_plots_qc_missingness <- function(
       ylab("missingness") +
       ggtitle("Missing values, metabolites")
     # mark?
-    if (!is.na(metMax))
-      p <- p+geom_hline(yintercept=metMax, color='red', linetype="dashed")
+    if (!is.na(met_max))
+      p <- p+geom_hline(yintercept=met_max, color='red', linetype="dashed")
     # fix ggplot environment
     p <- mti_fix_ggplot_env(p)
     # append
@@ -88,8 +88,8 @@ mt_plots_qc_missingness <- function(
       ylab("missingness") +
       ggtitle("Missing values, samples")
     # mark?
-    if (!is.na(sampMax))
-      p <- p1+geom_hline(yintercept=sampMax, color='red', linetype="dashed")
+    if (!is.na(samp_max))
+      p <- p1+geom_hline(yintercept=samp_max, color='red', linetype="dashed")
     # fix ggplot environment
     p <- mti_fix_ggplot_env(p)
     # append

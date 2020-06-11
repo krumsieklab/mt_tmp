@@ -30,13 +30,13 @@ $result: dilution factors
 }
 \description{
 Implementation according to Dieterle et al., 2006\cr
-https://www.ncbi.nlm.nih.gov/pubmed/16808434
+\href{https://www.ncbi.nlm.nih.gov/pubmed/16808434}{https://www.ncbi.nlm.nih.gov/pubmed/16808434}
 }
 \examples{
 \dontrun{#' # in the context of a SE pipeline
 ... \%>\% mt_pre_norm_quot() \%>\% ...    # standard call
 ... \%>\% mt_pre_norm_quot(ref_samples = GROUP=="ctrl") \%>\% ...    # use reference samples where 'GROUP' field in colData is 'ctrl'
-#' ... \%>\% mt_pre_norm_quot(met_max = 0.2) \%>\% ...    # use only metabolites with <= 20\% missing values to compute the reference used for normalization
+... \%>\% mt_pre_norm_quot(met_max = 0.2) \%>\% ...    # use only metabolites with <= 20\% missing values to compute the reference used for normalization
 }
 
 }

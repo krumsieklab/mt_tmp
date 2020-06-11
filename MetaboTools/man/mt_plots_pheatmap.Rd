@@ -87,7 +87,7 @@ mt_plots_pheatmap(
 }
 \description{
 all \code{pheatmap::pheatmap} arguments can be passed
-\code{\href{https://github.com/raivokolde/pheatmap}{GitHub}}
+\code{\href{https://github.com/raivokolde/pheatmap}{https://github.com/raivokolde/pheatmap}}
 }
 \examples{
 \dontrun{D \%>\%

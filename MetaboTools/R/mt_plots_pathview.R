@@ -9,7 +9,7 @@
 #' @param met.id string name of the rowData column containing the metabolite identifiers
 #' @param cpd.data the same as gene.data, excpet named with IDs mappable to KEGG compound IDs. Over 20 types of IDs included in CHEMBL database can be used here. Check details for mappable ID types. Default cpd.data=NULL. Note that gene.data and cpd.data can't be NULL simultaneously.
 #' @param cpd.idtype character, ID type used for the cpd.data. Currently only works with "kegg".
-#' @param statname name of the statistics object to apply metab.filter to
+#' @param stat_name name of the statistics object to apply metab.filter to
 #' @param metab.filter if given, filter will be applied to data and only variables satisfying the condition will be included
 #' @param color.scale if given, this will be used to map colors to a continuous scale
 #' @param color.range numeric (positive), if given, indicates the color range (-color.range, +color.range). If missing, color.range will be determined internally.
@@ -31,7 +31,7 @@
 #' \dontrun{# plot all pathways with at least one significant metabolite from the statistical comparison "comp" in them
 #' mt_plots_pathview(D = D,
 #'                   met.id="KEGG_mapped",
-#'                   statname = "comp",
+#'                   stat_name = "comp",
 #'                   color.scale = -sign(fc)*log10(p.adj),
 #'                   color.range = -log10(0.01),
 #'                   metab.filter = p.adj < 0.05,
@@ -61,7 +61,7 @@ mt_plots_pathview <- function(D,
                              cpd.data = NULL,
                              cpd.idtype = "kegg",
                              # if gene.id or met.id is given, variables can be selected from the results of a statistical analysis
-                             statname,
+                             stat_name,
                              metab.filter,
                              color.scale,
                              color.range,
@@ -114,10 +114,10 @@ mt_plots_pathview <- function(D,
   if(!is.null(met.id)) {
     if(length(met.id)!=1)
       stop(sprintf("%s can only be a single column", met.id))}
-  ## if metab.filter is given, statname must also be given and either met.id or gene.id must be given as well
+  ## if metab.filter is given, stat_name must also be given and either met.id or gene.id must be given as well
   if(!missing(metab.filter)) {
-    if(missing(statname))
-      stop("In order to use metab.filter, statname must be given")
+    if(missing(stat_name))
+      stop("In order to use metab.filter, stat_name must be given")
     if(is.null(gene.id) & is.null(met.id))
       stop("In order to use metab.filter, one betweeen gene.id and met.id must be given")}
   ## if n.pathway is given, it must be numeric
@@ -140,8 +140,8 @@ mt_plots_pathview <- function(D,
     dplyr::mutate(var = rownames(D))
 
   ## stat
-  if(!missing(statname)){
-    stat <- mti_get_stat_by_name(D, statname) %>%
+  if(!missing(stat_name)){
+    stat <- mti_get_stat_by_name(D, stat_name) %>%
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd

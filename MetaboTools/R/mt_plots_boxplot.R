@@ -4,7 +4,7 @@
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param x what phenotype (from colData(D)) should be used on x axis, default "x"
-#' @param statname index of the entry in metadata(D)$results that contains statistic object
+#' @param stat_name index of the entry in metadata(D)$results that contains statistic object
 #' @param correct_confounder confounders to adjust for before plotting, formula notation
 #' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
 #' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
@@ -25,7 +25,7 @@
 #' \dontrun{# boxplots as overview of results with a result already in 'comp'
 #' # color by "Group" variable in colData
 #' mt_plots_boxplot(x                  = Group,
-#'                  statname           = "comp",
+#'                  stat_name           = "comp",
 #'                  correct_confounder = ~BATCH_MOCK,
 #'                  metab_filter       = p.value<0.01,
 #'                  metab_sort         = p.value,
@@ -45,7 +45,7 @@
 
 mt_plots_boxplot <- function(D,
                              x = "x",
-                             statname,
+                             stat_name,
                              correct_confounder,
                              metab_filter = p.value < 0.05,
                              metab_sort   = p.value,
@@ -76,8 +76,8 @@ mt_plots_boxplot <- function(D,
     dplyr::mutate(var = rownames(D))
 
   ## stat
-  if(!missing(statname)){
-    stat <- mti_get_stat_by_name(D, statname) %>%
+  if(!missing(stat_name)){
+    stat <- mti_get_stat_by_name(D, stat_name) %>%
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd
@@ -110,7 +110,7 @@ mt_plots_boxplot <- function(D,
     tidyr::gather(var, value, dplyr::one_of(rownames(D)))
   ## filter to groups?
   if (restrict.to.used.samples) {
-    filterto <- mti_get_stat_by_name(D, statname, fullstruct=T)$samples.used
+    filterto <- mti_get_stat_by_name(D, stat_name, fullstruct=T)$samples.used
     dummy <- dummy[filterto,]
   }
 
@@ -131,7 +131,7 @@ mt_plots_boxplot <- function(D,
     dummy[[mainvar]] <- as.factor(dummy[[mainvar]])
 
     #
-    plottitle <- ifelse(missing(statname),"",statname)
+    plottitle <- ifelse(missing(stat_name),"",stat_name)
     p <- dummy %>%
       dplyr::select(dplyr::one_of(c("var","value", vars))) %>%
       ## add metabolite names, but only restricted subset from statistics table
@@ -147,7 +147,7 @@ mt_plots_boxplot <- function(D,
     # leave full info in
     # can create huge data.frames
 
-    plottitle <- ifelse(missing(statname),"",statname)
+    plottitle <- ifelse(missing(stat_name),"",stat_name)
     p <- dummy %>%
       ## add metabolite names
       dplyr::inner_join(stat, by = "var") %>%
@@ -214,11 +214,11 @@ mt_plots_boxplot <- function(D,
       p <- list(p)
     }
   }
-  
+
   # fix ggplot environments
   p <- lapply(p, mti_fix_ggplot_env)
-  
-  
+
+
   ## add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>%

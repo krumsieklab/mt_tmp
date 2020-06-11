@@ -58,7 +58,7 @@ D <- D %>%
   # p-value histogram
   mt_plots_pvalhist() %>%
   # Volcano plot as overview of results
-  mt_plots_volcano(statname     = "comp",
+  mt_plots_volcano(stat_name     = "comp",
                    x = statistic,
                    metab_filter = p.adj < 0.1,
                    colour       = p.value < 0.05)
@@ -86,7 +86,7 @@ D <- D %>%
   mt_plots_pathview(met.id="KEGG_identifiers",
                     n.pathways = 5,
                     # take results from statistical analysis called "comp"
-                    statname = "comp",
+                    stat_name = "comp",
                     # color scale function
                     color.scale = -sign(fc)*log10(p.value),
                     # set color range
@@ -109,7 +109,7 @@ D <- D %>%
   mt_plots_pathview(met.id="KEGG_identifiers",
                     n.pathways = 5,
                     # take results from statistical analysis called "comp"
-                    statname = "comp",
+                    stat_name = "comp",
                     # color scale function
                     color.scale = -sign(fc)*log10(p.value),
                     # set color range

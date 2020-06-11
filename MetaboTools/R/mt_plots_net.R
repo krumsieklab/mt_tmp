@@ -3,7 +3,7 @@
 #' Creates a network object
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param statname name of the test to take correlations from
+#' @param stat_name name of the test to take correlations from
 #' @param corr_filter filter for correlation values to plot
 #' @param node_coloring name of the test to use for node coloring
 #' @param save.html filename of visnetwork html file. If empty, no html saved
@@ -30,7 +30,7 @@
 
 mt_plots_net <- function(
   D,                               # SummarizedExperiment input
-  statname,                        # name of the correlation matrix to plot
+  stat_name,                        # name of the correlation matrix to plot
   corr_filter = p.value < 0.05,    # filter
   node_coloring,                   # name of the statistical test to use for node coloring
   save.html,                       # filename of visnetwork html
@@ -39,8 +39,8 @@ mt_plots_net <- function(
 
   ## check input
   stopifnot("SummarizedExperiment" %in% class(D))
-  if(missing(statname))
-    stop("statname must be given to plot the network")
+  if(missing(stat_name))
+    stop("stat_name must be given to plot the network")
 
   ## rowData
   rd1 <- subset(rowData(D), select=which(names(rowData(D))=="name")) %>%
@@ -55,7 +55,7 @@ mt_plots_net <- function(
   rd2$name2 %<>% make.names()
 
   ## stat
-  data_plot <- mti_get_stat_by_name(D, statname) %>%
+  data_plot <- mti_get_stat_by_name(D, stat_name) %>%
     dplyr::inner_join(rd1, by = "var1") %>%
     dplyr::inner_join(rd2, by = "var2")
 
@@ -124,7 +124,7 @@ mt_plots_net <- function(
                   size = 3, vjust = -0.6) +
     theme_blank() +
     theme(legend.position = "bottom")
-  
+
   # fix ggplot environment
   p <- mti_fix_ggplot_env(p)
 
@@ -141,7 +141,7 @@ mt_plots_net <- function(
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("Correlation Network, aes: %s", statname),
+      logtxt = sprintf("Correlation Network, aes: %s", stat_name),
       output = list(p),
       output2 = p_vis
     )

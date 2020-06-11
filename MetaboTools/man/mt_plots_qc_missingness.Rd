@@ -6,8 +6,8 @@
 \usage{
 mt_plots_qc_missingness(
   D,
-  metMax = NA,
-  sampMax = NA,
+  met_max = NA,
+  samp_max = NA,
   plot.mets = T,
   plot.samples = F,
   sample.labels = NA,
@@ -17,7 +17,7 @@ mt_plots_qc_missingness(
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{metMax}{Which missingness to mark on the y axis (default: NA = no line)}
+\item{met_max}{Which missingness to mark on the y axis (default: NA = no line)}
 }
 \value{
 $result: plot, two plots
@@ -29,7 +29,7 @@ Creates two plots:
 }
 \examples{
 \dontrun{\%>\%  mt_plots_qc_missingness() \%>\% # without horizontal line
-\%>\%  mt_plots_qc_missingness(metMax=0.5) \%>\% # with horizontal line at 50\%
+\%>\%  mt_plots_qc_missingness(met_max=0.5) \%>\% # with horizontal line at 50\%
 }
 
 }

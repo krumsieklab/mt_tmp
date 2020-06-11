@@ -7,7 +7,7 @@
 mt_plots_boxplot(
   D,
   x = "x",
-  statname,
+  stat_name,
   correct_confounder,
   metab_filter = p.value < 0.05,
   metab_sort = p.value,
@@ -28,7 +28,7 @@ mt_plots_boxplot(
 
 \item{x}{what phenotype (from colData(D)) should be used on x axis, default "x"}
 
-\item{statname}{index of the entry in metadata(D)$results that contains statistic object}
+\item{stat_name}{index of the entry in metadata(D)$results that contains statistic object}
 
 \item{correct_confounder}{confounders to adjust for before plotting, formula notation}
 
@@ -64,7 +64,7 @@ Creates one boxplot plot per metabolite based on given sample annotations
 \dontrun{# boxplots as overview of results with a result already in 'comp'
 # color by "Group" variable in colData
 mt_plots_boxplot(x                  = Group,
-                 statname           = "comp",
+                 stat_name           = "comp",
                  correct_confounder = ~BATCH_MOCK,
                  metab_filter       = p.value<0.01,
                  metab_sort         = p.value,

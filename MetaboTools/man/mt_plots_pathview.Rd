@@ -12,7 +12,7 @@ mt_plots_pathview(
   met.id = NULL,
   cpd.data = NULL,
   cpd.idtype = "kegg",
-  statname,
+  stat_name,
   metab.filter,
   color.scale,
   color.range,
@@ -61,7 +61,7 @@ mt_plots_pathview(
 
 \item{cpd.idtype}{character, ID type used for the cpd.data. Currently only works with "kegg".}
 
-\item{statname}{name of the statistics object to apply metab.filter to}
+\item{stat_name}{name of the statistics object to apply metab.filter to}
 
 \item{metab.filter}{if given, filter will be applied to data and only variables satisfying the condition will be included}
 
@@ -101,7 +101,7 @@ Creates KEGG pathways visualization
 \dontrun{# plot all pathways with at least one significant metabolite from the statistical comparison "comp" in them
 mt_plots_pathview(D = D,
                   met.id="KEGG_mapped",
-                  statname = "comp",
+                  stat_name = "comp",
                   color.scale = -sign(fc)*log10(p.adj),
                   color.range = -log10(0.01),
                   metab.filter = p.adj < 0.05,

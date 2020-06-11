@@ -6,7 +6,7 @@
 \usage{
 mt_plots_net(
   D,
-  statname,
+  stat_name,
   corr_filter = p.value < 0.05,
   node_coloring,
   save.html,
@@ -16,7 +16,7 @@ mt_plots_net(
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{statname}{name of the test to take correlations from}
+\item{stat_name}{name of the test to take correlations from}
 
 \item{corr_filter}{filter for correlation values to plot}
 

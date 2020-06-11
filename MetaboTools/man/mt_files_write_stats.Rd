@@ -4,7 +4,7 @@
 \alias{mt_files_write_stats}
 \title{Export statistical results from pipeline into Excel file.}
 \usage{
-mt_files_write_stats(D, file, compnames = NULL)
+mt_files_write_stats(D, file, compnames = NULL, sort.by.p = F)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
@@ -12,6 +12,8 @@ mt_files_write_stats(D, file, compnames = NULL)
 \item{file}{output filename to write to}
 
 \item{compnames}{Names of one or more statistical comparison to be written out. If NULL, will export all.}
+
+\item{sort.by.p}{Automatically sort by p-values? (default: False)}
 }
 \value{
 Does not change the SummarizedExperiment.

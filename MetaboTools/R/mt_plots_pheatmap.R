@@ -1,7 +1,7 @@
 #' Heatmap plot by pheatmap::pheatmap
 #'
 #' all \code{pheatmap::pheatmap} arguments can be passed
-#' \code{\href{https://github.com/raivokolde/pheatmap}{GitHub}}
+#' \code{\href{https://github.com/raivokolde/pheatmap}{https://github.com/raivokolde/pheatmap}}
 #'
 #' @param D summarized experiment object
 #' @param scaledata scaling the data, TRUE by default
@@ -110,11 +110,11 @@ mt_plots_pheatmap <- function(D, scaledata=F, sym0=F, fD = function(x){ if(scale
     # add custom elements?
     if (!is.null(ggadd)) re <- re+ggadd
   }
-  
+
   # fix ggplot environment
   re <- mti_fix_ggplot_env(re)
-  
-  
+
+
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>%
