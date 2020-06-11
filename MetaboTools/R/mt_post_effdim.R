@@ -2,7 +2,7 @@
 #'
 #' Adjust output of statistical test using the method described in Li J, Ji L (2005) Adjusting multiple testing in
 #' multilocus analyses using the eigenvalues of a correlation matrix. Heredity 95:221-227
-#' \href{https://www.ncbi.nlm.nih.gov/pubmed/16077740}
+#' \href{https://www.ncbi.nlm.nih.gov/pubmed/16077740}{https://www.ncbi.nlm.nih.gov/pubmed/16077740}
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param stat_name name of the statistical comparison to adjust
@@ -68,7 +68,7 @@ mt_post_effdim <- function(D,
 #'
 #' @return effective number of idependent tests
 #'
-#' @noRD
+#' @noRd
 
 calc_effdim <- function(X){
 
