@@ -1,18 +1,18 @@
 
 #### load libraries ----
 
-zap()
-# load MT 
-mt.quickload()
+rlang::zap()
+# load MT
+library(MetaboTools)
 
 #### part 1, preprocess data ----
 
-D <- 
+D <-
   # load data
   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
   # timing start
-  mt_logging_tic() %>% 
-  
+  mt_logging_tic() %>%
+
   ###
   # heading
   mt_reporting_heading("Preprocessing") %>%
@@ -22,8 +22,8 @@ D <-
   # missingness plot
   mt_plots_qc_missingness() %>%
   # filter metabolites with >20% missing values, then samples with >10% missing values
-  mt_pre_filtermiss(metMax=0.2) %>%
-  mt_pre_filtermiss(sampleMax=0.1) %>%
+  mt_pre_filtermiss(met_max=0.2) %>%
+  mt_pre_filtermiss(sample_max=0.1) %>%
   # batch correction by variable BATCH_MOCK
   mt_pre_batch_median(batches = "BATCH_MOCK") %>%
   # heading
@@ -46,19 +46,19 @@ D <- D %>%
   mt_reporting_heading("Statistics") %>%
   # linear model, differential test on Group
   mt_stats_univ_lm(
-    formula      = ~ Group, 
-    samplefilter = (Group %in% c("treatment1","treatment2")),
-    name         = "comp",
-    mc.cores     = 1
+    formula      = ~ Group,
+    sample_filter = (Group %in% c("treatment1","treatment2")),
+    stat_name         = "comp",
+    n_cores     = 1
   ) %>%
   # add fold change
-  mt_post_addFC(statname = "comp") %>%
+  mt_post_addFC(stat_name = "comp") %>%
   # add multiple testing correction
-  mt_post_multTest(statname = "comp", method = "BH") %>%
+  mt_post_multTest(stat_name = "comp", method = "BH") %>%
   # p-value histogram
   mt_plots_pvalhist() %>%
   # Volcano plot as overview of results
-  mt_plots_volcano(statname     = "comp",
+  mt_plots_volcano(stat_name     = "comp",
                    x = statistic,
                    metab_filter = p.adj < 0.1,
                    colour       = p.value < 0.05)
@@ -67,7 +67,7 @@ D <- D %>%
 
 D <- D %>%
   # add column to rowData with KEGG identifiers (computed from HMDB)
-  mt_anno_metabolites_HMDB2KEGG(col_input = "HMDb_ID", col_output = "KEGG_identifiers")
+  mt_anno_metabolites_HMDB2KEGG(in_col = "HMDb_ID", out_col = "KEGG_identifiers")
 
 D <- D %>%
   # plot all metabolites in the top 5 most frequent pathway annotations
@@ -86,7 +86,7 @@ D <- D %>%
   mt_plots_pathview(met.id="KEGG_identifiers",
                     n.pathways = 5,
                     # take results from statistical analysis called "comp"
-                    statname = "comp",
+                    stat_name = "comp",
                     # color scale function
                     color.scale = -sign(fc)*log10(p.value),
                     # set color range
@@ -109,7 +109,7 @@ D <- D %>%
   mt_plots_pathview(met.id="KEGG_identifiers",
                     n.pathways = 5,
                     # take results from statistical analysis called "comp"
-                    statname = "comp",
+                    stat_name = "comp",
                     # color scale function
                     color.scale = -sign(fc)*log10(p.value),
                     # set color range

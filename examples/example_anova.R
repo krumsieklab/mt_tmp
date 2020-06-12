@@ -5,15 +5,15 @@
 #### run pipeline ----
 
 # load MT
-mt.quickload()
+library(MetaboTools)
 
-D <- 
+D <-
   ###### <SAME AS example_simplepipeline.R>
   # load data
   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
   # timing start
-  mt_logging_tic() %>% 
-  
+  mt_logging_tic() %>%
+
   ###
   # heading
   mt_reporting_heading("Preprocessing") %>%
@@ -23,8 +23,8 @@ D <-
   # missingness plot
   mt_plots_qc_missingness() %>%
   # filter metabolites with >20% missing values, then samples with >10% missing values
-  mt_pre_filtermiss(metMax=0.2) %>%
-  mt_pre_filtermiss(sampleMax=0.1) %>%
+  mt_pre_filtermiss(met_max=0.2) %>%
+  mt_pre_filtermiss(sample_max=0.1) %>%
   # batch correction by variable BATCH_MOCK
   mt_pre_batch_median(batches = "BATCH_MOCK") %>%
   # heading
@@ -45,33 +45,33 @@ D <-
   mt_plots_sampleboxplot(color=Group, plottitle = 'final') %>%
   # PCA, colored by some rowData() fields... this function shows 2 PCs
   mt_plots_PCA(color=Group, shape=BATCH_MOCK, size=NUM_MOCK) %>%
-  
+
   ###### </SAME AS example_simplepipeline.R>
-  
+
   ###
   mt_reporting_heading("Statistics") %>%
   # linear model on multiple groups, i.e. ANOVA
   mt_stats_univ_lm(
-    formula      = ~ Group, 
-    name         = "comp",
-    mc.cores     = 1
+    formula      = ~ Group,
+    stat_name         = "comp",
+    n_cores     = 1
   ) %>%
   # add multiple testing correction
-  mt_post_multTest(statname = "comp", method = "BH") %>%
+  mt_post_multTest(stat_name = "comp", method = "BH") %>%
   # p-value histogram
   mt_plots_pvalhist() %>%
   # Volcano plot as overview of results
-  mt_plots_volcano(statname     = "comp",
+  mt_plots_volcano(stat_name     = "comp",
                    x = statistic,
                    metab_filter = p.adj < 0.1,
                    colour       = p.value < 0.05) %>%
-  
+
   ###
   # heading
   mt_reporting_heading("All boxplots") %>%
   # boxplots
   mt_plots_boxplot(
-    statname           = "comp",
+    stat_name           = "comp",
     x                  = Group,
     fill               = Group,
     metab_filter       = p.adj<0.05,
@@ -79,17 +79,17 @@ D <-
     annotation         = "{sprintf('P-value: %.1e', p.value)}\nadjusted: {sprintf('%.1e', p.adj)}",
     rows               = 2,
     cols               = 2) %>%
-  
+
   # final timing
   mt_logging_toc() %>%
-  
-  # testing void (should not occur)
-  mt_internal_void()
+
+  # END OF PIPELINE
+  {.}
 
 
 
 
 #### generate and knit markdown ----
 
-D %>% mt_reporting_quickhtml(outfile="example_anova.html")
+D %>% mt_reporting_html(outfile="example_anova.html")
 
