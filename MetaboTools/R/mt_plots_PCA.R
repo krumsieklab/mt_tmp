@@ -82,8 +82,8 @@ mt_plots_PCA <- function(
   pc2name = sprintf('PC%d (%.1f%%)', PCb, expvar[PCb]*100)
 
   # plot
-  p <- ggplot(data=df) +
-    geom_point(combine_aes(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb)),aes(...))) +
+  p <- ggplot(data=df, combine_aes(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb)),aes(...))) +
+    geom_point() +
     xlab(pc1name) + ylab(pc2name) + ggtitle(title)
   # add text?
   if (nchar(labelby)>0) {
@@ -91,7 +91,7 @@ mt_plots_PCA <- function(
     else p <- p + geom_text(combine_aes(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb),label=labelby),aes(...)))
   }
   # add ellipse?
-  if (!is.na(ellipse)) p <- p + stat_ellipse(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb)), level=ellipse)
+  if (!is.na(ellipse)) p <- p + stat_ellipse(level=ellipse)
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
   
