@@ -19,19 +19,19 @@
 
 mt_plots_pvalqq <- function(
   D,
-  comp
+  stat_name
 ) {
 
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
 
   # trick: access argument so that a missing argument error is thrown from here instead of from inside mti_get_stat_by_name
-  comp
+  stat_name
   # get statistical result
-  res <- mti_get_stat_by_name(D, comp)
+  res <- mti_get_stat_by_name(D, stat_name)
 
   # create plot
-  p <- mti_gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", comp))
+  p <- mti_gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", stat_name))
   
   # fix ggplot environment
   p <- mti_fix_ggplot_env(p)
@@ -41,7 +41,7 @@ mt_plots_pvalqq <- function(
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = glue::glue("P-value QQ plot for {paste0(comp, collapse=', ')}"),
+      logtxt = glue::glue("P-value QQ plot for {paste0(stat_name, collapse=', ')}"),
       output = p
     )
 
