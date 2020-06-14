@@ -85,7 +85,8 @@ mt_stats_multiv_net_GeneNet = function(
       output = list(
         table = tab,
         name = stat_name,
-        lstobj = NULL
+        lstobj = NULL,
+        outcome = NA
         )
     )
 

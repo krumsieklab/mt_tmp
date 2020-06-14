@@ -96,7 +96,8 @@ mt_stats_univ_tau = function(
         table = tab,
         name = stat_name,
         lstobj = NULL,
-        groups = outgroups
+        groups = outgroups,
+        outcome = var
       )
     )
 

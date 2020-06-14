@@ -98,7 +98,8 @@ mt_stats_univ_missingness <- function(
       logtxt = sprintf("missingness analysis with variable %s", as.character(comp_col)),
       output = list(
         table   = res,
-        name    = stat_name
+        name    = stat_name,
+        outcome = comp_col
       )
     )
 

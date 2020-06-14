@@ -260,7 +260,8 @@ mt_stats_univ_lm <- function(
         name    = stat_name,
         lstobj  = models,
         groups = outgroups,
-        samples.used = samples.used
+        samples.used = samples.used,
+        outcome = outvar
       )
     )
 
