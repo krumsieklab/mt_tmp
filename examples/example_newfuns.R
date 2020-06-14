@@ -1,15 +1,15 @@
 
 #### load MT ----
-mt.quickload()
+library(MetaboTools)
 
 #### part 1, needed preprocessing steps ----
 
-D <- 
+D <-
   # load data
   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
   # timing start
-  mt_logging_tic() %>% 
-  
+  mt_logging_tic() %>%
+
   ###
   # heading
   mt_reporting_heading("Preprocessing") %>%
@@ -19,8 +19,8 @@ D <-
   # missingness plot
   mt_plots_qc_missingness() %>%
   # filter metabolites with >20% missing values, then samples with >10% missing values
-  mt_pre_filtermiss(metMax=0.2) %>%
-  mt_pre_filtermiss(sampleMax=0.1) %>%
+  mt_pre_filtermiss(met_max=0.2) %>%
+  mt_pre_filtermiss(sample_max=0.1) %>%
   # batch correction by variable BATCH_MOCK
   mt_pre_batch_median(batches = "BATCH_MOCK") %>%
   # heading
@@ -34,7 +34,7 @@ D <-
   mt_pre_trans_log() %>%
   # KNN imputation
   mt_pre_impute_knn() %>%
-  # scale %>% 
+  # scale %>%
   mt_pre_trans_scale()
 
 
@@ -42,7 +42,7 @@ D <-
 
 D1 <- D %>%
   mt_files_write_xls(file = "out.xlsx") %>%
-  mt_pre_outlier(method="univariate", thr=1, perc=0.12) %>%
+  mt_pre_outlier(method="univariate", thresh=1, perc=0.12) %>%
   # mt_plots_PCA() %>%
   mt_plots_PCA(labelby = 'CLIENT_IDENTIFIER', color='GROUP_DESC', expvarplot = T) %>%
   mt_plots_PCA(labelby = 'CLIENT_IDENTIFIER', color='outlier_univariate') %>%
@@ -59,13 +59,13 @@ D1 <- D %>%
 
 
 #### step 3, create output ----
-D1 %>% mt_reporting_quickhtml("example3.html")
+D1 %>% mt_reporting_html("example3.html")
 # D1 %>% mt_reporting_generateMD(outfile = "example3.RMD")
 
 # # mutate examples, stored
 # D %>% mt_modify_mutate(dir='samples', varname='new', term=num2^2) %>% colData()
-D %>% mt_modify_mutate(dir='samples', varname='new', term= grepl("Vehicle", Group)) %>% colData()
+D %>% mt_modify_mutate(anno_type='samples', col_name='new', term= (grepl("Vehicle", Group))) %>% colData()
 
 # D %>% mt_modify_mutate(dir='metabolites', varname='new2', term=MASS-100) %>% rowData()
 
-... %>% mt_modify_mutate(dir='samples', varname='is_studypool', term= quo(grepl("study", ID))) %>% ...
+... %>% mt_modify_mutate(dir='samples', varname='is_studypool', term=(grepl("study", ID))) %>% ...
