@@ -11,6 +11,7 @@
 #' @param firstheading Name of first heading
 #' @param use.plotly Output interactive plotly plots? (experimental)
 #' @param output.calls Output full information about all parameters of each function call into RMD?
+#' @param number.sections Number sections and sub-sections? (default: F)
 #' @param start.after UUID of pipeline step AFTER which to start (default: none, i.e. output entire pipeline)
 #'
 #' @returns nothing
@@ -30,6 +31,7 @@ mt_reporting_generateMD <- function(
   firstheading='Output',
   use.plotly=F,
   output.calls=F,
+  number.sections=F,
   start.after=NA
 ) {
 
@@ -56,6 +58,7 @@ output:
   html_document:
     toc: true
     toc_float: TRUE
+    {if(number.sections){"number_sections: true"}else{""}}
 ---
 
     '))

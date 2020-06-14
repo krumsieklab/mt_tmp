@@ -6,6 +6,7 @@
 #' @param outfile # output HTML file name
 #' @param title Title of RMD document
 #' @param output.calls Output detailed info on function calls? default: F (passed through to mt_reporting_generateMD)
+#' @param number.sections Number sections and sub-sections? (default: F)
 #' @param start.after UUID of pipeline step AFTER which to start (default: none, i.e. output entire pipeline) (passed through to mt_reporting_generateMD)
 #' @param use.plotly Output interactive plotly plots? (experimental)
 #'
@@ -21,6 +22,7 @@ mt_reporting_html <- function(
   outfile,
   title = 'RMD output',
   output.calls=F,
+  number.sections=F,
   start.after=NA,
   use.plotly=F # EXPERIMENTAL
   ) {
@@ -36,7 +38,13 @@ mt_reporting_html <- function(
   rdsfile <-  sprintf("tmp_%s.rds", ustr)
   # generate RMD
   D %>% mt_reporting_generateMD(
-    outfile = rmdfile, readfrom = rdsfile, title = title, output.calls = output.calls, start.after=start.after, use.plotly = use.plotly)
+    outfile = rmdfile, 
+    readfrom = rdsfile, 
+    title = title, 
+    output.calls = output.calls, 
+    number.sections = number.sections,
+    start.after=start.after, 
+    use.plotly = use.plotly)
   # save temp file that will be input for the RMD
   save(D, file=rdsfile)
   # knit
