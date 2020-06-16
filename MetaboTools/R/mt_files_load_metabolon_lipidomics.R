@@ -1,8 +1,3 @@
-library(readxl)
-library(stringr)
-library(SummarizedExperiment)
-library(tidyverse)
-
 #' Load Metabolon-format lipidomics data.
 #' 
 #' Loads lipidomics data from a Metabolon-format Excel file. Needs to be in the original "Client Data Table" format that they deliver.
@@ -21,6 +16,11 @@ library(tidyverse)
 #' 
 #' @author EB
 #' 
+#' @import readxl
+#' @import stringr
+#' @import SummarizedExperiment
+#' @import tidyverse
+#' 
 #' @export
 mt_files_load_metabolon_lipidomics <- function(
   file,           # Metabolon xls file
@@ -29,7 +29,7 @@ mt_files_load_metabolon_lipidomics <- function(
   
   # using readxl package:
   raw <- lapply(sheet_list %>% {names(.)=.;.}, function(x){
-    read_excel(path=file, sheet=x, col_names = F)
+    readxl::read_excel(path=file, sheet=x, col_names = F)
   })
   
   xx <- lapply(sheet_list %>% {names(.)=.;.}, function(x){
@@ -44,14 +44,14 @@ mt_files_load_metabolon_lipidomics <- function(
     isamplast = max(which(apply(is.na(raw[[x]]),2,sum)<dim(raw[[x]])[1]))
     
     # fix overlapping cell
-    overl=gsub("\\s+", " ", str_trim(raw[[x]][imetheader,isampheader]))
+    overl=gsub("\\s+", " ", stringr::str_trim(raw[[x]][imetheader,isampheader]))
     overl=strsplit(overl, " ")[[1]]
     overlmet = overl[2]
     overlsamp = overl[1]
     
     # extract metabolite information
-    result$metinfo <- read_excel(path=file, sheet=x, col_names = T,
-                                      range = cell_limits(ul = c(imetheader+1, 1),
+    result$metinfo <- readxl::read_excel(path=file, sheet=x, col_names = T,
+                                      range = readxl::cell_limits(ul = c(imetheader+1, 1),
                                                           lr = c(imetlast+1 , isampheader)))
     result$metinfo <- as.data.frame(result$metinfo)
     
@@ -65,7 +65,7 @@ mt_files_load_metabolon_lipidomics <- function(
     #colnames(result$sampleinfo) = as.list(raw[1:imetheader-1,isampheader])[[1]] # dirty hack, had something to do with the output format of read_excel
     colnames(result$sampleinfo) = c(as.vector(as.matrix(raw[[x]][6:imetheader-1,isampheader])),overlsamp) # dirty hack, had something to do with the output format of read_excel
     rownames(result$sampleinfo) = c()
-    result$sampleinfo %<>% mutate_all(parse_guess)
+    result$sampleinfo %<>% dplyr::mutate_all(parse_guess)
     # convert any spaces in the colnames to underscores
     colnames(result$sampleinfo) <- gsub(" ", "_", colnames(result$sampleinfo))
     
@@ -132,7 +132,7 @@ mt_files_load_metabolon_lipidomics <- function(
   if(length(sheet_list)>1) {
     for (i in 2:length(sheet_list)) {
       result$sampleinfo <- result$sampleinfo %>% 
-        full_join(xx[[sheet_list[i]]]$sampleinfo)
+        dplyr::full_join(xx[[sheet_list[i]]]$sampleinfo)
     }
   }
   
@@ -150,7 +150,7 @@ mt_files_load_metabolon_lipidomics <- function(
   if(length(sheet_list)>1) {
     for (i in 2:length(sheet_list)) {
       result$data <- result$data %>% 
-        full_join(xx[[sheet_list[i]]]$data, by = "mergeby")
+        dplyr::full_join(xx[[sheet_list[i]]]$data, by = "mergeby")
     }
   }
   rownames(result$data) <- result$data$mergeby
