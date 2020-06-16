@@ -33,7 +33,7 @@ mt_files_load_metabolon_lipidomics <- function(
   })
   
   xx <- lapply(sheet_list %>% {names(.)=.;.}, function(x){
-
+    
     result <- list()
     
     # find metabolite header row and last metabolite row
@@ -51,8 +51,8 @@ mt_files_load_metabolon_lipidomics <- function(
     
     # extract metabolite information
     result$metinfo <- readxl::read_excel(path=file, sheet=x, col_names = T,
-                                      range = readxl::cell_limits(ul = c(imetheader+1, 1),
-                                                          lr = c(imetlast+1 , isampheader)))
+                                         range = readxl::cell_limits(ul = c(imetheader+1, 1),
+                                                                     lr = c(imetlast+1 , isampheader)))
     result$metinfo <- as.data.frame(result$metinfo)
     
     # convert any spaces in the colnames to underscores
@@ -90,49 +90,46 @@ mt_files_load_metabolon_lipidomics <- function(
     result$data %<>% as.data.frame
     result$data$mergeby <- rownames(result$data)
     
+    # adding variable for matching later on
+    result$sampleinfo$id = rownames(result$data)
+    
     # set info flags
     result$info$file = file
     result$info$sheet = x
     
-    # # copy NanN from another sheet?
-    # if (nchar(copynansheet)>0) {
-    #   # recursive call
-    #   nandf = parseMetabolonFile(file=file, sheet=copynansheet)
-    #   # sanity checks
-    #   if (!(all.equal(colnames(result$data), colnames(nandf$data)))==T) {
-    #     # figure out which are different
-    #     l1 = colnames(result$data)
-    #     l2 = colnames(nandf$data)
-    #     dummy=sapply(1:length(l1), function(i){if(l1[i]!=l2[i]){fprintf('"%s" vs. "%s"\n',l1[i],l2[i])}})
-    #     stop('some metabolites are different between data sheet and NaN sheet');
-    #   }
-    #   if (!all.equal(rownames(result$data), rownames(nandf$data)))
-    #     stop('some sample names are different between data sheet and NaN sheet');
-    #   # copy over NaNs
-    #   result$data[is.na(nandf$data)]=NA
-    #   # set info flag
-    #   result$info$copynansheet = copynansheet
-    #   
-    # }
-
-  # add display name
-  result$metinfo$name <- result$metinfo$Name
-  # # fix variable names  
-  # colnames(result$data) <- result$metinfo$Name
-  
-  result
+    # add display name
+    result$metinfo$name <- result$metinfo$Name
+    
+    result
   
   })
   
   # merge data and annotations from the different data sheets
   result <- list()
   
+  # join all data
+  result$data <- xx[[sheet_list[1]]]$data
+  if(length(sheet_list)>1) {
+    for (i in 2:length(sheet_list)) {
+      # throw an error if the sample names are different across data sheets
+      if (any(xx[[sheet_list[1]]]$data$mergeby!=xx[[sheet_list[i]]]$data$mergeby)) {
+        stop(sprintf("Sample names of %s and %s are not the same.", sheet_list[1], sheet_list[i]))
+      }
+      result$data <- result$data %>% 
+        dplyr::full_join(xx[[sheet_list[i]]]$data, by = "mergeby")
+    }
+  }
+  rownames(result$data) <- result$data$mergeby
+  result$data$mergeby <- NULL
+  
   # join all sample annotations
   result$sampleinfo <- xx[[sheet_list[1]]]$sampleinfo
   if(length(sheet_list)>1) {
     for (i in 2:length(sheet_list)) {
-      result$sampleinfo <- result$sampleinfo %>% 
-        dplyr::full_join(xx[[sheet_list[i]]]$sampleinfo)
+      # throw a warning if sample annotations are different across data sheets
+      if(any(colnames(xx[[sheet_list[1]]]$sampleinfo)!=colnames(xx[[sheet_list[i]]]$sampleinfo))) {
+        warning(sprintf("The sample annotations of %s and %s are not the same. Sample annotations from %s used.", sheet_list[1], sheet_list[i], sheet_list[1]))
+      }
     }
   }
   
@@ -145,20 +142,13 @@ mt_files_load_metabolon_lipidomics <- function(
     }
   }
   
-  # join all data
-  result$data <- xx[[sheet_list[1]]]$data
-  if(length(sheet_list)>1) {
-    for (i in 2:length(sheet_list)) {
-      result$data <- result$data %>% 
-        dplyr::full_join(xx[[sheet_list[i]]]$data, by = "mergeby")
-    }
-  }
-  rownames(result$data) <- result$data$mergeby
-  result$data$mergeby <- NULL
-  
   # join all info
   result$info$file <- file
   result$info$sheet <- paste(sheet_list, collapse = ", ")
+  
+  # sort metabolites and samples in annotations to match order in data
+  result$sampleinfo <- result$sampleinfo[match(rownames(result$data),result$sampleinfo$id),]
+  result$metinfo <- result$metinfo[match(colnames(result$data), result$metinfo$name),]
   
   # generate summarized experiment
   D <- SummarizedExperiment(assay    = t(result$data),
@@ -167,9 +157,9 @@ mt_files_load_metabolon_lipidomics <- function(
                             metadata = list(sessionInfo=sessionInfo(), parseInfo=result$info))
   
   # add status information
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>% 
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("loaded Metabolon lipidomics file: %s, sheets: %s", basename(file), paste(sheet_list, collapse = ", "))
     )
