@@ -60,8 +60,8 @@ mt_stats_univ_tau = function(
   met <- colnames(Ds)[(length(colnames(colData(D)))+2):length(colnames(Ds))]
   # compute association to the phenotype
   rr <- lapply(met, function(x){
-    d=stats::cor.test(Ds[,x], Ds[[var]], method="kendall", alternative = "two.sided")
-    list("statistic"=d$estimate, "p.value"=d$p.value, exact=exact_flag)
+    d=stats::cor.test(Ds[,x], Ds[[var]], method="kendall", alternative = "two.sided", exact=exact_flag)
+    list("statistic"=d$estimate, "p.value"=d$p.value)
   })
   names(rr) <- met
 
