@@ -9,6 +9,7 @@
 #' @param number.sections Number sections and sub-sections? (default: F)
 #' @param start.after UUID of pipeline step AFTER which to start (default: none, i.e. output entire pipeline) (passed through to mt_reporting_generateMD)
 #' @param use.plotly Output interactive plotly plots? (experimental)
+#' @param keep.tmp Keep temporary files? (default: No). Can be used to manually edit RMD afterwards.
 #'
 #' @author JK
 #'
@@ -24,15 +25,16 @@ mt_reporting_html <- function(
   output.calls=F,
   number.sections=F,
   start.after=NA,
-  use.plotly=F # EXPERIMENTAL
-  ) {
-
+  use.plotly=F,  # EXPERIMENTAL
+  keep.tmp=F
+) {
+  
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
-
+  
   # unique string
   ustr <- uuid::UUIDgenerate()
-
+  
   # define file names
   rmdfile <- sprintf("tmp_%s.RMD", ustr)
   rdsfile <-  sprintf("tmp_%s.rds", ustr)
@@ -52,9 +54,11 @@ mt_reporting_html <- function(
   # rename to correct name
   file.rename(paste0(tools::file_path_sans_ext(rmdfile),'.html'), outfile)
   # clean up
-  file.remove(rmdfile)
-  file.remove(rdsfile)
-
+  if (!keep.tmp) {
+    file.remove(rmdfile)
+    file.remove(rdsfile)
+  }
+  
   # return document, in case pipeline is supposed to keep running
   D
 }
