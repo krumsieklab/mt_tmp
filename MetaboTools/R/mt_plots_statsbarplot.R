@@ -101,8 +101,8 @@ mt_plots_statsbarplot <- function(D,
     ggplot(aes(x=name, y=!!sym(yscale), fill=color)) + 
     geom_bar(stat = "identity") +
     (if(yscale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s",  gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s",  gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-    labs(fill = colorby)
+    labs(fill = colorby) +
+    coord_flip()
   
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
