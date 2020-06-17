@@ -27,7 +27,7 @@
 mt_stats_univ_tau = function(
   D,
   var,
-  name,
+  stat_name,
   sample_filter, exact_flag=NULL){
 
   # validate arguments
