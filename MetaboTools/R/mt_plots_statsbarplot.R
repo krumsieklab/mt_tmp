@@ -95,15 +95,18 @@ mt_plots_statsbarplot <- function(D,
   data_plot <- data_plot %>%
     dplyr::left_join(dict, by=c("name"=aggregate)) %>%
     dplyr::rename(color=sym(colorby))
-
+  # convert names to factor for sorting
+  data_plot$name <- as.factor(data_plot$name)
+  
   ## CREATE PLOT
   p <- data_plot %>%
     ggplot(aes(x=name, y=!!sym(yscale), fill=color)) + 
     geom_bar(stat = "identity") +
     (if(yscale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s",  gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s",  gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
-    labs(fill = colorby) +
+    labs(x="",fill = colorby) +
+    scale_x_discrete(limits = rev(levels(data_plot$name))) +
     coord_flip()
-  
+
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
 
