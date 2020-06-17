@@ -150,6 +150,9 @@ mt_files_load_metabolon_lipidomics <- function(
   result$sampleinfo <- result$sampleinfo[match(rownames(result$data),result$sampleinfo$id),]
   result$metinfo <- result$metinfo[match(colnames(result$data), result$metinfo$name),]
   
+  # rownames of assay (right now colnames) must be R-compatible names
+  colnames(result$data) <- make.names(colnames(result$data))
+  
   # generate summarized experiment
   D <- SummarizedExperiment(assay    = t(result$data),
                             colData  = result$sampleinfo,
