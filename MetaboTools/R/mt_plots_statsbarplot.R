@@ -1,4 +1,4 @@
-#' mt_plots_barplot
+#' mt_plots_statsbarplot
 #'
 #' Creates a bar plot
 #'
@@ -7,7 +7,7 @@
 #' @param metab_filter if given, filter will be applied to data and remaining variables will be used to create plot
 #' @param aggregate rowData variable used to aggregate variables.
 #' @param colorby optional rowData variable used to color barplot. Default NULL.
-#' @param yscale plot percentage or frequency of variables. Values c("percentage","frequency"). Default "percentage".
+#' @param yscale plot percentage or frequency of variables. Values c("fraction","count"). Default "percentage".
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #'
@@ -16,44 +16,48 @@
 #' @examples
 #' \dontrun{# Volcano plot as overview of results with a result already in 'comp'
 #' ... %>%
-#' mt_plots_barplot(stat_name     = "comp",
+#' mt_plots_statsbarplot(stat_name     = "comp",
 #'  metab_filter = p.adj < 0.05,
 #'  aggregate    = "SUB_PATHWAY",
 #'  colorby      = "SUPER_PATHWAY",
-#'  yscale       = "frequency") %>%
+#'  yscale       = "count") %>%
 #'  ...}
 #'
 #' @author Elisa Benedetti
 #'
 #' @import ggplot2
+#' @import dplyr
+#' @import tidyr
 #' @importFrom magrittr %>% %<>%
 #' @import SummarizedExperiment
 #'
 #' @export
 
-mt_plots_barplot <- function(D,
+mt_plots_statsbarplot <- function(D,
                              stat_name,
                              metab_filter = p.value < 0.05,
                              aggregate = "SUB_PATHWAY",
                              colorby = NULL,
                              ggadd = NULL,
-                             yscale = "percentage",
+                             yscale = "fraction",
                              ...){
- 
+
   ## check input
   stopifnot("SummarizedExperiment" %in% class(D))
   if(missing(stat_name) & !missing(metab_filter))
     stop("stat_name must be given for metab_filter to work.")
-  if(!is.null(colorby) & !(colorby %in% colnames(rowData(D))))
+  if(!is.null(colorby))
+    if(!(colorby %in% colnames(rowData(D))))
     stop("colour is not in rowData")
 
   ## rowData
   rd <- rowData(D) %>%
     as.data.frame() %>%
     dplyr::mutate(var = rownames(D))
+
   perc <- rd[[aggregate]] %>%
     unlist %>% table %>% as.data.frame()
-  colnames(perc) <- c("name","frequency")
+  colnames(perc) <- c("name","count")
   ## subselect variables
   if(!missing(metab_filter)) {
     metab_filter_q <- dplyr::enquo(metab_filter)
@@ -70,19 +74,22 @@ mt_plots_barplot <- function(D,
   ## get data to plot
   data_plot <- rd[[aggregate]] %>% 
     unlist %>% table %>% as.data.frame()
-  colnames(data_plot) <- c("name","frequency")
-  
+  colnames(data_plot) <- c("name","count")
+  # add fraction variable
   perc %<>% dplyr::filter(name %in% data_plot$name) 
   perc <- perc[match(data_plot$name,perc$name),]
   data_plot <- data_plot %>%
-    dplyr::mutate(percentage= frequency/perc$frequency)
+    dplyr::mutate(fraction= count/perc$count)
     
+  # add color column if not given
   if(is.null(colorby)) {
-    colorby <- aggregate
+    colorby <- paste(aggregate,"color", collapse = "_")
+    rd[[colorby]] <- "pathway"
   } 
+  
   # create dictionary between aggregate and colorby variables
-  dict <- rd %>% dplyr::select(!!sym(aggregate),!!sym(colorby)) %>%
-    .[!duplicated(rd[[aggregate]]),]
+  dict <- rd %>% dplyr::select(!!sym(aggregate),!!sym(colorby)) %>% tidyr::unnest(cols=c(aggregate)) %>% as.data.frame()
+  dict <- dict[!duplicated(dict[[aggregate]]),]
   
   # add color to data_plot
   data_plot <- data_plot %>%
@@ -93,7 +100,7 @@ mt_plots_barplot <- function(D,
   p <- data_plot %>%
     ggplot(aes(x=name, y=!!sym(yscale), fill=color)) + 
     geom_bar(stat = "identity") +
-    (if(exists("stat_name")) {ggtitle(sprintf("Result summary for %s, by %s filtered by %s", stat_name, aggregate, rlang::expr_text(enquo(metab_filter))))}else{ggtitle(sprintf("Result summary by %s", aggregate))}) +
+    (if(yscale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s",  gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s",  gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     labs(fill = colorby)
   
@@ -108,7 +115,7 @@ mt_plots_barplot <- function(D,
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = ifelse(exists("stat_name"), sprintf("bar plot for comparison %s, by %s, filtered for %s, using %s", stat_name, aggregate, rlang::expr_text(enquo(metab_filter)), yscale),
+      logtxt = ifelse(exists("stat_name"), sprintf("bar plot for comparison %s, by %s, filtered for %s, using %s", stat_name, aggregate, gsub("~", "", rlang::expr_text(enquo(metab_filter))), yscale),
                       sprintf("bar plot by %s using %s", aggregate, yscale)),
       output = list(p)
     )
