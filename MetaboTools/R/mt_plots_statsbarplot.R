@@ -75,10 +75,12 @@ mt_plots_statsbarplot <- function(D,
   data_plot <- rd[[aggregate]] %>% 
     unlist %>% table %>% as.data.frame()
   colnames(data_plot) <- c("name","count")
-  # add fraction variable
+  # add number of metabolites in each pathway
   perc %<>% dplyr::filter(name %in% data_plot$name) 
   perc <- perc[match(data_plot$name,perc$name),]
   data_plot <- data_plot %>%
+    dplyr::mutate(label=sprintf("%s [%d]", name, perc$count)) %>%
+    # add fraction variable
     dplyr::mutate(fraction= count/perc$count)
     
   # add color column if not given
@@ -95,16 +97,16 @@ mt_plots_statsbarplot <- function(D,
   data_plot <- data_plot %>%
     dplyr::left_join(dict, by=c("name"=aggregate)) %>%
     dplyr::rename(color=sym(colorby))
-  # convert names to factor for sorting
-  data_plot$name <- as.factor(data_plot$name)
+  # convert labels to factor for sorting
+  data_plot$label <- as.factor(data_plot$label)
   
   ## CREATE PLOT
   p <- data_plot %>%
-    ggplot(aes(x=name, y=!!sym(yscale), fill=color)) + 
+    ggplot(aes(x=label, y=!!sym(yscale), fill=color)) + 
     geom_bar(stat = "identity") +
     (if(yscale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s",  gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s",  gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
     labs(x="",fill = colorby) +
-    scale_x_discrete(limits = rev(levels(data_plot$name))) +
+    scale_x_discrete(limits = rev(levels(data_plot$label))) +
     coord_flip()
 
   # add custom elements?
