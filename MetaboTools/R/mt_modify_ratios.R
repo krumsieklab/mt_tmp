@@ -6,9 +6,6 @@
 #' mt_post_pgain provides a special operation on a ratio data matrix for better interpretation of the resulting p-values.
 #'
 #' @param D SummarizedExperiment object
-#' @param nbr_stat_name Name of previous network generation call (e.g. \link{mt_stats_multiv_net_GeneNet}). Default: NA, i.e. no network-based ratios
-#' @param nbr_edge_filter Filter criterion for edge selection, e.g. "p.adj < 0.05", as a term.
-#' @param nbr_neighborhood Neighborhood degree to use (e.g. first neighbors, second neighbors), default: 1
 #'
 #' @examples
 #' \dontrun{# Transform dataset to ratios
