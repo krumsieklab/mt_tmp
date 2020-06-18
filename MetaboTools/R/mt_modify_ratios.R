@@ -6,6 +6,9 @@
 #' mt_post_pgain provides a special operation on a ratio data matrix for better interpretation of the resulting p-values.
 #'
 #' @param D SummarizedExperiment object
+#' @param nbr_stat_name Name of previous network generation call (e.g. \link{mt_stats_multiv_net_GeneNet}). Default: NA, i.e. no network-based ratios
+#' @param nbr_edge_filter Filter criterion for edge selection, e.g. "p.adj < 0.05", as a term.
+#' @param nbr_neighborhood Neighborhood degree to use (e.g. first neighbors, second neighbors), default: 1
 #'
 #' @examples
 #' \dontrun{# Transform dataset to ratios
@@ -36,7 +39,7 @@ mt_modify_ratios <- function(D){
     }
 
     ## CREATE RATIOS
-    as_ratio <- purrr::map(1:(nrow(as)-1), ~ sweep(as[(.x+1):nrow(as), , drop = F], 2, as[.x,], "-")) %>%
+    as_ratio <- purrr::map(1:(nrow(as)-1), ~ sweep(as[(.x+1):nrow(as), , drop = F], 2, as[.x,], op)) %>%
         stats::setNames(rownames(as)[1:(nrow(as)-1)])
 
     ## CREATE NEW ROWDATA
