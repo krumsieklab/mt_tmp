@@ -125,14 +125,25 @@ output:
 
         ## plot?
         if (r[[i]]$fun[1]=="plots") {
+          
+          # special parameters?
+          extraparams <- ""
+          if (r[[i]]$fun[2]=="statsbarplot") {
+            # dynamic height
+            x = r[[i]]$output[[1]]$plot_env$gg_grob
+            nr <- x$grobs[[which(x$layout$name == "axis-l")]]$children$axis$grobs[[1]]$children[[1]][[1]] %>% length() # mubu found this -JK
+            height <- (62+(nr*23.7143)+84)/2304*12 # manually curated using pixel measurements on example
+            extraparams <- sprintf(",fig.width=8,fig.height=%f", height)
+          }
+          
           # plot
           if (!use.plotly) {
-            writechunk( glue::glue("r[[{i}]]$output"))
+            writechunk( glue::glue("r[[{i}]]$output"), params = extraparams)
           } else {
             writechunk( glue::glue("
 plotlist = r[[{i}]]$output %>% lapply(ggplotly)
 htmltools::tagList(setNames(plotlist, NULL))
-                             "), params='results="show"')
+                             "), params=paste0('results="show"', extraparams))
           }
           # }
 
