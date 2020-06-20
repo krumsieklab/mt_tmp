@@ -6,6 +6,10 @@
 #' mt_post_pgain provides a special operation on a ratio data matrix for better interpretation of the resulting p-values.
 #'
 #' @param D SummarizedExperiment object
+#' @param nbr_stat_name Name of previous network generation call (e.g. \link{mt_stats_multiv_net_GeneNet}). Default: None, i.e. no network-based ratios
+#' @param nbr_edge_filter Filter criterion for edge selection, e.g. "p.adj < 0.05", as a term.
+#' @param nbr_neighborhood Neighborhood degree to use (e.g. first neighbors, second neighbors), default: 1
+
 #'
 #' @examples
 #' \dontrun{# Transform dataset to ratios
@@ -20,25 +24,30 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_modify_ratios <- function(D){
-
+mt_modify_ratios <- function(
+    D,
+    nbr_stat_name,
+    nbr_edge_filter,
+    nbr_neighborhood = 1
+){
+    
     stopifnot("SummarizedExperiment" %in% class(D))
-
+    
     as <- assay(D)
     p <- nrow(D)
     ## as <- matrix(1:(4*2), nrow = 4, ncol = 2, dimnames = list(letters[23:26], letters[1:2]))
-
+    
     ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
     op <- "/"
-    if (length(mti_res_get_path(D, c("pre","trans","log"))) > 0){
-        mti_logstatus("data already logscale, using '-'")
+    if (length(MetaboTools:::mti_res_get_path(D, c("pre","trans","log"))) > 0){
+        MetaboTools:::mti_logstatus("data already logscale, using '-'")
         op <- "-"
     }
-
+    
     ## CREATE RATIOS
     as_ratio <- purrr::map(1:(nrow(as)-1), ~ sweep(as[(.x+1):nrow(as), , drop = F], 2, as[.x,], op)) %>%
         stats::setNames(rownames(as)[1:(nrow(as)-1)])
-
+    
     ## CREATE NEW ROWDATA
     rd <- D %>%
         rowData() %>%
@@ -52,46 +61,83 @@ mt_modify_ratios <- function(D){
         dplyr::mutate(name = stringr::str_c(name1, " / ", name2))
     rd <- rd %>%
         dplyr::mutate(m1 = rownames,
-               m2 = NA,
-               name1 = name,
-               name2 = NA)
+                      m2 = NA,
+                      name1 = name,
+                      name2 = NA)
     rd <- dplyr::bind_rows(rd, rd_new) %>%
         dplyr::select(rownames, m1, m2, name1, name2, dplyr::everything()) %>%
         tibble::column_to_rownames("rownames")
-
+    
     ## COMBINE RATIOS TO SINGLE MATRIX
     as_ratio <- as_ratio %>%
         purrr::imap(~{rownames(.x) <- stringr::str_c(rownames(.x), .y, sep = "_"); .x}) %>%
         purrr::invoke(rbind, .)
     as_ratio <- rbind(as, as_ratio)
-
+    
     ## CHECK NAMES
     if(!identical(rownames(as_ratio), rownames(rd)))
         stop("something went wrong. check data!")
-
-    ## ADD RAW DATA
-    rd_final <- dplyr::bind_rows(rd, rd_new)
-
+    
+    ## FILTER BY NETWORK-BASED RATIOS (NBRs)?
+    if (!missing(nbr_stat_name)) {
+        # verify that arguments are given
+        if (missing(nbr_edge_filter)) stop("If nbr_stat_name is given, nbr_edge_filter must be supplied.")
+        # retrieve statistics object
+        res <- D %>% MetaboTools:::mti_get_stat_by_name(nbr_stat_name)
+        # extract metabolite pairs according to formula, only keep metabolite names
+        mpairs <- res %>% dplyr::filter(!!dplyr::enquo(nbr_edge_filter)) %>% dplyr::select(var1,var2) 
+        # initialize adjacency matrix
+        A <- matrix(0, nrow=nrow(D), ncol=nrow(D))
+        colnames(A) <- rownames(A) <- rownames(D)
+        # build adjacency matrix using indices of mpairs in matrix
+        inds <- data.frame(match(mpairs[,1], colnames(A)),match(mpairs[,2], colnames(A))) %>% as.matrix() 
+        A[inds] <- 1
+        A[inds[,c(2,1)]] <- 1 # symmetric
+        diag(A) <- 1
+        # get k-neighborhood (A^k matrix multiplication), 
+        # found this trick on StackExchange, repeated application of %*%, also works with 1
+        N <- Reduce("%*%", replicate(nbr_neighborhood, A, FALSE)) > 0
+        # convert back to pairs
+        mneighborpairs <- apply(which(N, arr.ind = T), 2, function(i){colnames(A)[i]}) %>%
+            #  build string names as M1_M2
+            apply(1, function(row){paste0(row[1],"_",row[2])})
+        # match any pair that's in this list AND any single metabolite
+        rn <- as_ratio %>% rownames()
+        keep <- (rn %in% mneighborpairs) | !grepl("_", rn) # no "_" in it -> single metabolite
+        # subselect
+        as_ratio <- as_ratio[keep,]
+        rd <- rd[keep,]
+    }
+    
     ## CREATE NEW OBJECT
     D <- SummarizedExperiment(assay    = as_ratio,
                               rowData  = rd,
                               colData  = colData(D),
                               metadata = metadata(D))
-
+    
     ## add status information & plot
-    funargs <- mti_funargs()
+    funargs <- MetaboTools:::mti_funargs()
     metadata(D)$results %<>%
-                  mti_generate_result(
-                      funargs = funargs,
-                      logtxt = sprintf("created %d metabolite ratios out of %d metabolites", nrow(D), p),
-                      output = NULL
-                  )
+        MetaboTools:::mti_generate_result(
+            funargs = funargs,
+            logtxt = sprintf("created %d metabolite ratios out of %d metabolites", nrow(D), p),
+            output = NULL
+        )
     D
-
+    
 }
 
 
-
+# #### k-neighborhood test code ----
+# # chain of 4, undirected
+# A <- matrix(0,nrow=4,ncol=4)
+# diag(A) <- 1
+# A[1,2] <- A[2,3] <- A[3,4] <- 1
+# A[2,1] <- A[3,2] <- A[4,3] <- 1
+# 
+# # k neighborhood (A^k matrix multiplications)
+# k=3
+# Reduce("%*%", replicate(k, A, FALSE))
 
 
 

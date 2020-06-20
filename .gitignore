@@ -48,3 +48,5 @@ precalc/pathview/.gitkeep
 examples/example3.html
 examples/example_missingness.html
 examples/example_quant_outcome.html
+.Rproj.user
+MT.Rproj
