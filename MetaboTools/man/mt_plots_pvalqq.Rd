@@ -4,7 +4,7 @@
 \alias{mt_plots_pvalqq}
 \title{Generate p-value qq plot}
 \usage{
-mt_plots_pvalqq(D, comp)
+mt_plots_pvalqq(D, stat_name)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}

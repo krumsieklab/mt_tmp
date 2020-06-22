@@ -5,18 +5,18 @@
 \title{Computes Kendall's rank correlation.
 If present, NAs will be omitted.}
 \usage{
-mt_stats_univ_tau(D, var, name, sample_filter, exact_flag = NULL)
+mt_stats_univ_tau(D, var, stat_name, sample_filter, exact_flag = NULL)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
 \item{var}{string name of the colData variable to use as ordered categorical variable for the correlation calculation. class(D[[var]]) needs to be numeric.}
 
+\item{stat_name}{name under which this comparison will be stored, must be unique to all other statistical results}
+
 \item{sample_filter}{optional sample filter condition}
 
 \item{exact_flag}{optional to set the exact flag in cor.test function}
-
-\item{stat_name}{name under which this comparison will be stored, must be unique to all other statistical results}
 }
 \value{
 original SummarizedExperiment as in input

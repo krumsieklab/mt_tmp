@@ -14,7 +14,7 @@ D <-
   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
   # timing start
   mt_logging_tic() %>%
-  
+
   ###
   # heading
   mt_reporting_heading("Preprocessing") %>%
@@ -39,15 +39,15 @@ D <-
   mt_pre_trans_log() %>%
   # KNN imputation
   mt_pre_impute_knn() %>%
-  
-  
-  
+
+
+
   # ratios
-  
+
   # GGM
   mt_stats_multiv_net_GeneNet(stat_name ="GGM") %>%
   mt_post_multTest(stat_name = "GGM", method="fdr") %>%
-  
+
   # linear model, differential test on Group
   mt_stats_univ_lm(
     formula      = ~ Group,
@@ -55,10 +55,10 @@ D <-
     stat_name         = "comp",
     n_cores     = 1
   )  %>%
-  
+
   # plot network
-  mt_plots_net(stat_name = "GGM", node_coloring = "comp")
-  
+  mt_plots_net(stat_name = "GGM", node_coloring = "comp") %>%
+
   {.}
 
 # D%>% MetaboTools:::mti_get_stat_by_name("comp") %>% View()

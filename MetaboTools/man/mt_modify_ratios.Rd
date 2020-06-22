@@ -4,10 +4,16 @@
 \alias{mt_modify_ratios}
 \title{Generate metabolite ratios.}
 \usage{
-mt_modify_ratios(D)
+mt_modify_ratios(D, nbr_stat_name, nbr_edge_filter, nbr_neighborhood = 1)
 }
 \arguments{
 \item{D}{SummarizedExperiment object}
+
+\item{nbr_stat_name}{Name of previous network generation call (e.g. \link{mt_stats_multiv_net_GeneNet}). Default: None, i.e. no network-based ratios}
+
+\item{nbr_edge_filter}{Filter criterion for edge selection, e.g. "p.adj < 0.05", as a term.}
+
+\item{nbr_neighborhood}{Neighborhood degree to use (e.g. first neighbors, second neighbors), default: 1}
 }
 \value{
 SummarizedExperiment containing pairwise ratios from all variables of input

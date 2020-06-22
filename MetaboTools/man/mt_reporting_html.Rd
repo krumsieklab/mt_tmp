@@ -9,8 +9,10 @@ mt_reporting_html(
   outfile,
   title = "RMD output",
   output.calls = F,
+  number.sections = F,
   start.after = NA,
-  use.plotly = F
+  use.plotly = F,
+  keep.tmp = F
 )
 }
 \arguments{
@@ -22,9 +24,13 @@ mt_reporting_html(
 
 \item{output.calls}{Output detailed info on function calls? default: F (passed through to mt_reporting_generateMD)}
 
+\item{number.sections}{Number sections and sub-sections? (default: F)}
+
 \item{start.after}{UUID of pipeline step AFTER which to start (default: none, i.e. output entire pipeline) (passed through to mt_reporting_generateMD)}
 
 \item{use.plotly}{Output interactive plotly plots? (experimental)}
+
+\item{keep.tmp}{Keep temporary files? (default: No). Can be used to manually edit RMD afterwards.}
 }
 \description{
 Shortcut for mt_reporting_generateMD with subsequent knitting and clean-up.
