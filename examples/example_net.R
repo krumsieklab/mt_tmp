@@ -57,7 +57,7 @@ D <-
   )  %>%
 
   # plot network
-  mt_plots_net(stat_name = "GGM", node_coloring = "comp") %>%
+  mt_plots_net(stat_name = "GGM", corr_filter = p.adj < 0.5, node_coloring = "comp") %>%
 
   {.}
 

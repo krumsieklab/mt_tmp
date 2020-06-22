@@ -67,7 +67,7 @@ mt_plots_net <- function(
     test <- test[match(nodes$ids, test$var),];
     nodes$map <- sign(test$statistic)*log10(test$p.value);
     nodes$node_color <- grDevices::colorRampPalette(c('blue', 'white', 'red'))(length(nodes$map))[rank(nodes$map)]
-  } else nodes$node_color <- rep("darkblue",times=length(nodes$ids))
+  } else nodes$node_color <- rep("lightblue",times=length(nodes$ids))
 
   ## apply filter on correlations
   if(!missing(corr_filter)){
@@ -102,9 +102,14 @@ mt_plots_net <- function(
   rownames(adj[[1]])<- as.character(nodes$label[match(adj[[2]],nodes$ids)])
   mm.net <- network::network(adj[[1]], layout = "kamadakawai", directed = FALSE)
 
-  test <- mti_get_stat_by_name(D, node_coloring);
-  test <- test[match(adj[[2]], test$var),];
-  map <- sign(test$statistic)*log10(test$p.value);
+  if(!missing(node_coloring)){
+    test <- mti_get_stat_by_name(D, node_coloring)
+    test <- test[match(adj[[2]], test$var),]
+    map <- sign(test$statistic)*log10(test$p.value)
+    mm.net %v% "strength" <- map
+  } else {
+    mm.net %v% "strength" <- 1
+  }
 
   mm.col <- c("positive" = "#000000", "negative" = "#0000FF")
   x <- data_plot$statistic
@@ -112,7 +117,6 @@ mt_plots_net <- function(
   x[x<0] <- "negative"
   mm.net %e% "pcor" <- abs(data_plot[,which(colnames(data_plot)=="statistic")])
   mm.net %e% "pos" <- x
-  mm.net %v% "strength" <- map
 
   # add edge color (positive/negative)
   # add black circle around nodes
