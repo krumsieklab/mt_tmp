@@ -1,9 +1,9 @@
 library(R6)
 library(igraph)
 
-MTResultCollector <- R6Class("MTResultCollector", list(
+MTResultCollector <- R6::R6Class("MTResultCollector", list(
   lst = list(),
-  graph = make_empty_graph(),
+  graph = igraph::make_empty_graph(),
   
   # add single SE dataset
   add = function(D) {
@@ -12,7 +12,7 @@ MTResultCollector <- R6Class("MTResultCollector", list(
     r <- metadata(D)$results
     for (i in 1:length(r)) {
       # add to list, if it doesn't exist yet
-      if (!(r[[i]]$uuid %in% names(lst))) {
+      if (!(r[[i]]$uuid %in% names(self$lst))) {
         self$lst[[r[[i]]$uuid]] = r[[i]]
       }
       # add node if it doesn't exist yet
