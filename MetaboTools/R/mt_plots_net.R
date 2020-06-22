@@ -23,7 +23,7 @@
 #' @importFrom ggnetwork theme_blank geom_nodetext geom_nodes geom_edges
 #' @import ggplot2
 #' @importFrom magrittr %>% %<>%
-#' @importFrom network %e% %v%
+#' @import network
 #' @import SummarizedExperiment
 #'
 #' @export
