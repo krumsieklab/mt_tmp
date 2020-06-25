@@ -56,7 +56,7 @@ mt_plots_statsbarplot <- function(D,
     dplyr::mutate(var = rownames(D))
 
   perc <- rd[[aggregate]] %>%
-    unlist %>% table %>% as.data.frame()
+    unlist %>% table(exclude = NULL) %>% as.data.frame()
   colnames(perc) <- c("name","count")
   ## subselect variables
   if(!missing(metab_filter)) {
@@ -73,16 +73,16 @@ mt_plots_statsbarplot <- function(D,
   
   ## get data to plot
   data_plot <- rd[[aggregate]] %>% 
-    unlist %>% table %>% as.data.frame()
+    unlist %>% table(exclude = NULL) %>% as.data.frame()
   colnames(data_plot) <- c("name","count")
   # add number of metabolites in each pathway
   perc %<>% dplyr::filter(name %in% data_plot$name) 
   perc <- perc[match(data_plot$name,perc$name),]
+  
   data_plot <- data_plot %>%
-    dplyr::mutate(label=sprintf("%s [%d]", name, perc$count)) %>%
     # add fraction variable
     dplyr::mutate(fraction= count/perc$count)
-    
+
   # add color column if not given
   if(is.null(colorby)) {
     colorby <- paste(aggregate,"color", collapse = "_")
@@ -97,6 +97,21 @@ mt_plots_statsbarplot <- function(D,
   data_plot <- data_plot %>%
     dplyr::left_join(dict, by=c("name"=aggregate)) %>%
     dplyr::rename(color=sym(colorby))
+  
+  # if pathway mapping exists in the metadata, use the names provided there
+  x <- D %>% metadata
+  if ("pathways" %in% names(x)){
+    if (aggregate %in% names(x$pathways)) {
+      # add pathway names to dataframe
+      data_plot %<>% dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("name"="ID"))
+      # substitute codes for names
+      data_plot$name <- data_plot$pathway_name
+    } else{
+      warning(sprintf("%s field not found in the metadata",aggregate))
+    } 
+  }
+  # create labels for plotting
+  data_plot %<>% dplyr::mutate(label=sprintf("%s [%d]", name, perc$count))
   # convert labels to factor for sorting
   data_plot$label <- as.factor(data_plot$label)
   
