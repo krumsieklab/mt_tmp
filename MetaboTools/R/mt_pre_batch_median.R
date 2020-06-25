@@ -19,8 +19,9 @@
 #' @export
 
 mt_pre_batch_median = function(
-  D,       # SummarizedExperiment input
-  batches  # sample annotation column that contains batch info
+  D,          # SummarizedExperiment input
+  batches,    # sample annotation column that contains batch info
+  ref_samples # expression to filter out reference samples to use from rowData
 ) {
 
   # validate and extract arguments
@@ -37,24 +38,47 @@ mt_pre_batch_median = function(
   # no negative values allowed
   if (min(X,na.rm=T)<0) stop("Matrix contains negative values.")
   # check if data actually have been logged by preprocessing
-  if (length(mti_res_get_path(D, c("pre","trans","log"))) > 0)
+  if (length(MetaboTools:::mti_res_get_path(D, c("pre","trans","log"))) > 0)
     stop("Median batch correction can only be performed on non-logged data.")
+
+  # get samples to use for median calculation
+  if (!missing(ref_samples)) {
+    # select those samples according to the expression
+    ref_samples_q <- dplyr::enquo(ref_samples)
+    inds <- colData(D) %>%
+      as.data.frame() %>%
+      dplyr::mutate(tmporder=1:ncol(D)) %>%
+      dplyr::filter(!!ref_samples_q) %>%
+      .$tmporder
+    use_samples <- rep(F, ncol(D))
+    use_samples[inds] <- T
+  } else {
+    # all samples
+    use_samples <- rep(T, ncol(D))
+  }
 
   # median per metabolite
   for (i in 1:length(levels(b))) {
     batch = levels(b)[i]
+    # check that there are any reference samples available
+    if (sum(b==batch & use_samples) == 0) stop(sprintf("No reference samples for batch '%s'", batch))
+    # build median vector for this batch
+    med <- X[b==batch & use_samples,,drop=F] %>% apply(2, stats::median, na.rm=T)
+    # transform into matrix of the same size as the batch
+    med_matrix <- replicate(sum(b==batch), med) %>% t()
     # median normalize
-    Xnorm = apply(X[b==batch,,drop=F],2,function(c){c/stats::median(c,na.rm=T)})
-    X[b==batch,] = Xnorm
+    X[b==batch,] <-  X[b==batch,] / med_matrix
   }
 
+  # ref samples logging string
+  refadd <- if(missing(ref_samples){""}else{sprintf(": %s", as.character(ref_samples))})
 
   # add status information
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("median-scaling per batch in '%s'",batches)
+      logtxt = sprintf("median-scaling per batch in '%s', based on %d reference samples%s",batches,sum(use_samples),refadd)
     )
 
   # return
