@@ -45,19 +45,21 @@ mt_pre_norm_quot = function(
     if (na_err) {
       stop('Data matrix contains NAs')
     } else {
-      mti_logwarning('Data matrix contains NAs')
+      MetaboTools:::mti_logwarning('Data matrix contains NAs')
     }
   }
 
   # apply reference sample filter?
   if (!missing(ref_samples)) {
+    # select those samples according to the expression
     sample_filter_q <- dplyr::enquo(ref_samples)
-    cd <- colData(D) %>%
+    inds <- colData(D) %>%
       as.data.frame() %>%
-      tibble::rownames_to_column("colnames") %>%
-      dplyr::filter(!!sample_filter_q)
-    # define samples to be used
-    useref <- (colnames(D) %in% cd$colnames)
+      dplyr::mutate(tmporder=1:ncol(D)) %>%
+      dplyr::filter(!!sample_filter_q) %>%
+      .$tmporder
+    useref <- rep(F, ncol(D))
+    useref[inds] <- T
     # if no samples are left, throw error
     if (sum(useref) == 0) stop(sprintf("No samples match filter for quotient normalization: %s", dplyr::quo_name(sample_filter_q)))
   } else {
