@@ -8,6 +8,7 @@
 #' @param aggregate rowData variable used to aggregate variables.
 #' @param colorby optional rowData variable used to color barplot. Default NULL.
 #' @param yscale plot percentage or frequency of variables. Values c("fraction","count"). Default "percentage".
+#' @param sort sort pathways in plot according to yscale. Default FALSE
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #'
@@ -20,7 +21,8 @@
 #'  metab_filter = p.adj < 0.05,
 #'  aggregate    = "SUB_PATHWAY",
 #'  colorby      = "SUPER_PATHWAY",
-#'  yscale       = "count") %>%
+#'  yscale       = "count",
+#'  sort         = TRUE) %>%
 #'  ...}
 #'
 #' @author Elisa Benedetti
@@ -40,6 +42,7 @@ mt_plots_statsbarplot <- function(D,
                              colorby = NULL,
                              ggadd = NULL,
                              yscale = "fraction",
+                             sort = FALSE,
                              ...){
 
   ## check input
@@ -112,8 +115,13 @@ mt_plots_statsbarplot <- function(D,
   }
   # create labels for plotting
   data_plot %<>% dplyr::mutate(label=sprintf("%s [%d]", name, perc$count))
-  # convert labels to factor for sorting
+  
+  # convert labels to factor to sort alphabetically
   data_plot$label <- as.factor(data_plot$label)
+  # optional sorting
+  if (sort){
+    data_plot$label <- reorder(data_plot$label, -data_plot[[yscale]])
+  } 
   
   ## CREATE PLOT
   p <- data_plot %>%
