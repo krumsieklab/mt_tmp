@@ -119,6 +119,10 @@ mt_files_load_metabolon <- function(
                        rowData  = result$metinfo,
                        metadata = list(sessionInfo=utils::sessionInfo(), parseInfo=result$info))
 
+  # ensure colnames and rownames exist
+  if (is.null(colnames(D))) colnames(D) <- 1:ncol(D)
+  if (is.null(rownames(D))) rownames(D) <- result$metinfo$BIOCHEMICAL
+
   # add status information
   funargs <- mti_funargs()
   metadata(D)$results %<>%
