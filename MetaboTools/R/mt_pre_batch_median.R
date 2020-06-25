@@ -71,7 +71,7 @@ mt_pre_batch_median = function(
   }
 
   # ref samples logging string
-  refadd <- if(missing(ref_samples){""}else{sprintf(": %s", as.character(ref_samples))})
+  refadd <- if(missing(ref_samples)){""}else{sprintf(": %s", as.character(ref_samples))}
 
   # add status information
   funargs <- MetaboTools:::mti_funargs()
