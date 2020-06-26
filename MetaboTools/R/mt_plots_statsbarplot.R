@@ -152,16 +152,16 @@ mt_plots_statsbarplot <- function(D,
     } 
     
     ## CREATE PLOT
-    p <- data_plot %>%
-      ggplot() + 
-      geom_bar(aes(x=label, y=!!sym(yscale), fill=color), stat = "identity") +
-      (if("association" %in% colnames(data_plot)) {geom_bar(aes(x=label, y=!!sym(yscale), fill=color, color=association), size=1, stat = "identity")}) +
-      # (if("association" %in% colnames(data_plot)) {geom_bar(aes(x=label, y=!!sym(yscale), fill=color, color=association, size=2), stat = "identity")}else{geom_bar(aes(x=label, y=!!sym(yscale), fill=color), stat = "identity")}) +
-      scale_color_manual(values=c("green", "blue")) +
+    p <- ggplot(data_plot, aes(label)) + 
+      (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "positive"), aes(y = !!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)}) + 
+      (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "negative"), aes(y = -!!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)} else{geom_bar(aes(x=label, y=!!sym(yscale), fill=color), stat = "identity", color="black", size=0.4)}) +
       (if(yscale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s",  gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s",  gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
+      (if(yscale=="count" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-max(data_plot$count, na.rm = T), max(data_plot$count, na.rm = T)))}) +
+      (if(yscale=="fraction" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-1, 1))}) +
+      geom_hline(yintercept = 0,colour = "black", size=0.4) +
       labs(x="",fill = colorby) +
       scale_x_discrete(limits = rev(levels(data_plot$label))) +
-      coord_flip()
+      coord_flip() 
     
     # add custom elements?
     if (!is.null(ggadd)) p <- p+ggadd
