@@ -56,7 +56,7 @@ mt_files_anno_xls <-
   # ensure that sample ID column exists
   if (!(anno_ID %in% colnames(df))) stop(glue::glue("sample ID column '{anno_ID}' does not exist in '{basename(file)}, sheet '{sheet}'"))
   if (any(is.na(df[[anno_ID]]))) stop(glue::glue("sample ID column '{anno_ID}' contains empty cells, '{basename(file)}, sheet '{sheet}'"))
-  rownames(df) <- df[[anno_ID]]
+  rownames(df) <- make.names(df[[anno_ID]], unique=T)
 
   # slightly different behavior for samples or metabolites
   if (anno_type=="samples") {
