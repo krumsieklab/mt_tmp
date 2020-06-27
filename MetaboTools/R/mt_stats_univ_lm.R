@@ -247,6 +247,8 @@ mt_stats_univ_lm <- function(
     attr(models[[i]]$model,"terms") <- NULL
     models[[i]]$terms <- NULL
   }
+  # tag the NAs as unused samples
+  samples.used[is.na(Ds[, outvar])] <- F
   
   ## add status information & results
   funargs <- mti_funargs()
