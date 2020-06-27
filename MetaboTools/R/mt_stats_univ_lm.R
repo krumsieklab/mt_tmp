@@ -63,6 +63,15 @@ mt_stats_univ_lm <- function(
     # did we leave 0 rows?
     if (nrow(Ds)==0) stop("Filtering left 0 rows")
     if (nrow(Ds)==ncol(D)) mti_logwarning('filtering did not filter out any samples')
+    
+    ## filter out the NAs in outcome if any
+    
+    outvar <- attr(stats::terms(formula, keep.order = T),"term.labels")[1]
+    Ds <- Ds[which(is.na(Ds[, outvar])==F), ]
+    # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
+    # did we leave 0 rows?
+    if (nrow(Ds)==0) stop("Filtering NAs left 0 rows")
+    if (nrow(Ds)==ncol(D)) mti_logwarning('filtering NAs did not filter out any samples')
 
     # store used samples
     samples.used <- rep(F, ncol(D))
@@ -71,7 +80,20 @@ mt_stats_univ_lm <- function(
     Ds %<>% dplyr::select(-tmpsamplenum)
 
   } else {
-    samples.used = rep(T, ncol(D))
+    Ds <- Ds %>%
+      dplyr::mutate(tmpsamplenum = 1:nrow(Ds)) %>%
+      droplevels()
+    ## filter out the NAs in outcome if any
+    outvar <- attr(stats::terms(formula, keep.order = T),"term.labels")[1]
+    Ds <- Ds[which(is.na(Ds[, outvar])==F), ]
+    # did we leave 0 rows?
+    if (nrow(Ds)==0) stop("Filtering NAs left 0 rows")
+    if (nrow(Ds)==ncol(D)) mti_logwarning('filtering NAs did not filter out any samples')
+    # store used samples
+    samples.used <- rep(F, ncol(D))
+    samples.used[Ds$tmpsamplenum] <- T
+    # drop dummy column
+    Ds %<>% dplyr::select(-tmpsamplenum)
   }
 
   ## save outcome variable
