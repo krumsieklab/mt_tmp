@@ -3,11 +3,11 @@
 #' Creates a bar plot
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param stat_name optional name of the statistics object to be used for filtering
-#' @param metab_filter if given, filter will be applied to data and remaining variables will be used to create plot
+#' @param stat_name list of names of the statistics objects to be used for filtering
+#' @param metab_filter filter will be applied to data and remaining variables will be used to create plot
 #' @param aggregate rowData variable used to aggregate variables.
 #' @param colorby optional rowData variable used to color barplot. Default NULL.
-#' @param yscale plot percentage or frequency of variables. Values c("fraction","count"). Default "percentage".
+#' @param yscale plot percentage or frequency of variables. Values c("fraction","count"). Default "fraction".
 #' @param sort sort pathways in plot according to yscale. Default FALSE
 #' @param assoc_sign optional parameter to discriminate between positive and negative associations.
 #' @param ggadd further elements/functions to add (+) to the ggplot object
@@ -38,7 +38,7 @@
 
 mt_plots_statsbarplot <- function(D,
                                   stat_name,
-                                  metab_filter = p.value < 0.05,
+                                  metab_filter = p.value < 1,
                                   aggregate = "SUB_PATHWAY",
                                   colorby = NULL,
                                   ggadd = NULL,
@@ -159,14 +159,9 @@ mt_plots_statsbarplot <- function(D,
     # return dataframe
     data_plot
   })
-  
-  # convert list to dataframe
-  if(length(data_plot)>1){
-    # rbind dataframes
-    data_plot <- do.call(rbind, data_plot)
-  } else {
-    data_plot <- as.data.frame(data_plot[[names(data_plot)[1]]])
-  }
+
+  # merge list into a single dataframe
+  data_plot <- do.call(rbind, data_plot)
   
   # optional sorting (only for single statistical results)
   if (sort){
@@ -192,7 +187,6 @@ mt_plots_statsbarplot <- function(D,
   
   # fix ggplot environment
   p <- MetaboTools:::mti_fix_ggplot_env(p)
-  p
   
   ## add status information & plot
   funargs <- MetaboTools:::mti_funargs()
