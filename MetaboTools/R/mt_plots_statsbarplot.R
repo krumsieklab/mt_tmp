@@ -21,7 +21,7 @@
 #' mt_plots_statsbarplot(stat_name     = "comp",
 #'  metab_filter = p.adj < 0.05,
 #'  aggregate    = "SUB_PATHWAY",
-#'  colorby      = "SUPER_PATHWAY",
+#'  colorby      = "SUPER_PATHWAYdevtools::install(codes.makepath("MT/MetaboTools"))",
 #'  yscale       = "count",
 #'  sort         = TRUE) %>%
 #'  ...}
@@ -166,6 +166,8 @@ mt_plots_statsbarplot <- function(D,
     if (sort){
       data_plot$label <- reorder(data_plot$label, -data_plot[[yscale]])
     } 
+    # sort comp so that facets appear in the same order given by the user
+    data_plot$comp <- factor(data_plot$comp,levels=stat_name)
     
     ## CREATE PLOT
     p <- ggplot(data_plot, aes(label)) + 
