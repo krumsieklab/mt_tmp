@@ -131,9 +131,21 @@ output:
           if (r[[i]]$fun[2]=="statsbarplot") {
             # dynamic height
             x = r[[i]]$output[[1]]$plot_env$gg_grob
-            nr <- x$grobs[[which(x$layout$name == "axis-l")]]$children$axis$grobs[[1]]$children[[1]][[1]] %>% length() # mubu found this -JK
-            height <- (62+(nr*23.7143)+84)/2304*12 # manually curated using pixel measurements on example
-            extraparams <- sprintf(",fig.width=8,fig.height=%f", height)
+            nr <- x$grobs[[which(x$layout$name == "axis-l-1-1")]]$children$axis$grobs[[1]]$children[[1]][[1]] %>% length() # mubu found this -JK
+            if(nr!=0){
+              # find number of panel rows in plot
+              s <- strsplit(grep(pattern = "panel", x$layout$name, value = T), "[-]") 
+              npanrow <- sapply(s, function(zz){ zz[3]}) %>% as.numeric() %>% max()
+              npancol <- sapply(s, function(zz){ zz[2]}) %>% as.numeric() %>% max()
+              # set plot height
+              height <- (62+(nr*npanrow*23.7143)+84)/2304*12 # manually curated using pixel measurements on example
+              width <- 5+3*npancol
+            } else{
+              # if empty plot, set height to 3
+              height <- 3
+              width <- 8
+            }
+            extraparams <- sprintf(",fig.width=%f,fig.height=%f", width, height)
           }
           
           # plot
