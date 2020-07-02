@@ -9,7 +9,6 @@ PURPOSE: Readme file for the meta-rocker project<br>
 MODIF:   02 July 2020 - port from WCM-Q code.qatar-med.cornell.edu/kas2049/meta-docker to krumsieklab GitLab<br>
 <p>
 
-
 **HOWTO use the meta-docker image**<p>
 
 **establish connection with the GitLab docker registry using your GitLab credentials (needs to be run only once):**<br>
@@ -23,13 +22,10 @@ docker run -v$HOME:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --na
 
 **Then open a browser and navigate to localhost:8787**
 
-    username: rstudio
-    pwd: pwd
-
-<br><br><br>
+    username: rstudio<br>
+    pwd: pwd<br>
 
 The docker -v option can be used to mount any directory that is needed. In the example above, the user home directory is mounted.
-
 
 **HOWTO create a new meta-docker image:**<br>
 ./meta-docker.setup.sh<br>
@@ -41,7 +37,7 @@ In particular, it will install autonomics ([maintained by Aditya Bhagwat](https:
 and metatools ([Jan Krumsiek lab](https://gitlab.com/krumsieklab/mt)) into a rocker/tidyverse environment.
 Keras, Tensorflow and rJava is also included.<br>
 
-<br><br><br>
+<p>
 
 **REFERENCES & NOTES**
 
@@ -66,7 +62,6 @@ https://gitlab.com/krumsieklab/mt/container_registry
 **meta-docker at WCM-Q**<br>
 https://code.qatar-med.cornell.edu/kas2049/meta-docker
 
-
 **Cheat-sheet for docker**<br>
 docker image ls<br>
 docker container ls -a<br>
@@ -75,6 +70,7 @@ docker container start meta<br>
 docker container rm meta<br>
 docker exec meta df<br>
 docker exec -it meta /bin/bash<br>
-docker push registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5
-docker pull registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5
+docker push registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5<br>
+docker pull registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5<br>
+docker tag registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5 registry.gitlab.com/krumsieklab/mt/meta-docker:latest<br>
 
