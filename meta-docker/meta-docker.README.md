@@ -60,6 +60,9 @@ https://github.com/bhagwataditya/autonomics
 https://gitlab.com/krumsieklab/mt<br>
 (requires access to Jan's gitlab, note that my personal credentials are presently in the setup script, so please do not distribute)
 
+**docker registry of Krumsiek Lab GitLab**<br>
+https://gitlab.com/krumsieklab/mt/container_registry
+
 **meta-docker at WCM-Q**<br>
 https://code.qatar-med.cornell.edu/kas2049/meta-docker
 
