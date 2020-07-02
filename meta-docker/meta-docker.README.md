@@ -22,8 +22,8 @@ docker run -v$HOME:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --na
 
 **Then open a browser and navigate to localhost:8787**
 
-    username: rstudio<br>
-    pwd: pwd<br>
+    username: rstudio
+    pwd: pwd
 
 The docker -v option can be used to mount any directory that is needed. In the example above, the user home directory is mounted.
 
