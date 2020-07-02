@@ -2,46 +2,48 @@
 
 **Integration of meta-tools and autonomics in an rstudio docker image from the rocker project**
 
-FILE:    README.md<br>
+FILE:    meta-docker.README.md<br>
 DATE:    29 January 2020<br>
 AUTHOR:  Karsten Suhre<br>
 PURPOSE: Readme file for the meta-rocker project<br>
+MODIF:   02 July 2020 - port from WCM-Q code.qatar-med.cornell.edu/kas2049/meta-docker to krumsieklab GitLab<br>
 <p>
 
-This project will install autonomics ([maintained by Aditya Bhagwat](https://github.com/bhagwataditya/autonomics)) and metatools ([Jan Krumsiek lab](https://gitlab.com/krumsieklab/mt)) into a rocker/tidyverse environment and make the docker image available via GitLab.
-
-The user can mount their own working directory using the docker -v option and then work with metatools and autonomics in an rstudio window via any web browser.
-
-Planned extensions are routines to ease the cross-usage of metatools and autonomics.
 
 **HOWTO use the meta-docker image**<p>
 
-**establish your credentials (needed only once):**<br>
-docker login code.qatar-med.cornell.edu
+**establish connection with the GitLab docker registry using your GitLab credentials (needs to be run only once):**<br>
+docker login registry.gitlab.com
 
-**Under Windows, open a CMD terminal and run the following command (adapt the directory to mount using the -v option)**<br>
+**Under Windows, open a CMD terminal and run the following command:**<br>
 docker run -v%USERPROFILE%:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta code.qatar-med.cornell.edu/kas2049/meta-docker/meta-docker:1.3.4
 
-**then open a browser and navigate to localhost:8787**
+**Under Linux, run the following command in a shell (adapt the directory to mount using the -v option):**<br>
+docker run -v$HOME:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta code.qatar-med.cornell.edu/kas2049/meta-docker/meta-docker:1.3.5
+
+**Then open a browser and navigate to localhost:8787**
 
     username: rstudio
     pwd: pwd
 
-**Notes for developpers**<br>
-The following is needed to create a docker image from scratch
+<br><br><br>
 
-**test connection to git:**<br>
-ssh -T -p 10022  git@code.qatar-med.cornell.edu
+The docker -v option can be used to mount any directory that is needed. In the example above, the user home directory is mounted.
 
-**clone setup script from WCM-Q Gitlab:**<br>
-git clone https://code.qatar-med.cornell.edu/kas2049/meta-docker
 
-**run setup script to create a new image:**<br>
+**HOWTO create a new meta-docker image:**<br>
 ./meta-docker.setup.sh<br>
-This will generate all auxillary files needed and build the final docker image. In particular, it will clone metatools and autonomics into the docker image, and install all R packages that are needed by these.
 
+Please note: this step needs only be performed when a new version of the docker image is created.
+The "normal" user shall not have to do this.
+The shell script meta-docker.setup.sh will generate all auxillary files needed and build the final docker image.
+In particular, it will install autonomics ([maintained by Aditya Bhagwat](https://github.com/bhagwataditya/autonomics)) 
+and metatools ([Jan Krumsiek lab](https://gitlab.com/krumsieklab/mt)) into a rocker/tidyverse environment.
+Keras, Tensorflow and rJava is also included.<br>
 
-**REFERENCES**
+<br><br><br>
+
+**REFERENCES & NOTES**
 
 **Rocker project:**<br>
 https://www.rocker-project.org/images/<br>
@@ -58,8 +60,11 @@ https://github.com/bhagwataditya/autonomics
 https://gitlab.com/krumsieklab/mt<br>
 (requires access to Jan's gitlab, note that my personal credentials are presently in the setup script, so please do not distribute)
 
+**meta-docker at WCM-Q**<br>
+https://code.qatar-med.cornell.edu/kas2049/meta-docker
 
-**Notes**<br>
+
+**Cheat-sheet for docker**<br>
 docker image ls<br>
 docker container ls -a<br>
 docker container stop meta<br>
