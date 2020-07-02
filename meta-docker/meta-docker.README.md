@@ -16,10 +16,10 @@ MODIF:   02 July 2020 - port from WCM-Q code.qatar-med.cornell.edu/kas2049/meta-
 docker login registry.gitlab.com
 
 **Under Windows, open a CMD terminal and run the following command:**<br>
-docker run -v%USERPROFILE%:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta code.qatar-med.cornell.edu/kas2049/meta-docker/meta-docker:1.3.4
+docker run -v%USERPROFILE%:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5
 
 **Under Linux, run the following command in a shell (adapt the directory to mount using the -v option):**<br>
-docker run -v$HOME:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta code.qatar-med.cornell.edu/kas2049/meta-docker/meta-docker:1.3.5
+docker run -v$HOME:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5
 
 **Then open a browser and navigate to localhost:8787**
 
@@ -72,4 +72,6 @@ docker container start meta<br>
 docker container rm meta<br>
 docker exec meta df<br>
 docker exec -it meta /bin/bash<br>
+docker push registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5
+docker pull registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5
 
