@@ -24,7 +24,7 @@
 #
 #         Version 1.3.2:
 #         add more R libs
-#         debug install of kerase/tensorflow
+#         debug install of keras/tensorflow
 #
 #         Version 1.3.3:
 #         installed java developper kit
@@ -47,19 +47,24 @@
 #         install.packages("kableExtra")
 #         BiocManager::install("ppcor", update = FALSE)
 #         install.packages("ggpubr")
+#
+#         Version 1.3.6
+#         move to rocker/tidyverse:3.6.3
+#         commented out: quick fix for Mt upper-lower case problem (let's see whether the problem disappeared)
+#         commented out: pull of qmdiab.git and snippet.git (let's look at that later)
+#         add apt-get install python3-venv 
 
 set -x
 
 # enter the version tag for the docker image here
-export VERSION="1.3.5"
+export VERSION="1.3.6"
 
 # enter your GIT credentials here (needed to access to Jan's repo)
 export GIT_CREDENTIALS='ksuhre:4meta-TOOLs'
 
 # define the meta-dockerinitial target image
 # https://hub.docker.com/r/rocker/tidyverse/tags
-BASE="rocker/tidyverse:3.6.2"  # R installs fail on this version
-BASE="rocker/tidyverse:3.5.3"
+BASE="rocker/tidyverse:3.6.3" 
 
 # deal with weird calling of docker.exe from Linux Subsystem for Windows
 uname -a | grep Microsoft 
@@ -103,23 +108,24 @@ ln -sf  /lib/x86_64-linux-gnu/liblzma.so.5 /usr/local/lib/R/lib/liblzma.so
 # libs needed for keras
 apt-get install -y python-pip  
 apt-get install -y python3-pip
+apt-get install python3-venv
 pip install virtualenv
 
 echo "cloning meta-tools"
-git clone  https://'$GIT_CREDENTIALS'@gitlab.com/krumsieklab/qmdiab.git
-mv qmdiab /home/rstudio
+# git clone  https://'$GIT_CREDENTIALS'@gitlab.com/krumsieklab/qmdiab.git
+# mv qmdiab /home/rstudio
 git clone  https://'$GIT_CREDENTIALS'@gitlab.com/krumsieklab/mt.git
 mv mt /home/rstudio
-git clone  https://'$GIT_CREDENTIALS'@gitlab.com/krumsieklab/snippets.git
-mv snippets /home/rstudio
+# git clone  https://'$GIT_CREDENTIALS'@gitlab.com/krumsieklab/snippets.git
+# mv snippets /home/rstudio
 
 # echo "cloning autonomics files"
 # git clone https://github.com/bhagwataditya/autonomics
 # mv autonomics /home/rstudio
 
 # a quick-fix for upper-lower case mixup in metatools
-ln -s /home/rstudio/mt /home/rstudio/MT
-ln -s /home/rstudio/mt /home/rstudio/Mt
+# ln -s /home/rstudio/mt /home/rstudio/MT
+# ln -s /home/rstudio/mt /home/rstudio/Mt
 
 # pass ownership of /home/rstudio to the rstudio user so that a user can modify the libraries if required
 chown -R rstudio /home/rstudio
@@ -140,7 +146,7 @@ echo "installing required R-packages"
 R <<EEOOFF
 cat("installing keras/tensorflow\n")
 
-# install kerase/tensorflow
+# install keras/tensorflow
 install.packages("tensorflow")
 library(tensorflow)
 install_tensorflow()
@@ -258,7 +264,7 @@ EOF
 # build image (use --no-cache)
 #################################################################################################
 echo "KS: building image"
-${DOCKER} build -t code.qatar-med.cornell.edu/kas2049/meta-docker/meta-docker:${VERSION}  --no-cache meta-docker.dir 
+${DOCKER} build -t registry.gitlab.com/krumsieklab/mt/meta-docker:${VERSION}  --no-cache meta-docker.dir 
 
 # list existing images
 echo "KS: listing image"
@@ -269,7 +275,7 @@ echo "KS: listing running container (including stopped ones)"
 ${DOCKER} container ls -a
 
 echo "KS: run the following to push the image"
-echo ${DOCKER} push code.qatar-med.cornell.edu/kas2049/meta-docker/meta-docker:${VERSION} 
+echo ${DOCKER} push registry.gitlab.com/krumsieklab/mt/meta-docker:${VERSION} 
 
 echo "now run the following:"
-echo "docker run -v\`pwd\`:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta code.qatar-med.cornell.edu/kas2049/meta-docker/meta-docker:$VERSION"
+echo "docker run -v\`pwd\`:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta registry.gitlab.com/krumsieklab/mt/meta-docker:$VERSION"
