@@ -53,6 +53,7 @@
 #         commented out: quick fix for Mt upper-lower case problem (let's see whether the problem disappeared)
 #         commented out: pull of qmdiab.git and snippet.git (let's look at that later)
 #         add apt-get install python3-venv 
+#	  a few minor fixes
 
 set -x
 
