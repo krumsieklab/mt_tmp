@@ -4,7 +4,7 @@
 \alias{mt_pre_batch_median}
 \title{Median batch correction.}
 \usage{
-mt_pre_batch_median(D, batches)
+mt_pre_batch_median(D, batches, ref_samples)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}

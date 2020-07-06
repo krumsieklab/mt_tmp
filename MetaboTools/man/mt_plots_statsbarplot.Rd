@@ -7,20 +7,22 @@
 mt_plots_statsbarplot(
   D,
   stat_name,
-  metab_filter = p.value < 0.05,
+  metab_filter = p.value < 1,
   aggregate = "SUB_PATHWAY",
   colorby = NULL,
   ggadd = NULL,
   yscale = "fraction",
+  sort = FALSE,
+  assoc_sign,
   ...
 )
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{stat_name}{optional name of the statistics object to be used for filtering}
+\item{stat_name}{list of names of the statistics objects to be used for filtering}
 
-\item{metab_filter}{if given, filter will be applied to data and remaining variables will be used to create plot}
+\item{metab_filter}{filter will be applied to data and remaining variables will be used to create plot}
 
 \item{aggregate}{rowData variable used to aggregate variables.}
 
@@ -28,7 +30,11 @@ mt_plots_statsbarplot(
 
 \item{ggadd}{further elements/functions to add (+) to the ggplot object}
 
-\item{yscale}{plot percentage or frequency of variables. Values c("fraction","count"). Default "percentage".}
+\item{yscale}{plot percentage or frequency of variables. Values c("fraction","count"). Default "fraction".}
+
+\item{sort}{sort pathways in plot according to yscale. Default FALSE.}
+
+\item{assoc_sign}{optional parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_name.}
 
 \item{...}{additional expression directly passed to aes() of ggplot, can refer to colData}
 }
@@ -39,13 +45,14 @@ $result: plot, barplot
 Creates a bar plot
 }
 \examples{
-\dontrun{# Volcano plot as overview of results with a result already in 'comp'
+\dontrun{# Barplot as overview of results with a result already in 'comp'
 ... \%>\%
 mt_plots_statsbarplot(stat_name     = "comp",
  metab_filter = p.adj < 0.05,
  aggregate    = "SUB_PATHWAY",
- colorby      = "SUPER_PATHWAY",
- yscale       = "count") \%>\%
+ colorby      = "SUPER_PATHWAYdevtools::install(codes.makepath("MT/MetaboTools"))",
+ yscale       = "count",
+ sort         = TRUE) \%>\%
  ...}
 
 }
