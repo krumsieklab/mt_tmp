@@ -8,24 +8,40 @@ mt_plots_qc_missingness(
   D,
   met_max = NA,
   samp_max = NA,
-  plot.mets = T,
-  plot.samples = F,
-  sample.labels = NA,
-  plot.data = T
+  plot_mets = T,
+  plot_samples = F,
+  sec_axis_mets = F,
+  sec_axis_samples = F,
+  sample_labels = NA,
+  plot_data = T
 )
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{met_max}{Which missingness to mark on the y axis (default: NA = no line)}
+\item{met_max}{Which metabolite missingness to mark on the y axis (default: NA = no line)}
+
+\item{samp_max}{Which sample missingness to mark on the y axis (default: NA = no line)}
+
+\item{plot_mets}{show metabolite missingness plot? (default: T)}
+
+\item{plot_samples}{show sample missingness plot? (default: F)}
+
+\item{sec_axis_mets}{add second axis to metabolite missingness plot? (default: F)}
+
+\item{sec_axis_samples}{add second axis to sample missingness plot? (default: F)}
+
+\item{sample_labels}{which column from colData to use as sample labels? (default: NA)}
+
+\item{plot_data}{show entire data missingness plot? (default: T)}
 }
 \value{
 $result: plot, two plots
 }
 \description{
-Creates two plots:
-1. missing value matrix view
-2. sorted missing value % plot
+Creates two kinds of plots:
+1. missing value matrix view (samples and metabolites)
+2. sorted missing value % plot (samples and/or metabolites)
 }
 \examples{
 \dontrun{\%>\%  mt_plots_qc_missingness() \%>\% # without horizontal line

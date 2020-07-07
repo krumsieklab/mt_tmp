@@ -2,14 +2,13 @@
 #'
 #' @docType class
 #'
-#' @importFrom R6 R6Class
 #'
 #' @field lst Combined list of all unique (as identified by uuid) metadata(D)$results entries
 #' @field graph An igraph graph capturing the directional relationships between result entries
 #'
 #' @noRd
 
-MTResultCollector <- R6Class("MTResultCollector", list(
+MTResultCollector <- R6::R6Class("MTResultCollector", list(
   lst = list(),
   graph = igraph::make_empty_graph(),
 

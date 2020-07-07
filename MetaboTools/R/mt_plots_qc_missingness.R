@@ -1,11 +1,18 @@
 #' Visualize missing value structure of dataset.
 #'
-#' Creates two plots:
-#' 1. missing value matrix view
-#' 2. sorted missing value % plot
+#' Creates two kinds of plots:
+#' 1. missing value matrix view (samples and metabolites)
+#' 2. sorted missing value % plot (samples and/or metabolites)
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param met_max Which missingness to mark on the y axis (default: NA = no line)
+#' @param met_max Which metabolite missingness to mark on the y axis (default: NA = no line)
+#' @param samp_max Which sample missingness to mark on the y axis (default: NA = no line)
+#' @param plot_mets show metabolite missingness plot? (default: T)
+#' @param plot_samples show sample missingness plot? (default: F)
+#' @param sec_axis_mets add second axis to metabolite missingness plot? (default: F)
+#' @param sec_axis_samples add second axis to sample missingness plot? (default: F)
+#' @param sample_labels which column from colData to use as sample labels? (default: NA)
+#' @param plot_data show entire data missingness plot? (default: T)
 #'
 #' @return $result: plot, two plots
 #'
@@ -26,10 +33,12 @@ mt_plots_qc_missingness <- function(
   D,         # SummarizedExperiment input
   met_max=NA, # which % to mark on the y axis,
   samp_max=NA, # which % to mark on the y axis,
-  plot.mets = T,    # show metabolite missingness plot?
-  plot.samples = F, # show sample missingness plot?
-  sample.labels=NA, # which column from colData to use as sample labels?
-  plot.data = T     # show entire data missingess plot?
+  plot_mets = T,    # show metabolite missingness plot?
+  plot_samples = F, # show sample missingness plot?
+  sec_axis_mets = F,
+  sec_axis_samples = F,
+  sample_labels=NA, # which column from colData to use as sample labels?
+  plot_data = T     # show entire data missingess plot?
 ) {
 
   # helper function
@@ -45,21 +54,25 @@ mt_plots_qc_missingness <- function(
   plots = list()
 
   # missingness %plot per metabolite
-  if (plot.mets) {
+  if (plot_mets) {
 
     p <-
       data.frame(met=rowData(D)$name, miss=missingness(X)) %>%
       dplyr::arrange(miss) %>%
-       ggplot(aes(x=order(miss), y=miss, met=met)) +
+       ggplot(aes(x=order(miss), met=met)) +
       # geom_point(aes(x=1:ncol(X),y=sort(missingness(X)))) +
-      geom_point() +
-      ylim(0,1) +
+      geom_point(aes(y=miss)) +
       xlab("metabolites (sorted)") +
       ylab("missingness") +
       ggtitle("Missing values, metabolites")
+    # second axis?
+    if(sec_axis_mets){
+      p <- p + scale_y_continuous(limits=c(0,1), sec.axis = sec_axis(~.*dim(X)[1], name="# samples"))
+    }
     # mark?
-    if (!is.na(met_max))
+    if (!is.na(met_max)){
       p <- p+geom_hline(yintercept=met_max, color='red', linetype="dashed")
+    }
     # fix ggplot environment
     p <- mti_fix_ggplot_env(p)
     # append
@@ -67,12 +80,12 @@ mt_plots_qc_missingness <- function(
   }
 
   # missingness %plot per sample
-  if (plot.samples) {
+  if (plot_samples) {
     # construct data frame, sample label does not have a default value in MT
     df <- data.frame(miss=missingness(t(X)))
     # add labels?
-    if (!is.na(sample.labels)) {
-      df$sample = colData(D)[[sample.labels]]
+    if (!is.na(sample_labels)) {
+      df$sample = colData(D)[[sample_labels]]
     } else {
       df$sample = rep("", ncol(D))
     }
@@ -80,16 +93,20 @@ mt_plots_qc_missingness <- function(
     p <-
       df %>%
       dplyr::arrange(miss) %>%
-      ggplot(aes(x=order(miss), y=miss, sample=sample)) +
-      geom_point() +
+      ggplot(aes(x=order(miss), sample=sample)) +
+      geom_point(aes(y=miss)) +
       #geom_point(aes(x=1:nrow(X),y=sort(missingness(t(X))))) +
-      ylim(0,1) +
       xlab("samples (sorted)") +
       ylab("missingness") +
       ggtitle("Missing values, samples")
+    # second axis?
+    if(sec_axis_samples){
+      p <- p + scale_y_continuous(limits=c(0,1), sec.axis = sec_axis(~.*dim(X)[2], name="# metabolites"))
+    }
     # mark?
-    if (!is.na(samp_max))
-      p <- p1+geom_hline(yintercept=samp_max, color='red', linetype="dashed")
+    if (!is.na(samp_max)){
+      p <- p+geom_hline(yintercept=samp_max, color='red', linetype="dashed")
+    }
     # fix ggplot environment
     p <- mti_fix_ggplot_env(p)
     # append
@@ -97,7 +114,7 @@ mt_plots_qc_missingness <- function(
   }
 
 
-  if (plot.data) {
+  if (plot_data) {
     # heatmap
     molten <- reshape2::melt(t(is.na(X)))
     colnames(molten) <- c("X1","X2","value") #rename to avoid colname errors
