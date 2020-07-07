@@ -15,13 +15,13 @@
 #' @return results$output: heatmap of statistical results
 #'
 #' @examples
-#' \dontrun{D <- D %>% mt_plots_pheatmap_multStats(met_anno = "SUPER_PATHWAY", cluster_cols = T, cluster_rows = T)}
+#' \dontrun{D <- D %>% mt_plots_pheatmap_multstats(met_anno = "SUPER_PATHWAY", cluster_cols = T, cluster_rows = T)}
 #'
 #' @author KC
 #'
 #' @export
 
-mt_plots_pheatmap_multStats <- function(D,
+mt_plots_pheatmap_multstats <- function(D,
                                         stat_list=NA,
                                         color_formula=sign(fc) * -log10(p.adj),
                                         met_anno,
