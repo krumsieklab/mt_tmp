@@ -6,10 +6,10 @@
 #' @param stat_list List of stat names to plot; default NA (for all stat objects in D)
 #' @param color_formula Expression used to color adjusted p-values; default: sign(fc) * -log10(p.adj)
 #' @param met_anno rowData() column name to use as column annotation
-#' @param signif_mark Expression used to indicate significant p-values; default: p.adj < 0.05
+#' @param signif_mark Expression used to indicate significant p-values
 #' @param cluster_rows cluster by rows? default: F
 #' @param cluster_cols cluster by cols? default: F
-#' @param filter_signif show only metabolites significant in one or more results? defult: T
+#' @param filter_signif show only metabolites significant in one or more results? default: T
 #' @param show_colnames should column (metabolite) labels be included in the plot? default: F
 #'
 #' @return results$output: heatmap of statistical results
@@ -23,14 +23,15 @@
 
 mt_plots_pheatmap_multstats <- function(D,
                                         stat_list=NA,
-                                        color_formula=sign(fc) * -log10(p.adj),
+                                        color_formula=sign(statistic) * -log10(p.adj),
                                         met_anno,
-                                        signif_mark = p.adj < 0.05,
+                                        signif_mark,
                                         cluster_rows = F,
                                         cluster_cols = F,
                                         filter_signif = T,
                                         show_colnames = F){
 
+  if (missing(signif_mark)) stop("signif_mark must be specified")
   color_formula <- dplyr::enquo(color_formula)
   signif_mark <- dplyr::enquo(signif_mark)
 
