@@ -112,7 +112,7 @@ mt_files_load_metabolon <- function(
   # add display name
   result$metinfo$name   <- result$metinfo$BIOCHEMICAL
   # fix variable names
-  colnames(result$data) <- result$metinfo$COMP_IDstr
+  colnames(result$data) <- result$metinfo$BIOCHEMICAL
   # generate summarized experiment
   D <- SummarizedExperiment(assay    = t(result$data),
                        colData  = result$sampleinfo,
