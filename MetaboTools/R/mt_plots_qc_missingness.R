@@ -67,7 +67,10 @@ mt_plots_qc_missingness <- function(
       ggtitle("Missing values, metabolites")
     # second axis?
     if(sec_axis_mets){
-      p <- p + scale_y_continuous(limits=c(0,1), sec.axis = sec_axis(~.*dim(X)[1], name="# samples"))
+      p <- p + scale_y_continuous(limits=c(0,1), sec.axis = sec_axis(~.*dim(X)[1], name="# samples")) +
+        theme(axis.title.y.right = element_text(angle=90))
+    }else{
+      p <- p + scale_y_continuous(limits=c(0,1))
     }
     # mark?
     if (!is.na(met_max)){
@@ -101,7 +104,10 @@ mt_plots_qc_missingness <- function(
       ggtitle("Missing values, samples")
     # second axis?
     if(sec_axis_samples){
-      p <- p + scale_y_continuous(limits=c(0,1), sec.axis = sec_axis(~.*dim(X)[2], name="# metabolites"))
+      p <- p + scale_y_continuous(limits=c(0,1), sec.axis = sec_axis(~.*dim(X)[2], name="# metabolites")) +
+        theme(axis.title.y.right = element_text(angle=90))
+    }else{
+      p <- p + scale_y_continuous(limits=c(0,1))
     }
     # mark?
     if (!is.na(samp_max)){
