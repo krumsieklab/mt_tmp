@@ -77,7 +77,7 @@ mt_reporting_generateMD_nonLinear <- function(res,
         head_list[[i+1]] <- FALSE
       }else if(length(next_node > 1)){
         next_lvl <- next_lvl + 1
-        nn_idx <- which(order == next_node)
+        nn_idx <- which(order %in% next_node)
         lvl_list[nn_idx] <- next_lvl
         head_list[nn_idx] <- TRUE
       }
@@ -117,7 +117,7 @@ mt_reporting_generateMD_nonLinear <- function(res,
   # loop over results
   lvl=1 # current level of results = 1
 
-  dfs_order <- dfs(res$graph, res$graph_roots())$order %>% as_ids()
+  dfs_order <- igraph::dfs(res$graph, res$graph_roots())$order %>% igraph::as_ids()
   md_lsts <- getMDLvl(res, dfs_order)
   lvl_lst <- md_lsts["levels"] %>% unlist() %>% unname()
   head_lst <- md_lsts["headers"] %>% unlist() %>% unname()
