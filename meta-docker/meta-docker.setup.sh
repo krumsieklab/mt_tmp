@@ -54,20 +54,61 @@
 #         commented out: pull of qmdiab.git and snippet.git (let's look at that later)
 #         add apt-get install python3-venv 
 #	  a few minor fixes
+#         
+#         error installing tensorflow remains:
+#          
+#          > install_tensorflow()
+#          Creating virtual environment '~/.virtualenvs/r-reticulate' ...
+#          Using python: /usr/bin/python3.7
+#          The virtual environment was not created successfully because ensurepip is not
+#          available.  On Debian/Ubuntu systems, you need to install the python3-venv
+#          package using the following command.
+#          
+#              apt-get install python3-venv
+#          
+#          You may need to use sudo with that command.  After installing the python3-venv
+#          package, recreate your virtual environment.
+#          
+#          Failing command: ['/root/.virtualenvs/r-reticulate/bin/python3.7', '-Im', 'ensurepip', '--upgrade', '--default-pip']
+#          
+#          ^[[91mError: Error creating virtual environment '~/.virtualenvs/r-reticulate' [error code 1]
+#          Execution halted
+#          
+#         https://stackoverflow.com/questions/39539110/pyvenv-not-working-because-ensurepip-is-not-available
+#         ==> that fix does not work
+#         
+#         Version 1.4
+# 
+#         10 July - total structural overhaul
+#                   metatools as package
+#                   logical packing of the different install scripts
+#                   inactivated keras/tensorflow for now
+#                   inactivated autonomics for now
+#
+#
+# personal notes KS regarding Windows:
+#            We recommend to convert this distro to WSL 2 and activate
+#            the WSL integration in Docker Desktop settings.
+#
+# install Olink code 
+# devtools::install_github(repo ='Olink-Proteomics/OlinkRPackage/OlinkAnalyze', upgrade = FALSE)
 
-set -x
+
+set -
 
 # enter the version tag for the docker image here
-export VERSION="1.3.6"
+export VERSION="1.4.0"
 
 # enter your GIT credentials here (needed to access to Jan's repo)
+# in the future we should change this to using git tokens
 export GIT_CREDENTIALS='ksuhre:4meta-TOOLs'
 
-# define the meta-dockerinitial target image
-# https://hub.docker.com/r/rocker/tidyverse/tags
+# define the initial target image from rocker
+# see https://hub.docker.com/r/rocker/tidyverse/tags
 BASE="rocker/tidyverse:3.6.3" 
 
 # deal with weird calling of docker.exe from Linux Subsystem for Windows
+# for some reason it is not possible to create an alias (because the docker command already exists under Windows, I guess)
 uname -a | grep Microsoft 
 if [ $? -eq 0 ] ; then
   export DOCKER=docker.exe
@@ -75,28 +116,25 @@ else
   export DOCKER=docker
 fi
 
-echo "KS: building meta-docker"
-
-# check whether the directory already exists
-# files may be overwritten
+# create files that will be moved to the docker image for install in meta-docker.dir
 if [ -d meta-docker.dir ] ; then
   echo "KS: warning, directory meta-docker.dir alreay exists, some files may be overwritten"
 else
   mkdir meta-docker.dir
 fi
 
+
 #################################################################################################
-# create meta-tools install script 1
+# create meta-tools script KSinstall_libs.sh
 #################################################################################################
-echo "KS: creating meta-tools install script 1"
-cat > meta-docker.dir/KSinstall1.sh <<EOF2KS1
-echo "running $0"
-echo "This is meta-docker version $VERSION" > /meta-docker.version
+echo "KS: creating meta-tools install script KSinstall_libs.sh"
+cat > meta-docker.dir/KSinstall_libs.sh <<EOF2KS1
+echo "running \$0"
+echo "This is \$0 version $VERSION" >> /meta-docker.version
 date >> /meta-docker.version
 date
 uname -a
 echo "installing Ubuntu libs"
-apt-get -y update
 apt-get install -y libjpeg-dev  # needed for R package "remote"
 
 # install java, used by glmnet which requires rJava 
@@ -106,41 +144,24 @@ apt-get install -y default-jdk
 ln -sf  /lib/x86_64-linux-gnu/libbz2.so.1 /usr/local/lib/R/lib/libbz2.so
 ln -sf  /lib/x86_64-linux-gnu/liblzma.so.5 /usr/local/lib/R/lib/liblzma.so
 
+EOF2KS1
+
+#################################################################################################
+# create meta-tools install script for  keras/tensorflow
+#################################################################################################
+echo "KS: creating meta-tools install script KSinstall_keras.sh"
+cat > meta-docker.dir/KSinstall_keras.sh <<EOF2KS2
+echo "running \$0"
+echo "This is \$0 version $VERSION" >> /meta-docker.version
+date >> /meta-docker.version
+date
+uname -a
+
 # libs needed for keras
 apt-get install -y python-pip  
 apt-get install -y python3-pip
 apt-get install python3-venv
 pip install virtualenv
-
-echo "cloning meta-tools"
-# git clone  https://'$GIT_CREDENTIALS'@gitlab.com/krumsieklab/qmdiab.git
-# mv qmdiab /home/rstudio
-git clone  https://'$GIT_CREDENTIALS'@gitlab.com/krumsieklab/mt.git
-mv mt /home/rstudio
-# git clone  https://'$GIT_CREDENTIALS'@gitlab.com/krumsieklab/snippets.git
-# mv snippets /home/rstudio
-
-# echo "cloning autonomics files"
-# git clone https://github.com/bhagwataditya/autonomics
-# mv autonomics /home/rstudio
-
-# a quick-fix for upper-lower case mixup in metatools
-# ln -s /home/rstudio/mt /home/rstudio/MT
-# ln -s /home/rstudio/mt /home/rstudio/Mt
-
-# pass ownership of /home/rstudio to the rstudio user so that a user can modify the libraries if required
-chown -R rstudio /home/rstudio
-chgrp -R users /home/rstudio
-EOF2KS1
-
-#################################################################################################
-# create meta-tools install script 2
-#################################################################################################
-echo "KS: creating meta-tools install script 2"
-cat > meta-docker.dir/KSinstall2.sh <<EOF2KS2
-echo "running $0"
-date
-uname -a
 
 echo "installing required R-packages"
 #------------------------------
@@ -156,27 +177,28 @@ library(keras)
 install_keras()
 EEOOFF
 
-# move the virtual environment (create by install_tensorflow) to /home/rstudio (not very elegant, better to run the install under the rstudio user, but I couldn't get this to run, su -l rstudio had no effect)
+# move the virtual environment (created by install_tensorflow) to /home/rstudio (not very elegant, better to run the install under the rstudio user, but I couldn't get this to run, su -l rstudio had no effect)
 mv /root/.virtualenvs/ /home/rstudio/
 
-# pass ownership of /home/rstudio to the rstudio user so that a user can modify the libraries if required
-chown -R rstudio /home/rstudio
-chgrp -R users /home/rstudio
+chown rstudio /home/rstudio/.virtualenvs
+chgrp users /home/rstudio/.virtualenvs
+
 EOF2KS2
 
 
 #################################################################################################
-# create meta-tools install script 3
+# create meta-tools install script for diverse R packages
 #################################################################################################
-echo "KS: creating meta-tools install script 3"
-cat > meta-docker.dir/KSinstall3.sh <<EOF2KS3
-echo "running $0"
+echo "KS: creating meta-tools install script KSinstall_packages.sh"
+cat > meta-docker.dir/KSinstall_packages.sh <<EOF2KS3
+echo "running \$0"
+echo "This is \$0 version $VERSION" >> /meta-docker.version
+date >> /meta-docker.version
 date
 uname -a
 
-echo "installing required R-packages"
 R <<EEOOFF
-cat("installing all required packages\n")
+cat("installing R packages\n")
 
 # R packages
 install.packages("hash")
@@ -239,15 +261,67 @@ remotes::install_github('bhagwataditya/autonomics/autonomics.find',       ref = 
 remotes::install_github('bhagwataditya/autonomics/autonomics.ora',        ref = 'dev', upgrade = FALSE)
 remotes::install_github('bhagwataditya/autonomics/autonomics',            ref = 'dev', upgrade = FALSE)
 
-# install Olink code
-devtools::install_github(repo ='Olink-Proteomics/OlinkRPackage/OlinkAnalyze', upgrade = FALSE)
-
 EEOOFF
 
 # pass ownership of /home/rstudio to the rstudio user so that a user can modify the libraries if required
-chown -R rstudio /home/rstudio
-chgrp -R users /home/rstudio
+chown -R rstudio /home/rstudio/mt
+chgrp -R users /home/rstudio/mt
 EOF2KS3
+
+#################################################################################################
+
+#################################################################################################
+# create meta-tools install script KSinstall_mt.sh
+#################################################################################################
+echo "KS: creating meta-tools install script KSinstall_mt.sh"
+cat > meta-docker.dir/KSinstall_mt.sh <<EOF2KS4
+echo "running \$0"
+echo "This is \$0 version $VERSION" >> /meta-docker.version
+date >> /meta-docker.version
+date
+uname -a
+
+# change into the home dir of the rstudio user (although the script will run as root)
+cd /home/rstudio
+
+# we should replace the below using tokens 
+echo "cloning meta-tools"
+git clone  https://'$GIT_CREDENTIALS'@gitlab.com/krumsieklab/mt.git
+git clone  https://'$GIT_CREDENTIALS'@gitlab.com/krumsieklab/snippets.git
+
+# a quick fix to work around different versions of mt/Mt/MT (may only concern linux systems)
+ln -s /home/rstudio/mt /home/rstudio/MT
+ln -s /home/rstudio/mt /home/rstudio/Mt
+
+R <<EEOOFF1
+cat("installing meta-tools\n")
+
+# the below command would install from the GitLab - but we want an install it from a local directory for now
+# devtools::install_gitlab(repo="krumsieklab/mt", subdir = "MetaboTools", auth_token = "Eu8aCTCZn7grLyrT3xUm"
+
+# the below should not be needed, but I keep it as a reminder for now
+# codes.makepath <- function(p){file.path("/home/rstudio",p)}
+# source(codes.makepath("snippets/mt.checkout.R"))
+# mt.quickload <- function()source(codes.makepath("mt/quickload.R"))
+# mt.quickload()
+
+devtools::install("mt/MetaboTools", keep_source = T)
+
+cat("installing meta-tools done\n")
+
+EEOOFF1
+
+# pass ownership of /home/rstudio to the rstudio user so that a user can modify the libraries if required
+chown -R rstudio /home/rstudio/mt
+chgrp -R users /home/rstudio/mt
+chown -R rstudio /home/rstudio/snippets
+chgrp -R users /home/rstudio/snippets
+chown rstudio /home/rstudio/Mt
+chgrp users /home/rstudio/Mt
+chown rstudio /home/rstudio/MT
+chgrp users /home/rstudio/MT
+
+EOF2KS4
 
 #################################################################################################
 # create Dockerfile
@@ -256,27 +330,41 @@ echo "KS: creating Dockerfile"
 cat > meta-docker.dir/Dockerfile << EOF
 FROM $BASE
 COPY . /app
-RUN sh /app/KSinstall1.sh
-RUN sh /app/KSinstall2.sh
-RUN sh /app/KSinstall3.sh
+#RUN sh /app/KSinstall_libs.sh
+#RUN sh /app/KSinstall_keras.sh
+#RUN sh /app/KSinstall_packages.sh
+RUN sh /app/KSinstall_mt.sh
 EOF
 
 #################################################################################################
 # build image (use --no-cache)
 #################################################################################################
-echo "KS: building image"
-${DOCKER} build -t registry.gitlab.com/krumsieklab/mt/meta-docker:${VERSION}  --no-cache meta-docker.dir 
+echo "KS: to build the image"
+echo ${DOCKER} build -t registry.gitlab.com/krumsieklab/mt/meta-docker:${VERSION}  --no-cache meta-docker.dir 
 
 # list existing images
-echo "KS: listing image"
-${DOCKER} image ls
+echo "KS: to list existing images:"
+echo ${DOCKER} image ls
 
-# list running containers
-echo "KS: listing running container (including stopped ones)"
-${DOCKER} container ls -a
-
-echo "KS: run the following to push the image"
+echo "KS: to push the image to the GitLab registry:"
 echo ${DOCKER} push registry.gitlab.com/krumsieklab/mt/meta-docker:${VERSION} 
 
-echo "now run the following:"
-echo "docker run -v\`pwd\`:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta registry.gitlab.com/krumsieklab/mt/meta-docker:$VERSION"
+echo "to start the image (adapt the work directory you wish to mount using -v):"
+echo "${DOCKER} run -v/tmp:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta registry.gitlab.com/krumsieklab/mt/meta-docker:$VERSION"
+
+echo "KS: to open a shell inside the container:"
+echo "${DOCKER} exec -it meta /bin/bash"
+
+echo "KS: to stop the container:"
+echo "${DOCKER} stop meta"
+
+echo "KS: to start the container again:"
+echo "${DOCKER} start meta"
+
+echo "KS: to delete the container:"
+echo "${DOCKER} rm meta"
+
+echo "KS: to list container and images"
+echo "${DOCKER} container ls"
+echo "${DOCKER} image ls"
+
