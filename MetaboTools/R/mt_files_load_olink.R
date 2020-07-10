@@ -196,7 +196,7 @@ mt_files_load_olink <- function(
   result$info = "nothing yet"
   
   # read the Olink file
-  odata = OlinkAnalyze::read_NPX(file)
+  odata = read_NPX(file)
   
   # NPX values are ~ PCA cycles, hence on some kind of a log-scale
   # to be in-line with meta-tools, un-logscale the data using 2 as a basis
