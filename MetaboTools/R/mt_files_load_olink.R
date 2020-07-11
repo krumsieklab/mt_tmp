@@ -21,6 +21,11 @@
 #' @author KS
 #'
 #'
+#' @import SummarizedExperiment
+#' @import readxl
+#' @import tidyverse
+#'
+#' @export
 ###########################################################################
 read_NPX <- function (filename)
 {
