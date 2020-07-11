@@ -208,6 +208,7 @@ mt_files_load_olink <- function(
   rownames(xdata) = wdata$SampleID
   
   # convert to SummarizedExperiment
+  # the assay is called "exprs" to be compatible with autonomics
   D = SummarizedExperiment(assay = list(exprs = t(xdata)),
                            colData = DataFrame(sample_id = rownames(xdata)),
                            rowData = DataFrame(feature_id = colnames(xdata),
@@ -228,8 +229,9 @@ mt_files_load_olink <- function(
   MissingFreq2 = reshape2::dcast(odata,formula = " SampleID ~ OlinkID", value.var = "MissingFreq")[2,-1] %>% unlist() %>% as.numeric() %>% unname()
   stopifnot (length(which(MissingFreq2 != rowData(D)$MissingFreq)) == 0)
   
-  # as column names, use "BIOCHEMICAL", if available
+  # as column names, use "BIOCHEMICAL" for autonomics and "name" for MetaboTools
   rowData(D)$BIOCHEMICAL = rowData(D)$Assay
+  rowData(D)$name = rowData(D)$Assay
   
   # as row names, use "SAMPLE_NAME", if available
   D$SAMPLE_NAME = D$sample_id
