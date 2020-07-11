@@ -112,7 +112,7 @@ mt_files_load_metabolon <- function(
   # add display name
   result$metinfo$name   <- result$metinfo$BIOCHEMICAL
   # fix variable names
-  colnames(result$data) <- result$metinfo$BIOCHEMICAL
+  colnames(result$data) <- result$metinfo$BIOCHEMICAL %>% make.names()
   # generate summarized experiment
   D <- SummarizedExperiment(assay    = t(result$data),
                        colData  = result$sampleinfo,
@@ -124,9 +124,9 @@ mt_files_load_metabolon <- function(
   if (is.null(rownames(D))) rownames(D) <- result$metinfo$BIOCHEMICAL
 
   # add status information
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("loaded Metabolon file: %s, sheet: %s", basename(file), sheet)
     )
