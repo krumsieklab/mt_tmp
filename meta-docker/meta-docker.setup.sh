@@ -134,8 +134,10 @@ echo "This is \$0 version $VERSION" >> /meta-docker.version
 date >> /meta-docker.version
 date
 uname -a
+
 echo "installing Ubuntu libs"
 apt-get install -y libjpeg-dev  # needed for R package "remote"
+apt-get install vim
 
 # install java, used by glmnet which requires rJava 
 apt-get install -y default-jdk
