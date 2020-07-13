@@ -27,6 +27,7 @@
 
 mt_stats_univ_cor = function(
   D,
+  method,
   var,
   stat_name,
   sample_filter, exact_flag=NULL){
