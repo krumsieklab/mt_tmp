@@ -25,7 +25,7 @@
 #'
 #' @export
 
-mt_stats_univ_tau = function(
+mt_stats_univ_cor = function(
   D,
   var,
   stat_name,
