@@ -80,14 +80,19 @@ mt_stats_univ_cor = function(
   rr_reverse <- revert_list_str(rr)
 
   # arrange results in dataframe
-  tab <-cbind.data.frame(as.data.frame(do.call(rbind, rr_reverse$statistic)),
+  tab <- cbind.data.frame(as.data.frame(do.call(rbind, rr_reverse$statistic)),
                          as.data.frame(do.call(rbind, rr_reverse$p.value)),
                          as.data.frame(do.call(rbind, rr_reverse$method)) )
   colnames(tab) <- c("statistic","p.value","method")
+  
   # add term column with ordinal variable
   tab$term <- rep(var, dim(tab)[1])
   # add column with names
   tab$var <- rownames(tab)
+
+  # reorder columns
+  cc <- c("var","term","statistic","p.value")
+  tab <- tab[,match(cc,colnames(tab))]
 
   ## construct output groups variable
   outgroups <- unique(Ds[[var]])
