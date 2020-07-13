@@ -30,7 +30,8 @@ mt_stats_univ_cor = function(
   method,
   var,
   stat_name,
-  sample_filter, exact_flag=NULL){
+  sample_filter, 
+  exact_flag=NULL){
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -42,10 +43,10 @@ mt_stats_univ_cor = function(
   if (class(D[[var]])!="numeric") stop(sprintf("For Kendall's correlation, %s must be numeric",var))
 
   # make sure name does not exist yet
-  if (stat_name %in% unlist(mti_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("stat_name"))) stop(sprintf("stat element with stat_name '%s' already exists",stat_name))
+  if (stat_name %in% unlist(MetaboTools:::mti_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("stat_name"))) stop(sprintf("stat element with stat_name '%s' already exists",stat_name))
 
   # merge data with sample info
-  Ds <- D %>% mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
+  Ds <- D %>% MetaboTools:::mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
   
   ## FILTER SAMPLES
   if(!missing(sample_filter)) {
@@ -80,7 +81,8 @@ mt_stats_univ_cor = function(
 
   # arrange results in dataframe
   tab <-cbind.data.frame(as.data.frame(do.call(rbind, rr_reverse$statistic)),
-                                   as.data.frame(do.call(rbind, rr_reverse$p.value)))
+                         as.data.frame(do.call(rbind, rr_reverse$p.value)),
+                         as.data.frame(do.call(rbind, rr_reverse$method)) )
   colnames(tab) <- c("statistic","p.value","method")
   # add term column with ordinal variable
   tab$term <- rep(var, dim(tab)[1])
@@ -95,7 +97,7 @@ mt_stats_univ_cor = function(
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = 'Kendall rank correlation (tau)',
+      logtxt = sprintf("%s correlation to %s", method, var),
       output = list(
         table = tab,
         name = stat_name,
