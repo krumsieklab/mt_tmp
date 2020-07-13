@@ -85,6 +85,7 @@
 #                   inactivated keras/tensorflow for now
 #                   inactivated autonomics for now
 #
+#          13 July - further testing 
 #
 # personal notes KS regarding Windows:
 #            We recommend to convert this distro to WSL 2 and activate
