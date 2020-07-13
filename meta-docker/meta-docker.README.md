@@ -15,10 +15,10 @@ MODIF:   02 July 2020 - port from WCM-Q code.qatar-med.cornell.edu/kas2049/meta-
 docker login registry.gitlab.com
 
 **Under Windows, open a CMD terminal and run the following command:**<br>
-docker run -v%USERPROFILE%:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5
+docker run -v%USERPROFILE%:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta registry.gitlab.com/krumsieklab/mt/meta-docker:1.4.1
 
-**Under Linux, run the following command in a shell (adapt the directory to mount using the -v option):**<br>
-docker run -v$HOME:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5
+**Under Mac/Linux, run the following command in a shell (adapt the directory to mount using the -v option):**<br>
+docker run -v$HOME:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --name meta registry.gitlab.com/krumsieklab/mt/meta-docker:1.4.1
 
 **Then open a browser and navigate to localhost:8787**
 
@@ -27,17 +27,7 @@ docker run -v$HOME:/home/rstudio/home -e PASSWORD=pwd -p 8787:8787 --detach --na
 
 The docker -v option can be used to mount any directory that is needed. In the example above, the user home directory is mounted.
 
-**HOWTO create a new meta-docker image:**<br>
-./meta-docker.setup.sh<br>
 
-Please note: this step needs only be performed when a new version of the docker image is created.
-The "normal" user shall not have to do this.
-The shell script meta-docker.setup.sh will generate all auxillary files needed and build the final docker image.
-In particular, it will install autonomics ([maintained by Aditya Bhagwat](https://github.com/bhagwataditya/autonomics)) 
-and metatools ([Jan Krumsiek lab](https://gitlab.com/krumsieklab/mt)) into a rocker/tidyverse environment.
-Keras, Tensorflow and rJava is also included.<br>
-
-<p>
 
 **REFERENCES & NOTES**
 
@@ -74,3 +64,18 @@ docker push registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5<br>
 docker pull registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5<br>
 docker tag registry.gitlab.com/krumsieklab/mt/meta-docker:1.3.5 registry.gitlab.com/krumsieklab/mt/meta-docker:latest<br>
 
+<br><br><br>
+
+**HOWTO create a new meta-docker image:**<br>
+./meta-docker.setup.sh<br>
+
+This script generates all required files and then prints the docker commands that need to be run
+in order to create a new image and register it to the GitLab.
+
+Please note: A "normal" user shall not have to do this.
+The shell script meta-docker.setup.sh will generate all auxillary files needed and build the final docker image.
+In particular, it will install autonomics ([maintained by Aditya Bhagwat](https://github.com/bhagwataditya/autonomics)) 
+and metatools ([Jan Krumsiek lab](https://gitlab.com/krumsieklab/mt)) into a rocker/tidyverse environment.
+Keras, Tensorflow and rJava is also included.<br>
+
+<p>
