@@ -85,6 +85,7 @@
 #                   inactivated keras/tensorflow for now
 #                   inactivated autonomics for now
 #
+#          13 July - further testing 
 #
 # personal notes KS regarding Windows:
 #            We recommend to convert this distro to WSL 2 and activate
@@ -97,7 +98,7 @@
 set -
 
 # enter the version tag for the docker image here
-export VERSION="1.4.0"
+export VERSION="1.4.1"
 
 # enter your GIT credentials here (needed to access to Jan's repo)
 # in the future we should change this to using git tokens
@@ -109,7 +110,7 @@ BASE="rocker/tidyverse:3.6.3"
 
 # deal with weird calling of docker.exe from Linux Subsystem for Windows
 # for some reason it is not possible to create an alias (because the docker command already exists under Windows, I guess)
-uname -a | grep Microsoft 
+uname -a | grep -i microsoft 
 if [ $? -eq 0 ] ; then
   export DOCKER=docker.exe
 else 
@@ -134,8 +135,10 @@ echo "This is \$0 version $VERSION" >> /meta-docker.version
 date >> /meta-docker.version
 date
 uname -a
+
 echo "installing Ubuntu libs"
 apt-get install -y libjpeg-dev  # needed for R package "remote"
+apt-get install vim
 
 # install java, used by glmnet which requires rJava 
 apt-get install -y default-jdk
