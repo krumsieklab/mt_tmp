@@ -86,6 +86,13 @@
 #                   inactivated autonomics for now
 #
 #          13 July - further testing 
+#          14 July - work on autonomics
+#                    correct some stuff in the NAMESPACE (needs to be pushed by Aditya)
+#                    install apt-file
+#                    to search for missing libs, like bzlib.h
+#                    apt-get install apt-file
+#                    apt-file update
+#                    apt-file search zlib.h
 #
 # personal notes KS regarding Windows:
 #            We recommend to convert this distro to WSL 2 and activate
@@ -137,8 +144,15 @@ date
 uname -a
 
 echo "installing Ubuntu libs"
-apt-get install -y libjpeg-dev  # needed for R package "remote"
+
+apt-get install -y libjpeg-dev  # needed for R package "remote" (really???)
+
+# vi editor
 apt-get install vim
+
+# a tool to search for missing Ubuntu files
+apt-get install apt-file
+apt-file update
 
 # install java, used by glmnet which requires rJava 
 apt-get install -y default-jdk
@@ -327,16 +341,62 @@ chgrp users /home/rstudio/MT
 EOF2KS4
 
 #################################################################################################
+# create meta-tools install script KSinstall_autonomics.sh
+#################################################################################################
+echo "KS: creating meta-tools install script KSinstall_autonomics.sh"
+cat > meta-docker.dir/KSinstall_autonomics.sh <<EOF2KS77
+echo "running \$0"
+echo "This is \$0 version $VERSION" >> /meta-docker.version
+date >> /meta-docker.version
+date
+uname -a
+
+# change into the home dir of the rstudio user (although the script will run as root)
+cd /home/rstudio
+
+# echo "cloning autonomics files"
+git clone https://github.com/bhagwataditya/autonomics
+
+R <<EEOOFF42
+cat("installing autonomics\n")
+
+# https://github.com/bhagwataditya/autonomics
+BiocManager::install('mixOmics', update = FALSE)   # CRAN -> BioC, requires explicit installation
+
+# Install autonomics (drop ref = 'dev' to install older autonomics stable)
+install.packages('remotes')
+devtools::install('autonomics/autonomics.data', keep_source = T)
+devtools::install('autonomics/autonomics.support', keep_source = T)
+devtools::install('autonomics/autonomics.annotate', keep_source = T)
+devtools::install('autonomics/autonomics.import', keep_source = T)
+devtools::install('autonomics/autonomics.preprocess', keep_source = T)
+devtools::install('autonomics/autonomics.plot', keep_source = T)
+devtools::install('autonomics/autonomics.find', keep_source = T)
+devtools::install('autonomics/autonomics.ora', keep_source = T)
+devtools::install('autonomics/autonomics', keep_source = T)
+
+cat("installing autonomics done\n")
+
+EEOOFF42
+
+# pass ownership of /home/rstudio to the rstudio user so that a user can modify the libraries if required
+chown -R rstudio /home/rstudio/autonomics
+chgrp -R users /home/rstudio/autonomics
+
+EOF2KS77
+
+#################################################################################################
 # create Dockerfile
 #################################################################################################
 echo "KS: creating Dockerfile"
 cat > meta-docker.dir/Dockerfile << EOF
 FROM $BASE
 COPY . /app
-#RUN sh /app/KSinstall_libs.sh
+RUN sh /app/KSinstall_libs.sh
+RUN sh /app/KSinstall_mt.sh
+RUN sh /app/KSinstall_autonomics.sh
 #RUN sh /app/KSinstall_keras.sh
 #RUN sh /app/KSinstall_packages.sh
-RUN sh /app/KSinstall_mt.sh
 EOF
 
 #################################################################################################
