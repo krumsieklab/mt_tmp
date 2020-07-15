@@ -88,6 +88,12 @@ mt_files_load_olink <- function(
 
 }
 ###########################################################################
+# KS: note - the function read_NPX has been copied out of the OlinkAnalyze package.
+#     it coud also be obtained by installing the OlinkAnalyze package instead, by using the following:
+#       devtools::install_github(repo ='Olink-Proteomics/OlinkRPackage/OlinkAnalyze')
+#     however, it appears that installing that package creates problems with MetaboTools,
+#     so for now we just copy the function here
+###########################################################################
 read_NPX <- function (filename)
 {
   NORM_FLAG <- F
