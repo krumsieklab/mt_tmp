@@ -100,6 +100,10 @@
 #
 # install Olink code 
 # devtools::install_github(repo ='Olink-Proteomics/OlinkRPackage/OlinkAnalyze', upgrade = FALSE)
+#
+#  code to redirect output from a shell script into a file
+#         #!/bin/bash
+#         exec 2>&1 >> /tmp/logfile
 
 
 set -
@@ -145,12 +149,13 @@ uname -a
 
 echo "installing Ubuntu libs"
 
+# installing some libs that are not present in the rocker image
 apt-get install -y libjpeg-dev  # needed for R package "remote" (really???)
 
 # vi editor
 apt-get install vim
 
-# a tool to search for missing Ubuntu files
+# a tool to search for missing Ubuntu files (e.g. apt-file search bzlib.h)
 apt-get install apt-file
 apt-file update
 
@@ -197,8 +202,8 @@ EEOOFF
 # move the virtual environment (created by install_tensorflow) to /home/rstudio (not very elegant, better to run the install under the rstudio user, but I couldn't get this to run, su -l rstudio had no effect)
 mv /root/.virtualenvs/ /home/rstudio/
 
-chown rstudio /home/rstudio/.virtualenvs
-chgrp users /home/rstudio/.virtualenvs
+chown -R rstudio /home/rstudio/.virtualenvs
+chgrp -R rstudio /home/rstudio/.virtualenvs
 
 EOF2KS2
 
@@ -262,27 +267,10 @@ BiocManager::install("rpubchem", update = FALSE)
 BiocManager::install('pathview', update = FALSE)
 BiocManager::install("ppcor", update = FALSE)
 
-# autonomics
-# https://github.com/bhagwataditya/autonomics
-BiocManager::install('mixOmics', update = FALSE)   # CRAN -> BioC, requires explicit installation
-
-# Install autonomics (drop ref = 'dev' to install older autonomics stable)
-install.packages('remotes')
-remotes::install_github('bhagwataditya/autonomics/autonomics.data',       ref = 'dev', upgrade = FALSE)
-remotes::install_github('bhagwataditya/autonomics/autonomics.support',    ref = 'dev', upgrade = FALSE)
-remotes::install_github('bhagwataditya/autonomics/autonomics.annotate',   ref = 'dev', upgrade = FALSE)
-remotes::install_github('bhagwataditya/autonomics/autonomics.import',     ref = 'dev', upgrade = FALSE)
-remotes::install_github('bhagwataditya/autonomics/autonomics.preprocess', ref = 'dev', upgrade = FALSE)
-remotes::install_github('bhagwataditya/autonomics/autonomics.plot',       ref = 'dev', upgrade = FALSE)
-remotes::install_github('bhagwataditya/autonomics/autonomics.find',       ref = 'dev', upgrade = FALSE)
-remotes::install_github('bhagwataditya/autonomics/autonomics.ora',        ref = 'dev', upgrade = FALSE)
-remotes::install_github('bhagwataditya/autonomics/autonomics',            ref = 'dev', upgrade = FALSE)
-
 EEOOFF
 
-# pass ownership of /home/rstudio to the rstudio user so that a user can modify the libraries if required
-chown -R rstudio /home/rstudio/mt
-chgrp -R users /home/rstudio/mt
+chown -R rstudio /home/rstudio/.rstudio
+chgrp -R rstudio /home/rstudio/.rstudio
 EOF2KS3
 
 #################################################################################################
@@ -330,13 +318,13 @@ EEOOFF1
 
 # pass ownership of /home/rstudio to the rstudio user so that a user can modify the libraries if required
 chown -R rstudio /home/rstudio/mt
-chgrp -R users /home/rstudio/mt
+chgrp -R rstudio /home/rstudio/mt
 chown -R rstudio /home/rstudio/snippets
-chgrp -R users /home/rstudio/snippets
+chgrp -R rstudio /home/rstudio/snippets
 chown rstudio /home/rstudio/Mt
-chgrp users /home/rstudio/Mt
+chgrp rstudio /home/rstudio/Mt
 chown rstudio /home/rstudio/MT
-chgrp users /home/rstudio/MT
+chgrp rstudio /home/rstudio/MT
 
 EOF2KS4
 
@@ -361,6 +349,7 @@ R <<EEOOFF42
 cat("installing autonomics\n")
 
 # https://github.com/bhagwataditya/autonomics
+install.packages('BiocManager')
 BiocManager::install('mixOmics', update = FALSE)   # CRAN -> BioC, requires explicit installation
 
 # Install autonomics (drop ref = 'dev' to install older autonomics stable)
@@ -381,7 +370,7 @@ EEOOFF42
 
 # pass ownership of /home/rstudio to the rstudio user so that a user can modify the libraries if required
 chown -R rstudio /home/rstudio/autonomics
-chgrp -R users /home/rstudio/autonomics
+chgrp -R rstudio /home/rstudio/autonomics
 
 EOF2KS77
 
@@ -394,10 +383,14 @@ FROM $BASE
 COPY . /app
 RUN sh /app/KSinstall_libs.sh
 RUN sh /app/KSinstall_mt.sh
-RUN sh /app/KSinstall_autonomics.sh
+#RUN sh /app/KSinstall_autonomics.sh
 #RUN sh /app/KSinstall_keras.sh
 #RUN sh /app/KSinstall_packages.sh
 EOF
+
+echo "--------------------------------------------"
+cat meta-docker.dir/Dockerfile
+echo "--------------------------------------------"
 
 #################################################################################################
 # build image (use --no-cache)
