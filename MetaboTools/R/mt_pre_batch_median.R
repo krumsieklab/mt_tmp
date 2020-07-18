@@ -38,7 +38,8 @@ mt_pre_batch_median = function(
   # no negative values allowed
   if (min(X,na.rm=T)<0) stop("Matrix contains negative values.")
   # check if data actually have been logged by preprocessing
-  if (length(MetaboTools:::mti_res_get_path(D, c("pre","trans","log"))) > 0)
+  if (length(MetaboTools:::mti_res_get_path(D, c("pre","trans","log"))) > 0 |
+      length(MetaboTools:::mti_res_get_path(D, c("flag", "logged"))) > 0)
     stop("Median batch correction can only be performed on non-logged data.")
 
   # get samples to use for median calculation
