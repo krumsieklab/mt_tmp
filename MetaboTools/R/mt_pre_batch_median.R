@@ -38,7 +38,8 @@ mt_pre_batch_median = function(
   # no negative values allowed
   if (min(X,na.rm=T)<0) stop("Matrix contains negative values.")
   # check if data actually have been logged by preprocessing
-  if (length(MetaboTools:::mti_res_get_path(D, c("pre","trans","log"))) > 0)
+  if (length(MetaboTools:::mti_res_get_path(D, c("pre","trans","log"))) > 0 |
+      length(MetaboTools:::mti_res_get_path(D, c("flag", "logged"))) > 0)
     stop("Median batch correction can only be performed on non-logged data.")
 
   # get samples to use for median calculation
@@ -71,7 +72,7 @@ mt_pre_batch_median = function(
   }
 
   # ref samples logging string
-  refadd <- if(missing(ref_samples)){""}else{sprintf(": %s", as.character(ref_samples))}
+  refadd <- if(missing(ref_samples)){""}else{sprintf(": %s", as.character(dplyr::enquo(ref_samples)))}
 
   # add status information
   funargs <- MetaboTools:::mti_funargs()

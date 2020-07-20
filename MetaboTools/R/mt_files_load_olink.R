@@ -37,10 +37,6 @@ mt_files_load_olink <- function(
   # read the Olink file
   odata = read_NPX(file)
 
-  # NPX values are ~ PCA cycles, hence on some kind of a log-scale
-  # to be in-line with meta-tools, un-logscale the data using 2 as a basis
-  odata$NPX = 2^odata$NPX
-
   # convert to wide format
   wdata = reshape2::dcast(odata,formula = " SampleID ~ OlinkID", value.var = "NPX")
   xdata = simplify2array(wdata[,-1])
