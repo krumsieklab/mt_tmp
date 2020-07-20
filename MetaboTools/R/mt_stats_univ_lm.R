@@ -50,7 +50,7 @@ mt_stats_univ_lm <- function(
 
   # merge data with sample info
   Ds <- D %>% mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
-  
+
   ## FILTER SAMPLES
   if(!missing(sample_filter)) {
 
@@ -113,14 +113,14 @@ mt_stats_univ_lm <- function(
 
   ## choose lm functions
   has_random_eff <- FALSE
-  if(stringr::str_detect(as.character(formula), "\\|")){
+  if(stringr::str_detect(as.character(formula[2]), "\\|")){
     mti_logmsg("random effect detected; using lmer")
     f_lm     <- lmerTest::lmer
-    f_tidy   <- broom.mixed::tidy
+    f_tidy   <- broom.mixed::tidy # this calls summary()
     has_random_eff <- TRUE
   }else{
     f_lm   <- lm
-    f_tidy <- broom::tidy
+    f_tidy <- broom::tidy # this calls summary()
   }
   f_tidy_tidy <- function(m, ...){
     if(is.null(m))
@@ -135,7 +135,7 @@ mt_stats_univ_lm <- function(
   if (!is.null(formula.tools::lhs(formula))) stop("Left-hand side of formula must be empty")
   ## will crash sort of meaningfully if variables don't exist
   if(has_random_eff){
-    mm <- lFormula(stats::update.formula(formula, stringr::str_c(rownames(D)[[1]], "~.")), Ds)
+    mm <- lme4::lFormula(stats::update.formula(formula, stringr::str_c(rownames(D)[[1]], "~.")), Ds)
   }else{
     mm <- stats::model.matrix(formula,Ds)
   }
@@ -164,7 +164,7 @@ mt_stats_univ_lm <- function(
     ## run glm with updated formula
     form <- stats::update(formula, sprintf("%s~.",m))
     ## check for constant confounders
-    trms <- attr(stats::terms(formula), "term.labels") %>%
+    trms <- all.vars(formula) %>%
       purrr::discard(~stringr::str_detect(.x, ":")) %>%
       c(m)
     clss <- purrr::map_chr(trms, ~class(Ds[[.x]])) %>%
@@ -204,7 +204,7 @@ mt_stats_univ_lm <- function(
       data    = Ds,
       formula = form
     )
-    terms <- mod$terms
+    terms <- terms(mod)
     ## DO ANOVA IF MULTIPLE FACTOR LEVELS
     if(do_anova)
       mod <- stats::anova(mod)
@@ -240,16 +240,24 @@ mt_stats_univ_lm <- function(
   } else {
     outgroups <- NULL
   }
-  
+
   ## remove environments from all models (blows up when saving to file)
   for (i in 1:length(models)) {
     attr(models[[i]], "terms") <- NULL
-    attr(models[[i]]$model,"terms") <- NULL
-    models[[i]]$terms <- NULL
+    if (!("lmerModLmerTest" %in% class(models[[i]]))) {
+      # regular LM
+      attr(models[[i]], "terms") <- NULL
+      attr(models[[i]]$model,"terms") <- NULL
+      models[[i]]$terms <- NULL
+    } else {
+      # LMER
+      attr(models[[i]]@frame, "terms") <- NULL
+      attr(models[[i]]@frame, "formula") <- NULL
+    }
   }
   # make sure that NAs in the outcome are set to FALSE in the list of used samples
   samples.used[is.na(Ds[, outvar])] <- F
-  
+
   ## add status information & results
   funargs <- mti_funargs()
   metadata(D)$results %<>%
