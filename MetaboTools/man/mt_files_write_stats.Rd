@@ -4,7 +4,14 @@
 \alias{mt_files_write_stats}
 \title{Export statistical results from pipeline into Excel file.}
 \usage{
-mt_files_write_stats(D, file, compnames = NULL, sort.by.p = F, output.dir = T)
+mt_files_write_stats(
+  D,
+  file,
+  compnames = NULL,
+  sort.by.p = F,
+  output.dir = T,
+  metname = NULL
+)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
@@ -16,6 +23,8 @@ mt_files_write_stats(D, file, compnames = NULL, sort.by.p = F, output.dir = T)
 \item{sort.by.p}{Automatically sort by p-values? (default: False)}
 
 \item{output.dir}{If the statistical test was a 2-group test, output the direction of the effect (which of the two groups the effect was "high" in). Default: Yes}
+
+\item{metname}{#optional parameter with name of rowdata column to include in the output}
 }
 \value{
 Does not change the SummarizedExperiment.
@@ -31,5 +40,5 @@ Writes out the statistics data frame with p-values, adjusted p-values, fold chan
 
 }
 \author{
-JK
+JK, RB (modified on 2020-07-22)
 }

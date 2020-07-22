@@ -7,7 +7,7 @@
 #' @param compnames Names of one or more statistical comparison to be written out. If NULL, will export all.
 #' @param sort.by.p Automatically sort by p-values? (default: False)
 #' @param output.dir If the statistical test was a 2-group test, output the direction of the effect (which of the two groups the effect was "high" in). Default: Yes
-#'
+#' @param metname #optional parameter with name of rowdata column to include in the output
 #' @return Does not change the SummarizedExperiment.
 #'
 #' @examples
@@ -16,13 +16,13 @@
 #' # Write out specific result]
 #' ... %>% mt_files_write_stats(file="results.xlsx", compnames="comp1") %>%}
 #'
-#' @author JK
+#' @author JK, RB (modified on 2020-07-22)
 #'
 #' @importFrom magrittr %>% %<>%
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_files_write_stats <- function(D, file, compnames=NULL, sort.by.p=F, output.dir=T) {
+mt_files_write_stats <- function(D, file, compnames=NULL, sort.by.p=F, output.dir=T, metname=NULL) {
 
   # verify input arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -49,6 +49,11 @@ mt_files_write_stats <- function(D, file, compnames=NULL, sort.by.p=F, output.di
   for (i in 1:length(S)) {
     # add to workbook
     df <- S[[i]]$output$table
+    # if metname is provided and it matches a column in row data add it to the output
+    # else just silently skip this step
+    if(is.null(metname)==F & is.na(match(metname, names(rowData(D))))==F){
+        df <- cbind.data.frame(df, metname=unlist(data.frame(rowData(D))[metname]))
+    } 
     # sort?
     if (sort.by.p) {
       df %<>% arrange(p.value)
