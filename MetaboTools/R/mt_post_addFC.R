@@ -25,8 +25,8 @@ mt_post_addFC <- function(D,
                           combine = function(x){mean(x,na.rm=T)}){
 
   ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
-  if ((length(mti_res_get_path(D, c("pre","trans","log"))) != 1) &&
-      (length(mti_res_get_path(D, c("flag","logged"))) != 1))
+  if ((length(MetaboTools:::mti_res_get_path(D, c("pre","trans","log"))) != 1) &&
+      (length(MetaboTools:::mti_res_get_path(D, c("flag","logged"))) != 1))
     stop("fold-changes can only be calculated for log-scale data")
 
   ## stat
@@ -50,33 +50,29 @@ mt_post_addFC <- function(D,
     stop("Cannot add fold change for ANOVA analysis.")
   }
 
-  ## GET OUTCOME
-  model <- metadata(D)$results[[ stat_id ]] %>%
-    .$output %>%
-    ## get first model in list (doesn't matter which)
-    .$lstobj %>%
-    .[[1]] %>%
-    ## get model matrix
-    .$model %>%
-    ## remove metabolites
-    dplyr::select(-one_of(intersect(names(.), rownames(D)))) %>%
-    ## select first phenotype = outcome of interest
-    .[,1, drop = F]
-  outcome    <- colnames(model)[[1]]
+  ## GET OUTCOME (works for both lm and lmer)
+  formula <- metadata(D)$results[[ stat_id ]]$output$formula
+  terms <- all.vars(as.formula(formula))
+  outcome <- terms[1]
+
+  # find any random effects... they cannot be corrected for here
+  # parse out by finding any variable inside (x | y)
+  re_terms <- stringr::str_match(formula, "\\((.*?)\\|(.*?)\\)")[-1] %>% trimws()
+  terms <- setdiff(terms, re_terms)
+
 
   ## CORRECT FOR CONFOUNDER
-  formula    <- metadata(D)$results[[ stat_id ]]$output$formula
-  confounder <- stats::update.formula(formula, stringr::str_c(".~.-", outcome))
-  confounder_terms <- attr(stats::terms(confounder), "term.labels")
-  if(length(confounder_terms) > 0){
-    mti_logstatus(glue::glue("correcting for {confounder}"))
-    D <- mti_correctConfounder(D, confounder)
+  if (length(terms)>1) {
+    # construct new formula
+    conf_form <- as.formula(sprintf("~%s", paste0(terms[2:length(terms)], collapse = "+")))
+    MetaboTools:::mti_logstatus(glue::glue("correcting for {as.character(conf_form)}"))
+    D <- MetaboTools:::mti_correctConfounder(D, conf_form)
   }
 
   ## EXTRACT DATA
-  if(is.factor(colData(D)[[outcome]]))model[[outcome]] <- as.factor(model[[outcome]])
+  # if(is.factor(colData(D)[[outcome]]))model[[outcome]] <- as.factor(model[[outcome]])
   d_fc <- cbind(colData(D)[,outcome,drop=F],t(assay(D))) %>% as.data.frame()
-  keep <- d_fc[[outcome]] %in% model[[outcome]]
+  keep <- metadata(D)$results[[ stat_id ]]$output$samples.used
   d_fc <- d_fc[keep,,drop=F]
   d_fc[[outcome]] <- as.factor(d_fc[[outcome]])
   d_fc[[outcome]] <- droplevels(d_fc[[outcome]])
@@ -118,9 +114,9 @@ mt_post_addFC <- function(D,
 
 
   ## add status information & plot
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("Calculated foldchanges for %s", stat_name),
       output = NULL
