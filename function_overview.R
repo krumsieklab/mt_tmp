@@ -13,12 +13,25 @@ slurp <- function(file){readChar(file, file.info(file)$size)}
 
 #### extract information
 
-## Parse out all roxygen titles
+## Parse out all functions and their roxygen titles
 titles <-
   # list of all code files
   list.files(path = "MetaboTools/R", pattern = "mt.*.R", full.names = T) %>%
+  # no internal files
+  {x<-.; x<-x[!grepl("internal",x)]; x} %>%
   # extract all Roxygen titles (first line, everything after #')
-  sapply(function(file){slurp(file) %>% str_match("#'(.*)") %>% .[[2]] %>% trimws()})
+  lapply(function(file){
+    # for each function in the file, extract the whole block from first Roxygen line #' to function name
+    chunks <- slurp(file) %>% str_extract_all(regex("^#'.*?mt_.*?<-.*?function", multiline=TRUE, dotall = T)) %>% .[[1]]
+    # for each of those chunks, get the first Roxygen comment (= the title) and the function name
+    chunks %>% lapply(function(chunk){
+      data.frame(
+        fun = chunk %>% str_match("(mt_.*?)<-") %>% .[1,2] %>% trimws(),
+        title = chunk %>% str_match("#'(.*)") %>% .[1,2] %>% trimws()
+      )
+    }) %>% do.call(rbind,.)
+  })  %>% do.call(rbind,.)
+# get rid of internal functions
 # remove path and ".R" in all names
 names(titles) %<>% basename() %>% gsub("\\.R", "", .)
 
