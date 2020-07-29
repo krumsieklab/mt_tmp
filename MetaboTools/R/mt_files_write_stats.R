@@ -51,7 +51,7 @@ mt_files_write_stats <- function(D, file, compnames=NULL, sort.by.p=F, output.di
     df <- S[[i]]$output$table
     # if metname is provided and it matches a column in row data add it to the output
     # else just silently skip this step
-    if(is.null(metname)==F & is.na(match(metname, names(rowData(D))))==F){
+    if(is.null(metname)==F && is.na(match(metname, names(rowData(D))))==F){
         df <- cbind.data.frame(df, metname=unlist(data.frame(rowData(D))[metname]))
     } 
     # sort?
