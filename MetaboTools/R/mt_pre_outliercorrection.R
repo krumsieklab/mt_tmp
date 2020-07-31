@@ -39,16 +39,19 @@ mt_pre_outliercorrection <- function(
   X <- t(assay(D))
   X <- scale(X)
 
-  if(is.na(threshold) & sample_num_correction == F){
-    stop("Threshold must be provided if not corrected by sample numbers")
-  }
   if(by_quant==FALSE){
+    if(is.na(threshold) & sample_num_correction == F){
+      stop("Threshold must be provided if not corrected by sample numbers")
+    }
     if(is.na(threshold)){
       numsamp=nrow(X)
       tail=alpha/numsamp
       threshold = stats::qnorm( 1 - (tail/2) )
     }
   } else if (by_quant==TRUE){
+    if(is.na(quant_threshold)){
+      stop("Quantile must be provided")
+    }
     # compute threshold based on the given quantile and sample size
     threshold <- abs(stats::qnorm((quant_thresh/2)/nrow(X)))
   }
