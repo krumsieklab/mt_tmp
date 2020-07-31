@@ -3,7 +3,7 @@
 #' Loads annotations and merges them into current SummarizedExperiment.
 #' Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
 #' Can load annotations for both metabolites (rowData) and samples (colData)
-#' 
+#'
 #' If annotation fields are already existing, this function will fill up any NAs with the values from the new file. Existing values are not overwritten/
 #'
 #' @param D \code{SummarizedExperiment} input
@@ -117,6 +117,13 @@ mt_files_anno_xls <-
   } else
     stop("bug")
 
+  # coldata and assay cannot have overlapping names
+  inters <- intersect(colnames(colData(D)), rownames(D))
+  if (length(inters)>0) {
+    stop(sprintf("There are metabolites and colData variables with the same name: %s", paste0(inters, collapse = ", ")))
+  }
+
+
   # add status information
   funargs <- mti_funargs()
   metadata(D)$results %<>%
@@ -135,20 +142,20 @@ mt_files_anno_xls <-
 # from https://alistaire.rbind.io/blog/coalescing-joins/
 # edited to be able to handle completely disjunct column sets (as in normal left_join). - JK 6/21/20
 # edited to make type safe, if two merged columns are incompatible (one numeric, one factor/string) - JK 6/21/20
-mti_coalesce_join <- function(x, y, 
-                              by = NULL, suffix = c(".x", ".y"), 
+mti_coalesce_join <- function(x, y,
+                              by = NULL, suffix = c(".x", ".y"),
                               join = dplyr::full_join, ...) {
   joined <- join(x, y, by = by, suffix = suffix, ...)
   # names of desired output
   cols <- union(names(x), names(y))
   to_coalesce <- names(joined)[!names(joined) %in% cols]
-  
+
   if (length(to_coalesce) > 0) {
     suffix_used <- suffix[ifelse(endsWith(to_coalesce, suffix[1]), 1, 2)]
     # remove suffixes and deduplicate
     to_coalesce <- unique(substr(
-      to_coalesce, 
-      1, 
+      to_coalesce,
+      1,
       nchar(to_coalesce) - nchar(suffix_used)
     ))
     # coalesce in a type-safe way (if one of them is a character or factor, convert both to character)
@@ -168,7 +175,7 @@ mti_coalesce_join <- function(x, y,
     #   joined[[paste0(.x, suffix[1])]],
     #   joined[[paste0(.x, suffix[2])]]
     # ))
-    
+
     names(coalesced) <- to_coalesce
     cbind(joined, coalesced)[cols] %>% dplyr::as_tibble()
   } else {
