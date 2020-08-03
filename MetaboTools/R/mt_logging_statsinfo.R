@@ -23,22 +23,26 @@ mt_logging_statsinfo <- function(D, stat_name, stat_filter) {
 
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
-  
+
   # trick: access argument so that a missing argument error is thrown from here instead of from inside mti_get_stat_by_name
   stat_name
   # find statistical result (not just the table, but the entire $output block)
-  allstats <- D %>% mti_res_get_path(c("stats")) 
+  allstats <- D %>% mti_res_get_path(c("stats"))
   statind <- allstats %>% purrr::map("output") %>% map("name") %>% map(~.==stat_name) %>% unlist() %>% which()
   if (length(statind)==0) stop(sprintf("comparison '%s' not found", stat_name))
   # retrieve actual structures
   output <- allstats %>% purrr::map("output") %>% .[[statind[1]]]
-  
-  # tabulate used samples with groups to output n's
-  N <- table(D %>% colData() %>% .[[output$outcome]], output$samples.used)[,"TRUE"]
-  N <- N[N>0] # filter out empty groups
-  
-  # toc
-  logtxt <- sprintf("'%s' info\n\nSamples:\n%s", stat_name, paste(names(N),N,sep=": ",collapse=", "))
+
+  # initialize logtxt
+  logtxt <- sprintf("'%s' info\n\n", stat_name)
+  # tabulate used samples with groups to output n's, if outcome variable was not numeric
+  if (!is.numeric((D %>% colData() %>% .[[output$outcome]]))) {
+    N <- table(D %>% colData() %>% .[[output$outcome]], output$samples.used)[,"TRUE"]
+    N <- N[N>0] # filter out empty groups
+    # toc
+    logtxt <- sprintf("%sSamples:\n%s",  logtxt, paste(names(N),N,sep=": ",collapse=", "))
+  }
+
   # filter?
   if (!missing(stat_filter)) {
     # extract formula
