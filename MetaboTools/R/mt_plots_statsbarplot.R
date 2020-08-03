@@ -61,6 +61,8 @@ mt_plots_statsbarplot <- function(D,
   rd <- rowData(D) %>%
     as.data.frame() %>%
     dplyr::mutate(var = rownames(D))
+  # set the nulls to unknown
+  rd[[aggregate]][which(rd[[aggregate]]=="NULL")] <- "Unknown"
   
   perc <- rd[[aggregate]] %>%
     unlist %>% table(exclude = NULL) %>% as.data.frame()
@@ -137,6 +139,10 @@ mt_plots_statsbarplot <- function(D,
         if (aggregate %in% names(x$pathways)) {
           # add pathway names to dataframe
           data_plot %<>% dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("name"="ID"))
+          # set Unknown pathway names to Unknown
+          if(length(which(is.na(data_plot$pathway_name)))>0){
+            data_plot$pathway_name[which(is.na(data_plot$pathway_name))] <- "Unknown"
+          }
           # substitute codes for names
           data_plot$name <- data_plot$pathway_name
         } else{
