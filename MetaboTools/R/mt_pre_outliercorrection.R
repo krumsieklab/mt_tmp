@@ -49,7 +49,7 @@ mt_pre_outliercorrection <- function(
       threshold = stats::qnorm( 1 - (tail/2) )
     }
   } else if (by_quant==TRUE){
-    if(is.na(quant_threshold)){
+    if(is.na(quant_thresh)){
       stop("Quantile must be provided")
     }
     # compute threshold based on the given quantile and sample size
