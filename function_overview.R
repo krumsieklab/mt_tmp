@@ -31,9 +31,6 @@ titles <-
       )
     }) %>% do.call(rbind,.)
   })  %>% do.call(rbind,.)
-# get rid of internal functions
-# remove path and ".R" in all names
-names(titles) %<>% basename() %>% gsub("\\.R", "", .)
 
 ## find which examples call which functions
 excalls  <-
@@ -45,14 +42,16 @@ excalls  <-
 names(excalls) %<>% basename() %>% gsub("\\.R", "", .)
 
 ## build data frame that contains function names, titles, and which example files these the functions are called in
-names(titles) %>% lapply(function(fun){
-  cbind(
-    # function name and title
-    data.frame(fun=fun, title=titles[[fun]]),
-    # matching function name in each example list
-    excalls %>% sapply(function(x){ifelse(!is.na(any(match(x,fun))),"X","")}) %>% as.list()
-  )
-}) %>% do.call(rbind, .) %>%
+titles %>% left_join(
+  titles$fun %>% lapply(function(fun){
+    cbind(
+      # function name and title
+      data.frame(fun=fun),
+      # matching function name in each example list
+      excalls %>% sapply(function(x){ifelse(!is.na(any(match(x,fun))),"X","")}) %>% as.list()
+    )
+  }) %>% do.call(rbind, .)
+)%>%
   # write out to Excel
   openxlsx::write.xlsx(file="function_overview.xlsx")
 
