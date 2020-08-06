@@ -48,7 +48,7 @@ mt_anno_metabolites_HMDB2KEGG <- function(D,
     stop(sprintf("%s already exists, please choose another name", out_col))
 
   # load look-up table of HMDB to KEGG identifiers
-  load(data.makepath("MT_precalc/pathview/MetaboliteMapping.Rds"))
+  load(system.file("extdata", "precalc/pathview/MetaboliteMapping.Rds", package = "MetaboTools"))
   # get rowData
   df <- as.data.frame(rowData(D))
   # rename in_col for left_join use
@@ -70,7 +70,7 @@ mt_anno_metabolites_HMDB2KEGG <- function(D,
   names(newdf)[which(names(newdf)=="MappingIDs")] <- in_col
 
   # overwrite entries stored in the manually curated file
-  dd <- utils::read.csv2(file=data.makepath("MT_precalc/pathview/MetaboliteMapping_manual.csv"), sep=",")
+  dd <- utils::read.csv2(file=system.file("extdata", "precalc/pathview/MetaboliteMapping_manual.csv", package = "MetaboTools"), sep=",")
   dd$Name <- as.character(dd$Name)
   dd$HMDB <- as.character(dd$HMDB)
   dd$KEGG <- as.character(dd$KEGG)

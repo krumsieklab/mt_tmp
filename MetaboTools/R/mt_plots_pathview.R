@@ -81,7 +81,7 @@ mt_plots_pathview <- function(D,
                              same.layer = TRUE,
                              out.suffix = "pathview",
                              add.pwname.suffix = FALSE,
-                             db_path = data.makepath("MT_precalc/pathview/KeggPathways.Rds"),
+                             db_path = system.file("extdata", "precalc/pathview/KeggPathways.Rds", package = "MetaboTools"),
 
                              # other pathview::pathview arguments
                              species = "hsa", gene.annotpkg = NULL, min.nnodes = 1, kegg.native = TRUE,
