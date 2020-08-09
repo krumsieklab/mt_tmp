@@ -28,37 +28,36 @@ mt_reporting_html <- function(
   use.plotly=F,  # EXPERIMENTAL
   keep.tmp=F
 ) {
-  
+
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
-  
+
   # unique string
   ustr <- uuid::UUIDgenerate()
-  
+
   # define file names
   rmdfile <- sprintf("tmp_%s.RMD", ustr)
-  rdsfile <-  sprintf("tmp_%s.rds", ustr)
+  if(keep.tmp) rdsfile <-  sprintf("tmp_%s.rds", ustr)
   # generate RMD
   D %>% mt_reporting_generateMD(
-    outfile = rmdfile, 
-    readfrom = rdsfile, 
-    title = title, 
-    output.calls = output.calls, 
+    outfile = rmdfile,
+    readfrom = rdsfile,
+    title = title,
+    output.calls = output.calls,
     number.sections = number.sections,
-    start.after=start.after, 
+    start.after=start.after,
     use.plotly = use.plotly)
   # save temp file that will be input for the RMD
-  save(D, file=rdsfile)
+  if (keep.tmp) save(D, file=rdsfile)
   # knit
-  rmarkdown::render(rmdfile)
+  rmarkdown::render(rmdfile, params=list(D=D))
   # rename to correct name
   file.rename(paste0(tools::file_path_sans_ext(rmdfile),'.html'), outfile)
   # clean up
   if (!keep.tmp) {
     file.remove(rmdfile)
-    file.remove(rdsfile)
   }
-  
+
   # return document, in case pipeline is supposed to keep running
   D
 }
