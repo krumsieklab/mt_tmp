@@ -80,8 +80,8 @@ mt_post_addFC <- function(D,
   ## CHECK TYPE OF OUTCOME
   if(!(class(d_fc[[ outcome ]]) %in% c("factor", "character")))
     stop(glue::glue("Fold-changes are only meaningful for factor/character, but {outcome} is a {class(d_fc[[outcome]])}"))
-  if(length(unique(d_fc[[ outcome ]])) != 2)
-    stop(glue::glue("Fold-changes are only meaningful for 2 groups, but {outcome} has {length(unique(d_fc[[outcome]]))}"))
+  if(length(levels(as.factor((d_fc[[ outcome ]])))) != 2)
+    stop(glue::glue("Fold-changes are only meaningful for 2 groups, but {outcome} has {length(levels(as.factor((d_fc[[ outcome ]]))))}"))
 
   ## GET LEVELS IN ORDER OF FACTOR LEVELS
   outcome_q <- rlang::sym(outcome)
