@@ -29,9 +29,13 @@ mt_plots_pheatmap_multstats(
 
 \item{met_anno}{rowData() column name to use as column annotation}
 
-\item{signif_mark}{Expression used to indicate significant p-values}
+\item{signif_mark}{Marker used to indicate significant p-values; default "•"}
 
-\item{color_signif}{only color significant values? default: F}
+\item{mark_size}{size of the marker}
+
+\item{show_mark}{show significance marker? default: T}
+
+\item{color_signif}{Boolean. Color only significant values? default: F}
 
 \item{filter_signif}{show only metabolites significant in one or more results? default: T}
 
@@ -41,9 +45,7 @@ mt_plots_pheatmap_multstats(
 
 \item{show_colnames}{should column (metabolite) labels be included in the plot? default: F}
 
-\item{color_formula}{Expression used to color adjusted p-values; default: sign(fc) * -log10(p.adj)}
-
-\item{signif_expr}{Expression used to indicate significant p-values}
+\item{main}{main title of pheatmap. default: "Stat Results Overview"}
 }
 \value{
 results$output: heatmap of statistical results

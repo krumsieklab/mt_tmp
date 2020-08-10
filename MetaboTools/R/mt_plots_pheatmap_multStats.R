@@ -4,17 +4,17 @@
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param stat_list List of stat names to plot; default NA (for all stat objects in D)
-#' @param color_formula Expression used to color adjusted p-values; default: sign(fc) * -log10(p.adj)
 #' @param color_signif Boolean. Color only significant values? default: F
 #' @param color_cutoff p.adj value significance cutoff
 #' @param met_anno rowData() column name to use as column annotation
-#' @param signif_expr Expression used to indicate significant p-values
-#' @param signif_mark Expression used to indicate significant p-values
+#' @param signif_mark Marker used to indicate significant p-values; default "•"
+#' @param show_mark show significance marker? default: T
+#' @param mark_size size of the marker
 #' @param cluster_rows cluster by rows? default: F
 #' @param cluster_cols cluster by cols? default: F
 #' @param filter_signif show only metabolites significant in one or more results? default: T
 #' @param show_colnames should column (metabolite) labels be included in the plot? default: F
-#' @param color_signif only color significant values? default: F
+#' @param main main title of pheatmap. default: "Stat Results Overview"
 #'
 #' @return results$output: heatmap of statistical results
 #'
