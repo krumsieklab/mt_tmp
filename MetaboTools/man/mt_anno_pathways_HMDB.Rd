@@ -9,7 +9,7 @@ mt_anno_pathways_HMDB(
   in_col,
   out_col,
   pwdb_name = "SMP",
-  db_dir = data.makepath("MT_precalc/hmdb/"),
+  db_dir = system.file("extdata", "precalc/hmdb/", package = "MetaboTools"),
   db_file,
   export_raw_db
 )
