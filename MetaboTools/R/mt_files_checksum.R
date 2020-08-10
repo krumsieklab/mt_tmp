@@ -32,8 +32,14 @@ mt_files_checksum <- function(D, file, checksum) {
   # calculate checksum
   md5 <- tools::md5sum(file)[[1]]
   # crash if wrong
-  if (checksum != md5) {
-    stop(sprintf("Wrong checksum for %s, expected: %s, actual: %s\n", file, checksum, md5))
+  if (!missing(checksum)) {
+    if (checksum != md5) {
+      stop(sprintf("Wrong checksum for %s, expected: %s, actual: %s\n", file, checksum, md5))
+    }
+    logtxt <- sprintf("Correct checksum for %s: %s", file, md5)
+  } else {
+    # no checksum given by user, just show checksum of file
+    logtxt <- sprintf("Checksum for %s: %s", file, md5)
   }
 
   # add status information
@@ -41,7 +47,7 @@ mt_files_checksum <- function(D, file, checksum) {
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("Correct checksum for %s: %s", file, md5)
+      logtxt = logtxt
     )
 
   # return
