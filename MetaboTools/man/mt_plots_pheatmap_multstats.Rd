@@ -7,14 +7,12 @@
 mt_plots_pheatmap_multstats(
   D,
   stat_list = NA,
-  color_formula = sign(statistic) * -log10(p.adj),
+  color_cutoff,
   met_anno,
-  signif_expr,
   signif_mark = "•",
   mark_size = 20,
   show_mark = T,
   color_signif = F,
-  color_sigval,
   filter_signif = F,
   cluster_rows = F,
   cluster_cols = F,
@@ -27,17 +25,13 @@ mt_plots_pheatmap_multstats(
 
 \item{stat_list}{List of stat names to plot; default NA (for all stat objects in D)}
 
-\item{color_formula}{Expression used to color adjusted p-values; default: sign(fc) * -log10(p.adj)}
+\item{color_cutoff}{p.adj value significance cutoff}
 
 \item{met_anno}{rowData() column name to use as column annotation}
-
-\item{signif_expr}{Expression used to indicate significant p-values}
 
 \item{signif_mark}{Expression used to indicate significant p-values}
 
 \item{color_signif}{only color significant values? default: F}
-
-\item{color_sigval}{a vector of length 2 containing positive and negative thresholds of significance}
 
 \item{filter_signif}{show only metabolites significant in one or more results? default: T}
 
@@ -46,6 +40,10 @@ mt_plots_pheatmap_multstats(
 \item{cluster_cols}{cluster by cols? default: F}
 
 \item{show_colnames}{should column (metabolite) labels be included in the plot? default: F}
+
+\item{color_formula}{Expression used to color adjusted p-values; default: sign(fc) * -log10(p.adj)}
+
+\item{signif_expr}{Expression used to indicate significant p-values}
 }
 \value{
 results$output: heatmap of statistical results
