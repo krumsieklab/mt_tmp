@@ -105,7 +105,7 @@ params:
 
   for (i in start.from:length(r)) {
     # to ignore?
-    if (r[[i]]$fun[2]!="void") { # ignore void
+    if (length(r[[i]]$fun)<2 || r[[i]]$fun[2]!="void") { # ignore void
 
       # reporting step?
       if (r[[i]]$fun[1]!="reporting") {
