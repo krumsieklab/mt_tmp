@@ -25,7 +25,7 @@
 #'
 #' @export
 
-mt_plots_heatmap_multstats <- function(D,
+mt_plots_multstats_heatmap <- function(D,
                                         stat_list=NA,
                                         color_cutoff,
                                         met_anno,
