@@ -26,18 +26,18 @@
 #' @export
 
 mt_plots_multstats_heatmap <- function(D,
-                                        stat_list=NA,
-                                        color_cutoff,
-                                        met_anno,
-                                        signif_mark = "•",
-                                        mark_size = 20,
-                                        show_mark = T,
-                                        color_signif = F,
-                                        filter_signif = F,
-                                        cluster_rows = F,
-                                        cluster_cols = F,
-                                        show_colnames = F,
-                                        main = "Stat Results Overview"){
+                                       stat_list=NA,
+                                       color_cutoff,
+                                       met_anno,
+                                       signif_mark = "•",
+                                       mark_size = 20,
+                                       show_mark = T,
+                                       color_signif = F,
+                                       filter_signif = F,
+                                       cluster_rows = F,
+                                       cluster_cols = F,
+                                       show_colnames = F,
+                                       main = "Stat Results Overview"){
 
   pheat_arg <- list()
   pheat_arg$cluster_rows <- cluster_rows
@@ -105,8 +105,8 @@ mt_plots_multstats_heatmap <- function(D,
   # generate significance label table
   if(show_mark==T){
     signif_label <- signif_matrix %>% t()
-    colnames(signif_label) <- signif_label[1,]
-    signif_label <- signif_label[-1,]
+    colnames(signif_label) <- signif_label[1,,drop=F]
+    signif_label <- signif_label[-1,,drop=F]
     signif_label <- ifelse(signif_label==1,signif_mark,"") %>% as.data.frame()
     indx <- sapply(signif_label, is.factor)
     signif_label[indx] <- lapply(signif_label[indx], function(x) as.character(x))
@@ -130,41 +130,54 @@ mt_plots_multstats_heatmap <- function(D,
   }
 
   # format data for plotting
-  color_matrix <- color_matrix[,c("var", stat_names)] %>% t()
+  color_matrix <- color_matrix[,c("var", stat_names),drop=F] %>% t()
   colnames(color_matrix) <- color_matrix[1,]
-  color_matrix <- color_matrix[-1,] %>% as.data.frame()
+  color_matrix <- color_matrix[-1,,drop=F] %>% as.data.frame()
   indx <- sapply(color_matrix, is.factor)
   color_matrix[indx] <- lapply(color_matrix[indx], function(x) as.numeric(as.character(x)))
+  # if there's just one row, make sure row clustering is deactivated
+  if (nrow(color_matrix)==1) pheat_arg$cluster_rows=F
+  # set plot argument
   pheat_arg$mat <- color_matrix
 
-  # if coloring by significance, need to calculate breaks
-  if(color_signif == T){
-
-    # generate colors and color breaks
-    colors <- colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name =
-                                                                       "RdYlBu")))(100)
-    n = length(colors)
-    color_breaks <- seq(min(pheat_arg$mat, na.rm=T), max(pheat_arg$mat, na.rm=T), length.out = n + 1)
-
-    # find breaks that represent significant values
-    graycolor <- "#CCCCCC"
-    left_side <- {color_breaks < -color_cutoff} %>% which() %>% max() # values between -cutoff and cutoff will have the same constant color
-    right_side <- {color_breaks > color_cutoff} %>% which() %>% min()
 
 
-    color_breaks <- c(color_breaks[1:left_side], -color_cutoff, color_cutoff, color_breaks[right_side:length(color_breaks)])
-    # rearrange colors
-    colors <- c(colors[1:(left_side)], graycolor, colors[(right_side-3):length(colors)])
+  # check if anything is significant at all
+  if (any(max(color_matrix>color_cutoff))) {
 
-    pheat_arg$color <- colors
-    pheat_arg$breaks <- color_breaks
+    # if coloring by significance, need to calculate breaks
+    if(color_signif == T){
+
+      # generate colors and color breaks
+      colors <- colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name =
+                                                                "RdYlBu")))(100)
+      n = length(colors)
+      color_breaks <- seq(min(pheat_arg$mat, na.rm=T), max(pheat_arg$mat, na.rm=T), length.out = n + 1)
+
+      # find breaks that represent significant values
+      graycolor <- "#CCCCCC"
+      left_side <- {color_breaks < -color_cutoff} %>% which() %>% max() # values between -cutoff and cutoff will have the same constant color
+      right_side <- {color_breaks > color_cutoff} %>% which() %>% min()
 
 
+      color_breaks <- c(color_breaks[1:left_side], -color_cutoff, color_cutoff, color_breaks[right_side:length(color_breaks)])
+      # rearrange colors
+      colors <- c(colors[1:(left_side)], graycolor, colors[(right_side-3):length(colors)])
+
+      pheat_arg$color <- colors
+      pheat_arg$breaks <- color_breaks
+
+
+    }
+
+    # plot pheatmap
+    re <- do.call(pheatmap::pheatmap, pheat_arg)
+
+  } else {
+    # empty plot
+    re <- (ggplot() + geom_text(aes(x=0, y=0, label='no significant results'), size=8)) %>%
+      MetaboTools:::mti_fix_ggplot_env()
   }
-
-  # plot pheatmap
-  re <- do.call(pheatmap::pheatmap, pheat_arg)
-
 
   # NTS: add option to convert to ggplot
 
