@@ -53,9 +53,11 @@ mt_plots_statsbarplot <- function(D,
     stop("stat_name must be given for metab_filter to work.")
   if(missing(stat_name) & !missing(assoc_sign))
     stop("stat_name must be given for assoc_sign to work.")
+  if(!(aggregate %in% colnames(rowData(D))))
+    stop(sprintf("aggregate column '%s' not found in rowData", aggregate))
   if(!is.null(colorby))
     if(!(colorby %in% colnames(rowData(D))))
-      stop("colour is not in rowData")
+      stop(sprintf("colorby column '%s' not found in rowData", colorby))
   
   ## rowData
   rd <- rowData(D) %>%
