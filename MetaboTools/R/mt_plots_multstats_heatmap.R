@@ -86,7 +86,7 @@ mt_plots_multstats_heatmap <- function(D,
   # generate matrix to plot
   color_signif_matrix <- stat_res %>% lapply(function(x){
     stat_name = x$stat_name[1]
-    x <- x %>%  dplyr::mutate(color = sign(statistic) * -log(p.adj)) %>%
+    x <- x %>%  dplyr::mutate(color = sign(statistic) * -log10(p.adj)) %>%
       dplyr::mutate(signif_col = ifelse(color > left_bound & color < right_bound , 0, 1)) %>%
       dplyr::select(., var, color, signif_col)
     colnames(x)[2] <- stat_name
@@ -142,17 +142,19 @@ mt_plots_multstats_heatmap <- function(D,
 
 
 
+  # maximum absolut value
+  range <- max(abs(color_matrix), na.rm=T)
   # check if anything is significant at all
-  if (any(max(color_matrix>color_cutoff))) {
+  if (range>color_cutoff) {
 
     # if coloring by significance, need to calculate breaks
     if(color_signif == T){
 
       # generate colors and color breaks
-      colors <- colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name =
-                                                                "RdYlBu")))(100)
+      colors <- gplots::bluered(100)
       n = length(colors)
-      color_breaks <- seq(min(pheat_arg$mat, na.rm=T), max(pheat_arg$mat, na.rm=T), length.out = n + 1)
+
+      color_breaks <- seq(-range, range, length.out = n + 1)
 
       # find breaks that represent significant values
       graycolor <- "#CCCCCC"
