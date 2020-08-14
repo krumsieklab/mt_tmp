@@ -30,7 +30,7 @@ mt_modify_cv <- function(D, qc_samples, col_lab){
     dplyr::filter(!!qc_samples_q)
 
     ## SUBSET SAMPLES
-  D_cv <- D[, cd$colnames]
+  D_cv <- D[, as.numeric(as.matrix(cd$colnames))]
 
   ## Calculate metabolite cv scores
   rowData(D)[[col_lab]] <- apply(assay(D_cv), 1, function(x) stats::sd(x, na.rm=T)/mean(x, na.rm=T))

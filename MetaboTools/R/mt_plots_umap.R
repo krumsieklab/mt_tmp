@@ -56,8 +56,8 @@ mt_plots_UMAP <- function(
   if (scaledata) X <- scale(X) #By default, the scale R-function: mean-centers and scales to unit variance the X matrix
 
   # UMAP
-  um <- umap::umap(d=as.matrix(X))
-
+  um <- umap::umap(d=as.matrix(X),...)
+  
   # assemble data frame, two components and sample info
   df = data.frame(x = um$layout[,1], y = um$layout[,2], colData(D)) # scores and colData
   colnames(df)[1:2] <- c("comp1","comp2")
