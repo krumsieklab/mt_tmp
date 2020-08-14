@@ -25,12 +25,12 @@
 #'
 #' @export
 
-mt_stats_univ_cor = function(
+mt_stats_univ_cor <- function(
   D,
   method,
   var,
   stat_name,
-  sample_filter, 
+  sample_filter,
   exact_flag=NULL){
 
   # validate arguments
@@ -47,7 +47,7 @@ mt_stats_univ_cor = function(
 
   # merge data with sample info
   Ds <- D %>% MetaboTools:::mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
-  
+
   ## FILTER SAMPLES
   if(!missing(sample_filter)) {
 
@@ -84,7 +84,7 @@ mt_stats_univ_cor = function(
                          as.data.frame(do.call(rbind, rr_reverse$p.value)),
                          as.data.frame(do.call(rbind, rr_reverse$method)) )
   colnames(tab) <- c("statistic","p.value","method")
-  
+
   # add term column with ordinal variable
   tab$term <- rep(var, dim(tab)[1])
   # add column with names

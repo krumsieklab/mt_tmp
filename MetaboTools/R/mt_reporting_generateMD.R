@@ -59,6 +59,8 @@ output:
     toc: true
     toc_float: TRUE
     {if(number.sections){"number_sections: true"}else{""}}
+params:
+  D: NA
 ---
 
     '))
@@ -89,8 +91,8 @@ output:
   } else  {
     writechunk('# load libraries\nlibrary(MetaboTools)\nlibrary("plotly")')
   }
-  #### chunk that loads data
-  writechunk(glue::glue('# load data\nload("{readfrom}")\nr <- metadata(D)$results'))
+  #### chunk that assigns list r from data
+  writechunk(glue::glue('r <- metadata(D)$results'))
 
   #### start of output
   out(glue::glue('# {firstheading}'))
@@ -103,7 +105,7 @@ output:
 
   for (i in start.from:length(r)) {
     # to ignore?
-    if (r[[i]]$fun[2]!="void") { # ignore void
+    if (length(r[[i]]$fun)<2 || r[[i]]$fun[2]!="void") { # ignore void
 
       # reporting step?
       if (r[[i]]$fun[1]!="reporting") {
@@ -125,7 +127,7 @@ output:
 
         ## plot?
         if (r[[i]]$fun[1]=="plots") {
-          
+
           # special parameters?
           extraparams <- ""
           if (r[[i]]$fun[2]=="statsbarplot") {
@@ -134,7 +136,7 @@ output:
             nr <- x$grobs[[which(x$layout$name == "axis-l-1-1")]]$children$axis$grobs[[1]]$children[[1]][[1]] %>% length() # mubu found this -JK
             if(nr!=0){
               # find number of panel rows in plot
-              s <- strsplit(grep(pattern = "panel", x$layout$name, value = T), "[-]") 
+              s <- strsplit(grep(pattern = "panel", x$layout$name, value = T), "[-]")
               npanrow <- sapply(s, function(zz){ zz[3]}) %>% as.numeric() %>% max()
               npancol <- sapply(s, function(zz){ zz[2]}) %>% as.numeric() %>% max()
               # set plot height
@@ -147,7 +149,7 @@ output:
             }
             extraparams <- sprintf(",fig.width=%f,fig.height=%f", width, height)
           }
-          
+
           # plot
           if (!use.plotly) {
             writechunk( glue::glue("r[[{i}]]$output"), params = extraparams)

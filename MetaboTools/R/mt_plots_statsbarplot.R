@@ -53,14 +53,18 @@ mt_plots_statsbarplot <- function(D,
     stop("stat_name must be given for metab_filter to work.")
   if(missing(stat_name) & !missing(assoc_sign))
     stop("stat_name must be given for assoc_sign to work.")
+  if(!(aggregate %in% colnames(rowData(D))))
+    stop(sprintf("aggregate column '%s' not found in rowData", aggregate))
   if(!is.null(colorby))
     if(!(colorby %in% colnames(rowData(D))))
-      stop("colour is not in rowData")
+      stop(sprintf("colorby column '%s' not found in rowData", colorby))
   
   ## rowData
   rd <- rowData(D) %>%
     as.data.frame() %>%
     dplyr::mutate(var = rownames(D))
+  # set the nulls to unknown
+  rd[[aggregate]][which(rd[[aggregate]]=="NULL")] <- "Unknown"
   
   perc <- rd[[aggregate]] %>%
     unlist %>% table(exclude = NULL) %>% as.data.frame()
@@ -137,6 +141,10 @@ mt_plots_statsbarplot <- function(D,
         if (aggregate %in% names(x$pathways)) {
           # add pathway names to dataframe
           data_plot %<>% dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("name"="ID"))
+          # set Unknown pathway names to Unknown
+          if(length(which(is.na(data_plot$pathway_name)))>0){
+            data_plot$pathway_name[which(is.na(data_plot$pathway_name))] <- "Unknown"
+          }
           # substitute codes for names
           data_plot$name <- data_plot$pathway_name
         } else{
@@ -174,15 +182,22 @@ mt_plots_statsbarplot <- function(D,
       (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "positive"), aes(y = !!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)}) + 
       (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "negative"), aes(y = -!!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)} else{geom_bar(aes(x=label, y=!!sym(yscale), fill=color), stat = "identity", color="black", size=0.4)}) +
       (if(yscale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
-      (if(yscale=="count" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-max(data_plot$count, na.rm = T), max(data_plot$count, na.rm = T)))}) +
+      (if(yscale=="count" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-max(data_plot$count, na.rm = T)*1.7, max(data_plot$count, na.rm = T)*1.7))}) +
+      (if(yscale=="count" & !("association" %in% colnames(data_plot))) {expand_limits(y=c(0, max(data_plot$count, na.rm = T)*1.7))}) +
       (if(yscale=="fraction" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-1, 1))}) +
       geom_hline(yintercept = 0,colour = "black", size=0.4) +
       labs(x="",fill = colorby) +
       scale_x_discrete(limits = rev(levels(data_plot$label))) +
       theme(plot.title = element_text(hjust = 0.4)) +
       coord_flip() + 
+      (if(yscale=="count" & !("association" %in% colnames(data_plot))) {geom_text(data=data_plot, aes(label, !!sym(yscale), label= sprintf("%.2f%%", fraction*100)),
+                                                                               position = position_dodge(width=0.9), hjust = -0.1, size=2.5)}) +
+      (if(yscale=="count" & "association" %in% colnames(data_plot)) {geom_text(data=dplyr::filter(data_plot, association=="positive"), aes(label, !!sym(yscale), group= association,label= sprintf("%.2f%%", fraction*100)), 
+                position = position_dodge(width=0.9), hjust = -0.1, size=2.5)}) +
+      (if(yscale=="count" & "association" %in% colnames(data_plot)) {geom_text(data=data_plot %>% dplyr::filter(association=="negative"), aes(label, -!!sym(yscale), group= association,label= sprintf("%.2f%%", fraction*100)), 
+                position = position_dodge(width=0.9), hjust = 1.1, size=2.5)}) +
       facet_wrap(~comp)
-    
+
     # add custom elements?
     if (!is.null(ggadd)) p <- p + ggadd
     
