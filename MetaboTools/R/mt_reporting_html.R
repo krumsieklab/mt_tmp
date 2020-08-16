@@ -37,7 +37,8 @@ mt_reporting_html <- function(
 
   # define file names
   rmdfile <- sprintf("tmp_%s.RMD", ustr)
-  if(keep.tmp) rdsfile <-  sprintf("tmp_%s.rds", ustr)
+  rdsfile <-  sprintf("tmp_%s.rds", ustr) # only used of keep.tmp==T
+
   # generate RMD
   D %>% mt_reporting_generateMD(
     outfile = rmdfile,
@@ -47,15 +48,23 @@ mt_reporting_html <- function(
     number.sections = number.sections,
     start.after=start.after,
     use.plotly = use.plotly)
-  # save temp file that will be input for the RMD
+
+  # save temp file that will be input for the RMD?
   if (keep.tmp) save(D, file=rdsfile)
   # knit
   rmarkdown::render(rmdfile, params=list(D=D))
   # rename to correct name
   file.rename(paste0(tools::file_path_sans_ext(rmdfile),'.html'), outfile)
+
   # clean up
   if (!keep.tmp) {
+    # no temp files left behind
     file.remove(rmdfile)
+    # .rds does not need to be deleted because it was never generated
+  } else {
+    # keep temp files, move them to their final destination name
+    file.rename(rmdfile, paste0(tools::file_path_sans_ext(outfile),'.rmd'))
+    file.rename(rdsfile, paste0(tools::file_path_sans_ext(outfile),'.rds'))
   }
 
   # return document, in case pipeline is supposed to keep running
