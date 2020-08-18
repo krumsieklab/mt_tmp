@@ -10,6 +10,7 @@
 #' @param yscale plot percentage or frequency of variables. Values c("fraction","count"). Default "fraction".
 #' @param sort sort pathways in plot according to yscale. Default FALSE.
 #' @param assoc_sign optional parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_name.
+#' @param add_empty boolean parameter that if TRUE adds also empty pathways to the barplot.
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #'
@@ -45,6 +46,7 @@ mt_plots_statsbarplot <- function(D,
                                   yscale = "fraction",
                                   sort = FALSE,
                                   assoc_sign,
+                                  add_empty = FALSE,
                                   ...){
   
   ## check input
@@ -111,6 +113,22 @@ mt_plots_statsbarplot <- function(D,
         data_plot <- rd[[aggregate]] %>% 
           unlist %>% table(exclude = NULL) %>% as.data.frame()
         colnames(data_plot) <- c("name","count")
+        
+      }
+      
+      if(add_empty){
+        # check which aggregate entries are not included
+        agg <- rowData(D) %>% as.data.frame() %>% .[[aggregate]] %>% unique
+        agg_empty <- agg[which(!(agg %in% unique(as.character(data_plot$name))))]
+        
+        # create data frame
+        empty <- data.frame(name = agg_empty, count = rep(0, times=length(agg_empty)))
+        if("association" %in% colnames(data_plot)){
+          empty$association <- "positive"
+        }
+        
+        # add to data
+        data_plot %<>% dplyr::full_join(empty, by=colnames(data_plot))
       }
       
       # add number of metabolites in each pathway
