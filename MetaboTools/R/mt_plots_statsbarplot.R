@@ -98,7 +98,7 @@ mt_plots_statsbarplot <- function(D,
             dplyr::mutate(association=ifelse(sign(!!sym(assoc_sign))>0, "positive", "negative")) %>%
             dplyr::select(var,association)
           
-          data_plot <- cbind.data.frame(name=rd[[aggregate]] %>% unlist, 
+          data_plot <- data.frame(name=rd[[aggregate]] %>% unlist, 
                                         association=rep(sel$association, times= (rd[[aggregate]] %>% sapply(length)))) %>% 
             table(exclude = NULL) %>% as.data.frame()
           colnames(data_plot) <- c("name","association","count")
@@ -168,7 +168,7 @@ mt_plots_statsbarplot <- function(D,
   # if there is at least one result, produce plot, otherwise output empty plot
   if((sapply(data_plot, function(ss){dim(ss)[1]}) %>% sum()) >0) {
     # merge list into a single dataframe
-    data_plot <- do.call(rbind, data_plot)
+    data_plot <- do.call(rbind, data_plot) %>% as.data.frame()
     
     # optional sorting (only for single statistical results)
     if (sort){
@@ -176,6 +176,9 @@ mt_plots_statsbarplot <- function(D,
     } 
     # sort comp so that facets appear in the same order given by the user
     data_plot$comp <- factor(data_plot$comp,levels=stat_name)
+    
+    # convert count to numeric
+    data_plot$count %<>% as.numeric
     
     ## CREATE PLOT
     p <- ggplot(data_plot, aes(label)) + 
@@ -187,9 +190,29 @@ mt_plots_statsbarplot <- function(D,
       (if(yscale=="fraction" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-1, 1))}) +
       geom_hline(yintercept = 0,colour = "black", size=0.4) +
       labs(x="",fill = colorby) +
-      scale_x_discrete(limits = rev(levels(data_plot$label))) +
       theme(plot.title = element_text(hjust = 0.4)) +
-      coord_flip() + 
+      scale_x_discrete(limits = rev(levels(data_plot$label)))
+    
+    # add phenotype labels to x axis
+    if("association" %in% colnames(data_plot)){
+      d <- MetaboTools:::mti_get_stat_by_name(D, stat_name, fullstruct=T)
+      if ("groups" %in% names(d) && length(d$groups)==2) {
+        # get labels
+        ggbld <- ggplot2::ggplot_build(p)
+        yticks = ggbld$layout$panel_params[[1]]$y$breaks
+        # edit labels to include groups
+        ytlabs = ggbld$layout$panel_params[[1]]$y$get_labels()
+        ytlabs[1] <- sprintf("%s\n%s", ytlabs[1], sprintf("high in %s", d$groups[1]))
+        ytlabs[length(ytlabs)] <- sprintf("%s\n%s", ytlabs[length(ytlabs)], sprintf("high in %s", d$groups[2]))
+        # apply new labels
+        p <- p +
+          scale_y_continuous(breaks = yticks, labels = ytlabs)
+      }
+    }
+    
+    # flip axes and add annotations on bars
+    p <- p +
+      coord_flip() +
       (if(yscale=="count" & !("association" %in% colnames(data_plot))) {geom_text(data=data_plot, aes(label, !!sym(yscale), label= sprintf("%.2f%%", fraction*100)),
                                                                                position = position_dodge(width=0.9), hjust = -0.1, size=2.5)}) +
       (if(yscale=="count" & "association" %in% colnames(data_plot)) {geom_text(data=dplyr::filter(data_plot, association=="positive"), aes(label, !!sym(yscale), group= association,label= sprintf("%.2f%%", fraction*100)), 
