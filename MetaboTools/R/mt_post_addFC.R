@@ -66,12 +66,16 @@ mt_post_addFC <- function(D,
     # construct new formula
     conf_form <- as.formula(sprintf("~%s", paste0(terms[2:length(terms)], collapse = "+")))
     MetaboTools:::mti_logstatus(glue::glue("correcting for {as.character(conf_form)}"))
-    D <- MetaboTools:::mti_correctConfounder(D, conf_form)
+    D1 <- MetaboTools:::mti_correctConfounder(D, conf_form) # store in different object to not change original SummarizedExperiment
+    # get data-frame from corrected one
+  } else {
+    # no confounding correction
+    D1 <- D
   }
 
+
   ## EXTRACT DATA
-  # if(is.factor(colData(D)[[outcome]]))model[[outcome]] <- as.factor(model[[outcome]])
-  d_fc <- cbind(colData(D)[,outcome,drop=F],t(assay(D))) %>% as.data.frame()
+  d_fc <- cbind(colData(D)[,outcome,drop=F],t(assay(D1))) %>% as.data.frame() # only required reference to D1, since this uses the assay
   keep <- metadata(D)$results[[ stat_id ]]$output$samples.used
   d_fc <- d_fc[keep,,drop=F]
   d_fc[[outcome]] <- as.factor(d_fc[[outcome]])
