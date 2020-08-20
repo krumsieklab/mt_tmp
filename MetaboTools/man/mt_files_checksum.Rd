@@ -21,10 +21,10 @@ Note: Has to be run after loading the data, since it needs to operate on an exis
 }
 \examples{
 # first call, to get the checksum (will crash, deliberately)
-\dontrun{... \%>\% mt_files_checksum(file="input.xlsx", checksum="") \%>\% ...}   
+\dontrun{... \%>\% mt_files_checksum(file="input.xlsx", checksum="") \%>\% ...}
 
 # copy-paste the correct ('actual') checksum from the error message into the call:
-\dontrun{... \%>\% mt_files_checksum(file="input.xlsx", checksum="688048bd1eb9c771be0eb49548a6f947") \%>\% ...}   
+\dontrun{... \%>\% mt_files_checksum(file="input.xlsx", checksum="688048bd1eb9c771be0eb49548a6f947") \%>\% ...}
 
 }
 \author{

@@ -23,6 +23,8 @@
 #'
 #' @author KC
 #'
+#' @import ggplot2
+#'
 #' @export
 
 mt_plots_multstats_heatmap <- function(D,
