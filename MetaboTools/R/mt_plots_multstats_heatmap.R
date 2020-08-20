@@ -133,7 +133,7 @@ mt_plots_multstats_heatmap <- function(D,
   color_matrix <- color_matrix[,c("var", stat_names),drop=F] %>% t()
   colnames(color_matrix) <- color_matrix[1,]
   color_matrix <- color_matrix[-1,,drop=F] %>% as.data.frame()
-  indx <- sapply(color_matrix, is.factor)
+  indx <- sapply(color_matrix, function(x){is.factor(x) | is.character(x)})
   color_matrix[indx] <- lapply(color_matrix[indx], function(x) as.numeric(as.character(x)))
   # if there's just one row, make sure row clustering is deactivated
   if (nrow(color_matrix)==1) pheat_arg$cluster_rows=F
