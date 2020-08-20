@@ -210,18 +210,18 @@ mt_plots_statsbarplot <- function(D,
       labs(x="",fill = colorby) +
       theme(plot.title = element_text(hjust = 0.4)) +
       scale_x_discrete(limits = rev(levels(data_plot$label)))
-    
+
     # add phenotype labels to x axis
     if("association" %in% colnames(data_plot)){
       d <- MetaboTools:::mti_get_stat_by_name(D, stat_name, fullstruct=T)
       if ("groups" %in% names(d) && length(d$groups)==2) {
-        # get labels
+        # get breaks
         ggbld <- ggplot2::ggplot_build(p)
-        yticks = ggbld$layout$panel_params[[1]]$y$breaks
+        yticks = ggbld$layout$panel_params[[1]]$y$minor_breaks # using minor_breaks because sometimes breaks would not work
         # edit labels to include groups
-        ytlabs = ggbld$layout$panel_params[[1]]$y$get_labels()
-        ytlabs[1] <- sprintf("%s\n%s", ytlabs[1], sprintf("high in %s", d$groups[1]))
-        ytlabs[length(ytlabs)] <- sprintf("%s\n%s", ytlabs[length(ytlabs)], sprintf("high in %s", d$groups[2]))
+        ytlabs = yticks
+        ytlabs[1] <- sprintf("%s\n%s", yticks[1], sprintf("high in %s", d$groups[1]))
+        ytlabs[length(ytlabs)] <- sprintf("%s\n%s", yticks[length(yticks)], sprintf("high in %s", d$groups[2]))
         # apply new labels
         p <- p +
           scale_y_continuous(breaks = yticks, labels = ytlabs)
