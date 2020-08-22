@@ -170,7 +170,7 @@ mt_plots_multstats_heatmap <- function(D,
 
       pheat_arg$color <- colors
       pheat_arg$breaks <- color_breaks
-      pheat_arg$legend_breaks <- c("Sig & down", "Insig & down", "Insig & up", "Sig & up",)
+
 
     }
 
