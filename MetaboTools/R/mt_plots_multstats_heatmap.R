@@ -179,7 +179,7 @@ mt_plots_multstats_heatmap <- function(D,
 
   } else {
     # empty plot
-    re <- (ggplot() + geom_text(aes(x=0, y=0, label='no significant results'), size=8)) %>%
+    re <- (ggplot() + ggtitle(main)+ geom_text(aes(x=0, y=0, label='no significant results'), size=8)) %>%
       MetaboTools:::mti_fix_ggplot_env()
   }
 
@@ -190,7 +190,7 @@ mt_plots_multstats_heatmap <- function(D,
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("Pheatmap of stat results"),
+      logtxt = sprintf("Pheatmap of stat results.\n Colors represent (sign(statistic) * -log10(p.adj)))"),
       output = list(re)
     )
 
