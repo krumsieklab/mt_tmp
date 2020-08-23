@@ -4,22 +4,12 @@
 \alias{mt_pre_confounding_correction_stepwise_aic}
 \title{Confounding correction using stepwise AIC}
 \usage{
-mt_pre_confounding_correction_stepwise_aic(
-  D,
-  id_col,
-  med_file,
-  to_remove = c(),
-  n_cores = 1
-)
+mt_pre_confounding_correction_stepwise_aic(D, cols_to_cor, n_cores = 1)
 }
 \arguments{
-\item{D}{SummarizedExperiment object}
+\item{D}{\code{SummarizedExperiment} input}
 
-\item{id_col}{column name of summarized experiment with sample id}
-
-\item{med_file}{name of file containing medication data}
-
-\item{to_remove}{vector of medication names that should not be corrected for}
+\item{cols_to_cor}{vector of column numbers from colData to correct for}
 
 \item{n_cores}{number of cores to use in parallelization}
 }
@@ -36,12 +26,11 @@ each metabolite is corrected by lm with the confounding variables determined by 
 and residuals are returned in lieu of uncorrected metabolites expressions.
 }
 \examples{
- \dontrun{#... \%>\% mt_pre_confounding_correction_stepwise_aic(id_col = "RID", med_file = meds,
-                         to_remove = c( "Med.Anticholinesterases", "Med.NMDAAntag"), n_cores = 10)
+ \dontrun{#... \%>\% mt_pre_confounding_correction_stepwise_aic(cols_to_cor = c(1, 4, 5), n_cores = 10)
  }
 
 
 }
 \author{
-Annalise Schweickart
+Annalise Schweickart, RB (modified on 2020-08-22)
 }
