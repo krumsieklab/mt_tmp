@@ -30,7 +30,7 @@ mt_pre_confounding_correction_stepwise_aic <- function(D, cols_to_cor, n_cores =
   stopifnot("SummarizedExperiment" %in% class(D))
   stopifnot(is.numeric(cols_to_cor))
   
-  # there should be atleast one covariate information per sample
+  ####### there should be atleast one covariate information per sample
   Y <- D %>% colData() %>% data.frame()
   # names of covariates
   col_names <- names(Y)[cols_to_cor]
@@ -41,7 +41,25 @@ mt_pre_confounding_correction_stepwise_aic <- function(D, cols_to_cor, n_cores =
   rem <- nrow(Y) - length(non_na)
   if(rem > 0) warning(sprintf("%d samples with no covariate info were removed!", rem))
   
-  # subset the input based on missing covariate info
+  #######  exclude the covariates with constant values for all patients
+  noNA <- function(x){x <- x[!is.na(x) & x!="NA" & x!=""];x}
+  cols_to_exclude <- NULL
+  for (cols in (cols_to_cor)) {
+    # just one factor represented?
+    if (D %>% colData() %>% as_tibble() %>% .[[cols]] %>% unique() %>% noNA() %>% length() <= 1) {
+      cols_to_exclude <- c(cols_to_exclude, cols)
+    }
+  }
+  # remove the col number of covariates to exclude
+  if(length(cols_to_exclude)>0){
+    cols_to_cor <- cols_to_cor[which(cols_to_cor%in%cols_to_exclude==F)]  
+  } warning(sprintf("Column numbers %s with constant values were removed from correction!", 
+                    toString(cols_to_exclude)))
+  
+  if(length(cols_to_cor)<1) stop("No columns left to correct for!")
+  
+  
+  ####### subset the input based on missing covariate info
   if(length(non_na) > 0) {
     D <- D [, non_na]
     X <- t(assay(D))
@@ -49,7 +67,7 @@ mt_pre_confounding_correction_stepwise_aic <- function(D, cols_to_cor, n_cores =
     model_data <- cbind.data.frame(X, colData(D)[, cols_to_cor])
   } else stop("No samples with any covariate info!")
   
-  # per metabolite loop 
+  ####### loop over metabolites
   outlist <- parallel::mclapply(1:ncol(X), FUN=function(i) {
     # all covariates and one metabolite
     form <- paste(colnames(X)[i], "~", paste(col_names, collapse=" + "))
@@ -80,7 +98,7 @@ mt_pre_confounding_correction_stepwise_aic <- function(D, cols_to_cor, n_cores =
     return(res)
   }, mc.cores= n_cores)
   
-  #Bind outputs into assay for summarized experiment
+  ###### results gathering : bind outputs into assay for summarized experiment
   covar_adjusted <- do.call(rbind, lapply(outlist, function(x) unlist(x[[1]])))
   covars_log <- do.call(rbind, lapply(outlist, function(x) unlist(x[2])))
   colnames(covars_log) <-  c("metabolite", "covariates", "model.rsq", "model.pvalue")
