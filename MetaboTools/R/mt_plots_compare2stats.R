@@ -59,7 +59,7 @@ mt_plots_compare2stats <- function(
   stat2,    # name of statistical comparison in second dataset
   filter2,  # filter criterion, which samples to label
   filterop="AND",  # if AND -> two colors, one for those where both stats match the criterion, and one where they don't
-                   # if OR -> three colors, a third one where only one stat matches the criterion
+  # if OR -> three colors, a third one where only one stat matches the criterion
 
   plot_title = "", # optional argument for plot title
   label_column = "name", # optional argument on which column in the statistical results df to use for labeling points
@@ -71,15 +71,17 @@ mt_plots_compare2stats <- function(
   ## check input
   stopifnot("SummarizedExperiment" %in% class(D1))
   stopifnot("SummarizedExperiment" %in% class(D2))
+  if (missing(filter1)) stop("Must provide 'filter1'")
+  if (missing(filter2)) stop("Must provide 'filter2'")
   filter1q <- dplyr::enquo(filter1)
   filter2q <- dplyr::enquo(filter2)
 
   if (!(filterop %in% c("AND","OR"))) stop("filterop must be 'AND' or 'OR'")
 
   ## obtain the two stats structures
-  s1 <- mti_get_stat_by_name(D1, stat1, fullstruct=T)
+  s1 <- MetaboTools:::mti_get_stat_by_name(D1, stat1, fullstruct=T)
   s1t <- s1$table
-  s2 <- mti_get_stat_by_name(D2, stat2, fullstruct=T)
+  s2 <- MetaboTools:::mti_get_stat_by_name(D2, stat2, fullstruct=T)
   s2t <- s2$table
 
   ## add directed p-value, filter, and merge
@@ -117,20 +119,20 @@ mt_plots_compare2stats <- function(
   ## plot
   st <- as.data.frame(st)
   p <- st %>%
-    ggplot(aes(x=dp1,y=dp2,color=as.factor(filtered))) +
-    geom_point(size = point_size) +
-    labs(color='filtered') +
-    ggrepel::geom_text_repel(data=dplyr::filter(st, filtered>0), aes_string(label=label_column), size=3, colour = "black") +
-    xlab(xlabel) + ylab(ylabel)
+    ggplot2::ggplot(ggplot2::aes(x=dp1,y=dp2,color=as.factor(filtered))) +
+    ggplot2::geom_point(size = point_size) +
+    ggplot2::labs(color='filtered') +
+    ggrepel::geom_text_repel(data=dplyr::filter(st, filtered>0), ggplot2::aes_string(label=label_column), size=3, colour = "black") +
+    ggplot2::xlab(xlabel) + ggplot2::ylab(ylabel)
 
   if (plot_title != "") {
-    p <- p + ggtitle(plot_title)
+    p <- p + ggplot2::ggtitle(plot_title)
 
   }
-  
+
   # fix ggplot environment
-  p <- mti_fix_ggplot_env(p)
-  
+  p <- MetaboTools:::mti_fix_ggplot_env(p)
+
   ## export to file?
   if (!is.null(export.file)) {
     # can't handle list columns, drop those
@@ -140,9 +142,9 @@ mt_plots_compare2stats <- function(
 
   if (!return.plot.only) {
     ## add status information & plot
-    funargs <- mti_funargs()
+    funargs <- MetaboTools:::mti_funargs()
     metadata(D1)$results %<>%
-      mti_generate_result(
+      MetaboTools::: mti_generate_result(
         funargs = funargs,
         logtxt = sprintf("comparison plot between '%s' and '%s'", stat1, stat2),
         output = list(p),
