@@ -39,7 +39,7 @@ mt_pre_confounding_correction_stepwise_aic <- function(D, cols_to_cor, n_cores =
     length(which(is.na(x)))!=length(x)) %>% which()
   # how many have no covariate information at all?
   rem <- nrow(Y) - length(non_na)
-  if(rem > 0) warning(sprintf("%d patients with no covariate info were removed!", rem))
+  if(rem > 0) warning(sprintf("%d samples with no covariate info were removed!", rem))
   
   # subset the input based on missing covariate info
   if(length(non_na) > 0) {
