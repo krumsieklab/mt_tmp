@@ -7,10 +7,9 @@
 mt_stats_glmnet(
   D,
   stat_name,
-  x,
-  y,
   outer_k,
   inner_k,
+  family = "binomial",
   alpha,
   lambda = NULL,
   rand_seed
@@ -21,15 +20,17 @@ mt_stats_glmnet(
 
 \item{stat_name}{name under which this comparison will be stored, must be unique to all other statistical results}
 
-\item{x}{input matrix}
-
-\item{y}{response variable}
-
 \item{outer_k}{number of folds in the outer cross-validation loop}
 
 \item{inner_k}{number of folds in the inner cross-validation loop}
 
-\item{lambda}{}
+\item{family}{response type; default: binomial}
+
+\item{alpha}{elasticnet mixing parameter}
+
+\item{lambda}{regularization parameter}
+
+\item{rand_seed}{integer to set RNG state so results (including CV partitioning) can be exactly reproduced}
 }
 \value{
 results$ouput: a list containing the foloowing:
@@ -42,6 +43,7 @@ results$output2: a list containing the following:
 \itemize{
  \item{idx}{list of indices used to create the train:test partitions for the outer cross-validation loop}
  \item{yhat}{list of all predictions from the outer cross-validation loop}
+ \item{labels}{list of test labels from the outer cross-validation loop}
  \item{models}{list of all models from the outer cross-validation loop}
  \item{params}{list containing the original parameters}
 }

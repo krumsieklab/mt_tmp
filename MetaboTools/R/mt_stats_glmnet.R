@@ -4,12 +4,12 @@
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param stat_name name under which this comparison will be stored, must be unique to all other statistical results
-#' @param x input matrix
-#' @param y response variable
 #' @param outer_k number of folds in the outer cross-validation loop
 #' @param inner_k number of folds in the inner cross-validation loop
-#' @param alpha
-#' @param lambda
+#' @param family response type; default: binomial
+#' @param alpha elasticnet mixing parameter
+#' @param lambda regularization parameter
+#' @param rand_seed integer to set RNG state so results (including CV partitioning) can be exactly reproduced
 #'
 #' @return results$ouput: a list containing the foloowing:
 #' \itemize{
@@ -20,6 +20,7 @@
 #' \itemize{
 #'  \item{idx}{list of indices used to create the train:test partitions for the outer cross-validation loop}
 #'  \item{yhat}{list of all predictions from the outer cross-validation loop}
+#'  \item{labels}{list of test labels from the outer cross-validation loop}
 #'  \item{models}{list of all models from the outer cross-validation loop}
 #'  \item{params}{list containing the original parameters}
 #' }
@@ -30,18 +31,20 @@
 #'
 #' @author KC
 #'
-#'
 #' @export
 
 mt_stats_glmnet <- function(D,
                             stat_name,
-                            x,
-                            y,
                             outer_k,
                             inner_k,
+                            family="binomial",
                             alpha,
                             lambda = NULL,
                             rand_seed){
+
+  # get x and y
+  x <- assay(D)
+  y <- colData(D)
 
   # get outer cv folds
   set.seed(rand_seed)
@@ -64,16 +67,17 @@ mt_stats_glmnet <- function(D,
   for(i in 1:outer_k){
 
     set.seed(rand_seed)
-    iMod <- glmnet::cv.glmnet(x=sets[[i]]$trainData, y=sets[[i]]$trainLabel, alpha=alpha, lambda=lambda, nfolds=inner_k, family="binomial")
+    iMod <- glmnet::cv.glmnet(x=sets[[i]]$trainData, y=sets[[i]]$trainLabel, alpha=alpha, lambda=lambda, nfolds=inner_k, family=family)
     iPred <- predict(iMod, sets[[i]]$testData, s=iMod$lambda.min, type="response")
 
     modList[[i]] <- iMod
     predList[[i]] <- iPred
+    trueList[[i]] <- sets[[i]]$testLabel
 
   }
 
   # train glmnet using all data
-  mod <- glmnet::glmnet(x=x, y=y, alpha=alpha, lambda = lambda, family = "binomial")
+  mod <- glmnet::glmnet(x=x, y=y, alpha=alpha, lambda = lambda, family = family)
   coef_tab <- data.matrix(coef(mod, s=mod$lambda))
 
   # add status information
@@ -91,6 +95,7 @@ mt_stats_glmnet <- function(D,
       output2 = list(
         idx = idxList,
         yhat = predList,
+        labels = trueList,
         models = modList,
         params = list(
           x = x,
