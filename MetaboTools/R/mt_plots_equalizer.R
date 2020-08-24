@@ -163,9 +163,9 @@ mt_plots_equalizer <- function(
     xlabel <- sprintf("%s high <--     directed log10(p)     --> %s high", d$groups[1], d$groups[2])
     p <- p + xlab(xlabel)
   }
-  
+
   # fix ggplot environment
-  p <- mti_fix_ggplot_env(p)
+  if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
 
   # add status information & plot
   funargs <- mti_funargs()

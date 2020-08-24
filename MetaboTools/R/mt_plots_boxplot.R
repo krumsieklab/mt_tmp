@@ -216,7 +216,7 @@ mt_plots_boxplot <- function(D,
   }
 
   # fix ggplot environments
-  p <- lapply(p, mti_fix_ggplot_env)
+  if (D %>% mti_get_setting("ggplot_fix")) p <- lapply(p, mti_fix_ggplot_env)
 
 
   ## add status information & plot

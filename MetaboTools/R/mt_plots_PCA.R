@@ -94,11 +94,11 @@ mt_plots_PCA <- function(
   if (!is.na(ellipse)) p <- p + stat_ellipse(level=ellipse)
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
-  
+
   # fix ggplot environment
-  p <- mti_fix_ggplot_env(p)
-  
-  
+  if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
+
+
   # add explained variance plot?
   plotlist <- list(p)
   if (expvarplot) {
@@ -112,7 +112,7 @@ mt_plots_PCA <- function(
       geom_text(aes(label=sprintf('%.1f%%',expdf$expvar)), vjust=-0.3, size=3.5) +
       scale_x_discrete(limits=1:nrow(expdf))
     # add to list of plots for results
-    plotlist[[2]] <- mti_fix_ggplot_env(newp)
+    if (D %>% mti_get_setting("ggplot_fix")) plotlist[[2]] <- mti_fix_ggplot_env(newp)
   }
 
   # prep output matrices

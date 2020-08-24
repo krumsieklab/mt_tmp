@@ -77,7 +77,7 @@ mt_plots_qc_missingness <- function(
       p <- p+geom_hline(yintercept=met_max, color='red', linetype="dashed")
     }
     # fix ggplot environment
-    p <- mti_fix_ggplot_env(p)
+    if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
     # append
     plots[[length(plots)+1]] <- p
   }
@@ -114,7 +114,7 @@ mt_plots_qc_missingness <- function(
       p <- p+geom_hline(yintercept=samp_max, color='red', linetype="dashed")
     }
     # fix ggplot environment
-    p <- mti_fix_ggplot_env(p)
+    if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
     # append
     plots[[length(plots)+1]] <- p
   }
@@ -138,7 +138,7 @@ mt_plots_qc_missingness <- function(
                         breaks=c("FALSE", "TRUE"),
                         labels=c("No", "Yes"))
     # fix ggplot environment
-    p <- mti_fix_ggplot_env(p)
+    if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
     # append
     plots[[length(plots)+1]] <- p
   }

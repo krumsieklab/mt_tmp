@@ -131,7 +131,7 @@ mt_plots_compare2stats <- function(
   }
 
   # fix ggplot environment
-  p <- MetaboTools:::mti_fix_ggplot_env(p)
+  if (D1 %>% mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
 
   ## export to file?
   if (!is.null(export.file)) {

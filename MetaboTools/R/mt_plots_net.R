@@ -130,7 +130,7 @@ mt_plots_net <- function(
     theme(legend.position = "bottom")
 
   # fix ggplot environment
-  p <- mti_fix_ggplot_env(p)
+  if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
 
   # if save.html given, save visnetwork to html
   if (!missing(save.html)) {

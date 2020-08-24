@@ -37,7 +37,10 @@ mti_get_setting <-  function(D, sname) {
   # check if settings missing
   if (!("settings" %in% names(metadata(D)))) {
     # no, use default
-    lst <- mti_settings_list()
+    # build list
+    fulllist <- mti_settings_list()
+    lst <- names(fulllist) %>% lapply(function(s){fulllist[[s]]$default})
+    names(lst) <- names(fulllist)
   } else {
     # yes, take from metadata
     lst <- metadata(D)$settings

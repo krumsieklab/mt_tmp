@@ -183,11 +183,11 @@ mt_plots_scatter <- function(D,
           geom_blank(data = data.frame(name = spaces))
       }
       # fix ggplot environments
-      p <- lapply(p, mti_fix_ggplot_env)
+      if (D %>% mti_get_setting("ggplot_fix")) p <- lapply(p, mti_fix_ggplot_env)
     }else{
       p <- p + facet_wrap(.~name, scales = "free_y")
       # fix ggplot environment
-      p <- mti_fix_ggplot_env(p)
+      if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
       p <- list(p)
     }
   }

@@ -36,7 +36,7 @@ mt_plots_pvalqq <- function(
   p <- mti_gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", stat_name))
 
   # fix ggplot environment
-  p <- mti_fix_ggplot_env(p)
+  if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
 
   # add status information & plot
   funargs <- mti_funargs()

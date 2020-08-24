@@ -116,7 +116,7 @@ mt_plots_volcano <- function(D,
   if (!is.null(ggadd)) p <- p+ggadd
 
   # fix ggplot environment
-  p <- mti_fix_ggplot_env(p)
+  if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
 
   ## add status information & plot
   funargs <- mti_funargs()

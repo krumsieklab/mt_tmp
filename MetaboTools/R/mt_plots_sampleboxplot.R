@@ -44,7 +44,7 @@ mt_plots_sampleboxplot <- function(
     assay(Dplot) <- log2(assay(Dplot))
     ylabel = sprintf("%s [log2]", ylabel)
   }
-  
+
   # merge with sample annotations, only keep the ones that were actually used
   cd <- Dplot %>% colData() %>% as.data.frame() %>% tibble::rownames_to_column("merge.primary")
   keep <- c(mti_extract_variables(quos(...)), "merge.primary")
@@ -64,10 +64,10 @@ mt_plots_sampleboxplot <- function(
 
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
-  
+
   # fix ggplot environment
-  p <- mti_fix_ggplot_env(p)
-  
+  if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
+
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>%
