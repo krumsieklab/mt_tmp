@@ -53,10 +53,10 @@ mt_pre_confounding_correction_stepwise_aic <- function(D, cols_to_cor, n_cores =
   # remove the col number of covariates to exclude
   if(length(cols_to_exclude)>0){
     cols_to_cor <- cols_to_cor[which(cols_to_cor%in%cols_to_exclude==F)]  
-  } warning(sprintf("Column numbers %s with constant values were removed from correction!", 
+  } warning(sprintf("Covariates in column numbers %s with constant values were removed from correction!", 
                     toString(cols_to_exclude)))
   
-  if(length(cols_to_cor)<1) stop("No columns left to correct for!")
+  if(length(cols_to_cor)<1) stop("No covariates left to correct for!")
   
   
   ####### subset the input based on missing covariate info
