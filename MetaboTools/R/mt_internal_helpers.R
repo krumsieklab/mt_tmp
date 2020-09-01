@@ -48,6 +48,49 @@ mti_get_stat_by_name <- function(D, name, fullstruct=F){
   output
 }
 
+#' Retrieve ML model results by name
+#'
+#' Returns a list of ML results given a result name
+#'
+#' @param D SummarizedExperiment object
+#' @param name the name of the ML result of interest
+#'
+#' @result res_list: list containing the output and output2 lists for a given name
+#'
+#' @noRd
+mti_get_ml_res_by_name <- function(D, name){
+ # code is identical to mti_get_stat_by_name, but returns output and output2 lists
+  stopifnot("SummarizedExperiment" %in% class(D2))
+
+  if(! ("results" %in% names(metadata(D)))){
+    stop("no results element found in D")
+  }
+
+  stats <- MetaboTools:::mti_res_get_stats_entries(D2)
+
+  if(length(stats) == 0){
+    stop("no stats element found in D")
+  }
+
+  names  <- stats %>% purrr::map_chr(~.x$output$name)
+  output <- which(names == name)
+
+  if(length(output) == 0){
+    stop("stat element with name ", name, " does not exist")
+  }
+  if(length(output)  > 1){
+    stop("there are multiple stat elements with name ", name)
+  }
+
+  res_list <- list()
+  res_list$output <- stats[[ output ]]$output
+  res_list$output2 <- stats[[ output ]]$output2
+
+  res_list
+
+}
+
+
 #' Safely add to end of list, even if list does not exist
 #'
 #' Adds an item to the end of a list, even if the list is empty or NULL

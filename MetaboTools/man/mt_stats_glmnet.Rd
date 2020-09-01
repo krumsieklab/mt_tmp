@@ -7,11 +7,11 @@
 mt_stats_glmnet(
   D,
   stat_name,
+  label_col,
   outer_k,
   inner_k,
   family = "binomial",
   alpha,
-  lambda = NULL,
   rand_seed
 )
 }
@@ -19,6 +19,8 @@ mt_stats_glmnet(
 \item{D}{\code{SummarizedExperiment} input}
 
 \item{stat_name}{name under which this comparison will be stored, must be unique to all other statistical results}
+
+\item{label_col}{name of column in colData(D) to be used as the response variable (y)}
 
 \item{outer_k}{number of folds in the outer cross-validation loop}
 
@@ -28,9 +30,9 @@ mt_stats_glmnet(
 
 \item{alpha}{elasticnet mixing parameter}
 
-\item{lambda}{regularization parameter}
-
 \item{rand_seed}{integer to set RNG state so results (including CV partitioning) can be exactly reproduced}
+
+\item{lambda}{regularization parameter}
 }
 \value{
 results$ouput: a list containing the foloowing:
