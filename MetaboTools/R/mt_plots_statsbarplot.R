@@ -212,7 +212,7 @@ mt_plots_statsbarplot <- function(D,
       scale_x_discrete(limits = rev(levels(data_plot$label)))
 
     # add phenotype labels to x axis
-    if("association" %in% colnames(data_plot)){
+    if("association" %in% colnames(data_plot) & length(stat_name)==1){
       d <- MetaboTools:::mti_get_stat_by_name(D, stat_name, fullstruct=T)
       if ("groups" %in% names(d) && length(d$groups)==2) {
         # get breaks
@@ -241,14 +241,24 @@ mt_plots_statsbarplot <- function(D,
 
     # add custom elements?
     if (!is.null(ggadd)) p <- p + ggadd
+    
+    # save plot parameters to be passed to the html generator for dynamical plot height
+    nr <- p$data$name %>% unique %>% length # number of pathways
+    ncol <- 3 # number of panel columns
+    nrow <- p$data$comp %>% unique %>% length %>% {ceiling(./ncol)} # number of panel rows
 
     # fix ggplot environment
-    if (D %>% mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
+    if (D %>% MetaboTools:::mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
 
   } else {
 
     p <- ggplot() +
       geom_text(aes(x=0,y=0, label="No significant results"), size=10)
+    
+    # save plot parameters to be passed to the html generator for dynamical plot height
+    nr <- 0 # number of pathways
+    ncol <- NULL
+    nrow <- NULL
 
   }
   ## add status information & plot
@@ -258,7 +268,8 @@ mt_plots_statsbarplot <- function(D,
       funargs = funargs,
       logtxt = ifelse(exists("stat_name"), sprintf("bar plot for comparison %s, by %s, filtered for %s, using %s", paste(stat_name,collapse = ", "), aggregate, gsub("~", "", rlang::expr_text(enquo(metab_filter))), yscale),
                       sprintf("bar plot by %s using %s", aggregate, yscale)),
-      output = list(p)
+      output = list(p),
+      output2 = list(nr = nr, npancol = ncol, npanrow = nrow)
     )
   ## return
   D
