@@ -3,6 +3,7 @@
 export(mt_anno_metabolites_HMDB2KEGG)
 export(mt_anno_missingness)
 export(mt_anno_pathways_HMDB)
+export(mt_anno_pathways_Uniprot)
 export(mt_anno_pathways_from_file)
 export(mt_anno_pathways_graphite)
 export(mt_anno_pathways_remove_redundant)
