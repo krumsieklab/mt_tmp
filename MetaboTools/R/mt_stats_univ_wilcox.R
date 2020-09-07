@@ -6,6 +6,7 @@
 #' @param stat_name name under which this comparison will be stored, must be unique to all other statistical results
 #' @param sample_filter term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison
 #' @param exact_flag optional to set the exact flag in wilcox.test function
+#' @param paired_flag optional to set the paired flag in wilcox.test function, would be applied for numeric y
 #' @return $result: statistics object
 #'
 #' @importFrom magrittr %>% %<>%
@@ -33,6 +34,7 @@ mt_stats_univ_wilcox <- function(
   y,        # name of the column in colData to compare with metabolite
   stat_name,      # name of comparison,
   sample_filter,
+  paired_flag=F, # if tests should be paired
   exact_flag=NULL
 ) {
   
@@ -94,7 +96,7 @@ mt_stats_univ_wilcox <- function(
     # run wilcox
     # we want to model metabolite ~ outcome
     wt <- lapply(mets, function(x){
-      res  <- wilcox.test(Ds[,x], Ds[[y]], paired = T, alternative = "two.sided", exact=exact_flag)
+      res  <- wilcox.test(Ds[,x], Ds[[y]], paired=paired_flag, alternative = "two.sided", exact=exact_flag)
       res <- data.frame("statistic"=res$statistic, "p.value"=res$p.value, "method"=res$method)
       return(res)
     }) %>% do.call(rbind,.) %>% data.frame()
