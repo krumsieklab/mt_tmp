@@ -35,6 +35,7 @@ mt_plots_UMAP <- function(
   textrepel=T,
   store.matrices=F,
   ggadd=NULL,
+  n_neighbors=15,
   ...
 ) {
 
@@ -56,7 +57,7 @@ mt_plots_UMAP <- function(
   if (scaledata) X <- scale(X) #By default, the scale R-function: mean-centers and scales to unit variance the X matrix
 
   # UMAP
-  um <- umap::umap(d=as.matrix(X))
+  um <- umap::umap(d=as.matrix(X), n_neighbors=n_neighbors)
 
   # assemble data frame, two components and sample info
   df = data.frame(x = um$layout[,1], y = um$layout[,2], colData(D)) # scores and colData
