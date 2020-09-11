@@ -34,7 +34,7 @@
 #'
 #' @export
 
-mt_stats_glmnet <- function(D,
+mt_ml_glmnet <- function(D,
                             stat_name,
                             label_col,
                             outer_k,
