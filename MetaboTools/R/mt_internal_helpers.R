@@ -60,13 +60,13 @@ mti_get_stat_by_name <- function(D, name, fullstruct=F){
 #' @noRd
 mti_get_ml_res_by_name <- function(D, name){
  # code is identical to mti_get_stat_by_name, but returns output and output2 lists
-  stopifnot("SummarizedExperiment" %in% class(D2))
+  stopifnot("SummarizedExperiment" %in% class(D))
 
   if(! ("results" %in% names(metadata(D)))){
     stop("no results element found in D")
   }
 
-  stats <- MetaboTools:::mti_res_get_stats_entries(D2)
+  stats <- MetaboTools:::mti_res_get_path(D,"ml")
 
   if(length(stats) == 0){
     stop("no stats element found in D")

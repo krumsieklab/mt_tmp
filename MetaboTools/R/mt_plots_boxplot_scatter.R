@@ -14,7 +14,7 @@
 #' @param cols number columns of boxplots in $result
 #' @param full_info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
 #' @param text_size text size of the annotations
-#' @param jitter whether to add jitter to boxplot,  default T
+#' @param jitter add geom_jitter ("jitter") or geom_beeswarm ("beeswarm") to boxplot, exclude if NULL;  default "beeswarm"
 #' @param restrict_to_used_samples whether to filter to the samples that were used in the statistical test, default: T
 #' @param manual_ylab manual ylabel (default: none)
 #' @param fitline add fit line? (default: T)
@@ -26,6 +26,8 @@
 #' @return if plot_type = "scatter", $result: plot, scatter plot
 #'
 #' @author JZ, KC
+#'
+#' @import ggplot2
 #'
 #' @export
 
@@ -42,7 +44,7 @@ mt_plots_boxplot_scatter <- function(D,
                                      cols,
                                      full_info = F,
                                      text_size = 3.88,
-                                     jitter = T,
+                                     jitter = "beeswarm",
                                      restrict_to_used_samples = T,
                                      manual_ylab=NULL,
                                      fitline = T,
@@ -110,7 +112,7 @@ mt_plots_boxplot_scatter <- function(D,
   if(!full_info){
     # filter down only to the variables needed for plotting
     # need to parse x and ... list
-    vars <- x %>% as.character() %>% gsub("~","",.)
+    vars <- x %>% dplyr::quo_name()
     q <- dplyr::quos(...)
     if (length(q) > 0) {
       vars <- c(vars, q %>% lapply(function(x){x %>% as.character() %>% gsub("~","",.)}) %>% unlist() %>% as.vector())
@@ -120,7 +122,7 @@ mt_plots_boxplot_scatter <- function(D,
     plottitle <- ifelse(missing(stat_name),"",stat_name)
     if(plot_type=="box"){
       # make sure the main outcome variable x is a factor
-      mainvar <- x %>% as.character() %>% gsub("~","",.)
+      mainvar <-x %>% dplyr::quo_name()
       dummy[[mainvar]] <- as.factor(dummy[[mainvar]])
 
       p <- dummy %>%
@@ -201,9 +203,12 @@ mt_plots_boxplot_scatter <- function(D,
     }
 
     ## ADD JITTER
-    if(jitter){
+    if(jitter=="beeswarm"){
       p <- p +
         ggbeeswarm::geom_beeswarm(aes(x = !!x, y = value, ...))
+    }else if(jitter=="jitter"){
+      p <- p +
+        geom_jitter(aes(x = !!x, y = value, ...))
     }
   }
 
@@ -225,30 +230,13 @@ mt_plots_boxplot_scatter <- function(D,
   # if there is no plot, create a single empty page
   if (length(unique(stat$name))==0) {
     p <- list(ggplot() + geom_text(aes(x=0, y=0, label='no plots'), size=10))
+    output2 <- NULL
   } else {
-    if(!missing(cols) && !missing(rows)){
-      p_plots   <- length(unique(stat$name))
-      p_perpage <- cols*rows
-      pages     <- ceiling(p_plots / p_perpage)
-      MetaboTools:::mti_logstatus(glue::glue("split {p_plots} plots to {pages} pages with {rows} rows and {cols} cols"))
-      p <- purrr::map(1:pages, ~ p + ggforce::facet_wrap_paginate(~name, scales = "free_y", nrow = rows, ncol  = cols, page = .x))
-      ## ADD EMPTY PLOTS TO FILL PAGE
-      fill_page <- (pages*p_perpage) - p_plots
-      if(fill_page > 0){
-        MetaboTools:::mti_logstatus(glue::glue("add {fill_page} blanks to fill page"))
-        spaces <- purrr::map(1:fill_page, ~rep(" ", .x)) %>%
-          purrr::map_chr(stringr::str_c, collapse = "")
-        p[[ pages ]] <- p[[ pages ]] +
-          geom_blank(data = data.frame(name = spaces))
-      }
-      # fix ggplot environments
-      if (D %>% MetaboTools:::mti_get_setting("ggplot_fix")) p <- lapply(p, MetaboTools:::mti_fix_ggplot_env)
-    }else{
-      p <- p + facet_wrap(.~name, scales = "free_y")
-      # fix ggplot environment
-      if (D %>% MetaboTools:::mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
-      p <- list(p)
-    }
+    p <- p + facet_wrap(.~name, scales = "free_y", ncol=2)
+    # fix ggplot environment
+    if (D %>% MetaboTools:::mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
+    p <- list(p)
+    output2 <- ceiling(length(unique(stat$name))/2)
   }
 
   ## add status information & plot
@@ -257,7 +245,8 @@ mt_plots_boxplot_scatter <- function(D,
     MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("Metabolite ",ifelse(plot_type=="box", "boxplots", "scatter plots"),", aes: %s", MetaboTools:::mti_dots_to_str(...)),
-      output = p
+      output = p,
+      output2 = output2
     )
   ## return
   D

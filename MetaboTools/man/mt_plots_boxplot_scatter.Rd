@@ -17,7 +17,7 @@ mt_plots_boxplot_scatter(
   cols,
   full_info = F,
   text_size = 3.88,
-  jitter = T,
+  jitter = "beeswarm",
   restrict_to_used_samples = T,
   manual_ylab = NULL,
   fitline = T,
@@ -49,7 +49,7 @@ mt_plots_boxplot_scatter(
 
 \item{text_size}{text size of the annotations}
 
-\item{jitter}{whether to add jitter to boxplot,  default T}
+\item{jitter}{add geom_jitter ("jitter") or geom_beeswarm ("beeswarm") to boxplot, exclude if NULL;  default "beeswarm"}
 
 \item{restrict_to_used_samples}{whether to filter to the samples that were used in the statistical test, default: T}
 
