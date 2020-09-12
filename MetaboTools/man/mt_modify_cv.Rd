@@ -4,14 +4,18 @@
 \alias{mt_modify_cv}
 \title{mt_modify cv}
 \usage{
-mt_modify_cv(D, qc_samples, col_lab)
+mt_modify_cv(D, qc_samples, col_lab, replicates = F, id_col = NULL)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
 \item{qc_samples}{Logical expression. Can use fields from \code{colData()}}
 
-\item{col_lab}{Label for the new cv values to be stored in in colData}
+\item{col_lab}{Label for the new cv values to be stored in in rowData}
+
+\item{replicates}{Optional flag to indicate if the selected samples are replicates}
+
+\item{id_col}{Optional if replicates is T, it is the name of the column in colData containing sample IDs}
 }
 \value{
 rowData(D)[[col_lab]] contains column with CV score for each metabolite
@@ -24,5 +28,5 @@ Calculate CV score
 
 }
 \author{
-Annalise Schweickart
+Annalise Schweickart, RB (updated on 2020-09-12)
 }
