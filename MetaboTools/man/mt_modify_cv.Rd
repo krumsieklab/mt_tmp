@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_modify_cv.R
 \name{mt_modify_cv}
 \alias{mt_modify_cv}
-\title{mt_modify cv}
+\title{mt_modify_cv}
 \usage{
 mt_modify_cv(D, qc_samples, col_lab, replicates = F, id_col = NULL)
 }
@@ -21,7 +21,7 @@ mt_modify_cv(D, qc_samples, col_lab, replicates = F, id_col = NULL)
 rowData(D)[[col_lab]] contains column with CV score for each metabolite
 }
 \description{
-Calculate CV score
+Calculate CV - coefficient of variation
 }
 \examples{
 \dontrun{... \%>\% mt_modify_cv(qc_samples=="PQC", col_lab = "PQC_cv") \%>\% ...}
