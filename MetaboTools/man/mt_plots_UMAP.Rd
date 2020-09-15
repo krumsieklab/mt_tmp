@@ -12,6 +12,7 @@ mt_plots_UMAP(
   textrepel = T,
   store.matrices = F,
   ggadd = NULL,
+  n_neighbors = 15,
   ...
 )
 }

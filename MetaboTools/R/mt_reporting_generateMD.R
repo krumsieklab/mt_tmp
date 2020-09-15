@@ -144,7 +144,7 @@ params:
             extraparams <- sprintf(",fig.width=%f,fig.height=%f", width, height)
           } else if(r[[i]]$fun[2]=="boxplot"&r[[i]]$fun[3]=="scatter"){
             # dynamic height
-            if(r[[i]]$output2!=0){
+            if(!is.null(r[[i]]$output2)){
               # set plot height
               height <- (23+(r[[i]]$output2*160.65)+33)/2304*32 # manually curated using pixel measurements on example
               width <- 7
