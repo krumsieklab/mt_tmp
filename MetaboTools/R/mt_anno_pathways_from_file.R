@@ -1,7 +1,13 @@
 #' Add pathway information.
 #'
 #' Adds custom pathways to the already existing SummarizedExperiment
-#' data structure using a flat file.
+#' data structure using a flat file. 
+#' NOTE: The flat file should be an Excel file, containing 3 columns: 
+#' met_ID, containing metabolite IDs, pw_ID containing pathway IDs, 
+#' and pw_name containing pathway names.
+#' The pathway columns pw_ID and pw_name should be in long format, meaning 
+#' if a metabolite is assigned to multiple pathways, each metabolite pathway 
+#' pair should appear in a separate row.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param in_col Column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
