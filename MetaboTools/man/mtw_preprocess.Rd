@@ -29,7 +29,7 @@ mtw_preprocess(
 
 \item{quot_options}{A list of parameters for \code{mt_pre_norm_quot}}
 
-\item{comp_fac}{List of names in colData column to correlation dilution factors with}
+\item{comp_fac}{List of names in colData column to correlate dilution factors with}
 
 \item{dilution_options}{A list of parameters for \code{mt_plots_qc_dilutionplot}}
 

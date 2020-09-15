@@ -77,6 +77,7 @@ mtw_missingness <- function (D,
   D <- do.call("mt_plots_qc_missingness", plot_options)
   # filtering samples?
   filter_options$sample_max <- sample_max
+  filter_options$met_max <- NULL
   filter_options$D <- D
   D <- do.call("mt_pre_filtermiss", filter_options)
   # plot missingness after filtering samples?

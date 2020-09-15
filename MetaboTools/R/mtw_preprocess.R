@@ -7,7 +7,7 @@
 #' @param batch_fun Batch function to use. Default is \code{mt_pre_batch_median}
 #' @param boxplot_options A list of parameters for \code{mt_plots_sampleboxplot}
 #' @param quot_options A list of parameters for \code{mt_pre_norm_quot}
-#' @param comp_fac List of names in colData column to correlation dilution factors with
+#' @param comp_fac List of names in colData column to correlate dilution factors with
 #' @param dilution_options A list of parameters for \code{mt_plots_qc_dilutionplot}
 #' @param log_base Base for log function, default is 2
 #' @param do_impute Logical. Whether to run imputation
@@ -85,7 +85,7 @@ mtw_preprocess <-
     D <- do.call("mt_plots_sampleboxplot", boxplot_options)
     
     quot_options_def = list(
-      vars = 1:ncol(D),
+      vars = 1:nrow(D),
       na_err = F,
       ref_samples = NULL,
       met_max = 1
