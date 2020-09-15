@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_modify_icc.R
 \name{mt_modify_icc}
 \alias{mt_modify_icc}
-\title{mt_modify icc}
+\title{mt_modify_icc}
 \usage{
 mt_modify_icc(D, qc_samples, col_lab, grp_col)
 }
