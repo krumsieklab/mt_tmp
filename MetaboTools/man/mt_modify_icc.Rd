@@ -2,9 +2,9 @@
 % Please edit documentation in R/mt_modify_icc.R
 \name{mt_modify_icc}
 \alias{mt_modify_icc}
-\title{mt_modify icc}
+\title{mt_modify_icc}
 \usage{
-mt_modify_icc(D, qc_samples, col_lab, grp_col)
+mt_modify_icc(D, qc_samples, col_lab, grp_col, icc_lmer = F)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
@@ -14,6 +14,8 @@ mt_modify_icc(D, qc_samples, col_lab, grp_col)
 \item{col_lab}{Label for the new icc values to be stored in in rowData}
 
 \item{grp_col}{it is the name of the column in colData containing groups of qc_samples}
+
+\item{icc_lmer}{Optional flag to set lmer flag in ICC function default is FALSE}
 }
 \value{
 rowData(D)[[col_lab]] contains column with ICC score for each metabolite
