@@ -32,7 +32,7 @@
 #' @import ggplot2
 #' @import dplyr
 #' @import tidyr
-#' @importFrom magrittr %>% %<>%
+#' @import magrittr
 #' @import SummarizedExperiment
 #'
 #' @export
@@ -99,9 +99,9 @@ mt_plots_statsbarplot <- function(D,
           sel <- sel[match(sel$var,rd$var),] %>%
             dplyr::mutate(association=ifelse(sign(!!sym(assoc_sign))>0, "positive", "negative")) %>%
             dplyr::select(var,association)
-
-          data_plot <- data.frame(name=rd[[aggregate]] %>% unlist,
-                                        association=rep(sel$association, times= (rd[[aggregate]] %>% sapply(length)))) %>%
+          
+          data_plot <- data.frame(name=rd[[aggregate]] %>% unlist %>% as.vector,
+                                  association=rep(sel$association, times= (rd[[aggregate]] %>% sapply(length)))) %>%
             table(exclude = NULL) %>% as.data.frame()
           colnames(data_plot) <- c("name","association","count")
 
@@ -118,7 +118,7 @@ mt_plots_statsbarplot <- function(D,
 
       if(add_empty){
         # check which aggregate entries are not included
-        agg <- rowData(D) %>% as.data.frame() %>% .[[aggregate]] %>% unique
+        agg <- rowData(D) %>% as.data.frame() %>% .[[aggregate]] %>% unlist %>% unique
         agg_empty <- agg[which(!(agg %in% unique(as.character(data_plot$name))))]
 
         # create data frame
@@ -243,9 +243,14 @@ mt_plots_statsbarplot <- function(D,
     if (!is.null(ggadd)) p <- p + ggadd
     
     # save plot parameters to be passed to the html generator for dynamical plot height
-    nr <- p$data$name %>% unique %>% length # number of pathways
-    ncol <- 3 # number of panel columns
-    nrow <- p$data$comp %>% unique %>% length %>% {ceiling(./ncol)} # number of panel rows
+    re <- p %>%
+      ggplot2::ggplot_build() %>%
+      magrittr::extract2('layout') %>% 
+      magrittr::extract2('layout')
+
+    nr <- data_plot$name %>% unique %>% length # number of pathways
+    ncol <- re$COL %>% max() # number of panel columns
+    nrow <- re$ROW %>% max() # number of panel rows
 
     # fix ggplot environment
     if (D %>% MetaboTools:::mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
@@ -261,6 +266,7 @@ mt_plots_statsbarplot <- function(D,
     nrow <- NULL
 
   }
+
   ## add status information & plot
   funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
