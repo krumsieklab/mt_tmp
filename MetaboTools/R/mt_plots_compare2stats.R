@@ -14,6 +14,7 @@
 #' @param   label_column optional argument on which column in the statistical results df to use for labeling points
 #' @param point_size size of the points on the ggplot
 #' @param return.plot.only return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.
+#' @param use_estimate use estimate for comparison, instead of statistic; default: F
 #'
 #' @return $result: plot, p-value histogram
 #'
@@ -65,7 +66,8 @@ mt_plots_compare2stats <- function(
   label_column = "name", # optional argument on which column in the statistical results df to use for labeling points
   point_size = 1.5,
   return.plot.only=F,  # return only the plot object. note: setting this to true makes the function non-MT pipeline compatible.
-  export.file = NULL   # export overlap table to file?
+  export.file = NULL,   # export overlap table to file?
+  use_estimate = F  # use estimate instead of statistic?
 ) {
 
   ## check input
@@ -73,6 +75,7 @@ mt_plots_compare2stats <- function(
   stopifnot("SummarizedExperiment" %in% class(D2))
   if (missing(filter1)) stop("Must provide 'filter1'")
   if (missing(filter2)) stop("Must provide 'filter2'")
+
   filter1q <- dplyr::enquo(filter1)
   filter2q <- dplyr::enquo(filter2)
 
@@ -84,10 +87,16 @@ mt_plots_compare2stats <- function(
   s2 <- MetaboTools:::mti_get_stat_by_name(D2, stat2, fullstruct=T)
   s2t <- s2$table
 
+  # if use_estimate==T, check that estimate column exists
+  if(use_estimate){
+    if("estimate" %in% colnames(s1t) == F){stop("Column estimate was not found in stat table 1")}
+    if("estimate" %in% colnames(s2t) == F){stop("Column estimate was not found in stat table 2")}
+  }
+
   ## add directed p-value, filter, and merge
-  s1t$dp1 <- -log10(s1t$p.value) * sign(s1t$statistic)
+  s1t$dp1 <- ifelse(use_estimate, -log10(s1t$p.value) * sign(s1t$estimate), -log10(s1t$p.value) * sign(s1t$statistic))
   s1t$filtered1 <- s1t$var %in% (s1t %>% dplyr::filter(!!filter1q))$var
-  s2t$dp2 <- -log10(s2t$p.value) * sign(s2t$statistic)
+  s2t$dp2 <- ifelse(use_estimate, -log10(s2t$p.value) * sign(s2t$estimate), -log10(s2t$p.value) * sign(s2t$statistic))
   s2t$filtered2 <- s2t$var %in% (s2t %>% dplyr::filter(!!filter2q))$var
   st <- merge(s1t, s2t, by='var')
   st <- merge(st, rowData(D1), by.x="var", by.y='row.names', all.x=T) # add names

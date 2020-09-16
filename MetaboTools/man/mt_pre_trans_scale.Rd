@@ -12,6 +12,8 @@ mt_pre_trans_scale(D, center = T, scale = T, sample_filter)
 \item{center}{T/F, mean-center data? default: T}
 
 \item{scale}{T/F, scale data to sd 1? default: T}
+
+\item{sample_filter}{term which samples to filter to first}
 }
 \value{
 assay: scaled data
