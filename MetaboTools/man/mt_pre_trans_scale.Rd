@@ -4,7 +4,7 @@
 \alias{mt_pre_trans_scale}
 \title{Scale data, mean 0 / sd 1 by default.}
 \usage{
-mt_pre_trans_scale(D, center = T, scale = T)
+mt_pre_trans_scale(D, center = T, scale = T, sample_filter)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}

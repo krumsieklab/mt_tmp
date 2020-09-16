@@ -430,3 +430,33 @@ mti_fix_ggplot_env <- function(p) {
 fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)} # fix order of a factor
 
 
+#'
+#'
+#'
+#'
+#' @param Ds Concatenated dataframe returned by mti_format_se_samplewise
+#' @param sample_filter term which samples to filter to first
+#'
+#' @return logical vector of samples to keep
+#'
+#' @author JK, JZ, KC
+#' @noRd
+mti_filter_sample <- function(Ds, filter_q, num_samp){
+
+  Ds <- Ds %>%
+    dplyr::mutate(tmpsamplenum = 1:nrow(Ds)) %>%
+    dplyr::filter(!!filter_q) %>%
+    droplevels()
+  # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
+  # did we leave 0 rows?
+  if (nrow(Ds)==0) stop("Filtering left 0 rows")
+  if (nrow(Ds)==num_samp) MetaboTools:::mti_logwarning('filtering did not filter out any samples')
+
+  # store used samples
+  samples.used <- rep(F, num_samp)
+  samples.used[Ds$tmpsamplenum] <- T
+
+  # return
+  samples.used
+
+}
