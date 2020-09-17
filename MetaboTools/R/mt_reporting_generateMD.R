@@ -142,18 +142,20 @@ params:
               width <- 8
             }
             extraparams <- sprintf(",fig.width=%f,fig.height=%f", width, height)
-          } else if(r[[i]]$fun[2]=="boxplot"&r[[i]]$fun[3]=="scatter"){
-            # dynamic height
-            if(!is.null(r[[i]]$output2)){
-              # set plot height
-              height <- (23+(r[[i]]$output2*160.65)+33)/2304*32 # manually curated using pixel measurements on example
-              width <- 7
-            } else{
-              # if empty plot, set height to 3
-              height <- 3
-              width <- 7
+          } else if(length(r[[i]]$fun)>=3){
+            if(r[[i]]$fun[2]=="boxplot"&r[[i]]$fun[3]=="scatter"){
+              # dynamic height
+              if(!is.null(r[[i]]$output2)){
+                # set plot height
+                height <- (23+(r[[i]]$output2*160.65)+33)/2304*32 # manually curated using pixel measurements on example
+                width <- 7
+              } else{
+                # if empty plot, set height to 3
+                height <- 3
+                width <- 7
+              }
+              extraparams <- sprintf(",fig.width=%f,fig.height=%f", width, height)
             }
-            extraparams <- sprintf(",fig.width=%f,fig.height=%f", width, height)
           }
 
 
