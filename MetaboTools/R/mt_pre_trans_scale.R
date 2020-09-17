@@ -3,6 +3,7 @@
 #' @param D \code{SummarizedExperiment} input
 #' @param center T/F, mean-center data? default: T
 #' @param scale T/F, scale data to sd 1? default: T
+#' @param sample_filter term which samples to filter to first
 #'
 #' @return assay: scaled data
 #'
@@ -22,7 +23,8 @@
 mt_pre_trans_scale <- function(
   D,        # SummarizedExperiment input
   center=T, # mean 0?
-  scale=T   # SD 1?
+  scale=T,   # SD 1?
+  sample_filter #
 ) {
 
   # validate arguments
@@ -31,7 +33,36 @@ mt_pre_trans_scale <- function(
   stopifnot(is.logical(scale))
 
   # scale
-  assay(D) = t(scale(t(assay(D)),center=center,scale=scale))
+  if(!missing(sample_filter)){
+
+    # get filtered samples
+    filter_q <- dplyr::enquo(sample_filter)
+    num_samp <- ncol(D)
+    Ds <- D %>% mti_format_se_samplewise()
+    samples.used <- mti_filter_sample(Ds, filter_q, num_samp)
+
+    Da <- t(assay(D))
+
+    Da_filtered <- Da[samples.used,]
+    if(center == T){
+      # center by mean of selected samples
+      da_f_means <- apply(Da_filtered, 2, mean, na.rm=T)
+      Da <- sweep(Da, 2, da_f_means, FUN = "-")
+    }
+    if(scale == T){
+      # scale by sd of selected samples
+      da_f_sd <- apply(Da_filtered, 2, stats::sd, na.rm=T)
+      Da <- sweep(Da, 2, da_f_sd, FUN = "/")
+    }
+
+    assay(D) = t(Da)
+
+  }else{
+    # if no sample filter, set center and scale to TRUE
+    center = T
+    scale = T
+    assay(D) = t(scale(t(assay(D)),center=center,scale=scale))
+  }
 
   # add status information
   funargs <- mti_funargs()

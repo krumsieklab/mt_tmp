@@ -16,7 +16,8 @@ mt_plots_compare2stats(
   label_column = "name",
   point_size = 1.5,
   return.plot.only = F,
-  export.file = NULL
+  export.file = NULL,
+  use_estimate = F
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ if OR -> three colors, a third one where only one stat matches the criterion}
 \item{point_size}{size of the points on the ggplot}
 
 \item{return.plot.only}{return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.}
+
+\item{use_estimate}{use estimate for comparison, instead of statistic; default: F}
 }
 \value{
 $result: plot, p-value histogram
