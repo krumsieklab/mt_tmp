@@ -56,9 +56,9 @@ mt_modify_icc <- function(D, qc_samples, col_lab, grp_col, icc_lmer=F){
   rowData(D)[[col_lab]] <- icc_df$icc
   
   ## add status information
-  funargs <- MetabolTools:::mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    MetabolTools:::mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("Added QC ICC to rowData!")
     )
