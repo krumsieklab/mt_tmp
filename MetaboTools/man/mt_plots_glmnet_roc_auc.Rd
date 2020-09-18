@@ -7,8 +7,9 @@
 mt_plots_glmnet_roc_auc(
   D,
   result_name,
-  plot_measures = c("spec", "sens", "ppv"),
-  cutoff
+  plot_measures = c("spec", "sens", "ppv", "f1", "acc"),
+  cutoff,
+  pos_class
 )
 }
 \arguments{
@@ -19,9 +20,11 @@ mt_plots_glmnet_roc_auc(
 \item{plot_measures}{a vector of measures to include; can be one or more of the following: spec, sens, f1, acc, and/or ppv; default c("spec", "sens", "ppv")}
 
 \item{cutoff}{threshold cutoff for prediction probability class assignment; function will select threshold closest to user provided value}
+
+\item{pos_class}{which label to set as positive class}
 }
 \value{
-results$ouput:
+results$ouput: list of four or more plots
 }
 \description{
 This function creates four plots: (1) ROC curve, (2) evaluation measures across thresholds (folds ignored), (3) AUC scores per fold,
@@ -29,7 +32,7 @@ This function creates four plots: (1) ROC curve, (2) evaluation measures across 
 }
 \examples{
 # example of how to run function
-\dontrun{}
+\dontrun{D \%<>\% mt_plots_glmnet_roc_auc(result_name = "glmnet result", plot_measures = c("spec", "sens") cutoff = 0.75)}
 
 }
 \author{

@@ -4,7 +4,13 @@
 \alias{mt_modify_missingness}
 \title{Add Missingness Column to rowData / colData}
 \usage{
-mt_modify_missingness(D, add_mets = T, add_samples = T)
+mt_modify_missingness(
+  D,
+  add_mets = T,
+  add_samples = T,
+  col_name_mets = "missing",
+  col_name_samples = "missing"
+)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
@@ -12,6 +18,10 @@ mt_modify_missingness(D, add_mets = T, add_samples = T)
 \item{add_mets}{add metabolite missingness? default: T}
 
 \item{add_samples}{add sample missingness? default: T}
+
+\item{col_name_mets}{name to give the new rowData column; default: missing}
+
+\item{col_name_samples}{name to give the new colData column; default: missing}
 }
 \value{
 if add_mets == T: new rowData column

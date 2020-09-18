@@ -5,6 +5,8 @@
 #' @param D \code{SummarizedExperiment} input
 #' @param add_mets add metabolite missingness? default: T
 #' @param add_samples add sample missingness? default: T
+#' @param col_name_mets name to give the new rowData column; default: missing
+#' @param col_name_samples name to give the new colData column; default: missing
 #'
 #' @return if add_mets == T: new rowData column
 #' @return if add_samples == T: new colData column
@@ -19,7 +21,9 @@
 
 mt_modify_missingness <- function(D,
                                   add_mets=T,
-                                  add_samples=T){
+                                  add_samples=T,
+                                  col_name_mets="missing",
+                                  col_name_samples="missing"){
 
   # helper function
   missingness <- function(X)apply(is.na(X),2,sum)/dim(X)[1]
@@ -36,14 +40,20 @@ mt_modify_missingness <- function(D,
 
   # add metabolite missingness
   if(add_mets){
+    if(col_name_mets %in% colnames(rowData(D))){
+      warning(paste0(col_name_mets, " already exists in rowData. It will be overwritten."))
+    }
     miss=missingness(X)
-    rowData(D)[["missingess"]] <- miss
+    rowData(D)[[col_name_mets]] <- miss
   }
 
   # add sample missingness
   if(add_samples){
+    if(col_name_samples %in% colnames(colData(D))){
+      warning(paste0(col_name_samples, " already exists in colData. It will be overwritten."))
+    }
     miss=missingness(t(X))
-    colData(D)[["missingness"]] <- miss
+    colData(D)[[col_name_samples]] <- miss
   }
 
   # add status information & plot

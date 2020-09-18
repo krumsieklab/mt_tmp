@@ -99,7 +99,7 @@ mt_ml_glmnet <- function(D,
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = 'glmnet',
+      logtxt = paste0('ran glmnet; outer k: ' , outer_k, ', inner k: ', inner_k),
       output = list(
         table = coef_tab,
         name = stat_name,
