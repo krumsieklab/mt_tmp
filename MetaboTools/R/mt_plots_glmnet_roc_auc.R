@@ -7,12 +7,13 @@
 #' @param result_name name under which the glmnet results are stored, must be unique to all other glmnet results
 #' @param plot_measures a vector of measures to include; can be one or more of the following: spec, sens, f1, acc, and/or ppv; default c("spec", "sens", "ppv")
 #' @param cutoff threshold cutoff for prediction probability class assignment; function will select threshold closest to user provided value
+#' @param pos_class which label to set as positive class
 #'
-#' @return results$ouput:
+#' @return results$ouput: list of four or more plots
 #'
 #' @examples
 #' # example of how to run function
-#' \dontrun{}
+#' \dontrun{D %<>% mt_plots_glmnet_roc_auc(result_name = "glmnet result", plot_measures = c("spec", "sens") cutoff = 0.75)}
 #'
 #' @author KC
 #'
@@ -22,14 +23,19 @@
 
 mt_plots_glmnet_roc_auc <- function(D,
                                     result_name,
-                                    plot_measures =  c("spec", "sens", "ppv"),
-                                    cutoff){
+                                    plot_measures =  c("spec", "sens", "ppv", "f1", "acc"),
+                                    cutoff,
+                                    pos_class){
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
 
   if(missing(result_name)){
     stop("A value must be provided for result_name")
+  }
+
+  if(missing(pos_class)){
+    stop("pos_class is missing! The positive class must be specified.")
   }
 
   res_list <- MetaboTools:::mti_get_ml_res_by_name(D, result_name)
@@ -44,14 +50,19 @@ mt_plots_glmnet_roc_auc <- function(D,
   all_folds_df <- cbind(pred_df, label=true_df$.x)
   colnames(all_folds_df)[2] <- "prediction"
 
-  # make sure true labels are given as boolean
-  all_folds_df$label <- all_folds_df$label %>% as.numeric == 2
+  # check pos_class is present in true class labels
+  if(pos_class %in% all_folds_df$label==F){
+    stop("Provided positive class not found in true class labels.")
+  }
+
+  # convert true labels as boolean
+  all_folds_df$label <- all_folds_df$label == pos_class
 
   # order predictions
   all_folds_df <- all_folds_df[order(all_folds_df$prediction),]
 
   # get roc plot data
-  measures_list = get_measures_list(trueclass=all_folds_df$label, eta=all_folds_df$prediction)
+  measures_list = MetaboTools:::mti_get_measures_list(trueclass=all_folds_df$label, predprob=all_folds_df$prediction)
   roc_data=data.frame(FPR=rev(1-measures_list$specvals),
                       sensitivity=rev(measures_list$sensvals))
 
@@ -61,9 +72,9 @@ mt_plots_glmnet_roc_auc <- function(D,
                               ppv=measures_list$ppvvals,
                               acc=measures_list$accvals,
                               f1=measures_list$f1vals,
-                              thresholds=1:length(measures_list$thresholds))
+                              thresholds=measures_list$thresholds)
   measures_data <- measures_data[,c(plot_measures, "thresholds")]
-  measures_plot_data <- reshape2::melt(measures_data, id="thresholds")
+  measures_plot_data <- reshape2::melt(measures_data, id=c("thresholds"))
 
   # get evaluation measures per fold
   folds <- length(unique(all_folds_df$fold))
@@ -71,7 +82,7 @@ mt_plots_glmnet_roc_auc <- function(D,
   fold_measures <- list()
   for(i in 1:folds){
     f_df <- all_folds_df[all_folds_df$fold==i,]
-    fold_result <- get_measures_list(f_df$label, f_df$prediction)
+    fold_result <- MetaboTools:::mti_get_measures_list(f_df$label, f_df$prediction)
 
     # results for measures plot
     if(!missing(cutoff)){
@@ -92,7 +103,7 @@ mt_plots_glmnet_roc_auc <- function(D,
                         ppv=fold_result$ppvvals,
                         acc=fold_result$accvals,
                         f1=fold_result$f1vals,
-                        thresholds=1:length(fold_result$thresholds),
+                        thresholds=fold_result$thresholds,
                         fold = i)
     }
     fold_measures[[i]] <- fms
@@ -116,49 +127,55 @@ mt_plots_glmnet_roc_auc <- function(D,
   # (1) ROC Plot
   roc_plot <- ggplot(data=roc_data, aes(x=FPR, y=sensitivity)) +
     geom_line() + geom_abline(intercept=0, slope=1, colour="blue") +
-    ggtitle(sprintf("AUC: %.3f", measures_list$AUC)) + xlab("FPR") + ylab("TPR") +
+    ggtitle(sprintf("AUC: %.3f (All Folds)", measures_list$AUC)) + xlab("FPR") + ylab("TPR") +
     xlim(0,1) + ylim(0,1)
   plot_list[[plot_idx]] <- roc_plot
   plot_idx <- plot_idx + 1
 
   # (2) Evaluation Measures Line Plot (fold ignored)
+  # threshold values plot
   measures_plot <- ggplot(measures_plot_data, aes(x=thresholds, y=value, color=variable)) + geom_line() +
-    theme(axis.text.x=element_blank(),
-          axis.ticks.x=element_blank()
-          ) +
-    labs(color='Measures') +
-    ggtitle("Evaluation Measures (All Folds)")
+    xlab("Thresholds (values)") +
+    ylab("Evaluation Measure Values") +
+    labs(color='Measures')
   if(!missing(cutoff)){
-    cut_val <- abs(cutoff-measures_list$thresholds)
-    ct <- which(min(cut_val)==cut_val)
-    measures_plot <- measures_plot + geom_vline(xintercept = ct)
+    measures_plot <- measures_plot + geom_vline(xintercept = cutoff)
+    mp_title <- paste0("Evaluaiton Measures (All Folds), cutoff: ", round(cutoff,2))
+  }else{
+    mp_title <- "Evaluation Measures (All Folds)"
   }
+  measures_plot <- measures_plot + ggtitle(mp_title)
   plot_list[[plot_idx]] <- measures_plot
   plot_idx <- plot_idx + 1
 
   # (3) AUC Per Fold Plot
-  auc_plot <- ggplot(fold_auc_df, aes(x = factor(folds), y = AUC)) + geom_point() + ylim(0,1) +
-    xlab("fold") +
-    ggtitle("AUC Per Fold")
+  auc_plot <- ggplot(fold_auc_df, aes(x = factor(folds), y = AUC)) + geom_point(size=3) + ylim(0,1) +
+    xlab("Fold") +
+    ggtitle("AUC (Per Fold)")
   plot_list[[plot_idx]] <- auc_plot
   plot_idx <- plot_idx + 1
 
   # (4) Evaluation Measures Per Fold Plot(s)
   if(!missing(cutoff)){
-    measure_pf_plot <- ggplot(fold_measures_plot_df, aes(x= factor(fold), y=value, color=variable)) + geom_point()
+    # plot evaluation measures at specified cutoff
+    measure_pf_plot <- ggplot(fold_measures_plot_df, aes(x= factor(fold), y=value, color=variable)) + geom_point(size=3) +
+      xlab("Fold") +
+      ylab("Evaluation Measure Value") +
+      ggtitle(paste0("Evaluation Measures (Per Fold), cutoff: ", round(cutoff,2)))
     plot_list[[plot_idx]] <- measure_pf_plot
   }else{
     for(i in 1:length(fold_measures)){
       fms <- fold_measures[[i]]
       fold <- unique(fms$fold)
       fms <- fms[,c(plot_measures, "thresholds")]
-      fms <- reshape2::melt(fms, id="thresholds")
+      fms <- reshape2::melt(fms, id=c("thresholds"))
+
+      # thresholds values plot
       measures_pf_plot <- ggplot(fms, aes(x=thresholds, y=value, color=variable)) + geom_line() +
-        theme(axis.text.x=element_blank(),
-              axis.ticks.x=element_blank()) +
+        xlab("Thresholds") +
+        ylab("Evaluation Measure Values") +
         labs(color='Measures') +
         ggtitle(paste0("Evaluation Measures: Fold ", fold))
-
       plot_list[[plot_idx]] <- measures_pf_plot
       plot_idx <- plot_idx + 1
     }
@@ -176,62 +193,4 @@ mt_plots_glmnet_roc_auc <- function(D,
   D
 
 
-}
-
-
-
-# function to calculate quality measures
-measures <- function(tpfn) {
-  # construct sensitivity, specificity, accuracy, PPV and F1 score; return as list
-  x = list(
-    sens = tpfn$TP/(tpfn$TP+tpfn$FN),
-    spec = tpfn$TN/(tpfn$TN+tpfn$FP),
-    acc = (tpfn$TP+tpfn$TN)/(tpfn$TP+tpfn$FN+tpfn$FP+tpfn$TN),
-    PPV = tpfn$TP/(tpfn$TP+tpfn$FP)
-  )
-  x$F1 = 2*(x$sens*x$spec)/(x$sens+x$spec)
-  x
-}
-
-# function to calculate TP, FP, FN, TN
-TPFN <- function(trueclass, predclass) {
-  list(
-    TP = sum(trueclass & predclass),
-    FP = sum(!trueclass & predclass),
-    FN = sum(trueclass & !predclass),
-    TN = sum(!trueclass & !predclass)
-  )
-}
-
-# function to get measures needed for plotting
-get_measures_list <- function(trueclass, eta) {
-  # initialize arrays
-  sensvals = c()
-  specvals = c()
-  ppvvals = c()
-  accvals = c()
-  f1vals = c()
-  # loop over all eta values as cutoff
-  eta.sorted = sort(eta)
-  # trick: add -Inf to make the curve work
-  eta.sorted = c(-Inf, eta.sorted)
-  # loop over all values
-  for (i in 1:length(eta.sorted)) { # could also be done via sapply()
-    # do the cut
-    predclass = eta > eta.sorted[i]
-    # quality measures
-    m = measures(TPFN(trueclass, predclass))
-    sensvals[i] = m$sens
-    specvals[i] = m$spec
-    ppvvals[i] = m$PPV
-    accvals[i] = m$acc
-    f1vals[i] = m$F1
-  }
-  # calculate AUC under ROC curve
-  # we have to take the negative, because we built the curve the backwards
-  AUC = -pracma::trapz(1-specvals,sensvals)
-
-  eta.sorted[1] <- 0
-  # return list
-  list(sensvals=sensvals, specvals=specvals, AUC=AUC, ppvvals=ppvvals, thresholds=eta.sorted, accvals=accvals, f1vals=f1vals)
 }

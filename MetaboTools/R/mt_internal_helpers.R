@@ -2,8 +2,8 @@
 #
 # Helper functions.
 #
-# last update: 2019-3-15
-# authors: JK,MB
+# last update: 2020-09-17
+# authors: JK,MB, KC
 #
 
 #' Return stats output by name.
@@ -459,4 +459,88 @@ mti_filter_sample <- function(Ds, filter_q, num_samp){
   # return
   samples.used
 
+}
+
+#' Calculate evaluation measures for classifier predictions
+#'
+#' Calculates the following evaluation measures: sensitivity (sens), specificity (spec),
+#'  accuracy (acc), positive-predictive value (ppv), and F1-measure (F1)
+#'
+#' @param tpfn a list of the four confusion matrix outcomes: True Positive (TP), False Positive (FP), False Negative (FN), and
+#'  True Negative (TN)
+#'
+#' @return list of evaluation measures
+#' @noRd
+mti_measures <- function(tpfn) {
+  # construct sensitivity, specificity, accuracy, PPV and F1 score; return as list
+  x = list(
+    sens = tpfn$TP/(tpfn$TP+tpfn$FN),
+    spec = tpfn$TN/(tpfn$TN+tpfn$FP),
+    acc = (tpfn$TP+tpfn$TN)/(tpfn$TP+tpfn$FN+tpfn$FP+tpfn$TN),
+    PPV = tpfn$TP/(tpfn$TP+tpfn$FP)
+  )
+  x$F1 = 2*(x$sens*x$spec)/(x$sens+x$spec)
+  x
+}
+
+#' Calculate Confusion Matrix Outcomes
+#'
+#' Calculates the following four confusion matrix outcomes: True Positive (TP), False Positive (FP), False Negative (FN), and
+#'  False Positive (FP)
+#'
+#' @param trueclass a boolean vector of class labels
+#' @param predclass a boolean vector of predicted classes
+#'
+#' @return list of confusion matrix outcomes
+#' @noRd
+mti_TPFN <- function(trueclass, predclass) {
+  list(
+    TP = sum(trueclass & predclass),
+    FP = sum(!trueclass & predclass),
+    FN = sum(trueclass & !predclass),
+    TN = sum(!trueclass & !predclass)
+  )
+}
+
+#' Get Evaluation Measures List
+#'
+#' Get a list of evaluation measures given a vector of predicted class probabilities and class labels. The following
+#' evaluation measures are included in the list: sensitivity (sens), specificity (spec), accuracy (acc), positive-predictive
+#' value (ppv), and F1-measure (F1).
+#'
+#' @param trueclass a boolean vector of class labels
+#' @param predprob a vector of predicted class probabilities
+#'
+#' @return
+#' @noRd
+mti_get_measures_list <- function(trueclass, predprob) {
+  # initialize arrays
+  sensvals = c()
+  specvals = c()
+  ppvvals = c()
+  accvals = c()
+  f1vals = c()
+  # loop over all predprob values as cutoff
+  predprob.sorted = sort(predprob)
+  # trick: add -Inf to make the curve work
+  predprob.sorted = c(-Inf, predprob.sorted)
+  # loop over all values
+  for (i in 1:length(predprob.sorted)) { # could also be done via sapply()
+    # do the cut
+    predclass = predprob > predprob.sorted[i]
+    # quality measures
+    m = mti_measures(mti_TPFN(trueclass, predclass))
+    sensvals[i] = m$sens
+    specvals[i] = m$spec
+    ppvvals[i] = m$PPV
+    accvals[i] = m$acc
+    f1vals[i] = m$F1
+  }
+  # calculate AUC under ROC curve
+  # we have to take the negative, because we built the curve the backwards
+  AUC = -pracma::trapz(1-specvals,sensvals)
+
+  predprob.sorted[1] <- 0
+  # return list
+  list(sensvals=sensvals, specvals=specvals, AUC=AUC, ppvvals=ppvvals, thresholds=predprob.sorted, accvals=accvals, f1vals=f1vals)
 }
