@@ -3,7 +3,7 @@
 #' @param D \code{SummarizedExperiment} input
 #' @param center T/F, mean-center data? default: T
 #' @param scale T/F, scale data to sd 1? default: T
-#' @param sample_filter term which samples to use for center and scale calculcation
+#' @param ref_samples term which samples to use for center and scale calculcation
 #'
 #' @return assay: scaled data
 #'
@@ -24,7 +24,7 @@ mt_pre_trans_scale <- function(
   D,        # SummarizedExperiment input
   center=T, # mean 0?
   scale=T,   # SD 1?
-  sample_filter #
+  ref_samples #
 ) {
 
   # validate arguments
@@ -33,10 +33,10 @@ mt_pre_trans_scale <- function(
   stopifnot(is.logical(scale))
 
   # scale
-  if(!missing(sample_filter)){
+  if(!missing(ref_samples)){
 
     # get filtered samples
-    filter_q <- dplyr::enquo(sample_filter)
+    filter_q <- dplyr::enquo(ref_samples)
     num_samp <- ncol(D)
     Ds <- D %>% mti_format_se_samplewise()
     samples.used <- mti_filter_samples(Ds, filter_q, num_samp)
