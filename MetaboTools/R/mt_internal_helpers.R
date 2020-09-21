@@ -441,7 +441,7 @@ fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.
 #'
 #' @author JK, JZ, KC
 #' @noRd
-mti_filter_sample <- function(Ds, filter_q, num_samp){
+mti_filter_samples <- function(Ds, filter_q, num_samp){
 
   Ds <- Ds %>%
     dplyr::mutate(tmpsamplenum = 1:nrow(Ds)) %>%
