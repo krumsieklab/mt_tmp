@@ -3,7 +3,7 @@
 #' @param D \code{SummarizedExperiment} input
 #' @param center T/F, mean-center data? default: T
 #' @param scale T/F, scale data to sd 1? default: T
-#' @param sample_filter term which samples to filter to first
+#' @param sample_filter term which samples to use for center and scale calculcation
 #'
 #' @return assay: scaled data
 #'
@@ -39,11 +39,11 @@ mt_pre_trans_scale <- function(
     filter_q <- dplyr::enquo(sample_filter)
     num_samp <- ncol(D)
     Ds <- D %>% mti_format_se_samplewise()
-    samples.used <- mti_filter_sample(Ds, filter_q, num_samp)
+    samples.used <- mti_filter_sample(Ds, filter_q, num_samp) # returns logical index vector
 
-    Da <- t(assay(D))
+    # get and filter
+    Da_filtered <- t(assay(D))[samples.used,]
 
-    Da_filtered <- Da[samples.used,]
     if(center == T){
       # center by mean of selected samples
       da_f_means <- apply(Da_filtered, 2, mean, na.rm=T)
@@ -57,10 +57,8 @@ mt_pre_trans_scale <- function(
 
     assay(D) = t(Da)
 
-  }else{
-    # if no sample filter, set center and scale to TRUE
-    center = T
-    scale = T
+  } else {
+    # if no sample filter given, just use scale() function
     assay(D) = t(scale(t(assay(D)),center=center,scale=scale))
   }
 
