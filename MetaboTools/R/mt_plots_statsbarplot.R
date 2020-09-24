@@ -10,7 +10,8 @@
 #' @param yscale plot percentage or frequency of variables. Values c("fraction","count"). Default "fraction".
 #' @param sort sort pathways in plot according to yscale. Default FALSE.
 #' @param assoc_sign optional parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_name.
-#' @param add_empty boolean parameter that if TRUE adds also empty pathways to the barplot.
+#' @param keep.unmapped boolean, if TRUE keeps metabolites with no pathway annotations. Default "FALSE".
+#' @param add_empty boolean, if TRUE adds also empty pathways to the barplot.
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #'
@@ -47,6 +48,7 @@ mt_plots_statsbarplot <- function(D,
                                   sort = FALSE,
                                   assoc_sign,
                                   add_empty = FALSE,
+                                  keep.unmapped = FALSE,
                                   ...){
 
   ## check input
@@ -66,7 +68,9 @@ mt_plots_statsbarplot <- function(D,
     as.data.frame() %>%
     dplyr::mutate(var = rownames(D))
   # set the nulls to unknown
-  rd[[aggregate]][which(rd[[aggregate]]=="NULL")] <- "Unknown"
+  if(keep.unmapped){
+    rd[[aggregate]][which(rd[[aggregate]]=="NULL")] <- "Unmapped"
+  }
 
   perc <- rd[[aggregate]] %>%
     unlist %>% table(exclude = NULL) %>% as.data.frame()
