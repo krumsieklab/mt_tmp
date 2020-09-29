@@ -544,3 +544,47 @@ mti_get_measures_list <- function(trueclass, predprob) {
   # return list
   list(sensvals=sensvals, specvals=specvals, AUC=AUC, ppvvals=ppvvals, thresholds=predprob.sorted, accvals=accvals, f1vals=f1vals)
 }
+
+#' Check if Data is Logged
+#'
+#' Check to see if either mt_pre_trans_log or mt_flag_logged was called in the pipeline. If mt_pre_trans_log called multiple
+#' times or logging reversed, throw a warning and set is_logged to FALSE.
+#'
+#' @param D SummarizedExperiment
+#'
+#' @return is_logged (boolean)
+#' @noRd
+mti_check_is_logged <- function(D){
+
+  is_logged <- FALSE
+
+  # get names of the functions called
+  called_functions <- names(metadata(D)$results)
+
+  # if data is logged more than once, throw warning and return is_logged = FALSE
+  num_times_logged <- called_functions %>% startsWith("pre_trans_log") %>% sum()
+  if(num_times_logged > 1){
+    warning("Data logged multiple times! Cannot determine log status. is_logged will be set to FALSE.")
+    return(is_logged)
+  }
+
+  # if logging is reversed, throw warning and return is_logged = FALSE
+  if(num_times_logged==1){
+    log_index <- called_functions %>% startsWith("pre_trans_log") %>% which()
+    exp_after_logged <- called_functions[(first_log_index+1):length(called_functions)] %>% startsWith("pre_trans_exp") %>% any()
+    if(exp_after_logged){
+      warning("Logging of data has been reversed! Cannot determine log stats. is_logged will be set to FALSE.")
+      return(is_logged)
+    }else{
+      is_logged <- TRUE
+    }
+  }
+
+  # NOTE TO SELF: What do for case where pre_trans_log AND flag_logged called? Does the order matter?
+  if(any(startsWith(called_functions, "flag_logged"))){
+    is_logged <- TRUE
+  }
+
+  is_logged
+
+}
