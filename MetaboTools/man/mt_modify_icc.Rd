@@ -4,7 +4,7 @@
 \alias{mt_modify_icc}
 \title{mt_modify_icc}
 \usage{
-mt_modify_icc(D, qc_samples, col_lab, grp_col, icc_lmer = F)
+mt_modify_icc(D, qc_samples, col_lab, id_col, icc_lmer = F)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
@@ -13,7 +13,7 @@ mt_modify_icc(D, qc_samples, col_lab, grp_col, icc_lmer = F)
 
 \item{col_lab}{Label for the new icc values to be stored in in rowData}
 
-\item{grp_col}{it is the name of the column in colData containing groups of qc_samples}
+\item{id_col}{it is the name of the column in colData containing ids qc_samples}
 
 \item{icc_lmer}{Optional flag to set lmer flag in ICC function default is FALSE}
 }
@@ -24,7 +24,7 @@ rowData(D)[[col_lab]] contains column with ICC score for each metabolite
 Calculate ICC - intraclass correlation
 }
 \examples{
-\dontrun{... \%>\% mt_modify_icc(qc_samples=="PQC", col_lab = "PQC_cv", grp_col='dup_grp') \%>\% ...}
+\dontrun{... \%>\% mt_modify_icc(qc_samples=="PQC", col_lab = "PQC_cv", id_col='RID') \%>\% ...}
 
 }
 \author{
