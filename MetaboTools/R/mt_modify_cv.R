@@ -35,6 +35,7 @@ mt_modify_cv <- function(D, qc_samples, col_lab, replicates=F, id_col=NULL){
   D_cv <- D[, as.numeric(as.matrix(cd$colnames))]
   # calc_cv function
   calc_cv <- function(x){sd(x, na.rm = T)/mean(x, na.rm = TRUE)}
+  replace_zeros <- function(x){ x[which(x==0)] <- NA; return(x)}
   ## Calculate metabolite cv scores
   if (replicates) {
     if(missing(id_col)) stop(sprintf('id_col must be provided if cv is to be calcualted on replicates!'))
@@ -45,7 +46,7 @@ mt_modify_cv <- function(D, qc_samples, col_lab, replicates=F, id_col=NULL){
     rowData(D)[[col_lab]] <- cv_data %>%
       dplyr::group_by_at(vars(starts_with(!!id_col))) %>% # calculate cv per duplicated ID
       dplyr::summarise_at(vars(-starts_with(!!id_col)), calc_cv) %>% select(-!!id_col) %>% 
-      colMeans(na.rm = T) %>% unlist()
+      summarise_all(replace_zeros) %>% colMeans(na.rm = T) %>% unlist()
     
   } else {
     rowData(D)[[col_lab]] <- apply(assay(D_cv), 1, calc_cv)

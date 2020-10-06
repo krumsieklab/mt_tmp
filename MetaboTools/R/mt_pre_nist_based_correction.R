@@ -45,7 +45,8 @@ mt_pre_nist_based_correction <- function(D, qc_samples, plate_col){
             dplyr::summarise_at(vars(-starts_with(!!plate_col)), my_mean) %>% 
             ungroup() %>% data.frame()
   row_names <- qc_val %>% pull(!!plate_col)
-  qc_val <- (qc_val %>% select(-!!plate_col) / qc_avg) %>% summarise_all(replace_nan)
+  qc_val <- apply((qc_val %>% select(-!!plate_col)), 1, FUN=function(x) x/ qc_avg) %>% 
+    t() %>% data.frame() %>% summarise_all(replace_nan)
   rownames(qc_val) <- row_names
   ## Correct the data using qc values
   X <- D %>% assay() %>% t()
