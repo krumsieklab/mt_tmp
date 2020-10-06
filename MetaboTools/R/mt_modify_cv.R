@@ -52,9 +52,9 @@ mt_modify_cv <- function(D, qc_samples, col_lab, replicates=F, id_col=NULL){
   }
 
   ## add status information
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("Added QC cv to rowData")
       )
