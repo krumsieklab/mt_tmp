@@ -27,7 +27,7 @@ mt_modify_cv <- function(D, qc_samples, col_lab, replicates=F, id_col=NULL){
   ## APPLY FILTER TO ROW DATA
   qc_samples_q <- dplyr::enquo(qc_samples)
   cd <- colData(D) %>%
-    as.data.frame() %>%
+    data.frame(row.names = 1:ncol(D)) %>%
     tibble::rownames_to_column("colnames") %>%
     dplyr::filter(!!qc_samples_q)
 
