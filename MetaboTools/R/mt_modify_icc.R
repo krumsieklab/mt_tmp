@@ -63,6 +63,8 @@ mt_modify_icc <- function(D, qc_samples, col_lab, id_col, icc_lmer=F){
     }) %>% do.call(rbind, .)
     qc_data <- bind_rows(qc_data, addon)
   }
+  # sort by id_col
+  qc_data <- qc_data[order(qc_data[[id_col]]), ]
   # names of the metabolites
   mets <- D1 %>% assay() %>% t() %>% data.frame() %>% colnames()
   
@@ -71,7 +73,7 @@ mt_modify_icc <- function(D, qc_samples, col_lab, id_col, icc_lmer=F){
     icc_met <- qc_data %>% dplyr::select_at(vars('dup_grp', x))
     f <- as.formula(glue::glue(x, ' ~ dup_grp'))
     icc_met <- utils::unstack(icc_met, f)
-    icc_val <- tryCatch(psych::ICC(na.omit(icc_met), missing=F, lmer=icc_lmer)$results[3, 2], silent=T,error = function(err){NA})
+    icc_val <- tryCatch(psych::ICC(icc_met, missing=F, lmer=icc_lmer)$results[3, 2], silent=T,error = function(err){NA})
     return(icc_val)
   }) %>% do.call(rbind,.) %>% data.frame(icc=.)
   
