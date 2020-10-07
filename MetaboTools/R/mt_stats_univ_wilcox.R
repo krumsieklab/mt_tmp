@@ -37,45 +37,34 @@ mt_stats_univ_wilcox <- function(
   paired_flag=F, # if tests should be paired
   exact_flag=NULL
 ) {
-  
+
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
   # check that y is in the colData
   if (!(y %in% colnames(colData(D)))) stop(sprintf("There is no column called %s in the colData", y))
   # make sure name does not exist yet
   if (stat_name %in% unlist(MetaboTools:::mti_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("name"))) stop(sprintf("stat element with name '%s' already exists",stat_name))
-  
+
   # merge data with sample info
   Ds <- D %>% MetaboTools:::mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 8/17/20, JK
-  
+
   ## FILTER SAMPLES
   if(!missing(sample_filter)) {
-    
+
     filter_q <- dplyr::enquo(sample_filter)
-    Ds <- Ds %>%
-      dplyr::mutate(tmpsamplenum = 1:nrow(Ds)) %>%
-      dplyr::filter(!!filter_q) %>%
-      droplevels()
-    # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
-    # did we leave 0 rows?
-    if (nrow(Ds)==0) stop("Filtering left 0 rows")
-    if (nrow(Ds)==ncol(D)) mti_logwarning('filtering did not filter out any samples')
-    
-    # store used samples
-    samples.used <- rep(F, ncol(D))
-    samples.used[Ds$tmpsamplenum] <- T
-    # drop dummy column
-    Ds %<>% dplyr::select(-tmpsamplenum)
-    
+    num_samp <- ncol(D)
+    samples.used <- MetaboTools:::mti_filter_sample(Ds, filter_q, num_samp)
+    Ds <- Ds[samples.used,]
+
   } else {
     samples.used = rep(T, ncol(D))
   }
-  
+
   # check that outcome is either binary or numerical and run test accordingly
   mets <- rownames(D)
   outvec <- Ds[[y]]
   cl <- outvec %>% class()
-  
+
   if (("character" %in% cl) || ("factor" %in% cl)) {
     if ((outvec %>% as.factor() %>% levels() %>% length()) != 2) {
       stop("If outcome is a factor, it must have exactly two levels")
@@ -101,8 +90,8 @@ mt_stats_univ_wilcox <- function(
       return(res)
     }) %>% do.call(rbind,.) %>% data.frame()
   }
-  
-  # add columns with metabolite names and y variable 
+
+  # add columns with metabolite names and y variable
   wt %<>% mutate(var=mets, term=y)
   # reorder columns
   wt %<>% select(var, term, statistic, p.value)
@@ -112,7 +101,7 @@ mt_stats_univ_wilcox <- function(
   wt <- wt[o,]
   # make sure that NAs in the outcome are set to FALSE in the list of used samples
   samples.used[is.na(Ds[[y]])] <- F
-  
+
   ## add status information & results
   funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
@@ -129,8 +118,8 @@ mt_stats_univ_wilcox <- function(
         outcome = y
       )
     )
-  
+
   ## return
   D
-  
+
 }

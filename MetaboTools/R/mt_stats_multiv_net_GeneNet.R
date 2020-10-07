@@ -39,23 +39,13 @@ mt_stats_multiv_net_GeneNet = function(
   if(any(is.na(X)))
     stop("the data matrix contains NAs")
 
-  ## FILTER SAMPLES?
+  ## FILTER SAMPLES
   if(!missing(sample_filter)) {
-    # merge data with sample info
-    Ds <- D %>% mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
-    filter_q <- dplyr::enquo(samplefilter)
-    Ds <- Ds %>%
-      dplyr::mutate(tmpsamplenum = 1:nrow(Ds)) %>%
-      dplyr::filter(!!filter_q) %>%
-      droplevels()
-    # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
-    # did we leave 0 rows?
-    if (nrow(Ds)==0) stop("Filtering left 0 rows")
-    if (nrow(Ds)==ncol(D)) mti_logwarning('filtering did not remove any samples')
 
-    # store used samples
-    samples.used <- rep(F, ncol(D))
-    samples.used[Ds$tmpsamplenum] <- T
+    filter_q <- dplyr::enquo(sample_filter)
+    num_samp <- ncol(D)
+    samples.used <- MetaboTools:::mti_filter_sample(Ds, filter_q, num_samp)
+    Ds <- Ds[samples.used,]
 
   } else {
     samples.used = rep(T, ncol(D))
@@ -86,6 +76,7 @@ mt_stats_multiv_net_GeneNet = function(
         table = tab,
         name = stat_name,
         lstobj = NULL,
+        samples.used = samples.used,
         outcome = NA
         )
     )

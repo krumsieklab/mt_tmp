@@ -50,20 +50,9 @@ mt_stats_univ_matrixeqtl <- function(
   if(!missing(sample_filter)) {
 
     filter_q <- dplyr::enquo(sample_filter)
-    Ds <- Ds %>%
-      dplyr::mutate(tmpsamplenum = 1:nrow(Ds)) %>%
-      dplyr::filter(!!filter_q) %>%
-      droplevels()
-    # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
-    # did we leave 0 rows?
-    if (nrow(Ds)==0) stop("Filtering left 0 rows")
-    if (nrow(Ds)==ncol(D)) mti_logwarning('filtering did not filter out any samples')
-
-    # store used samples
-    samples.used <- rep(F, ncol(D))
-    samples.used[Ds$tmpsamplenum] <- T
-    # drop dummy column
-    Ds %<>% dplyr::select(-tmpsamplenum)
+    num_samp <- ncol(D)
+    samples.used <- MetaboTools:::mti_filter_sample(Ds, filter_q, num_samp)
+    Ds <- Ds[samples.used,]
 
   } else {
     samples.used = rep(T, ncol(D))

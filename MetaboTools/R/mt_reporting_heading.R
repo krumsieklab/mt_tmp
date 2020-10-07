@@ -19,7 +19,7 @@
 #'
 #' @importFrom magrittr %>% %<>%
 #' @import SummarizedExperiment
-#'
+#' @import ggplot2
 #' @export
 
 mt_reporting_heading <- function(
