@@ -11,7 +11,7 @@
 #' @examples
 #' \dontrun{D <-
 #'   # load data in WCM format
-#'   mt_files_load_WCM(
+#'   mt_load_files_WCM(
 #'     file='DM369_Metabolites separated by nucleotides 12_6_18_altered.xlsx',
 #'     sheet='peakHeight_metabolite_intensiti') %>%
 #'   ...}
@@ -22,7 +22,7 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_files_load_WCM <- function(
+mt_load_files_WCM <- function(
   file,          # Metabolon xls file
   sheet,         # sheet name or number to read
   zero_to_NA=T     # replace zeros by NAs?

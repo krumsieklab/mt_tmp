@@ -15,7 +15,7 @@
 #' @examples
 #' D <-
 #'   # load data
-#'   mt_files_load_olink(codes.makepath("mt/olink_sampledata.xlsx")) %>%
+#'   mt_load_files_olink(codes.makepath("mt/olink_sampledata.xlsx")) %>%
 #'   ...
 #'
 #' @author KS
@@ -27,7 +27,7 @@
 #'
 #' @export
 ###########################################################################
-mt_files_load_olink <- function(
+mt_load_files_olink <- function(
   file           # Olink Metabolon xlsx file
 ) {
 

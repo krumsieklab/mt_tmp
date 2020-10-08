@@ -12,7 +12,7 @@
 #' @examples
 #' \dontrun{D <-
 #'   # load data
-#'   mt_files_load_UCD(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+#'   mt_load_files_UCD(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
 #'   ...}
 #'
 #' @author JK
@@ -21,7 +21,7 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_files_load_UCD <- function(
+mt_load_files_UCD <- function(
   file,                 # input xls file
   sheet,                # sheet name or number to read
   zero_to_NA=T,         # set zeros to NAs?

@@ -11,7 +11,7 @@
 #' @examples
 #' \dontrun{D <-
 #'   # load data
-#'   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+#'   mt_load_files_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
 #'   ...}
 #'
 #' @author JK
@@ -20,7 +20,7 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_files_load_metabolon <- function(
+mt_load_files_metabolon <- function(
   file,           # Metabolon xls file
   sheet,          # sheet name or number to read
   copynansheet='' # if given, which sheet to copy the NA pattern from

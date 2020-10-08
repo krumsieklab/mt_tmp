@@ -1,11 +1,11 @@
 #' Load data matrix from Excel file.
-#' 
+#'
 #' Loads numerical data matrix from Excel sheet.
 #' Can handle files with samples in rows or columns.
-#' 
+#'
 #' Default name for entity in columns will be 'name".
 #'
-#' @param file input Excel file 
+#' @param file input Excel file
 #' @param sheet name or number of sheet
 #' @param samples_in_rows  read samples as rows (T) or as columns (F). default: T (samples as rows)
 #' @param ID_col if samples_in_rows==T -> name of sample ID column... must be exactly one
@@ -16,39 +16,39 @@
 #'
 #' @examples
 #' # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
-#' \dontrun{D <- 
+#' \dontrun{D <-
 #'   # load raw data
-#'   mt_files_data_xls(file=file, sheet="data", samples_in_rows=T, ID_col="SAMPLE_NAME") %>% 
+#'   mt_load_files_data_xls(file=file, sheet="data", samples_in_rows=T, ID_col="SAMPLE_NAME") %>%
 #'   # sample annotations from metabolomics run
-#'   mt_files_anno_xls(file=file, sheet="sampleinfo", annosfor="samples", IDanno = "SAMPLE_NAME") %>% 
+#'   mt_files_anno_xls(file=file, sheet="sampleinfo", annosfor="samples", IDanno = "SAMPLE_NAME") %>%
 #'   # sample annotations from clinical table
-#'   mt_files_anno_xls(file=file, sheet="clinicals", annosfor="samples", IDanno="SAMPLE_NAME") %>% 
+#'   mt_files_anno_xls(file=file, sheet="clinicals", annosfor="samples", IDanno="SAMPLE_NAME") %>%
 #'   # metabolite annotations`
-#'   mt_files_anno_xls(file=file, sheet="metinfo", annosfor="metabolites", IDanno="BIOCHEMICAL", IDdata = "name") %>% 
+#'   mt_files_anno_xls(file=file, sheet="metinfo", annosfor="metabolites", IDanno="BIOCHEMICAL", IDdata = "name") %>%
 #'   ...}
-#' 
+#'
 #' @author JK
-#' 
+#'
 #' @importFrom magrittr %<>%
 #' @import SummarizedExperiment
-#' 
+#'
 #' @export
-mt_files_data_xls <- function(file,
+mt_load_files_data_xls <- function(file,
                               sheet,
                               samples_in_rows = T,
                               ID_col,
                               zero_to_NA=F) {
-  
-  
+
+
   # load excel sheet
   df <- as.data.frame(readxl::read_excel(path=file,sheet=sheet,col_names=T))
-  
+
   # ensure that sample ID_col column exists
   if (missing(ID_col)) stop("No ID column provided")
   if (!(ID_col %in% colnames(df))) stop(glue::glue("sample ID column '{ID_col}' does not exist in '{basename(file)}, sheet '{sheet}'"))
   # now convert to rownames
-  df %<>% tibble::column_to_rownames(ID_col)  
-  
+  df %<>% tibble::column_to_rownames(ID_col)
+
   # construct assay
   if (samples_in_rows) {
     # need to transpose
@@ -56,19 +56,19 @@ mt_files_data_xls <- function(file,
   } else {
     assay = as.matrix(df)
   }
-  
+
   # save original names as metabolite annotation, and ensure valid R name rownames
   metinfo = data.frame(name=rownames(assay))
   rownames(assay) %<>% make.names()
-  
+
   # ensure that all columns are numeric
   rn <- rownames(assay)
   assay <- apply(assay,2,as.numeric)
   rownames(assay) <- rn
-  
+
   # zeros to NAs?
   if (zero_to_NA) assay[assay==0] <- NA
-  
+
   # construct SummarizedExperiment
   cd <- data.frame(as.character(colnames(assay)))
   colnames(cd)[1] <- ifelse(samples_in_rows,ID_col,'sample')
@@ -77,17 +77,17 @@ mt_files_data_xls <- function(file,
     rowData=metinfo,
     colData=cd
   )
-  
+
   # add status information
   funargs <- mti_funargs()
-  metadata(D)$results %<>% 
+  metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
       logtxt = glue::glue("loaded assay from Excel file '{basename(file)}, sheet '{sheet}'")
     )
-  
+
   # return
   D
-  
+
 }
 
