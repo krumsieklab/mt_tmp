@@ -74,8 +74,18 @@ mti_get_setting <-  function(D, sname) {
 #' @export
 mt_settings <- function(D, settings) {
 
-  # validate argument
-  stopifnot("SummarizedExperiment" %in% class(D))
+  if(missing(D)){
+    # create a SummarizedExperiment object with empty data frames
+    df <- matrix(c(0,0,0,0), ncol = 2, nrow = 2)
+    D <- SummarizedExperiment(
+      assay=df,
+      rowData=rownames(df),
+      colData=c("dummy1", "dummy2")
+    )
+  }else{
+    # validate argument
+    stopifnot("SummarizedExperiment" %in% class(D))
+  }
 
   # make sure that settings exist in metadata of this pipeline
   D %<>% mti_ensure_settings()
