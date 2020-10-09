@@ -12,9 +12,9 @@
 #'
 #' @examples
 #' \dontrun{# Write out all results
-#' ... %>% mt_files_write_stats(file="results.xlsx") %>%
+#' ... %>% mt_write_files_stats(file="results.xlsx") %>%
 #' # Write out specific result]
-#' ... %>% mt_files_write_stats(file="results.xlsx", compnames="comp1") %>%}
+#' ... %>% mt_write_files_stats(file="results.xlsx", compnames="comp1") %>%}
 #'
 #' @author JK, RB (modified on 2020-07-22)
 #'
@@ -22,7 +22,7 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_files_write_stats <- function(D, file, compnames=NULL, sort.by.p=F, output.dir=T, metname=NULL) {
+mt_write_files_stats <- function(D, file, compnames=NULL, sort.by.p=F, output.dir=T, metname=NULL) {
 
   # verify input arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -53,7 +53,7 @@ mt_files_write_stats <- function(D, file, compnames=NULL, sort.by.p=F, output.di
     # else just silently skip this step
     if(is.null(metname)==F && is.na(match(metname, names(rowData(D))))==F){
         df <- cbind.data.frame(df, metname=unlist(data.frame(rowData(D))[metname]))
-    } 
+    }
     # sort?
     if (sort.by.p) {
       df %<>% arrange(p.value)

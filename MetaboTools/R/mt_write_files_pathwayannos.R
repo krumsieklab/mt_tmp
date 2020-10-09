@@ -16,7 +16,7 @@
 #'     pw_species = "hsapiens",
 #'     pw_name = "kegg") %>%
 #' mt_anno_pathways_remove_redundant(met_ID_col = "KEGG", pw_col = "kegg_db") %>%
-#' mt_files_write_pathwayannos(pwfield='kegg_db', file='pwannos.xlsx')}
+#' mt_write_files_pathwayannos(pwfield='kegg_db', file='pwannos.xlsx')}
 #'
 #' @author JK
 #'
@@ -24,7 +24,7 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_files_write_pathwayannos <- function(D, pwfield, file) {
+mt_write_files_pathwayannos <- function(D, pwfield, file) {
 
   wb <- openxlsx::createWorkbook()
   # helper function
