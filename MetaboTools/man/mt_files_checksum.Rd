@@ -7,7 +7,7 @@
 mt_files_checksum(D, file, checksum)
 }
 \arguments{
-\item{D}{SummarizedExperiment for pass-through}
+\item{D}{SummarizedExperiment for pass-through (missing if first step in pipeline)}
 
 \item{file}{File path... does not necessarily have to be the same as the dataset loaded in the pipeline}
 

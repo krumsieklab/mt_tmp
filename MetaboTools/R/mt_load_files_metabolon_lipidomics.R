@@ -2,6 +2,7 @@
 #'
 #' Loads lipidomics data from a Metabolon-format Excel file. Needs to be in the original "Client Data Table" format that they deliver.
 #'
+#' @param D \code{SummarizedExperiment} input (missing if first step in pipeline)
 #' @param file input Excel file
 #' @param sheet_list list with the sheet names to read
 #' @param copynansheet if given, which sheet to copy the NA pattern from
@@ -23,9 +24,32 @@
 #'
 #' @export
 mt_load_files_metabolon_lipidomics <- function(
+  D,
   file,           # Metabolon xls file
   sheet_list     # list of sheet names or numbers to read
 ) {
+
+  # initialize outer result list
+  result <- list()
+
+  # validate arguments
+  if (missing(file)) stop("file must be provided")
+  if (missing(sheet)) stop("sheet must be provided")
+
+  # save input information
+  result$info$file <- file
+  result$info$sheet <- paste(sheet_list, collapse = ", ")
+
+  # get metadata from D if present
+  if(!missing(D)){
+    # validate SE
+    if ("SummarizedExperiment" %in% class(D)) stop("D is not of class SummarizedExperiment")
+    if (sum(assay(D))!=0) stop("Passed SummarizedExperiment assay must be empty!")
+
+    # get metadata
+    result$meta <- metadata(D)
+  }
+
 
   # using readxl package:
   raw <- lapply(sheet_list %>% {names(.)=.;.}, function(x){
@@ -104,9 +128,7 @@ mt_load_files_metabolon_lipidomics <- function(
 
   })
 
-  # merge data and annotations from the different data sheets
-  result <- list()
-
+  ## merge data and annotations from the different data sheets
   # join all data
   result$data <- xx[[sheet_list[1]]]$data
   if(length(sheet_list)>1) {
@@ -142,10 +164,6 @@ mt_load_files_metabolon_lipidomics <- function(
     }
   }
 
-  # join all info
-  result$info$file <- file
-  result$info$sheet <- paste(sheet_list, collapse = ", ")
-
   # sort metabolites and samples in annotations to match order in data
   result$sampleinfo <- result$sampleinfo[match(rownames(result$data),result$sampleinfo$id),]
   result$metinfo <- result$metinfo[match(colnames(result$data), result$metinfo$name),]
@@ -153,11 +171,15 @@ mt_load_files_metabolon_lipidomics <- function(
   # rownames of assay (right now colnames) must be R-compatible names
   colnames(result$data) <- make.names(colnames(result$data))
 
-  # generate summarized experiment
+  # construct SummarizedExperiment
   D <- SummarizedExperiment(assay    = t(result$data),
                             colData  = result$sampleinfo,
                             rowData  = result$metinfo,
-                            metadata = list(sessionInfo=sessionInfo(), parseInfo=result$info))
+                            metadata = list(sessionInfo=utils::sessionInfo(), parseInfo=result$info))
+
+  # add original metadata if exists
+  if (!is.null(result$meta$results)) metadata(D)$results <- result$meta$results
+  if (!is.null(result$meta$settings)) metadata(D)$settings <- result$meta$settings
 
   # add status information
   funargs <- MetaboTools:::mti_funargs()

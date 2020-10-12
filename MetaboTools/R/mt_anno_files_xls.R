@@ -23,11 +23,11 @@
 #'   # load raw data
 #'   mt_files_data_xls(file=file, sheet="data", samplesInRows=T, ID="SAMPLE_NAME") %>%
 #'   # sample annotations from metabolomics run
-#'   mt_files_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_ID = "SAMPLE_NAME") %>%
+#'   mt_anno_files_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_ID = "SAMPLE_NAME") %>%
 #'   # sample annotations from clinical table
-#'   mt_files_anno_xls(file=file, sheet="clinicals", anno_type="samples", anno_ID="SAMPLE_NAME") %>%
+#'   mt_anno_files_xls(file=file, sheet="clinicals", anno_type="samples", anno_ID="SAMPLE_NAME") %>%
 #'   # metabolite annotations`
-#'   mt_files_anno_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_ID="BIOCHEMICAL", data_ID = "name") %>%
+#'   mt_anno_files_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_ID="BIOCHEMICAL", data_ID = "name") %>%
 #'   ...}
 #'
 #' @author JK
@@ -37,7 +37,7 @@
 #'
 #' @export
 
-mt_files_anno_xls <-
+mt_anno_files_xls <-
   function(D,
            file,
            sheet,

@@ -5,6 +5,7 @@
 #'
 #' Default name for entity in columns will be 'name".
 #'
+#' @param D \code{SummarizedExperiment} input (missing if first step in pipeline)
 #' @param file input Excel file
 #' @param sheet name or number of sheet
 #' @param samples_in_rows  read samples as rows (T) or as columns (F). default: T (samples as rows)
@@ -33,12 +34,33 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_load_files_data_xls <- function(file,
-                              sheet,
-                              samples_in_rows = T,
-                              ID_col,
-                              zero_to_NA=F) {
+mt_load_files_data_xls <- function(D,
+                                  file,
+                                  sheet,
+                                  samples_in_rows = T,
+                                  ID_col,
+                                  zero_to_NA=F) {
 
+  # initialize result list
+  result=list()
+
+  # validate arguments
+  if (missing(file)) stop("file must be provided")
+  if (missing(sheet)) stop("sheet must be provided")
+
+  # save input information
+  result$info$file <- file
+  result$info$sheet <- sheet
+
+  # get metadata from D if present
+  if(!missing(D)){
+    # validate SE
+    if ("SummarizedExperiment" %in% class(D)) stop("D is not of class SummarizedExperiment")
+    if (sum(assay(D))!=0) stop("Passed SummarizedExperiment assay must be empty!")
+
+    # get metadata
+    result$meta <- metadata(D)
+  }
 
   # load excel sheet
   df <- as.data.frame(readxl::read_excel(path=file,sheet=sheet,col_names=T))
@@ -69,14 +91,19 @@ mt_load_files_data_xls <- function(file,
   # zeros to NAs?
   if (zero_to_NA) assay[assay==0] <- NA
 
-  # construct SummarizedExperiment
   cd <- data.frame(as.character(colnames(assay)))
   colnames(cd)[1] <- ifelse(samples_in_rows,ID_col,'sample')
-  D <- SummarizedExperiment(
-    assay=assay,
-    rowData=metinfo,
-    colData=cd
-  )
+
+  # construct SummarizedExperiment
+  D <- SummarizedExperiment(assay = assay,
+                            rowData = metinfo,
+                            colData = cd,
+                            metadata = list(sessionInfo=utils::sessionInfo(), parseInfo=result$info))
+
+  # add original metadata if exists
+  if (!is.null(result$meta$results)) metadata(D)$results <- result$meta$results
+  if (!is.null(result$meta$settings)) metadata(D)$settings <- result$meta$settings
+
 
   # add status information
   funargs <- mti_funargs()

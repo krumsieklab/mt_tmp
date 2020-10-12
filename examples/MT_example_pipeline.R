@@ -16,7 +16,7 @@ zap()
 setwd("/Users/kelsey/Desktop/KrumsiekLab/")
 
 # NTS: need to be able to load this via data()
-file_data <- "simulated_data.xlsx"
+file_data <- "/Users/kelsey/Desktop/KrumsiekLab/simulated_data.xlsx"
 
 ##############################################################################################################################
 # PART 1 - STARTING A METABOTOOLS PIPELINE
@@ -25,13 +25,13 @@ D <-
   # load data - this function loads the assay data only
   #   alternative loading functions: mt_files_load_metabolon, mt_files_load_metabolon_lipidomics, mt_files_load_olink,
   #     mt_files_load_UCD, mt_files_load_WCM
-  mt_files_data_xls(file=file_data, sheet="data", samples_in_row=T, ID_col="sample") %>%
+  mt_load_files_data_xls(file=file_data, sheet="data", samples_in_row=T, ID_col="sample") %>%
   # validate checksum
   mt_files_checksum(file=file_data, checksum = "80afcd72481c6cf3dcf83342e3513699") %>%
   # load metabolite (rowData) annotations
-  mt_files_anno_xls(file=file_data, sheet="metinfo",anno_type="metabolites", anno_ID="name", data_ID="name") %>%
+  mt_anno_files_xls(file=file_data, sheet="metinfo",anno_type="metabolites", anno_ID="name", data_ID="name") %>%
   # load clinical (colData) annotations
-  mt_files_anno_xls(file=file_data, sheet="clin", anno_type="samples", anno_ID="sample", data_ID="sample") %>%
+  mt_anno_files_xls(file=file_data, sheet="clin", anno_type="samples", anno_ID="sample", data_ID="sample") %>%
   # # log assay dimensions and number of columns for both metabolite and clincial annotations
   mt_logging_datasetinfo() %>%
   # start timing

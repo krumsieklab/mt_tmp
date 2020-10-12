@@ -2,6 +2,7 @@
 #'
 #' Loads data from a WCM core format file (as they send it).
 #'
+#' @param D \code{SummarizedExperiment} input (missing if first step in pipeline)
 #' @param file input Excel file
 #' @param sheet name or number of sheet
 #' @param zero_to_NA replace zeros by NAs? (default: T)
@@ -23,10 +24,32 @@
 #'
 #' @export
 mt_load_files_WCM <- function(
+  D,
   file,          # Metabolon xls file
   sheet,         # sheet name or number to read
   zero_to_NA=T     # replace zeros by NAs?
 ) {
+
+  # initialize outer result list
+  result <- list()
+
+  # validate arguments
+  if (missing(file)) stop("file must be provided")
+  if (missing(sheet)) stop("sheet must be provided")
+
+  # save input information
+  result$info$file <- file
+  result$info$sheet <- paste(sheet_list, collapse = ", ")
+
+  # get metadata from D if present
+  if(!missing(D)){
+    # validate SE
+    if ("SummarizedExperiment" %in% class(D)) stop("D is not of class SummarizedExperiment")
+    if (sum(assay(D))!=0) stop("Passed SummarizedExperiment assay must be empty!")
+
+    # get metadata
+    result$meta <- metadata(D)
+  }
 
   # load file in raw format
   raw = as.data.frame(readxl::read_excel(path=file, sheet=sheet)) %>% tibble::column_to_rownames("compound")
@@ -47,7 +70,11 @@ mt_load_files_WCM <- function(
   D <- SummarizedExperiment(assay    = as.matrix(raw),
                             rowData  = metinfo,
                             colData  = data.frame(ID=colnames(raw)),
-                            metadata = list(sessionInfo=utils::sessionInfo()))
+                            metadata = list(sessionInfo=utils::sessionInfo(), parseInfo=result$info))
+
+  # add original metadata if exists
+  if (!is.null(result$meta$results)) metadata(D)$results <- result$meta$results
+  if (!is.null(result$meta$settings)) metadata(D)$settings <- result$meta$settings
 
   # add status information
   funargs <- mti_funargs()

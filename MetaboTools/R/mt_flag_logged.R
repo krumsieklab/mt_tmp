@@ -3,7 +3,7 @@
 #' # Required when loading already-logged data, to signal to other functions (e.g. fold change calculation) that this is logged data.
 #'  Technically, function does not do anything, but leaves its call footprint in the pipeline to be found by others.
 #'
-#' @param D SummarizedExperiment input
+#' @param D \code{SummarizedExperiment} input
 #'
 #' @return unchanged SE
 #'

@@ -7,7 +7,7 @@
 mt_settings(D, settings)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input (missing if first step in pipeline)}
 
 \item{settings}{list of settings}
 }

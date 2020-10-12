@@ -56,7 +56,7 @@ mti_get_setting <-  function(D, sname) {
 #'
 #' Call without parameters to show current settings Call with list of parameters to set settings. Will crash for invalid setting names.
 #'
-#' @param D \code{SummarizedExperiment} input
+#' @param D \code{SummarizedExperiment} input (missing if first step in pipeline)
 #' @param settings list of settings
 #'
 #' @return Nothing - leaves \code{D} unchanged
@@ -74,13 +74,13 @@ mti_get_setting <-  function(D, sname) {
 #' @export
 mt_settings <- function(D, settings) {
 
+  # if first step in pipeline, create SE
   if(missing(D)){
     # create a SummarizedExperiment object with empty data frames
     df <- matrix(c(0,0,0,0), ncol = 2, nrow = 2)
-    D <- SummarizedExperiment(
-      assay=df,
-      rowData=rownames(df),
-      colData=c("dummy1", "dummy2")
+    D <- SummarizedExperiment(assay=df,
+                              rowData=rownames(df),
+                              colData=c("dummy1", "dummy2")
     )
   }else{
     # validate argument

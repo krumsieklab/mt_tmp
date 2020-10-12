@@ -7,7 +7,7 @@
 mt_flag_logged(D)
 }
 \arguments{
-\item{D}{SummarizedExperiment input}
+\item{D}{\code{SummarizedExperiment} input}
 }
 \value{
 unchanged SE

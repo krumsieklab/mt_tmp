@@ -2,7 +2,7 @@
 #'
 #' Will be used when calling \code{mt_reporting_generateMD}.
 #'
-#' @param D  \code{SummarizedExperiment} input
+#' @param D  \code{SummarizedExperiment} input (missing if first step in pipeline)
 #' @param strtitle Heading text
 #' @param lvl Heading level, default: 1 (can be used for nested outline structures)
 #'
@@ -28,8 +28,19 @@ mt_reporting_heading <- function(
   lvl=1
 ) {
 
-  # validate argument
-  stopifnot("SummarizedExperiment" %in% class(D))
+  # if first step in pipeline, create SE
+  if(missing(D)){
+    # create a SummarizedExperiment object with empty data frames
+    df <- matrix(c(0,0,0,0), ncol = 2, nrow = 2)
+    D <- SummarizedExperiment(
+      assay=df,
+      rowData=rownames(df),
+      colData=c("dummy1", "dummy2")
+    )
+  }else{
+    # validate argument
+    stopifnot("SummarizedExperiment" %in% class(D))
+  }
 
   # add status information & heading info
   funargs <- mti_funargs()

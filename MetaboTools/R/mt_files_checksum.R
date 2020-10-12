@@ -2,7 +2,7 @@
 #'
 #' Note: Has to be run after loading the data, since it needs to operate on an existing SummarizedExperiment.
 #'
-#' @param D SummarizedExperiment for pass-through
+#' @param D SummarizedExperiment for pass-through (missing if first step in pipeline)
 #' @param file File path... does not necessarily have to be the same as the dataset loaded in the pipeline
 #' @param checksum Checksum to test for.
 #'
@@ -23,8 +23,19 @@
 #' @export
 mt_files_checksum <- function(D, file, checksum) {
 
-  # validate arguments
-  stopifnot("SummarizedExperiment" %in% class(D))
+  # if first step in pipeline, create SE
+  if(missing(D)){
+    # create a SummarizedExperiment object with empty data frames
+    df <- matrix(c(0,0,0,0), ncol = 2, nrow = 2)
+    D <- SummarizedExperiment(
+      assay=df,
+      rowData=rownames(df),
+      colData=c("dummy1", "dummy2")
+    )
+  }else{
+    # validate argument
+    stopifnot("SummarizedExperiment" %in% class(D))
+  }
 
   # throw error if file does not exist
   if(!file.exists(file)) stop(sprintf("File does not exist: %s", file))

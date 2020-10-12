@@ -7,7 +7,7 @@
 mt_reporting_heading(D, strtitle, lvl = 1)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input (missing if first step in pipeline)}
 
 \item{strtitle}{Heading text}
 
