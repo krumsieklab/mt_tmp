@@ -55,21 +55,23 @@ mt_plots_boxplot_scatter <- function(D,
   stopifnot("SummarizedExperiment" %in% class(D))
   x <- dplyr::enquo(x)
 
+  # create dummy SE so original not changed
+  Ds <- D
 
   ## CONFOUNDER
   if(!missing(correct_confounder)){
     MetaboTools:::mti_logstatus(glue::glue("correcting for {correct_confounder}"))
-    D <- MetaboTools:::mti_correctConfounder(D, correct_confounder)
+    Ds <- MetaboTools:::mti_correctConfounder(Ds, correct_confounder)
   }
 
   ## rowData
-  rd <- rowData(D) %>%
+  rd <- rowData(Ds) %>%
     as.data.frame() %>%
-    dplyr::mutate(var = rownames(D))
+    dplyr::mutate(var = rownames(Ds))
 
   ## stat
   if(!missing(stat_name)){
-    stat <- MetaboTools:::mti_get_stat_by_name(D, stat_name) %>%
+    stat <- MetaboTools:::mti_get_stat_by_name(Ds, stat_name) %>%
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd
@@ -98,13 +100,13 @@ mt_plots_boxplot_scatter <- function(D,
   }
 
   ## CREATE PLOT
-  dummy <- D %>%
+  dummy <- Ds %>%
     MetaboTools:::mti_format_se_samplewise() %>% # NOTE: No explosion of dataset size due to active restriction - 6/2/20, JK
-    tidyr::gather(var, value, dplyr::one_of(rownames(D)))
+    tidyr::gather(var, value, dplyr::one_of(rownames(Ds)))
   ## filter to groups?
   if(plot_type=="box"){
     if (restrict_to_used_samples) {
-      filterto <- MetaboTools:::mti_get_stat_by_name(D, stat_name, fullstruct=T)$samples.used
+      filterto <- MetaboTools:::mti_get_stat_by_name(Ds, stat_name, fullstruct=T)$samples.used
       dummy <- dummy[filterto,]
     }
   }
@@ -196,7 +198,7 @@ mt_plots_boxplot_scatter <- function(D,
       p <- p + ylab(manual_ylab)
     } else {
       # add label if this is logged data
-      r <- D %>% MetaboTools:::mti_res_get_path(c("pre","trans","log"))
+      r <- Ds %>% MetaboTools:::mti_res_get_path(c("pre","trans","log"))
       if (length(r)>0) {
         p <- p + ylab(r[[1]]$logtxt) # log text contains e.g. "log2"
       }

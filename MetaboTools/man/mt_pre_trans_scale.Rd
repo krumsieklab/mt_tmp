@@ -4,7 +4,7 @@
 \alias{mt_pre_trans_scale}
 \title{Scale data, mean 0 / sd 1 by default.}
 \usage{
-mt_pre_trans_scale(D, center = T, scale = T, sample_filter)
+mt_pre_trans_scale(D, center = T, scale = T, ref_samples)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
@@ -13,7 +13,7 @@ mt_pre_trans_scale(D, center = T, scale = T, sample_filter)
 
 \item{scale}{T/F, scale data to sd 1? default: T}
 
-\item{sample_filter}{term which samples to filter to first}
+\item{ref_samples}{term which samples to use for center and scale calculcation}
 }
 \value{
 assay: scaled data
