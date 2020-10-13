@@ -15,6 +15,7 @@ mt_plots_statsbarplot(
   sort = FALSE,
   assoc_sign,
   add_empty = FALSE,
+  keep.unmapped = FALSE,
   ...
 )
 }
@@ -37,7 +38,9 @@ mt_plots_statsbarplot(
 
 \item{assoc_sign}{optional parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_name.}
 
-\item{add_empty}{boolean parameter that if TRUE adds also empty pathways to the barplot.}
+\item{add_empty}{boolean, if TRUE adds also empty pathways to the barplot.}
+
+\item{keep.unmapped}{boolean, if TRUE keeps metabolites with no pathway annotations. Default "FALSE".}
 
 \item{...}{additional expression directly passed to aes() of ggplot, can refer to colData}
 }

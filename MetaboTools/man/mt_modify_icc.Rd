@@ -24,7 +24,8 @@ rowData(D)[[col_lab]] contains column with ICC score for each metabolite
 Calculate ICC - intraclass correlation
 }
 \examples{
-\dontrun{... \%>\% mt_modify_icc(qc_samples=="PQC", col_lab = "PQC_cv", id_col='RID') \%>\% ...}
+\dontrun{... \%>\% mt_modify_icc(qc_samples= (RID\%in\%RID[duplicated(RID)]), 
+col_lab = "Dup_icc", id_col='RID') \%>\% ...}
 
 }
 \author{

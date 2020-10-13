@@ -32,20 +32,16 @@ mt_stats_univ_missingness <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
   stopifnot(length(comp_col)==1)
 
-  # filter samples?
-  Ds <- D
+  ## FILTER SAMPLES
   if(!missing(sample_filter)) {
-    # translate lazy expression
+
     filter_q <- dplyr::enquo(sample_filter)
-    # get indices
-    keep <-
-      colData(D) %>% as.data.frame() %>%
-      tibble::rownames_to_column() %>%
-      dplyr::filter(!!filter_q) %>%
-      `[[`("rowname") %>%
-      as.numeric()
-    # filter SE
-    Ds <- Ds[,keep]
+    num_samp <- ncol(D)
+    samples.used <- MetaboTools:::mti_filter_samples(Ds, filter_q, num_samp)
+    Ds <- Ds[samples.used,]
+
+  } else {
+    samples.used = rep(T, ncol(D))
   }
 
   # get variable to compare to
@@ -99,6 +95,7 @@ mt_stats_univ_missingness <- function(
       output = list(
         table   = res,
         name    = stat_name,
+        samples.used = samples.used,
         outcome = comp_col
       )
     )

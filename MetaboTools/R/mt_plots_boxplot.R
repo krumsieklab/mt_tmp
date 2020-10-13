@@ -63,21 +63,23 @@ mt_plots_boxplot <- function(D,
   stopifnot("SummarizedExperiment" %in% class(D))
   x <- dplyr::enquo(x)
 
+  # create dummy SE so original not changed
+  Ds <- D
 
   ## CONFOUNDER
   if(!missing(correct_confounder)){
     mti_logstatus(glue::glue("correcting for {correct_confounder}"))
-    D <- mti_correctConfounder(D, correct_confounder)
+    Ds <- mti_correctConfounder(Ds, correct_confounder)
   }
 
   ## rowData
-  rd <- rowData(D) %>%
+  rd <- rowData(Ds) %>%
     as.data.frame() %>%
-    dplyr::mutate(var = rownames(D))
+    dplyr::mutate(var = rownames(Ds))
 
   ## stat
   if(!missing(stat_name)){
-    stat <- mti_get_stat_by_name(D, stat_name) %>%
+    stat <- mti_get_stat_by_name(Ds, stat_name) %>%
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd
@@ -105,12 +107,12 @@ mt_plots_boxplot <- function(D,
 
 
   ## CREATE PLOT
-  dummy <- D %>%
+  dummy <- Ds %>%
     mti_format_se_samplewise() %>% # NOTE: No explosion of dataset size due to active restriction - 6/2/20, JK
-    tidyr::gather(var, value, dplyr::one_of(rownames(D)))
+    tidyr::gather(var, value, dplyr::one_of(rownames(Ds)))
   ## filter to groups?
   if (restrict.to.used.samples) {
-    filterto <- mti_get_stat_by_name(D, stat_name, fullstruct=T)$samples.used
+    filterto <- mti_get_stat_by_name(Ds, stat_name, fullstruct=T)$samples.used
     dummy <- dummy[filterto,]
   }
 
@@ -164,7 +166,7 @@ mt_plots_boxplot <- function(D,
     p <- p + ylab(manual.ylab)
   } else {
     # add label if this is logged data
-    r <- D %>% mti_res_get_path(c("pre","trans","log"))
+    r <- Ds %>% mti_res_get_path(c("pre","trans","log"))
     if (length(r)>0) {
       p <- p + ylab(r[[1]]$logtxt) # log text contains e.g. "log2"
     }

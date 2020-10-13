@@ -60,21 +60,23 @@ mt_plots_scatter <- function(D,
   stopifnot("SummarizedExperiment" %in% class(D))
   x <- dplyr::enquo(x)
 
+  # create dummy SE so original not changed
+  Ds <- D
 
   ## CONFOUNDER
   if(!missing(correct_confounder)){
     mti_logstatus(glue::glue("correcting for {correct_confounder}"))
-    D <- mti_correctConfounder(D, correct_confounder)
+    Ds <- mti_correctConfounder(Ds, correct_confounder)
   }
 
   ## rowData
-  rd <- rowData(D) %>%
+  rd <- rowData(Ds) %>%
     as.data.frame() %>%
-    dplyr::mutate(var = rownames(D))
+    dplyr::mutate(var = rownames(Ds))
 
   ## stat
   if(!missing(stat_name)){
-    stat <- mti_get_stat_by_name(D, stat_name) %>%
+    stat <- mti_get_stat_by_name(Ds, stat_name) %>%
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd
@@ -101,9 +103,9 @@ mt_plots_scatter <- function(D,
 
 
   ## CREATE PLOT
-  dummy <- D %>%
+  dummy <- Ds %>%
     mti_format_se_samplewise() %>% # NOTE: No explosion of dataset size due to active restriction - 6/2/20, JK
-    tidyr::gather(var, value, dplyr::one_of(rownames(D)))
+    tidyr::gather(var, value, dplyr::one_of(rownames(Ds)))
 
 
   if (!full.info) {

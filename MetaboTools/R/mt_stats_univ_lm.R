@@ -46,29 +46,18 @@ mt_stats_univ_lm <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
 
   # make sure name does not exist yet
-  if (stat_name %in% unlist(mti_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("stat_name"))) stop(sprintf("stat element with name '%s' already exists",stat_name))
+  if (stat_name %in% unlist(MetaboTools:::mti_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("stat_name"))) stop(sprintf("stat element with name '%s' already exists",stat_name))
 
   # merge data with sample info
-  Ds <- D %>% mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
+  Ds <- D %>% MetaboTools:::mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 6/2/20, JK
 
   ## FILTER SAMPLES
   if(!missing(sample_filter)) {
 
     filter_q <- dplyr::enquo(sample_filter)
-    Ds <- Ds %>%
-      dplyr::mutate(tmpsamplenum = 1:nrow(Ds)) %>%
-      dplyr::filter(!!filter_q) %>%
-      droplevels()
-    # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
-    # did we leave 0 rows?
-    if (nrow(Ds)==0) stop("Filtering left 0 rows")
-    if (nrow(Ds)==ncol(D)) mti_logwarning('filtering did not filter out any samples')
-
-    # store used samples
-    samples.used <- rep(F, ncol(D))
-    samples.used[Ds$tmpsamplenum] <- T
-    # drop dummy column
-    Ds %<>% dplyr::select(-tmpsamplenum)
+    num_samp <- ncol(D)
+    samples.used <- MetaboTools:::mti_filter_samples(Ds, filter_q, num_samp)
+    Ds <- Ds[samples.used,]
 
   } else {
     samples.used = rep(T, ncol(D))
@@ -81,7 +70,7 @@ mt_stats_univ_lm <- function(
   if(stringr::str_detect(outvar, ":")){
     outvar <- strsplit(outvar, ":") %>% unlist()
     is_interaction <- TRUE
-    mti_logmsg("calculating interaction term")
+    MetaboTools:::mti_logmsg("calculating interaction term")
   }
   if(any(!(outvar %in% colnames(Ds))))
     stop(sprintf("column %s do not exist in data", stringr::str_c(outvar[ !(outvar %in% colnames(Ds))], collapse = ", ")))
@@ -114,7 +103,7 @@ mt_stats_univ_lm <- function(
   ## choose lm functions
   has_random_eff <- FALSE
   if(stringr::str_detect(as.character(formula[2]), "\\|")){
-    mti_logmsg("random effect detected; using lmer")
+    MetaboTools:::mti_logmsg("random effect detected; using lmer")
     f_lm     <- lmerTest::lmer
     f_tidy   <- broom.mixed::tidy # this calls summary()
     has_random_eff <- TRUE
@@ -186,15 +175,15 @@ mt_stats_univ_lm <- function(
     if(length(conf_invar) > 0){
       ## terminate if metabolite or outcome are invariant
       if(m %in% names(conf_invar)){
-        mti_logwarning(glue::glue("metabolite {m} invariant "))
+        MetaboTools:::mti_logwarning(glue::glue("metabolite {m} invariant "))
         return(NULL)
       }
       if(any(outvar %in% names(conf_invar))){
-        mti_logwarning(glue::glue("outcome {outvar} invariant for metabolite {m}"))
+        MetaboTools:::mti_logwarning(glue::glue("outcome {outvar} invariant for metabolite {m}"))
         return(NULL)
       }
       for(c in names(conf_invar)){
-        mti_logwarning(glue::glue("confounder {c} invariant for metabolite {m}, removing from formula"))
+        MetaboTools:::mti_logwarning(glue::glue("confounder {c} invariant for metabolite {m}, removing from formula"))
         form <- stats::update.formula(form, stringr::str_c(". ~ . -", c))
       }
     }
@@ -259,9 +248,9 @@ mt_stats_univ_lm <- function(
   samples.used[is.na(Ds[, outvar])] <- F
 
   ## add status information & results
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("univariate lm, %s", as.character(formula)),
       output = list(

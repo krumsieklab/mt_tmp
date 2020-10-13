@@ -12,6 +12,7 @@
 #' @param assoc_sign optional parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_name.
 #' @param keep.unmapped boolean, if TRUE keeps metabolites with no pathway annotations. Default "FALSE".
 #' @param add_empty boolean, if TRUE adds also empty pathways to the barplot.
+#' @param output.file optional Excel filename to save data to 
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #'
@@ -34,6 +35,7 @@
 #' @import dplyr
 #' @import tidyr
 #' @import magrittr
+#' @import openxlsx
 #' @import SummarizedExperiment
 #'
 #' @export
@@ -49,6 +51,7 @@ mt_plots_statsbarplot <- function(D,
                                   assoc_sign,
                                   add_empty = FALSE,
                                   keep.unmapped = FALSE,
+                                  output.file = NULL,
                                   ...){
 
   ## check input
@@ -79,7 +82,7 @@ mt_plots_statsbarplot <- function(D,
   flag_filter <- ifelse((!missing(metab_filter)), T,F)
   flag_sign <- ifelse((!missing(assoc_sign)), T,F)
 
-  data_plot <- lapply(stat_name %>% {names(.)=.;.}, function(ss){
+  data <- lapply(stat_name %>% {names(.)=.;.}, function(ss){
     ## subselect variables
     if(flag_filter) {
       metab_filter_q <- dplyr::enquo(metab_filter)
@@ -87,12 +90,15 @@ mt_plots_statsbarplot <- function(D,
         dplyr::filter(!!metab_filter_q)
       rd <- rd %>%
         dplyr::filter(var %in% sel$var)
+
     }
 
     # if filtering gives an empty matrix, produce an empty df
     if(nrow(rd)==0) {
       data_plot <- data.frame(name=as.character(),
                               count = as.numeric())
+      anno <- data.frame()
+      
     } else {
       # if assoc_sign given, include in data
       if(flag_sign){
@@ -104,6 +110,7 @@ mt_plots_statsbarplot <- function(D,
             dplyr::mutate(association=ifelse(sign(!!sym(assoc_sign))>0, "positive", "negative")) %>%
             dplyr::select(var,association)
           
+          # create data.frame for plotting 
           data_plot <- data.frame(name=rd[[aggregate]] %>% unlist %>% as.vector,
                                   association=rep(sel$association, times= (rd[[aggregate]] %>% sapply(length)))) %>%
             table(exclude = NULL) %>% as.data.frame()
@@ -111,9 +118,11 @@ mt_plots_statsbarplot <- function(D,
 
         }
       } else {
+        # reorder sel according to rd
         sel <- sel[match(sel$var,rd$var),] %>%
           dplyr::select(var)
-
+        
+        # create data.frame for plotting
         data_plot <- rd[[aggregate]] %>%
           unlist %>% table(exclude = NULL) %>% as.data.frame()
         colnames(data_plot) <- c("name","count")
@@ -127,6 +136,7 @@ mt_plots_statsbarplot <- function(D,
 
         # create data frame
         empty <- data.frame(name = agg_empty, count = rep(0, times=length(agg_empty)))
+        
         if("association" %in% colnames(data_plot)){
           empty$association <- "positive"
         }
@@ -137,7 +147,7 @@ mt_plots_statsbarplot <- function(D,
 
       # add number of metabolites in each pathway
       perc <- data_plot %>% dplyr::select(name) %>%
-        left_join(perc, by="name")
+        dplyr::left_join(perc, by="name")
       data_plot <- data_plot %>%
         # add fraction variable
         dplyr::mutate(fraction= count/perc$count)
@@ -156,13 +166,26 @@ mt_plots_statsbarplot <- function(D,
       data_plot <- data_plot %>%
         dplyr::left_join(dict, by=c("name"=aggregate)) %>%
         dplyr::rename(color=sym(colorby))
+      
+      # create annotation data
+      anno <- anno <- data.frame(name = rep(rd$name, times=sapply(rd[[aggregate]], length) %>% as.vector()), 
+                                 var = rep(rd$var, times=sapply(rd[[aggregate]], length) %>% as.vector()), 
+                                 pathway = unlist(rd[[aggregate]]),
+                                 color = ifelse(!is.null(colorby), rep(rd[[colorby]], times=sapply(rd[[aggregate]], length) %>% as.vector()),"pathway")) %>%
+        dplyr::left_join(MetaboTools:::mti_get_stat_by_name(D=D,name=ss) , by="var") %>%
+        dplyr::select(-var)
 
       # if pathway mapping exists in the metadata, use the names provided there
       x <- D %>% metadata
       if ("pathways" %in% names(x)){
         if (aggregate %in% names(x$pathways)) {
           # add pathway names to dataframe
-          data_plot %<>% dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("name"="ID"))
+          data_plot %<>% 
+            dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("name"="ID"))
+          anno %<>% 
+            dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("pathway"="ID")) %>%
+            dplyr::select(name,pathway,pathway_name,color,everything())
+          
           # set Unknown pathway names to Unknown
           if(length(which(is.na(data_plot$pathway_name)))>0){
             data_plot$pathway_name[which(is.na(data_plot$pathway_name))] <- "Unknown"
@@ -170,7 +193,7 @@ mt_plots_statsbarplot <- function(D,
           # substitute codes for names
           data_plot$name <- data_plot$pathway_name
         } else{
-          warning(sprintf("%s field not found in the metadata",aggregate))
+          warning(sprintf("%s field not found in the metadata", aggregate))
         }
       }
       # create labels for plotting
@@ -181,16 +204,27 @@ mt_plots_statsbarplot <- function(D,
 
       # add comparison name to df
       data_plot$comp <- ss
+      anno$comp <- ss
 
-      # return dataframe
-      data_plot
     }
+    list(dt = data_plot, anno = anno)
   })
+  
+  # function to revert string structure
+  revert_list_str_4 <- function(ls) {
+    # get sub-elements in same order
+    x <- lapply(ls, `[`, names(ls[[1]]))
+    # stack and reslice
+    apply(do.call(rbind, x), 2, as.list) 
+  }
+  
+  data <- revert_list_str_4(data)
 
   # if there is at least one result, produce plot, otherwise output empty plot
-  if((sapply(data_plot, function(ss){dim(ss)[1]}) %>% sum()) >0) {
+  if((sapply(data$dt, function(ss){dim(ss)[1]}) %>% sum()) >0) {
     # merge list into a single dataframe
-    data_plot <- do.call(rbind, data_plot) %>% as.data.frame()
+    data_plot <- do.call(rbind, data$dt) %>% as.data.frame()
+    anno <- do.call(rbind, data$anno) %>% as.data.frame()
 
     # optional sorting (only for single statistical results)
     if (sort){
@@ -269,6 +303,21 @@ mt_plots_statsbarplot <- function(D,
     ncol <- NULL
     nrow <- NULL
 
+  }
+
+  if(!is.null(output.file)){
+    if(exists("data_plot")){
+      wb = createWorkbook()
+      sheet = addWorksheet(wb, "Parameters")
+      writeData(wb, sheet=sheet, list(comparisons = stat_name, metab_filter = gsub("~", "", rlang::expr_text(enquo(metab_filter))), aggregate = aggregate, coloredby = colorby))
+      sheet = addWorksheet(wb, "AggregatedPathways")
+      writeData(wb, sheet=sheet, data_plot, rowNames = F, colNames = T)
+      sheet = addWorksheet(wb, "IndividualResults")
+      writeData(wb, sheet=sheet, anno, rowNames = F, colNames = T)
+      saveWorkbook(wb, output.file, overwrite = T)
+    } else {
+      warning("mt_plots_statsbarplot: No significant results. output.file ignored.")
+    }
   }
 
   ## add status information & plot

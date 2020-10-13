@@ -52,14 +52,12 @@ mt_stats_univ_cor <- function(
   if(!missing(sample_filter)) {
 
     filter_q <- dplyr::enquo(sample_filter)
-    Ds <- Ds %>%
-      dplyr::filter(!!filter_q) %>%
-      droplevels()
-    # message("filter metabolites: ", metab_filter_q, " [", nrow(stat), " remaining]")
-    # did we leave 0 rows?
-    if (nrow(Ds)==0) stop("Filtering left 0 rows")
-    if (nrow(Ds)==ncol(D)) MetaboTools:::mti_logwarning('filtering did not filter out any samples')
+    num_samp <- ncol(D)
+    samples.used <- MetaboTools:::mti_filter_samples(Ds, filter_q, num_samp)
+    Ds <- Ds[samples.used,]
 
+  } else {
+    samples.used = rep(T, ncol(D))
   }
 
   met <- colnames(Ds)[(length(colnames(colData(D)))+2):length(colnames(Ds))]
@@ -108,6 +106,7 @@ mt_stats_univ_cor <- function(
         name = stat_name,
         lstobj = NULL,
         groups = outgroups,
+        samples.used = samples.used,
         outcome = var
       )
     )
