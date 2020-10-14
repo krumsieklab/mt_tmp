@@ -53,7 +53,7 @@ mt_stats_univ_wilcox <- function(
 
     filter_q <- dplyr::enquo(sample_filter)
     num_samp <- ncol(D)
-    samples.used <- MetaboTools:::mti_filter_sample(Ds, filter_q, num_samp)
+    samples.used <- MetaboTools:::mti_filter_samples(Ds, filter_q, num_samp)
     Ds <- Ds[samples.used,]
 
   } else {
