@@ -25,13 +25,8 @@ mt_files_checksum <- function(D, file, checksum) {
 
   # if first step in pipeline, create SE
   if(missing(D)){
-    # create a SummarizedExperiment object with empty data frames
-    df <- matrix(c(0,0,0,0), ncol = 2, nrow = 2)
-    D <- SummarizedExperiment(
-      assay=df,
-      rowData=rownames(df),
-      colData=c("dummy1", "dummy2")
-    )
+    # create an empty SummarizedExperiment object
+    D <- SummarizedExperiment()
   }else{
     # validate argument
     stopifnot("SummarizedExperiment" %in% class(D))
