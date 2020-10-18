@@ -16,6 +16,7 @@ mt_plots_statsbarplot(
   assoc_sign,
   add_empty = FALSE,
   keep.unmapped = FALSE,
+  output.file = NULL,
   ...
 )
 }
@@ -41,6 +42,8 @@ mt_plots_statsbarplot(
 \item{add_empty}{boolean, if TRUE adds also empty pathways to the barplot.}
 
 \item{keep.unmapped}{boolean, if TRUE keeps metabolites with no pathway annotations. Default "FALSE".}
+
+\item{output.file}{optional Excel filename to save data to}
 
 \item{...}{additional expression directly passed to aes() of ggplot, can refer to colData}
 }

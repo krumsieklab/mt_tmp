@@ -24,7 +24,7 @@
 #' mt_plots_statsbarplot(stat_name     = "comp",
 #'  metab_filter = p.adj < 0.05,
 #'  aggregate    = "SUB_PATHWAY",
-#'  colorby      = "SUPER_PATHWAYdevtools::install(codes.makepath("MT/MetaboTools"))",
+#'  colorby      = "SUPER_PATHWAY",
 #'  yscale       = "count",
 #'  sort         = TRUE) %>%
 #'  ...}
@@ -73,8 +73,10 @@ mt_plots_statsbarplot <- function(D,
   # set the nulls to unknown
   if(keep.unmapped){
     rd[[aggregate]][which(rd[[aggregate]]=="NULL")] <- "Unmapped"
+  } else{
+    rd[which(rd[[aggregate]]!="NULL"), ]
   }
-
+  
   perc <- rd[[aggregate]] %>%
     unlist %>% table(exclude = NULL) %>% as.data.frame()
   colnames(perc) <- c("name","count")
@@ -235,7 +237,7 @@ mt_plots_statsbarplot <- function(D,
 
     # convert count to numeric
     data_plot$count %<>% as.numeric
-
+    
     ## CREATE PLOT
     p <- ggplot(data_plot, aes(label)) +
       (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "positive"), aes(y = !!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)}) +
@@ -307,14 +309,15 @@ mt_plots_statsbarplot <- function(D,
 
   if(!is.null(output.file)){
     if(exists("data_plot")){
-      wb = createWorkbook()
-      sheet = addWorksheet(wb, "Parameters")
-      writeData(wb, sheet=sheet, list(comparisons = stat_name, metab_filter = gsub("~", "", rlang::expr_text(enquo(metab_filter))), aggregate = aggregate, coloredby = colorby))
-      sheet = addWorksheet(wb, "AggregatedPathways")
-      writeData(wb, sheet=sheet, data_plot, rowNames = F, colNames = T)
-      sheet = addWorksheet(wb, "IndividualResults")
-      writeData(wb, sheet=sheet, anno, rowNames = F, colNames = T)
-      saveWorkbook(wb, output.file, overwrite = T)
+      wb = openxlsx::createWorkbook()
+      sheet = openxlsx::addWorksheet(wb, "Parameters")
+      if(is.null(colorby)){colorby <- 'none'}
+      openxlsx::writeData(wb, sheet=sheet, list(comparisons = stat_name, metab_filter = gsub("~", "", rlang::expr_text(enquo(metab_filter))), aggregate = aggregate, coloredby = colorby))
+      sheet = openxlsx::addWorksheet(wb, "AggregatedPathways")
+      openxlsx::writeData(wb, sheet=sheet, data_plot, rowNames = F, colNames = T)
+      sheet = openxlsx::addWorksheet(wb, "IndividualResults")
+      openxlsx::writeData(wb, sheet=sheet, anno, rowNames = F, colNames = T)
+      openxlsx::saveWorkbook(wb, output.file, overwrite = T)
     } else {
       warning("mt_plots_statsbarplot: No significant results. output.file ignored.")
     }
