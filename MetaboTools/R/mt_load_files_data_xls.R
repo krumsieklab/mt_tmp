@@ -3,7 +3,7 @@
 #' Loads numerical data matrix from Excel sheet.
 #' Can handle files with samples in rows or columns.
 #'
-#' Default name for entity in columns will be 'name".
+#' Default name for entity in columns will be "name".
 #'
 #' @param D \code{SummarizedExperiment} input (missing if first step in pipeline)
 #' @param file input Excel file
@@ -91,6 +91,7 @@ mt_load_files_data_xls <- function(D,
   # zeros to NAs?
   if (zero_to_NA) assay[assay==0] <- NA
 
+  # save column names as sample annotation
   cd <- data.frame(as.character(colnames(assay)))
   colnames(cd)[1] <- ifelse(samples_in_rows,ID_col,'sample')
 

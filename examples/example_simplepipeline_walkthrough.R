@@ -10,22 +10,50 @@ library(MetaboTools)
 D <-
   # load data
   mt_load_files_metabolon(file = codes.makepath("Mt/sampledata.xlsx"), sheet = "OrigScale") %>%
+  ## new SE
+  ## assay: 244 rows and 12 columns; column names are 1:12, row names are from metabolon "BIOCHEMICAL" column
+  ## rowData: 244 rows with 16 metabolite annotation columns
+  ## colData:12 rows with 9 sample annotation columns
+  ## metadata:
+  ##  result: standard info; no output or output2
+  ##  sessionInfo: session information at time of run
+  ##  parseInfo: file name and sheet name
+
   # timing start
   mt_logging_tic() %>%
+  ## metadata:
+  ##  result: standard info
 
   ###
   # heading
   mt_reporting_heading("Preprocessing") %>%
+  ## metadata:
+  ##  result: standard info; output - list with level and title string
   mt_reporting_heading("Part 1", lvl=2) %>%
+  ## metadata:
+  ##  result: standard info; output - list with level and title string
   # sample boxplot
   mt_plots_sampleboxplot() %>%
+  ## metadata:
+  ##  result: standard info; output - list of plots "p"
   # missingness plot
   mt_plots_qc_missingness() %>%
+  ## metadata
+  ##  result: standard info; output - list of plots "plots"
   # filter metabolites with >20% missing values, then samples with >10% missing values
   mt_pre_filtermiss(met_max=0.2) %>%
+  ## assay: filter out rows with missingness >= 20% (244 -> 186)
+  ## rowData: filter out rows removed from assay (244 -> 186)
+  ## metadata:
+  ##  result: standard info; output - list of rows kept
   mt_pre_filtermiss(sample_max=0.1) %>%
+  ## assay: filter out columns with missingness >= 10% (12 -> 12)
+  ## colData: filter out rows removed from assay (12 -> 12)
+  ## metadata:
+  ##  result: standard info; output - list of columns kept
   # batch correction by variable BATCH_MOCK
   mt_pre_batch_median(batches = "BATCH_MOCK") %>%
+  ##
   # heading
   mt_reporting_heading("Part 2", lvl=2) %>%
   # quotient normalization
@@ -91,5 +119,5 @@ D <-
 
 #### generate and knit markdown ----
 
-D %>% mt_reporting_html(outfile="example_simplepipeline.html", output.calls = T)
+D %>% mt_reporting_html(outfile="/Users/kelsey/Desktop/example_simplepipeline_walkthrough.html", output.calls = T)
 

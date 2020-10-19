@@ -1,7 +1,5 @@
 #' Validate MD5 checksum of file.
 #'
-#' Note: Has to be run after loading the data, since it needs to operate on an existing SummarizedExperiment.
-#'
 #' @param D SummarizedExperiment for pass-through (missing if first step in pipeline)
 #' @param file File path... does not necessarily have to be the same as the dataset loaded in the pipeline
 #' @param checksum Checksum to test for.

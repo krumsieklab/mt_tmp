@@ -38,11 +38,9 @@ mt_load_files_olink <- function(
 
   # validate arguments
   if (missing(file)) stop("file must be provided")
-  if (missing(sheet)) stop("sheet must be provided")
 
   # save input information
   result$info$file <- file
-  result$info$sheet <- paste(sheet_list, collapse = ", ")
 
   # get metadata from D if present
   if(!missing(D)){
