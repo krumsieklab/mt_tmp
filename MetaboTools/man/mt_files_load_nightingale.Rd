@@ -6,17 +6,17 @@
 \usage{
 mt_files_load_nightingale(
   excel_file,
-  raw_data,
-  met_info,
+  raw_sheet,
+  met_sheet,
   sample_id = "Sample id"
 )
 }
 \arguments{
 \item{excel_file}{input Excel file}
 
-\item{raw_data}{name of sheet with raw data}
+\item{raw_sheet}{name of sheet with raw data}
 
-\item{met_info}{name of sheet with biomarker information}
+\item{met_sheet}{name of sheet with biomarker information}
 
 \item{sample_id}{optional, name of the column with sample id}
 }

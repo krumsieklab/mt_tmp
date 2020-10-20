@@ -59,7 +59,7 @@ Creates a bar plot
 mt_plots_statsbarplot(stat_name     = "comp",
  metab_filter = p.adj < 0.05,
  aggregate    = "SUB_PATHWAY",
- colorby      = "SUPER_PATHWAYdevtools::install(codes.makepath("MT/MetaboTools"))",
+ colorby      = "SUPER_PATHWAY",
  yscale       = "count",
  sort         = TRUE) \%>\%
  ...}
