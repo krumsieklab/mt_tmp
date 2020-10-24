@@ -6,8 +6,10 @@
 \usage{
 mt_files_load_nightingale(
   excel_file,
-  raw_sheet,
-  met_sheet,
+  raw_sheet = "Results",
+  met_sheet = "Biomarker annotations",
+  met_qc = "Tags per biomarker",
+  sample_qc = "Quality control tags and notes",
   sample_id = "Sample id"
 )
 }
@@ -17,6 +19,10 @@ mt_files_load_nightingale(
 \item{raw_sheet}{name of sheet with raw data}
 
 \item{met_sheet}{name of sheet with biomarker information}
+
+\item{met_qc}{name of sheet with biomarker qc tags}
+
+\item{sample_qc}{name of sheet with sample qc tags}
 
 \item{sample_id}{optional, name of the column with sample id}
 }
@@ -29,7 +35,13 @@ Loads data from a Nightingale format Excel file.
 \examples{
 \dontrun{D <-
   # load data
-  mt_files_load_nightingale(codes.makepath("Mt/sampledata_night.xlsx"), "Results") \%>\%
+  mt_files_load_nightingale(excel_file = codes.makepath("Mt/sampledata_night.xlsx"), 
+  raw_sheet = "Results", 
+  met_sheet = "Biomarker annotations",
+  met_qc = "Tags per biomarker",
+  sample_qc = "Quality control tags and notes",
+  sample_id = 'Sample id'# optional name of the column with sample id, default is 'Sample id'
+  ) \%>\%
   ...}
 
 }
