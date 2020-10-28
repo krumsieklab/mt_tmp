@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_reporting_text.R
 \name{mt_reporting_text}
 \alias{mt_reporting_text}
-\title{Store heading that will be added to report later.}
+\title{Store text that will be added to html report later.}
 \usage{
 mt_reporting_text(D, text)
 }
@@ -12,15 +12,15 @@ mt_reporting_text(D, text)
 \item{text}{Heading text}
 }
 \value{
-$result: stores info about heading
+$result: stores plain text for use with html
 }
 \description{
-Will be used when calling \code{mt_reporting_generateMD}.
+Plain text to add to the html document. Will be used when calling \code{mt_reporting_html} or \code{mt_reporting_html_nonLinear}.
 }
 \examples{
 \dontrun{... \%>\%
 # add first and second level of heading
-mt_reporting_text("Preprocessing") \%>\%
+mt_reporting_heading("Preprocessing") \%>\%
 mt_reporting_text("Data were first filtered for missing values, then normalized and log-transformed") \%>\%
 ...}
 

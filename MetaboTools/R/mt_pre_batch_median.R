@@ -3,7 +3,8 @@
 #' Same approach that Metabolon uses for runday correction. Divides metabolite values by the median value per batch.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param batches # sample annotation (colData) column name that contains batch assignment
+#' @param batches sample annotation (colData) column name that contains batch assignment
+#' @param ref_samples expression to filter out reference samples to use from colData
 #'
 #' @return assay: batch-corrected version
 #'
@@ -21,7 +22,7 @@
 mt_pre_batch_median = function(
   D,          # SummarizedExperiment input
   batches,    # sample annotation column that contains batch info
-  ref_samples # expression to filter out reference samples to use from rowData
+  ref_samples # expression to filter out reference samples to use from colData
 ) {
 
   # validate and extract arguments
@@ -71,6 +72,9 @@ mt_pre_batch_median = function(
     X[b==batch,] <-  X[b==batch,] / med_matrix
   }
 
+  # replace original assay with batch corrected assay
+  assay(D) = t(X)
+
   # ref samples logging string
   refadd <- if(missing(ref_samples)){""}else{sprintf(": %s", as.character(dplyr::enquo(ref_samples)))}
 
@@ -83,7 +87,6 @@ mt_pre_batch_median = function(
     )
 
   # return
-  assay(D) = t(X)
   D
 
 

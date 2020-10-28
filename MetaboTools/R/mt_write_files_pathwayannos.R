@@ -24,7 +24,9 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_write_files_pathwayannos <- function(D, pwfield, file) {
+mt_write_files_pathwayannos <- function(D,
+                                        pwfield,
+                                        file) {
 
   wb <- openxlsx::createWorkbook()
   # helper function

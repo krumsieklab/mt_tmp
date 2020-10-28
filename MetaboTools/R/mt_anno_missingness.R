@@ -38,8 +38,6 @@ mt_anno_missingness <- function(D,
   if (!(anno_type %in% c("samples","metabolites"))) stop("anno_type must be either 'samples' or 'metabolites'")
   if(length(anno_type) > 1) stop("anno_type must be either 'samples' OR 'metabolites' - NOT both")
 
-  # check that assay data hasn't been filtered already?
-
   X <- t(assay(D))
 
   if(anno_type == "metabolites"){

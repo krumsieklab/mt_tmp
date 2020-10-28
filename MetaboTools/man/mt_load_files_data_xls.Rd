@@ -35,7 +35,7 @@ Loads numerical data matrix from Excel sheet.
 Can handle files with samples in rows or columns.
 }
 \details{
-Default name for entity in columns will be 'name".
+Default name for entity in columns will be "name".
 }
 \examples{
 # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file

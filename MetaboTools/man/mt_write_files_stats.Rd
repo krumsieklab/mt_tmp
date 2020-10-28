@@ -22,9 +22,9 @@ mt_write_files_stats(
 
 \item{sort.by.p}{Automatically sort by p-values? (default: False)}
 
-\item{output.dir}{If the statistical test was a 2-group test, output the direction of the effect (which of the two groups the effect was "high" in). Default: Yes}
+\item{output.dir}{If the statistical test was a 2-group test, output the direction of the effect (which of the two groups the effect was "high" in). Default: T}
 
-\item{metname}{#optional parameter with name of rowdata column to include in the output}
+\item{metname}{optional parameter with name of rowdata column to include in the output}
 }
 \value{
 Does not change the SummarizedExperiment.

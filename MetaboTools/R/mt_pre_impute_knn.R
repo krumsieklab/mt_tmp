@@ -22,7 +22,10 @@
 #'
 #' @export
 
-mt_pre_impute_knn <- function(D, method="knn.obs.euc.sel", K=10, verbose=F) {
+mt_pre_impute_knn <- function(D,
+                              method="knn.obs.euc.sel",
+                              K=10,
+                              verbose=F) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

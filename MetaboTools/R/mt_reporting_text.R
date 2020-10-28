@@ -1,16 +1,16 @@
-#' Store heading that will be added to report later.
+#' Store text that will be added to html report later.
 #'
-#' Will be used when calling \code{mt_reporting_generateMD}.
+#' Plain text to add to the html document. Will be used when calling \code{mt_reporting_html} or \code{mt_reporting_html_nonLinear}.
 #'
 #' @param D  \code{SummarizedExperiment} input
 #' @param text Heading text
 #'
-#' @return $result: stores info about heading
+#' @return $result: stores plain text for use with html
 #'
 #' @examples
 #' \dontrun{... %>%
 #' # add first and second level of heading
-#' mt_reporting_text("Preprocessing") %>%
+#' mt_reporting_heading("Preprocessing") %>%
 #' mt_reporting_text("Data were first filtered for missing values, then normalized and log-transformed") %>%
 #' ...}
 #'

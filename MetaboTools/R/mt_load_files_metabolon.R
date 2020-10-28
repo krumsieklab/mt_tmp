@@ -42,7 +42,7 @@ mt_load_files_metabolon <- function(
   # get metadata from D if present
   if(!missing(D)){
     # validate SE
-    if ("SummarizedExperiment" %in% class(D)) stop("D is not of class SummarizedExperiment")
+    if ("SummarizedExperiment" %in% class(D) == F) stop("D is not of class SummarizedExperiment")
     if (length(assays(D))!=0) stop("Passed SummarizedExperiment assay must be empty!")
 
     # get metadata

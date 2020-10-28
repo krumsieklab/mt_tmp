@@ -117,10 +117,10 @@ mt_anno_files_xls <-
   } else
     stop("bug")
 
-  # coldata and assay cannot have overlapping names
+  # colData and rowData cannot have overlapping names
   inters <- intersect(colnames(colData(D)), rownames(D))
   if (length(inters)>0) {
-    stop(sprintf("There are metabolites and colData variables with the same name: %s", paste0(inters, collapse = ", ")))
+    stop(sprintf("There are metabolites (rowData) and sample (colData) variables with the same name: %s", paste0(inters, collapse = ", ")))
   }
 
 

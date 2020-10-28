@@ -17,7 +17,7 @@ mt_files_checksum(D, file, checksum)
 Does not change SummarizedExperiment, only adds a log message.
 }
 \description{
-Note: Has to be run after loading the data, since it needs to operate on an existing SummarizedExperiment.
+Validate MD5 checksum of file.
 }
 \examples{
 # first call, to get the checksum (will crash, deliberately)

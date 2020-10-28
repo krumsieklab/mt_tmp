@@ -15,7 +15,8 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_write_files_xls <- function(D, file) {
+mt_write_files_xls <- function(D,
+                               file) {
 
   # verify that input is a SummarizedExperiment
   stopifnot("SummarizedExperiment" %in% class(D))

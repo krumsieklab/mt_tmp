@@ -10,8 +10,6 @@
 #' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
 #' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
 #' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}"
-#' @param rows number rows of boxplots in $result
-#' @param cols number columns of boxplots in $result
 #' @param full_info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
 #' @param text_size text size of the annotations
 #' @param jitter add geom_jitter ("jitter") or geom_beeswarm ("beeswarm") to boxplot, exclude if NULL;  default "beeswarm"
@@ -40,8 +38,6 @@ mt_plots_boxplot_scatter <- function(D,
                                      metab_filter = p.value < 0.05,
                                      metab_sort = p.value,
                                      annotation = "{sprintf('P-value: %.1e', p.value)}",
-                                     rows,
-                                     cols,
                                      full_info = F,
                                      text_size = 3.88,
                                      jitter = "beeswarm",

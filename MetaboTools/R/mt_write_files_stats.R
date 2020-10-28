@@ -6,8 +6,8 @@
 #' @param file output filename to write to
 #' @param compnames Names of one or more statistical comparison to be written out. If NULL, will export all.
 #' @param sort.by.p Automatically sort by p-values? (default: False)
-#' @param output.dir If the statistical test was a 2-group test, output the direction of the effect (which of the two groups the effect was "high" in). Default: Yes
-#' @param metname #optional parameter with name of rowdata column to include in the output
+#' @param output.dir If the statistical test was a 2-group test, output the direction of the effect (which of the two groups the effect was "high" in). Default: T
+#' @param metname optional parameter with name of rowdata column to include in the output
 #' @return Does not change the SummarizedExperiment.
 #'
 #' @examples
@@ -22,7 +22,12 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_write_files_stats <- function(D, file, compnames=NULL, sort.by.p=F, output.dir=T, metname=NULL) {
+mt_write_files_stats <- function(D,
+                                 file,
+                                 compnames=NULL,
+                                 sort.by.p=F,
+                                 output.dir=T,
+                                 metname=NULL) {
 
   # verify input arguments
   stopifnot("SummarizedExperiment" %in% class(D))

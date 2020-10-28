@@ -4,7 +4,7 @@
 #' \href{https://www.ncbi.nlm.nih.gov/pubmed/16808434}{https://www.ncbi.nlm.nih.gov/pubmed/16808434}
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param vars index vector of variables of be used, default: all
+#' @param vars index vector of variables to be used, default: all
 #' @param na_err T/F, throw error for NA's or just ignore?
 #' @param ref_samples expression filtering reference samples from colData
 #' @param met_max maximum fraction of missingness to select metabolites to be used in the reference (default: 1, i.e. all metabolites)
@@ -82,6 +82,9 @@ mt_pre_norm_quot <- function(
   #Y = t(apply(X,1,  function(s) s /  d) )
   rownames(Y) = rownames(X)
 
+  # replace original assay with normalized assay
+  assay(D) = t(Y)
+
   # add status information
   funargs <- mti_funargs()
   metadata(D)$results %<>%
@@ -92,7 +95,6 @@ mt_pre_norm_quot <- function(
     )
 
   # return
-  assay(D) = t(Y)
   D
 
 }

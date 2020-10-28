@@ -95,6 +95,9 @@ mt_pre_confounding_correction <- function(
   colnames(Xh) <- colnames(X)
   rownames(Xh) <- rownames(X)
 
+  # replace original assay with corrected verison
+  assay(D) = Xh
+
   # add status information
   funargs <- mti_funargs()
   metadata(D)$results %<>%
@@ -108,7 +111,6 @@ mt_pre_confounding_correction <- function(
     )
 
   # return
-  assay(D) = Xh
   D
 
 }

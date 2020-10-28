@@ -9,7 +9,7 @@ mt_write_files_SE(D, file)
 \arguments{
 \item{D}{SummarizedExperiment input}
 
-\item{file}{File to write to.}
+\item{file}{output filename to write to}
 }
 \description{
 Simple helper function to save SE to a file. Object name will be \code{D}

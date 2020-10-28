@@ -3,7 +3,7 @@
 #' Simple helper function to save SE to a file. Object name will be \code{D}
 #'
 #' @param D SummarizedExperiment input
-#' @param file File to write to.
+#' @param file output filename to write to
 #'
 #' @examples
 #' \dontrun{#
@@ -16,7 +16,8 @@
 #'
 #' @export
 
-mt_write_files_SE <- function(D, file) {
+mt_write_files_SE <- function(D,
+                              file) {
 
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
