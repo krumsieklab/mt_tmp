@@ -28,7 +28,8 @@ Only support specific composite score association analysis in our COVID project
 \examples{
 \donttest{
  mt_stats_univ_cs(
-   y     = ~ Group,
+   y     = Group,
+   patient_id = Subject_ID,
    stat_name         = "composite_score",
    sample_filter = (Group \%in\% c("grp1","grp2")),
  ) \%>\% ...
