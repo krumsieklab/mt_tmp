@@ -42,9 +42,9 @@ mt_modify_averagesample <- function(
   D<- D[,-to_remove]
 
   ## add status information
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf(' %d duplicate samples combined', length(to_remove))
     )
