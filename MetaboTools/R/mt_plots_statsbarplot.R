@@ -24,7 +24,7 @@
 #' mt_plots_statsbarplot(stat_name     = "comp",
 #'  metab_filter = p.adj < 0.05,
 #'  aggregate    = "SUB_PATHWAY",
-#'  colorby      = "SUPER_PATHWAYdevtools::install(codes.makepath("MT/MetaboTools"))",
+#'  colorby      = "SUPER_PATHWAY",
 #'  yscale       = "count",
 #'  sort         = TRUE) %>%
 #'  ...}
@@ -65,7 +65,6 @@ mt_plots_statsbarplot <- function(D,
   if(!is.null(colorby))
     if(!(colorby %in% colnames(rowData(D))))
       stop(sprintf("colorby column '%s' not found in rowData", colorby))
-
   ## rowData
   rd <- rowData(D) %>%
     as.data.frame() %>%
@@ -73,8 +72,9 @@ mt_plots_statsbarplot <- function(D,
   # set the nulls to unknown
   if(keep.unmapped){
     rd[[aggregate]][which(rd[[aggregate]]=="NULL")] <- "Unmapped"
+  } else{
+    rd <- rd[which(rd[[aggregate]]!="NULL"), ]
   }
-
   perc <- rd[[aggregate]] %>%
     unlist %>% table(exclude = NULL) %>% as.data.frame()
   colnames(perc) <- c("name","count")
@@ -87,7 +87,8 @@ mt_plots_statsbarplot <- function(D,
     if(flag_filter) {
       metab_filter_q <- dplyr::enquo(metab_filter)
       sel <- MetaboTools:::mti_get_stat_by_name(D=D,name=ss) %>%
-        dplyr::filter(!!metab_filter_q)
+        dplyr::filter(!!metab_filter_q) %>%
+        dplyr::filter(var %in% rd$var)
       rd <- rd %>%
         dplyr::filter(var %in% sel$var)
 
@@ -109,7 +110,7 @@ mt_plots_statsbarplot <- function(D,
           sel <- sel[match(sel$var,rd$var),] %>%
             dplyr::mutate(association=ifelse(sign(!!sym(assoc_sign))>0, "positive", "negative")) %>%
             dplyr::select(var,association)
-          
+    
           # create data.frame for plotting 
           data_plot <- data.frame(name=rd[[aggregate]] %>% unlist %>% as.vector,
                                   association=rep(sel$association, times= (rd[[aggregate]] %>% sapply(length)))) %>%
@@ -176,6 +177,7 @@ mt_plots_statsbarplot <- function(D,
         dplyr::select(-var)
 
       # if pathway mapping exists in the metadata, use the names provided there
+
       x <- D %>% metadata
       if ("pathways" %in% names(x)){
         if (aggregate %in% names(x$pathways)) {
@@ -217,7 +219,7 @@ mt_plots_statsbarplot <- function(D,
     # stack and reslice
     apply(do.call(rbind, x), 2, as.list) 
   }
-  
+
   data <- revert_list_str_4(data)
 
   # if there is at least one result, produce plot, otherwise output empty plot
@@ -235,12 +237,12 @@ mt_plots_statsbarplot <- function(D,
 
     # convert count to numeric
     data_plot$count %<>% as.numeric
-
+    
     ## CREATE PLOT
     p <- ggplot(data_plot, aes(label)) +
       (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "positive"), aes(y = !!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)}) +
       (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "negative"), aes(y = -!!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)} else{geom_bar(aes(x=label, y=!!sym(yscale), fill=color), stat = "identity", color="black", size=0.4)}) +
-      (if(yscale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
+      (if(yscale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s", gsub("~", "", rlang::expr_text(dplyr::enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
       (if(yscale=="count" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-max(data_plot$count, na.rm = T)*1.7, max(data_plot$count, na.rm = T)*1.7))}) +
       (if(yscale=="count" & !("association" %in% colnames(data_plot))) {expand_limits(y=c(0, max(data_plot$count, na.rm = T)*1.7))}) +
       (if(yscale=="fraction" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-1, 1))}) +
@@ -307,14 +309,15 @@ mt_plots_statsbarplot <- function(D,
 
   if(!is.null(output.file)){
     if(exists("data_plot")){
-      wb = createWorkbook()
-      sheet = addWorksheet(wb, "Parameters")
-      writeData(wb, sheet=sheet, list(comparisons = stat_name, metab_filter = gsub("~", "", rlang::expr_text(enquo(metab_filter))), aggregate = aggregate, coloredby = colorby))
-      sheet = addWorksheet(wb, "AggregatedPathways")
-      writeData(wb, sheet=sheet, data_plot, rowNames = F, colNames = T)
-      sheet = addWorksheet(wb, "IndividualResults")
-      writeData(wb, sheet=sheet, anno, rowNames = F, colNames = T)
-      saveWorkbook(wb, output.file, overwrite = T)
+      wb = openxlsx::createWorkbook()
+      sheet = openxlsx::addWorksheet(wb, "Parameters")
+      if(is.null(colorby)){colorby <- 'none'}
+      openxlsx::writeData(wb, sheet=sheet, list(comparisons = stat_name, metab_filter = gsub("~", "", rlang::expr_text(enquo(metab_filter))), aggregate = aggregate, coloredby = colorby))
+      sheet = openxlsx::addWorksheet(wb, "AggregatedPathways")
+      openxlsx::writeData(wb, sheet=sheet, data_plot, rowNames = F, colNames = T)
+      sheet = openxlsx::addWorksheet(wb, "IndividualResults")
+      openxlsx::writeData(wb, sheet=sheet, anno, rowNames = F, colNames = T)
+      openxlsx::saveWorkbook(wb, output.file, overwrite = T)
     } else {
       warning("mt_plots_statsbarplot: No significant results. output.file ignored.")
     }

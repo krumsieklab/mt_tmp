@@ -16,6 +16,7 @@ mt_plots_statsbarplot(
   assoc_sign,
   add_empty = FALSE,
   keep.unmapped = FALSE,
+  output.file = NULL,
   ...
 )
 }
@@ -42,6 +43,8 @@ mt_plots_statsbarplot(
 
 \item{keep.unmapped}{boolean, if TRUE keeps metabolites with no pathway annotations. Default "FALSE".}
 
+\item{output.file}{optional Excel filename to save data to}
+
 \item{...}{additional expression directly passed to aes() of ggplot, can refer to colData}
 }
 \value{
@@ -56,7 +59,7 @@ Creates a bar plot
 mt_plots_statsbarplot(stat_name     = "comp",
  metab_filter = p.adj < 0.05,
  aggregate    = "SUB_PATHWAY",
- colorby      = "SUPER_PATHWAYdevtools::install(codes.makepath("MT/MetaboTools"))",
+ colorby      = "SUPER_PATHWAY",
  yscale       = "count",
  sort         = TRUE) \%>\%
  ...}
