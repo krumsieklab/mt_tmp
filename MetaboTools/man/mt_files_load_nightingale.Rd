@@ -6,25 +6,28 @@
 \usage{
 mt_files_load_nightingale(
   excel_file,
-  raw_sheet = "Results",
+  data_sheet,
+  sample_id,
+  format_type = "multiple_sheets",
   met_sheet = "Biomarker annotations",
   met_qc = "Tags per biomarker",
-  sample_qc = "Quality control tags and notes",
-  sample_id = "Sample id"
+  sample_qc = "Quality control tags and notes"
 )
 }
 \arguments{
-\item{excel_file}{input Excel file}
+\item{excel_file}{input excel file}
 
-\item{raw_sheet}{name of sheet with raw data}
-
-\item{met_sheet}{name of sheet with biomarker information}
-
-\item{met_qc}{name of sheet with biomarker qc tags}
-
-\item{sample_qc}{name of sheet with sample qc tags}
+\item{data_sheet}{optional if format_type is multiple sheets, name of sheet with data}
 
 \item{sample_id}{optional, name of the column with sample id}
+
+\item{format_type}{optional, type of nightingale format, single_sheet, multiple_sheets}
+
+\item{met_sheet}{optional, name of sheet with biomarker information}
+
+\item{met_qc}{optional, name of sheet with biomarker qc tags}
+
+\item{sample_qc}{optional, name of sheet with sample qc tags}
 }
 \value{
 Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry
@@ -35,13 +38,7 @@ Loads data from a Nightingale format Excel file.
 \examples{
 \dontrun{D <-
   # load data
-  mt_files_load_nightingale(excel_file = codes.makepath("Mt/sampledata_night.xlsx"), 
-  raw_sheet = "Results", 
-  met_sheet = "Biomarker annotations",
-  met_qc = "Tags per biomarker",
-  sample_qc = "Quality control tags and notes",
-  sample_id = 'Sample id'# optional name of the column with sample id, default is 'Sample id'
-  ) \%>\%
+  mt_files_load_nightingale(excel_file = codes.makepath("Mt/sampledata_night.xlsx")) \%>\%
   ...}
 
 }
