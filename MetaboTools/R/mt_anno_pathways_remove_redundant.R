@@ -75,7 +75,7 @@ mt_anno_pathways_remove_redundant <- function(
     dplyr::mutate(ID = stringr::str_split(ID, ", "))
   
   # match the nested pathways to our lieblings IDs
-  match_idx <-match(row_data$met_ID, pw_ID_replacement$metID)
+  match_idx <-match(row_data$met_ID, pw_ID_replacement$met_ID)
   pw_ID_replacement <- pw_ID_replacement$ID[match_idx]
   
   pwdb_summary_replacement <-
