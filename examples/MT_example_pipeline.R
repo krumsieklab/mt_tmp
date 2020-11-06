@@ -18,6 +18,9 @@ setwd("/Users/kelsey/Desktop/KrumsiekLab/")
 # NTS: need to be able to load this via data()
 file_data <- "/Users/kelsey/Desktop/KrumsiekLab/simulated_data.xlsx"
 
+# NOTE: IN THIS EXAMPLE WE DO NOT GROUP REUSABLE FUNCTION STEPS INTO FUNCTIONS BUT REPEAT THEM AS A DEMONSTRATION OF THE BROAD
+# FUNCITON OF THE TOOLBOX
+
 ##############################################################################################################################
 # PART 1 - STARTING A METABOTOOLS PIPELINE
 ##############################################################################################################################
@@ -67,28 +70,7 @@ D <- D %>%
 
 
 ##############################################################################################################################
-# PART 3.1 - PREPROCESSING: MISSING ANALYSIS
-##############################################################################################################################
-
-D <- D %>%
-  # heading for html file
-  mt_reporting_heading(strtitle = "Preprocessing", lvl = 1) %>%
-  # heading for html file
-  mt_reporting_heading(strtitle = "Missingness Analysis", lvl = 2) %>%
-  # section text
-  mt_reporting_text(text = "Perform missingness analysis to determine if NAs significantly accumulate in one of the Diagnosis
-                    groups. Adjust output of test using multiple testing correction.") %>%
-  # compute Fisher's exact test
-  mt_stats_univ_missingness(comp_col="Diagnosis", stat_name="missingness") %>%
-  # create p-value qq plot
-  mt_plots_pvalqq(stat_name = "missingness") %>%
-  # apply multiple testing correction
-  #   alternative function: mt_post_multTest_effdim
-  mt_post_multTest(stat_name="missingness", method="BH") %>%
-  {.}
-
-##############################################################################################################################
-# PART 3.2 - PREPROCESSING: FILTERING
+# PART 3.2 - PREPROCESSING: FILTERING MISSING VALUES
 ##############################################################################################################################
 
 D <- D %>%
@@ -104,7 +86,7 @@ D <- D %>%
   mt_pre_filtermiss(met_max = 0.5, met_group = "Diagnosis") %>%
   # plot missingness distribution after filtering
   mt_plots_qc_missingness(met_max=0.5) %>%
-  # add missingness percentage as annotation to samples
+  # add missingness percentage as annotation to samples (remaining missing)
   mt_anno_missingness(anno_type = "samples", out_col = "missing") %>%
   # add missingness percentage as annotation to metabolites
   mt_anno_missingness(anno_type = "metabolites", out_col = "missing") %>%
@@ -122,6 +104,7 @@ D <- D %>%
                     normalization, plot boxplot with dilution factors from quotient normalization, plot sample boxplot after
                     normalization, log transform the data, impute missing data using knn, plot sample boxplot after imputation,
                     detect outliers, log dataset info, write pre-processed data to file.") %>%
+  # NOTE: the wrapper function mtw_preprocess can be used in place of the functions below
   # plot sample boxplots
   mt_plots_sampleboxplot(color=Diagnosis, plottitle = "Original", logged = T) %>%
   # apply batch correction
@@ -146,7 +129,11 @@ D <- D %>%
   mt_plots_sampleboxplot(color=Diagnosis, plottitle = "After imputation", logged = T) %>%
   # outlier detection (univariate)
   #   related function: mt_pre_outliercorrection
+  # KELSEY: talk to Richa & Annalise
   mt_pre_outlier(method="univariate") %>%
+  # correct metabolite abundances for Age
+  #   alternative function: mt_pre_confounding_correction_stepwise_aic
+  #mt_pre_confounding_correction(formula = ~ Age) %>%
   # print infos about dataset
   mt_logging_datasetinfo() %>%
   # write preprocessed data to Excel file
@@ -161,6 +148,7 @@ D <- D %>%
 D <- D %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Global Statistics", lvl = 2) %>%
+  # NOTE: the wrapper function mtw_global_statistics() can alternatively be used in place of the functions below
   # plot PCA
   mt_plots_PCA(scaledata = T, title = "scaled PCA - Diagnosis", color=Diagnosis, size=2.5, ggadd=scale_size_identity()) %>%
   # plot UMAP
@@ -180,11 +168,7 @@ D %>% mt_reporting_html(outfile = "/Users/kelsey/Desktop/MT_Example_PreProcessed
 # create new SE object for analysis pipeline
 D1 <- D
 
-# remove results list but keep pre-processed SE data frames
-D1 %<>% mt_stripresults() %>%
-  # indicates this data is logged
-  mt_flag_logged()
-
+# KELSEY
 D1 <- D1 %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Get Pathway Annotations", lvl = 1) %>%
@@ -200,7 +184,28 @@ D1 <- D1 %>%
   {.}
 
 ##############################################################################################################################
-# PART 5.1 - METABOLITE ANALYSIS: AGE ANALYSIS
+# PART 5 - MISSINGNESS ANALYSIS
+##############################################################################################################################
+
+D <- D %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Missingness Analysis", lvl = 1) %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Missingness analysis", lvl = 2) %>%
+  # section text
+  mt_reporting_text(text = "Perform missingness analysis to determine if NAs significantly accumulate in one of the Diagnosis
+                    groups. Adjust output of test using multiple testing correction.") %>%
+  # compute Fisher's exact test
+  mt_stats_univ_missingness(comp_col="Diagnosis", stat_name="missingness") %>%
+  # create p-value qq plot
+  mt_plots_pvalqq(stat_name = "missingness") %>%
+  # apply multiple testing correction
+  #   alternative function: mt_post_multTest_effdim
+  mt_post_multTest(stat_name="missingness", method="BH") %>%
+  {.}
+
+##############################################################################################################################
+# PART 6.1 - METABOLITE ANALYSIS: AGE ANALYSIS
 ##############################################################################################################################
 
 # create another SE object for first analysis branch (metabolites)
@@ -213,6 +218,7 @@ D2 <- D1 %>%
   mt_stats_univ_cor(method = "pearson",
                     var = "Age",
                     stat_name = "Age met")%>%
+  # ADD PVALQQ
   # add multiple testing correction
   mt_post_multTest(stat_name = "Age met", method = "BH") %>%
   # add stats logging
@@ -233,13 +239,10 @@ D2 <- D1 %>%
                            metab_filter = p.adj < 1E-10, # made very small because otherwise would take an eternity to generate all plots
                            metab_sort = p.value,
                            annotation = "{sprintf('P-value: %.2e', p.value)}\nP.adj: {sprintf('%.2e', p.adj)}") %>%
-  # correct metabolite abundances for Age
-  #   alternative function: mt_pre_confounding_correction_stepwise_aic
-  mt_pre_confounding_correction(formula = ~ Age) %>%
   {.}
 
 ##############################################################################################################################
-# PART 5.2 - METABOLITE ANALYSIS: DIAGNOSIS ANALYSIS
+# PART 6.2 - METABOLITE ANALYSIS: DIAGNOSIS ANALYSIS
 ##############################################################################################################################
 
 D2 <- D2 %>%
@@ -277,7 +280,7 @@ D2 <- D2 %>%
   {.}
 
 ##############################################################################################################################
-# PART 5.3 - METABOLITE ANALYSIS: BAR PLOT
+# PART 6.3 - METABOLITE ANALYSIS: STATS BAR PLOT & PATHVIEW
 ##############################################################################################################################
 
 D2 <- D2 %>%
@@ -298,55 +301,7 @@ D2 <- D2 %>%
                         yscale = "fraction",
                         sort = T,
                         assoc_sign = "statistic") %>%
-  {.}
-
-##############################################################################################################################
-# PART 5.4 - METABOLITE ANALYSIS: PARTIAL CORRELATION NETWORK
-##############################################################################################################################
-
-# THE DATA TABLE IS TOO LARGE TO INCLUDE IN AN HTML FILE
-
-D2 <- D2 %>%
-  # heading for html file
-  mt_reporting_heading(strtitle = "Partial Correlation Network", lvl = 2) %>%
-  # compute partial correlation matrix
-  mt_stats_multiv_net_GeneNet(stat_name = "GGM") %>%
-  # add multiple testing correction
-  mt_post_multTest(stat_name = "GGM", method = "BH") %>%
-  # plot network and color according to age analysis
-  mt_plots_net(stat_name = "GGM", corr_filter = p.adj < 0.05, node_coloring = "Age met") %>%
-  {.}
-
-##############################################################################################################################
-# PART 5.5 - METABOLITE ANALYSIS: MULTIPLE STATISTICS HEATMAP
-##############################################################################################################################
-
-D2 <- D2 %>%
-  # heading for html file
-  mt_reporting_heading(strtitle = "Multiple Statistics Heatmap", lvl = 2) %>%
-  # heatmap of all statistical results
-  mt_plots_multstats_heatmap(color_cutoff = 0.05)
-{.}
-
-##############################################################################################################################
-# PART 5.6 - METABOLITE ANALYSIS: RESULT COMPARISON
-##############################################################################################################################
-
-D2 <- D2 %>%
-  # heading for html file
-  mt_reporting_heading(strtitle = "Result Comparison", lvl = 2) %>%
-  # comparison plot
-  mt_plots_compare2stats(stat1 = "Age met", filter1 = p.adj < 0.05,
-                         D2 = D2, stat2 = "Diagnosis met", filter2 = p.adj < 0.05,
-                         filterop = "OR") %>%
-                         {.}
-
-
-##############################################################################################################################
-# PART 5.7 - PATHVIEW OF "AGE MET" ANALYSIS
-##############################################################################################################################
-
-D2 <- D2 %>%
+  # NOTE: THIS FUNCTION CAN TAKE SEVERAL MINUTES TO RUN
   mt_plots_pathview(met.id="KEGG_ids",
                     species = "hsa",
                     # n.pathways = 5,
@@ -365,11 +320,59 @@ D2 <- D2 %>%
                     # set to false to speed-up (output files will be bigger in size)
                     same.layer = FALSE,
                     add.pwname.suffix = TRUE) %>%
+                    {.}
+
+##############################################################################################################################
+# PART 6.4 - METABOLITE ANALYSIS: PARTIAL CORRELATION NETWORK
+##############################################################################################################################
+
+# THE DATA TABLE IS TOO LARGE TO INCLUDE IN AN HTML FILE
+
+D2 <- D2 %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Partial Correlation Network", lvl = 2) %>%
+  # compute partial correlation matrix
+  mt_stats_multiv_net_GeneNet(stat_name = "GGM") %>%
+  # add multiple testing correction
+  mt_post_multTest(stat_name = "GGM", method = "BH") %>%
+  # plot network and color according to age analysis
+  mt_plots_net(stat_name = "GGM", corr_filter = p.adj < 0.05, node_coloring = "Age met") %>%
   {.}
+
+##############################################################################################################################
+# PART 6.5 - METABOLITE ANALYSIS: MULTIPLE STATISTICS HEATMAP
+##############################################################################################################################
+
+D2 <- D2 %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Multiple Statistics Heatmap", lvl = 2) %>%
+  # heatmap of all statistical results
+  mt_plots_multstats_heatmap(color_cutoff = 0.05)
+{.}
+
+##############################################################################################################################
+# PART 6.6 - METABOLITE ANALYSIS: RESULT COMPARISON
+##############################################################################################################################
+
+D2 <- D2 %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Result Comparison", lvl = 2) %>%
+  # comparison plot
+  mt_plots_compare2stats(stat1 = "Age met", filter1 = p.adj < 0.05,
+                         D2 = D2, stat2 = "Diagnosis met", filter2 = p.adj < 0.05,
+                         filterop = "OR") %>%
+                         {.}
+
 
 ##############################################################################################################################
 # PART 6.1 - PATHWAY ANALYSIS: AGE ANALYSIS
 ##############################################################################################################################
+
+# UNIVARIATE
+# STATS BAR PLOT
+# PATHVIEW
+# AGGREGATION ANALYSIS
+# NOT BOTH IN THE SAME PIPELINE
 
 D3 <- D1 %>%
   # aggregate metabolites in the same pathways

@@ -53,6 +53,16 @@ mt_post_multTest_effdim <- function(D,
     dplyr::mutate(p.adj=(!!p_col * effdim) %>%
                     pmin(.,1))
 
+  ## add status information & plot
+  funargs <- mti_funargs()
+  metadata(D)$results %<>%
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf("Multiple testing correction of '%s' using effective dimension method", stat_name),
+      output = NULL
+    )
+
+  ## RETURN
   D
 
 }
