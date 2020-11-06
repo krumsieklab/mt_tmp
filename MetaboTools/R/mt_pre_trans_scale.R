@@ -38,8 +38,8 @@ mt_pre_trans_scale <- function(
     # get filtered samples
     filter_q <- dplyr::enquo(ref_samples)
     num_samp <- ncol(D)
-    Ds <- D %>% mti_format_se_samplewise()
-    samples.used <- mti_filter_samples(Ds, filter_q, num_samp)
+    Da <- D %>% mti_format_se_samplewise()
+    samples.used <- mti_filter_samples(Da, filter_q, num_samp)
 
     # get and filter
     Da_filtered <- t(assay(D))[samples.used,]

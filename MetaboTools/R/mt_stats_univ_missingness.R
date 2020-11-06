@@ -33,6 +33,7 @@ mt_stats_univ_missingness <- function(
   stopifnot(length(comp_col)==1)
 
   ## FILTER SAMPLES
+  Ds <- D
   if(!missing(sample_filter)) {
 
     filter_q <- dplyr::enquo(sample_filter)
