@@ -72,10 +72,12 @@ mt_anno_pathways_remove_redundant <- function(
     dplyr::distinct() %>%
     dplyr::group_by(met_ID) %>%
     dplyr::summarise(ID = stringr::str_c(ID, collapse = ", ")) %>%
-    dplyr::mutate(ID = stringr::str_split(ID, ", ")) %>%
-    dplyr::right_join(row_data, by = "met_ID") %>%
-    .$ID
-
+    dplyr::mutate(ID = stringr::str_split(ID, ", "))
+  
+  # match the nested pathways to our lieblings IDs
+  match_idx <-match(row_data$met_ID, pw_ID_replacement$metID)
+  pw_ID_replacement <- pw_ID_replacement$ID[match_idx]
+  
   pwdb_summary_replacement <-
     dplyr::inner_join(metadata(D)$pathways[[pw_ID]],
                dplyr::select(row_data_indexed, -met_ID) %>%
