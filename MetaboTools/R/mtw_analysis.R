@@ -102,8 +102,7 @@ mtw_analysis <-
     box_scatter_options_def = list(
       plot_type = 'box',
       stat_name = stat_name,
-      x = quote(Diagnosis),
-      fill = quote(Diagnosis),
+      x = 'x',
       metab_filter = quote(p.value < 0.05),
       metab_sort = quote(p.value),
       annotation = "{sprintf('P-value: %.1e', p.value)}",
@@ -116,10 +115,11 @@ mtw_analysis <-
       manual_ylab = NULL,
       fitline = T,
       fitline_se = T,
-      ggadd = NULL
+      ggadd = NULL,
+      fill = NULL
     )
     
-    # Will stop even input "lm"
+    
     if (!(test_type == "lm")&&!(test_type == "cor")) {
       stop("Unknown test type")
     }
@@ -127,7 +127,6 @@ mtw_analysis <-
     # not able to make sample_filter as input param
     if (test_type == "lm") {
       #add statement, if sample filter is NULL or NA then delete it
-      #lm_options$formula <- dplyr::enquo(lm_options$formula)
       lm_options <- map_lists(lm_options_def, lm_options)
       if(is.null(lm_options$sample_filter)||is.na(lm_options$sample_filter)){lm_options$sample_filter <- NULL}
       lm_options$D <- D
@@ -173,8 +172,10 @@ mtw_analysis <-
     volcano_options$D <- D
     D <- do.call('mt_plots_volcano', volcano_options)
     
+    
     # (lm and binary) or cor -> boxplot; lm not binary -> scatter
     box_scatter_options <- map_lists(box_scatter_options_def, box_scatter_options)
+    if(is.null(box_scatter_options$fill)||is.na(box_scatter_options$fill)){box_scatter_options$fill <- NULL}
     box_scatter_options$D <- D
     D <- do.call('mt_plots_boxplot_scatter', box_scatter_options)
     
