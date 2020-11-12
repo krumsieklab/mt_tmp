@@ -33,7 +33,6 @@
 #'                            metab_filter       = quote(p.adj < 0.05),
 #'                            metab_sort         = quote(p.value),
 #'                            annotation         = "{sprintf('P-value: %.2e', p.value)}\nPadj: {sprintf('%.2e', p.adj)}",
-#'                            rows               = 3,
 #'                            cols               = 3)) %>% ...}
 #'
 #' @author Zeyu Wang
@@ -106,7 +105,6 @@ mtw_analysis <-
       metab_filter = quote(p.value < 0.05),
       metab_sort = quote(p.value),
       annotation = "{sprintf('P-value: %.1e', p.value)}",
-      rows = 3,
       cols = 3,
       full_info = F,
       text_size = 3.88,
