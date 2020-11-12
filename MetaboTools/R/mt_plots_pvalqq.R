@@ -3,12 +3,12 @@
 #' QQ plot against uniform distribution.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param comp Name of the statistical result.
+#' @param stat_name Name of the statistical result.
 #'
-#' @return $result: plot, p-value histogram
+#' @return $result: plot, p-value qq plot
 #'
 #' @examples
-#' \dontrun{... %>% mt_plots_pvalhist(statnames='comp') %>% ...  # for one
+#' \dontrun{... %>% mt_plots_pvalqq(stat_name='comp') %>% ...  # for one
 #' }
 #'
 #' @import ggplot2

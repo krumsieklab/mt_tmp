@@ -5,10 +5,11 @@
 # Built upon the packages SummarizedExperiment
 # Designed to utilize the magrittr pipe operator for a smooth, continuous workflow
 # Below is an example pipeline demonstrating the use of many of the functions provided by MetaboTools
-# The MetaboTools user documentation provides an extensive overview of all of the functions utilized in this example
+# The MetaboTools user documentation provides an overview of all of the functions utilized in this example
 
 library(MetaboTools)
 library(tidyverse)
+library(pathview)
 
 zap()
 
@@ -42,6 +43,8 @@ D <-
   # start timing
   mt_logging_tic() %>%
   {.}
+# additional functions used at beginning of pipelines:
+#   - mt_flag_logged - for flagging a loaded dataset as already log transformed
 
 ##############################################################################################################################
 # PART 2 - DATA CLEANING
@@ -70,10 +73,12 @@ D <- D %>%
 
 
 ##############################################################################################################################
-# PART 3.2 - PREPROCESSING: FILTERING MISSING VALUES
+# PART 3.1 - PREPROCESSING: FILTERING MISSING VALUES
 ##############################################################################################################################
 
 D <- D %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Preprocessing", lvl=1) %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Filtering", lvl = 2) %>%
   # section text
@@ -93,7 +98,7 @@ D <- D %>%
   {.}
 
 ##############################################################################################################################
-# PART 3.3 - PREPROCESSING: NORMALIZATION
+# PART 3.2 - PREPROCESSING: NORMALIZATION
 ##############################################################################################################################
 
 D <- D %>%
@@ -142,34 +147,10 @@ D <- D %>%
   {.}
 
 ##############################################################################################################################
-# PART 3.4 - PREPROCESSING: GLOBAL STATISTICS
-##############################################################################################################################
-
-D <- D %>%
-  # heading for html file
-  mt_reporting_heading(strtitle = "Global Statistics", lvl = 2) %>%
-  # NOTE: the wrapper function mtw_global_statistics() can alternatively be used in place of the functions below
-  # plot PCA
-  mt_plots_PCA(scaledata = T, title = "scaled PCA - Diagnosis", color=Diagnosis, size=2.5, ggadd=scale_size_identity()) %>%
-  # plot UMAP
-  mt_plots_UMAP(scaledata = T, title = "scaled UMAP - Diagnosis", color=Diagnosis, size=2.5, ggadd=scale_size_identity()) %>%
-  # plot heatmap
-  mt_plots_pheatmap(scaledata = T, annotation_col = c("Diagnosis"), annotation_row = c("SUPER_PATHWAY"),
-                    clustering_method = "ward.D2", fontsize = 5, cutree_rows = 3, cutree_cols = 3) %>%
-  {.}
-
-# create the hmtl report for the pre-processed data
-D %>% mt_reporting_html(outfile = "/Users/kelsey/Desktop/MT_Example_PreProcessed.html", title = "Example Pipeline - Pre-Processed")
-
-##############################################################################################################################
 # PART 4 - GET PATHWAY ANNOTATIONS
 ##############################################################################################################################
 
-# create new SE object for analysis pipeline
-D1 <- D
-
-# KELSEY
-D1 <- D1 %>%
+D <- D %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Get Pathway Annotations", lvl = 1) %>%
   # get KEGG ids from HMDB ids
@@ -184,14 +165,32 @@ D1 <- D1 %>%
   {.}
 
 ##############################################################################################################################
-# PART 5 - MISSINGNESS ANALYSIS
+# PART 5 - GLOBAL STATISTICS
 ##############################################################################################################################
 
 D <- D %>%
   # heading for html file
-  mt_reporting_heading(strtitle = "Missingness Analysis", lvl = 1) %>%
+  mt_reporting_heading(strtitle = "Global Statistics", lvl = 1) %>%
+  # NOTE: the wrapper function mtw_global_statistics() can alternatively be used in place of the functions below
+  # plot PCA
+  mt_plots_PCA(scaledata = T, title = "scaled PCA - Diagnosis", color=Diagnosis, size=2.5, ggadd=scale_size_identity()) %>%
+  # plot UMAP
+  mt_plots_UMAP(scaledata = T, title = "scaled UMAP - Diagnosis", color=Diagnosis, size=2.5, ggadd=scale_size_identity()) %>%
+  # plot heatmap
+  mt_plots_pheatmap(scaledata = T, annotation_col = c("Diagnosis"), annotation_row = c("SUPER_PATHWAY"),
+                    clustering_method = "ward.D2", fontsize = 5, cutree_rows = 3, cutree_cols = 3) %>%
+  {.}
+
+##############################################################################################################################
+# PART 6.1 - STATISTICAL ANALYSIS, OUTCOME: DIAGNOSIS, METHOD: MISSINGNESS ANALYSIS
+##############################################################################################################################
+
+#create another SE object for first analysis branch (missingness)
+D1 <- D
+
+D1 <- D1 %>%
   # heading for html file
-  mt_reporting_heading(strtitle = "Missingness analysis", lvl = 2) %>%
+  mt_reporting_heading(strtitle = "Missingness analysis", lvl = 1) %>%
   # section text
   mt_reporting_text(text = "Perform missingness analysis to determine if NAs significantly accumulate in one of the Diagnosis
                     groups. Adjust output of test using multiple testing correction.") %>%
@@ -205,20 +204,20 @@ D <- D %>%
   {.}
 
 ##############################################################################################################################
-# PART 6.1 - METABOLITE ANALYSIS: AGE ANALYSIS
+# PART 6.2 - STATISTICAL ANALYSIS, OUTCOME: AGE, METHOD: LINEAR REGRESSION
 ##############################################################################################################################
 
-# create another SE object for first analysis branch (metabolites)
-D2 <- D1 %>%
+D1 <- D1 %>%
   # heading for html file
-  mt_reporting_heading(strtitle = "Metabolite Analysis", lvl = 1) %>%
+  mt_reporting_heading(strtitle = "Statistical Analysis", lvl = 1) %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Age analysis", lvl = 2) %>%
   # Pearson correlation
   mt_stats_univ_cor(method = "pearson",
                     var = "Age",
                     stat_name = "Age met")%>%
-  # ADD PVALQQ
+  # create p-value qq plot
+  mt_plots_pvalqq(stat_name = "Age met") %>%
   # add multiple testing correction
   mt_post_multTest(stat_name = "Age met", method = "BH") %>%
   # add stats logging
@@ -242,10 +241,10 @@ D2 <- D1 %>%
   {.}
 
 ##############################################################################################################################
-# PART 6.2 - METABOLITE ANALYSIS: DIAGNOSIS ANALYSIS
+# PART 6.3 - STATISTICAL ANALYSIS, OUTCOME: DIAGNOSIS, METHOD: LINEAR REGRESSION (t-test)
 ##############################################################################################################################
 
-D2 <- D2 %>%
+D1 <- D1 %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Diagnosis analysis", lvl = 2) %>%
   # linear model for binary function (equivalent to t-test)
@@ -280,10 +279,12 @@ D2 <- D2 %>%
   {.}
 
 ##############################################################################################################################
-# PART 6.3 - METABOLITE ANALYSIS: STATS BAR PLOT & PATHVIEW
+# PART 7.1 - STATISTICAL RESULTS PRESENTATION: STATS BARPLOT & PATHVIEW
 ##############################################################################################################################
 
-D2 <- D2 %>%
+D1 <- D1 %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Statisitcal Results Presentation", lvl = 1) %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Barplot", lvl = 2) %>%
   # create statsbarplots
@@ -323,27 +324,10 @@ D2 <- D2 %>%
                     {.}
 
 ##############################################################################################################################
-# PART 6.4 - METABOLITE ANALYSIS: PARTIAL CORRELATION NETWORK
+# PART 7.2 - STATISTICAL RESULT PRESENTATION: MULTIPLE STATISTICS HEATMAP
 ##############################################################################################################################
 
-# THE DATA TABLE IS TOO LARGE TO INCLUDE IN AN HTML FILE
-
-D2 <- D2 %>%
-  # heading for html file
-  mt_reporting_heading(strtitle = "Partial Correlation Network", lvl = 2) %>%
-  # compute partial correlation matrix
-  mt_stats_multiv_net_GeneNet(stat_name = "GGM") %>%
-  # add multiple testing correction
-  mt_post_multTest(stat_name = "GGM", method = "BH") %>%
-  # plot network and color according to age analysis
-  mt_plots_net(stat_name = "GGM", corr_filter = p.adj < 0.05, node_coloring = "Age met") %>%
-  {.}
-
-##############################################################################################################################
-# PART 6.5 - METABOLITE ANALYSIS: MULTIPLE STATISTICS HEATMAP
-##############################################################################################################################
-
-D2 <- D2 %>%
+D1 <- D1 %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Multiple Statistics Heatmap", lvl = 2) %>%
   # heatmap of all statistical results
@@ -351,35 +335,54 @@ D2 <- D2 %>%
 {.}
 
 ##############################################################################################################################
-# PART 6.6 - METABOLITE ANALYSIS: RESULT COMPARISON
+# PART 7.3 - STATISTICAL RESULT PRESENTATION: RESULT COMPARISON
 ##############################################################################################################################
 
-D2 <- D2 %>%
+D1 <- D1 %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Result Comparison", lvl = 2) %>%
   # comparison plot
   mt_plots_compare2stats(stat1 = "Age met", filter1 = p.adj < 0.05,
-                         D2 = D2, stat2 = "Diagnosis met", filter2 = p.adj < 0.05,
+                         D2 = D1, stat2 = "Diagnosis met", filter2 = p.adj < 0.05,
                          filterop = "OR") %>%
                          {.}
 
 
+
 ##############################################################################################################################
-# PART 6.1 - PATHWAY ANALYSIS: AGE ANALYSIS
+# PART 8 - PARTIAL CORRELATION NETWORK
 ##############################################################################################################################
 
-# UNIVARIATE
-# STATS BAR PLOT
-# PATHVIEW
-# AGGREGATION ANALYSIS
-# NOT BOTH IN THE SAME PIPELINE
+# THE DATA TABLE IS TOO LARGE TO INCLUDE IN AN HTML FILE
 
-D3 <- D1 %>%
+#D1 <- D1 %>%
+  # heading for html file
+#  mt_reporting_heading(strtitle = "Partial Correlation Network", lvl = 2) %>%
+  # compute partial correlation matrix
+#  mt_stats_multiv_net_GeneNet(stat_name = "GGM") %>%
+  # add multiple testing correction
+#  mt_post_multTest(stat_name = "GGM", method = "BH") %>%
+  # plot network and color according to age analysis
+#  mt_plots_net(stat_name = "GGM", corr_filter = p.adj < 0.05, node_coloring = "Age met") %>%
+#  {.}
+
+##############################################################################################################################
+# PART 9 - PATHWAY AGGREGATION ANALYSIS
+##############################################################################################################################
+# This is now first aggregating the metabolite matrix into pathways creating a new matrix of pathway
+# conentration values, and then repeating the parts of the same pipeline as above
+# In a real scenario, you would include a statistical analysis performed on metabolites AND have to pick between part 9 and the sections above
+
+# create another SE object for third analysis branch (pathway)
+D2 <- D
+
+D2 <- D2 %>%
   # aggregate metabolites in the same pathways
   mt_modify_aggPW(pw_col = "pathway", method = "aggmean") %>%
 
+  # STATISTICAL ANALYSIS, OUTCOME: AGE
   # heading for html file
-  mt_reporting_heading(strtitle = "Pathway Analysis", lvl = 1) %>%
+  mt_reporting_heading(strtitle = "Pathway Aggregation Analysis", lvl = 1) %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Age analysis", lvl = 2) %>%
   # Pearson correlation
@@ -406,13 +409,8 @@ D3 <- D1 %>%
                    annotation = "{sprintf('P-value: %.2e', p.value)}\nP.adj: {sprintf('%.2e', p.adj)}",
                    rows = 3,
                    cols = 3) %>%
-  {.}
 
-##############################################################################################################################
-# PART 6.2 - PATHWAY ANALYSIS: DIAGNOSIS ANALYSIS
-##############################################################################################################################
-
-D3 <- D3 %>%
+  # STATISTICAL ANALYSIS, OUTCOME: DIAGNOSIS
   # heading for html file
   mt_reporting_heading(strtitle = "Diagnosis analysis", lvl = 2) %>%
   # linear model for binary function (equivalent to t-test)
@@ -438,32 +436,23 @@ D3 <- D3 %>%
                            plot_type          = "box",
                            metab_filter       = p.adj < 0.05,
                            metab_sort         = p.value,
-                           annotation         = "{sprintf('P-value: %.2e', p.value)}\nPadj: {sprintf('%.2e', p.adj)}") %>%
-  {.}
+                           annotation         = "{sprintf('P-value: %.2e', p.value)}\nPadj: {sprintf('%.2e', p.adj)}")
 
-
-##############################################################################################################################
-# PART 6.3 - PATHWAY ANALYSIS: MULTIPLE STATISTICS HEATMAP
-##############################################################################################################################
-
-D3 <- D3 %>%
+D2 <- D2 %>%
+  # MULTIPLE STATISTICS HEATMAP
+  # heading for html file
+  mt_reporting_heading(strtitle = "Statistical Results Presentation", lvl = 2) %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Multiple Statistics Heatmap", lvl = 2) %>%
   # heatmap of all statistical results
   mt_plots_multstats_heatmap(color_cutoff = 0.05) %>%
-  {.}
 
-##############################################################################################################################
-# PART 6.4 - PATHWAY ANALYSIS: RESULT COMPARISON
-##############################################################################################################################
-
-D3 <- D3 %>%
+  # COMPARE STATISTICAL RESULTS
   # heading for html file
   mt_reporting_heading(strtitle = "Result Comparison", lvl = 2) %>%
-
   # comparison plot from pw analysis
   mt_plots_compare2stats(stat1 = "Age pw", filter1 = p.adj < 0.05,
-                         D2 = D3, stat2 = "Diagnosis pw", filter2 = p.adj < 0.05,
+                         D2 = D2, stat2 = "Diagnosis pw", filter2 = p.adj < 0.05,
                          filterop = "OR") %>%
   # end timing
   mt_logging_toc()
@@ -474,12 +463,12 @@ D3 <- D3 %>%
 ##############################################################################################################################
 
 # metabolite analysis html report
-D2 %>% mt_reporting_html(outfile = "/Users/kelsey/Desktop/Example_Pipeline_Metabolite_Analysis.html",
-                         title = "Example Pipeline - Metabolite Analysis")
+D1 %>% mt_reporting_html(outfile = "/Users/kelsey/Desktop/Example_Pipeline_Metabolite_Analysis.html",
+                         title = "Example Pipeline - Statistical Analysis")
 # pathway analysis html report
-D3 %>% mt_reporting_html(outfile = "/Users/kelsey/Desktop/Example_Pipeline_Pathway_Analysis.html",
-                         title = "Example Pipeline - Pathway Analysis")
+D2 %>% mt_reporting_html(outfile = "/Users/kelsey/Desktop/Example_Pipeline_Pathway_Analysis.html",
+                         title = "Example Pipeline - Pathway Aggregation Analysis")
 
-# creat a combined report with both analsyses
-mt_reporting_html_nonLinear(pipelines = list(D2, D3), outfile = "/Users/kelsey/Desktop/ExamplePipeline_CombinedReport.hmtl",
+# create a combined report with both analsyses
+mt_reporting_html_nonLinear(pipelines = list(D1, D2), outfile = "/Users/kelsey/Desktop/ExamplePipeline_CombinedReport.hmtl",
                             title = "Combined Report")

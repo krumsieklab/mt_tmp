@@ -430,9 +430,9 @@ mti_fix_ggplot_env <- function(p) {
 fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)} # fix order of a factor
 
 
+#' ADD TITLE
 #'
-#'
-#'
+#' ADD DESCRIPTION
 #'
 #' @param Ds Concatenated dataframe returned by mti_format_se_samplewise
 #' @param sample_filter term which samples to filter to first
