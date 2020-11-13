@@ -2,6 +2,7 @@
 #'
 #' Loads data from a Metabolon-format Excel file. Needs to be in the original "Client Data Table" format that they deliver.
 #'
+#' @param D \code{SummarizedExperiment} input (missing if first step in pipeline)
 #' @param file input Excel file
 #' @param sheet name of sheet
 #' @param copynansheet if given, which sheet to copy the NA pattern from
@@ -11,7 +12,7 @@
 #' @examples
 #' \dontrun{D <-
 #'   # load data
-#'   mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+#'   mt_load_files_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
 #'   ...}
 #'
 #' @author JK
@@ -21,15 +22,35 @@
 #'
 #' @export
 mt_files_load_metabolon <- function(
+  D,
   file,           # Metabolon xls file
   sheet,          # sheet name or number to read
   copynansheet='' # if given, which sheet to copy the NA pattern from
 ) {
 
+  # initialize result list
+  result=list()
+
+  # validate arguments
+  if (missing(file)) stop("file must be provided")
+  if (missing(sheet)) stop("sheet must be provided")
+
+  # save input information
+  result$info$file <- file
+  result$info$sheet <- sheet
+
+  # get metadata from D if present
+  if(!missing(D)){
+    # validate SE
+    if ("SummarizedExperiment" %in% class(D) == F) stop("D is not of class SummarizedExperiment")
+    if (length(assays(D))!=0) stop("Passed SummarizedExperiment assay must be empty!")
+
+    # get metadata
+    result$meta <- metadata(D)
+  }
+
   # using readxl package:
   raw = readxl::read_excel(path=file, sheet=sheet, col_names = F)
-
-  result=list()
 
   # find metabolite header row and last metabolite row
   imetheader = min(which(!is.na(raw[,1])))
@@ -46,8 +67,8 @@ mt_files_load_metabolon <- function(
 
   # extract metabolite information
   result$metinfo <- readxl::read_excel(path=file, sheet=sheet, col_names = T,
-                               range = readxl::cell_limits(ul = c(imetheader, 1),
-                                                   lr = c(imetlast  , isampheader)))
+                                       range = readxl::cell_limits(ul = c(imetheader, 1),
+                                                                   lr = c(imetlast  , isampheader)))
   result$metinfo <- as.data.frame(result$metinfo)
 
   # convert any spaces in the colnames to underscores
@@ -82,10 +103,6 @@ mt_files_load_metabolon <- function(
     rownames(result$data) = c()
   }
 
-  # set info flags
-  result$info$file = file
-  result$info$sheet = sheet
-
   # copy NanN from another sheet?
   if (nchar(copynansheet)>0) {
     # recursive call
@@ -113,11 +130,17 @@ mt_files_load_metabolon <- function(
   result$metinfo$name   <- result$metinfo$BIOCHEMICAL
   # fix variable names
   colnames(result$data) <- result$metinfo$BIOCHEMICAL %>% make.names()
-  # generate summarized experiment
+
+  # construct SummarizedExperiment
   D <- SummarizedExperiment(assay    = t(result$data),
-                       colData  = result$sampleinfo,
-                       rowData  = result$metinfo,
-                       metadata = list(sessionInfo=utils::sessionInfo(), parseInfo=result$info))
+                            colData  = result$sampleinfo,
+                            rowData  = result$metinfo,
+                            metadata = list(sessionInfo=utils::sessionInfo(), parseInfo=result$info))
+
+  # add original metadata if exists
+  if (!is.null(result$meta$results)) metadata(D)$results <- result$meta$results
+  if (!is.null(result$meta$settings)) metadata(D)$settings <- result$meta$settings
+
 
   # ensure colnames and rownames exist
   if (is.null(colnames(D))) colnames(D) <- 1:ncol(D)

@@ -8,6 +8,7 @@
 #' save file as xlsx (make sure to rename SEPT9 back from Excel date)
 #' don't keep the Excel file open while running R - this throws a file access denied error
 #'
+#' @param D \code{SummarizedExperiment} input (missing if first step in pipeline)
 #' @param filename filename of NPX file exported from NPX manger.
 #'
 #' @return Produces an initial SummarizedExperiment, with assay (note: 2^NPX), colData, rowData, and metadata with first entry
@@ -15,7 +16,7 @@
 #' @examples
 #' D <-
 #'   # load data
-#'   mt_files_load_olink(codes.makepath("mt/olink_sampledata.xlsx")) %>%
+#'   mt_load_files_olink(codes.makepath("mt/olink_sampledata.xlsx")) %>%
 #'   ...
 #'
 #' @author KS
@@ -28,11 +29,28 @@
 #' @export
 ###########################################################################
 mt_files_load_olink <- function(
+  D,             # SummarizedExperiment
   file           # Olink Metabolon xlsx file
 ) {
 
-  result=list()
-  result$info = "nothing yet"
+  # initialize outer result list
+  result <- list()
+
+  # validate arguments
+  if (missing(file)) stop("file must be provided")
+
+  # save input information
+  result$info$file <- file
+
+  # get metadata from D if present
+  if(!missing(D)){
+    # validate SE
+    if ("SummarizedExperiment" %in% class(D) == F) stop("D is not of class SummarizedExperiment")
+    if (length(assays(D))!=0) stop("Passed SummarizedExperiment assay must be empty!")
+
+    # get metadata
+    result$meta <- metadata(D)
+  }
 
   # read the Olink file
   odata = read_NPX(file)
@@ -56,8 +74,11 @@ mt_files_load_olink <- function(
                                                Panel_Version = reshape2::dcast(odata,formula = " SampleID ~ OlinkID", value.var = "Panel_Version")[1,-1] %>% unlist() %>% unname(),
                                                PlateID = reshape2::dcast(odata,formula = " SampleID ~ OlinkID", value.var = "PlateID")[1,-1] %>% unlist() %>% unname()
                            ),
-                           metadata = list(sessionInfo=sessionInfo(), parseInfo=result$info)
-  )
+                           metadata = list(sessionInfo=utils::sessionInfo(), parseInfo=result$info))
+
+  # add original metadata if exists
+  if (!is.null(result$meta$results)) metadata(D)$results <- result$meta$results
+  if (!is.null(result$meta$settings)) metadata(D)$settings <- result$meta$settings
 
   # do some sanity checks
   stopifnot (length(which(colnames(xdata) != rowData(D)$OlinkID)) == 0)

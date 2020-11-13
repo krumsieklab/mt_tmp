@@ -56,7 +56,7 @@ mti_get_setting <-  function(D, sname) {
 #'
 #' Call without parameters to show current settings Call with list of parameters to set settings. Will crash for invalid setting names.
 #'
-#' @param D \code{SummarizedExperiment} input
+#' @param D \code{SummarizedExperiment} input (missing if first step in pipeline)
 #' @param settings list of settings
 #'
 #' @return Nothing - leaves \code{D} unchanged
@@ -74,8 +74,14 @@ mti_get_setting <-  function(D, sname) {
 #' @export
 mt_settings <- function(D, settings) {
 
-  # validate argument
-  stopifnot("SummarizedExperiment" %in% class(D))
+  # if first step in pipeline, create SE
+  if(missing(D)){
+    # create an empty SummarizedExperiment object
+    D <- SummarizedExperiment()
+  }else{
+    # validate argument
+    stopifnot("SummarizedExperiment" %in% class(D))
+  }
 
   # make sure that settings exist in metadata of this pipeline
   D %<>% mti_ensure_settings()

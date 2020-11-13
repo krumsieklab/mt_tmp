@@ -2,6 +2,7 @@
 #'
 #' Loads data from a UC Davis-format Excel file.
 #'
+#' @param D \code{SummarizedExperiment} input (missing if first step in pipeline)
 #' @param file input Excel file in UCD format
 #' @param sheet name or number of sheet
 #' @param zero_to_NA replace zeros by NAs? (default: T)
@@ -12,7 +13,7 @@
 #' @examples
 #' \dontrun{D <-
 #'   # load data
-#'   mt_files_load_UCD(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+#'   mt_load_files_UCD(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
 #'   ...}
 #'
 #' @author JK
@@ -22,16 +23,36 @@
 #'
 #' @export
 mt_files_load_UCD <- function(
+  D,
   file,                 # input xls file
   sheet,                # sheet name or number to read
   zero_to_NA=T,         # set zeros to NAs?
   gen_valid_varnames=F  # enforce valid variable names?
 ) {
 
+  # initialize result list
+  result=list()
+
+  # validate arguments
+  if (missing(file)) stop("file must be provided")
+  if (missing(sheet)) stop("sheet must be provided")
+
+  # save input information
+  result$info$file <- file
+  result$info$sheet <- sheet
+
+  # get metadata from D if present
+  if(!missing(D)){
+    # validate SE
+    if ("SummarizedExperiment" %in% class(D) == F) stop("D is not of class SummarizedExperiment")
+    if (length(assays(D))!=0) stop("Passed SummarizedExperiment assay must be empty!")
+
+    # get metadata
+    result$meta <- metadata(D)
+  }
+
   # using readxl package:
   raw = readxl::read_excel(path=file, sheet=sheet, col_names = F)
-
-  result=list()
 
   #### find dimensions of sheet
   # find metabolite header row and last metabolite row
@@ -78,16 +99,16 @@ mt_files_load_UCD <- function(
     result$data[result$data==0] = NA
   }
 
-  #### set info flags
-  result$info$file = file
-  result$info$sheet = sheet
-
 
   #### return SummarizedExperiment, make sure colData and rowData are data.frames
   D <- SummarizedExperiment(assay    = t(result$data),
                             colData  = result$sampleinfo %>% as.data.frame(),
                             rowData  = result$metinfo %>% as.data.frame(),
                             metadata = list(sessionInfo=utils::sessionInfo(), parseInfo=result$info))
+
+  # add original metadata if exists
+  if (!is.null(result$meta$results)) metadata(D)$results <- result$meta$results
+  if (!is.null(result$meta$settings)) metadata(D)$settings <- result$meta$settings
 
   # add status information
   funargs <- mti_funargs()
