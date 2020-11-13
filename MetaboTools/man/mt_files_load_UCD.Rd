@@ -4,9 +4,11 @@
 \alias{mt_files_load_UCD}
 \title{Load UC Davis-format data.}
 \usage{
-mt_files_load_UCD(file, sheet, zero_to_NA = T, gen_valid_varnames = F)
+mt_files_load_UCD(D, file, sheet, zero_to_NA = T, gen_valid_varnames = F)
 }
 \arguments{
+\item{D}{\code{SummarizedExperiment} input (missing if first step in pipeline)}
+
 \item{file}{input Excel file in UCD format}
 
 \item{sheet}{name or number of sheet}
@@ -24,7 +26,7 @@ Loads data from a UC Davis-format Excel file.
 \examples{
 \dontrun{D <-
   # load data
-  mt_files_load_UCD(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") \%>\%
+  mt_load_files_UCD(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") \%>\%
   ...}
 
 }

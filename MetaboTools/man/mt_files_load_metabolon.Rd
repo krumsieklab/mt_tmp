@@ -4,9 +4,11 @@
 \alias{mt_files_load_metabolon}
 \title{Load Metabolon-format data.}
 \usage{
-mt_files_load_metabolon(file, sheet, copynansheet = "")
+mt_files_load_metabolon(D, file, sheet, copynansheet = "")
 }
 \arguments{
+\item{D}{\code{SummarizedExperiment} input (missing if first step in pipeline)}
+
 \item{file}{input Excel file}
 
 \item{sheet}{name of sheet}
@@ -22,7 +24,7 @@ Loads data from a Metabolon-format Excel file. Needs to be in the original "Clie
 \examples{
 \dontrun{D <-
   # load data
-  mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") \%>\%
+  mt_load_files_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") \%>\%
   ...}
 
 }

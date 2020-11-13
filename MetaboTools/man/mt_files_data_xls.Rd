@@ -4,9 +4,11 @@
 \alias{mt_files_data_xls}
 \title{Load data matrix from Excel file.}
 \usage{
-mt_files_data_xls(file, sheet, samples_in_rows = T, ID_col, zero_to_NA = F)
+mt_files_data_xls(D, file, sheet, samples_in_rows = T, ID_col, zero_to_NA = F)
 }
 \arguments{
+\item{D}{\code{SummarizedExperiment} input (missing if first step in pipeline)}
+
 \item{file}{input Excel file}
 
 \item{sheet}{name or number of sheet}
@@ -26,19 +28,19 @@ Loads numerical data matrix from Excel sheet.
 Can handle files with samples in rows or columns.
 }
 \details{
-Default name for entity in columns will be 'name".
+Default name for entity in columns will be "name".
 }
 \examples{
 # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
-\dontrun{D <- 
+\dontrun{D <-
   # load raw data
-  mt_files_data_xls(file=file, sheet="data", samples_in_rows=T, ID_col="SAMPLE_NAME") \%>\% 
+  mt_load_files_data_xls(file=file, sheet="data", samples_in_rows=T, ID_col="SAMPLE_NAME") \%>\%
   # sample annotations from metabolomics run
-  mt_files_anno_xls(file=file, sheet="sampleinfo", annosfor="samples", IDanno = "SAMPLE_NAME") \%>\% 
+  mt_files_anno_xls(file=file, sheet="sampleinfo", annosfor="samples", IDanno = "SAMPLE_NAME") \%>\%
   # sample annotations from clinical table
-  mt_files_anno_xls(file=file, sheet="clinicals", annosfor="samples", IDanno="SAMPLE_NAME") \%>\% 
+  mt_files_anno_xls(file=file, sheet="clinicals", annosfor="samples", IDanno="SAMPLE_NAME") \%>\%
   # metabolite annotations`
-  mt_files_anno_xls(file=file, sheet="metinfo", annosfor="metabolites", IDanno="BIOCHEMICAL", IDdata = "name") \%>\% 
+  mt_files_anno_xls(file=file, sheet="metinfo", annosfor="metabolites", IDanno="BIOCHEMICAL", IDdata = "name") \%>\%
   ...}
 
 }

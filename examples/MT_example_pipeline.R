@@ -33,11 +33,11 @@ D <-
   # load data - this function loads the assay data only
   #   alternative loading functions: mt_files_load_metabolon, mt_files_load_metabolon_lipidomics, mt_files_load_olink,
   #     mt_files_load_UCD, mt_files_load_WCM
-  mt_load_files_data_xls(file=file_data, sheet="data", samples_in_row=T, ID_col="sample") %>%
+  mt_files_data_xls(file=file_data, sheet="data", samples_in_row=T, ID_col="sample") %>%
   # load metabolite (rowData) annotations
-  mt_anno_files_xls(file=file_data, sheet="metinfo",anno_type="metabolites", anno_ID="name", data_ID="name") %>%
+  mt_files_anno_xls(file=file_data, sheet="metinfo",anno_type="metabolites", anno_ID="name", data_ID="name") %>%
   # load clinical (colData) annotations
-  mt_anno_files_xls(file=file_data, sheet="clin", anno_type="samples", anno_ID="sample", data_ID="sample") %>%
+  mt_files_anno_xls(file=file_data, sheet="clin", anno_type="samples", anno_ID="sample", data_ID="sample") %>%
   # # log assay dimensions and number of columns for both metabolite and clincial annotations
   mt_logging_datasetinfo() %>%
   # start timing
@@ -143,7 +143,7 @@ D <- D %>%
   mt_logging_datasetinfo() %>%
   # write preprocessed data to Excel file
   #   other writing functions: mt_files_write_SE (write SummarizedExerpiment object)
-  mt_write_files_xls(file = "/Users/kelsey/Desktop/PreprocessedData.xlsx") %>%
+  mt_files_write_xls(file = "PreprocessedData.xlsx") %>%
   {.}
 
 ##############################################################################################################################
@@ -161,7 +161,7 @@ D <- D %>%
   # remove redundant
   mt_anno_pathways_remove_redundant(met_ID = "KEGG_ids", pw_ID = "pathway") %>%
   # write pathway annotations
-  mt_write_files_pathwayannos(file="/Users/kelsey/Desktop/ExamplePipeline_PathwayAnnotations.xlsx", pwfield = "pathway") %>%
+  mt_files_write_pathwayannos(file="ExamplePipeline_PathwayAnnotations.xlsx", pwfield = "pathway") %>%
   {.}
 
 ##############################################################################################################################
@@ -223,7 +223,7 @@ D1 <- D1 %>%
   # add stats logging
   mt_logging_statsinfo(stat_name = "Age met", stat_filter = p.adj < 0.05) %>%
   # write statistical results to file
-  mt_write_files_stats(file = "AgeAnalysis.xlsx", metname = "BOCHEMICAL") %>%
+  mt_files_write_stats(file = "AgeAnalysis.xlsx", metname = "BOCHEMICAL") %>%
   # pvalue histogram
   mt_plots_pvalhist(stat_names = "Age met") %>%
   # volcano plot as overview of results
@@ -258,7 +258,7 @@ D1 <- D1 %>%
   # add stats logging
   mt_logging_statsinfo(stat_name = "Diagnosis met", stat_filter = p.adj < 0.05) %>%
   # write statistical results to file
-  mt_write_files_stats(file = "DiagnosisAnalysis.xlsx") %>%
+  mt_files_write_stats(file = "DiagnosisAnalysis.xlsx") %>%
   # pvalue histogram
   mt_plots_pvalhist(stat_names = "Diagnosis met") %>%
   # volcano plot as overview of results
@@ -463,12 +463,12 @@ D2 <- D2 %>%
 ##############################################################################################################################
 
 # metabolite analysis html report
-D1 %>% mt_reporting_html(outfile = "/Users/kelsey/Desktop/Example_Pipeline_Metabolite_Analysis.html",
+D1 %>% mt_reporting_html(outfile = "Example_Pipeline_Metabolite_Analysis.html",
                          title = "Example Pipeline - Statistical Analysis")
 # pathway analysis html report
-D2 %>% mt_reporting_html(outfile = "/Users/kelsey/Desktop/Example_Pipeline_Pathway_Analysis.html",
+D2 %>% mt_reporting_html(outfile = "Example_Pipeline_Pathway_Analysis.html",
                          title = "Example Pipeline - Pathway Aggregation Analysis")
 
 # create a combined report with both analsyses
-mt_reporting_html_nonLinear(pipelines = list(D1, D2), outfile = "/Users/kelsey/Desktop/ExamplePipeline_CombinedReport.hmtl",
+mt_reporting_html_nonLinear(pipelines = list(D1, D2), outfile = "ExamplePipeline_CombinedReport.hmtl",
                             title = "Combined Report")

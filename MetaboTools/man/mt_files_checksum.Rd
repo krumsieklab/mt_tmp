@@ -7,7 +7,7 @@
 mt_files_checksum(D, file, checksum)
 }
 \arguments{
-\item{D}{SummarizedExperiment for pass-through}
+\item{D}{SummarizedExperiment for pass-through (missing if first step in pipeline)}
 
 \item{file}{File path... does not necessarily have to be the same as the dataset loaded in the pipeline}
 
@@ -17,7 +17,7 @@ mt_files_checksum(D, file, checksum)
 Does not change SummarizedExperiment, only adds a log message.
 }
 \description{
-Note: Has to be run after loading the data, since it needs to operate on an existing SummarizedExperiment.
+Validate MD5 checksum of file.
 }
 \examples{
 # first call, to get the checksum (will crash, deliberately)

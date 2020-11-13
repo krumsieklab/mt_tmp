@@ -4,9 +4,11 @@
 \alias{mt_files_load_olink}
 \title{Load Olink-format data.}
 \usage{
-mt_files_load_olink(file)
+mt_files_load_olink(D, file)
 }
 \arguments{
+\item{D}{\code{SummarizedExperiment} input (missing if first step in pipeline)}
+
 \item{filename}{filename of NPX file exported from NPX manger.}
 }
 \value{
@@ -25,7 +27,7 @@ don't keep the Excel file open while running R - this throws a file access denie
 \examples{
 D <-
   # load data
-  mt_files_load_olink(codes.makepath("mt/olink_sampledata.xlsx")) \%>\%
+  mt_load_files_olink(codes.makepath("mt/olink_sampledata.xlsx")) \%>\%
   ...
 
 }

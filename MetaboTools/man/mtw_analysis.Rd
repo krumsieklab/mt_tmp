@@ -61,7 +61,6 @@ box_scatter_options = list(plot_type = 'box',
                            metab_filter       = quote(p.adj < 0.05),
                            metab_sort         = quote(p.value),
                            annotation         = "{sprintf('P-value: \%.2e', p.value)}\nPadj: {sprintf('\%.2e', p.adj)}",
-                           rows               = 3,
                            cols               = 3)) \%>\% ...}
 
 }

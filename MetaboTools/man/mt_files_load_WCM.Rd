@@ -4,9 +4,11 @@
 \alias{mt_files_load_WCM}
 \title{Load WCM core-format data.}
 \usage{
-mt_files_load_WCM(file, sheet, zero_to_NA = T)
+mt_files_load_WCM(D, file, sheet, zero_to_NA = T)
 }
 \arguments{
+\item{D}{\code{SummarizedExperiment} input (missing if first step in pipeline)}
+
 \item{file}{input Excel file}
 
 \item{sheet}{name or number of sheet}
@@ -22,7 +24,7 @@ Loads data from a WCM core format file (as they send it).
 \examples{
 \dontrun{D <-
   # load data in WCM format
-  mt_files_load_WCM(
+  mt_load_files_WCM(
     file='DM369_Metabolites separated by nucleotides 12_6_18_altered.xlsx',
     sheet='peakHeight_metabolite_intensiti') \%>\%
   ...}

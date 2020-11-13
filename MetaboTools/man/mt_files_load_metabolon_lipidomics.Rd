@@ -4,9 +4,11 @@
 \alias{mt_files_load_metabolon_lipidomics}
 \title{Load Metabolon-format lipidomics data.}
 \usage{
-mt_files_load_metabolon_lipidomics(file, sheet_list)
+mt_files_load_metabolon_lipidomics(D, file, sheet_list)
 }
 \arguments{
+\item{D}{\code{SummarizedExperiment} input (missing if first step in pipeline)}
+
 \item{file}{input Excel file}
 
 \item{sheet_list}{list with the sheet names to read}
@@ -20,9 +22,9 @@ Produces an initial SummarizedExperiment, with assay, colData, rowData, and meta
 Loads lipidomics data from a Metabolon-format Excel file. Needs to be in the original "Client Data Table" format that they deliver.
 }
 \examples{
-D <- 
+D <-
   # load data
-  mt_files_load_metabolon_lipidomics(codes.makepath("Mt/sampledata.xlsx"), sheet_list = c("Species Concentrations","Fatty Acid Concentrations")) \%>\%
+  mt_load_files_metabolon_lipidomics(codes.makepath("Mt/sampledata.xlsx"), sheet_list = c("Species Concentrations","Fatty Acid Concentrations")) \%>\%
   ...
 
 }
