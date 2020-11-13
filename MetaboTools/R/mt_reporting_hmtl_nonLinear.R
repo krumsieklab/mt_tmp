@@ -22,7 +22,7 @@ mt_reporting_html_nonLinear <- function(
   output.calls=F,
   keep.tmp=F
 ) {
-  
+
   # validate argument
   ## pipelines
   stopifnot("list" %in% class(pipelines))
@@ -34,22 +34,27 @@ mt_reporting_html_nonLinear <- function(
   if(missing(outfile)){
     stop("Argument outfile must be provided.")
   }
-  
-  
+
+
   res <- MTResultCollector$new()
   res$addMultiple(pipelines)
-  
+
+  # throw error if multiple roots (i.e. disjointed pipelines)
+  if(length(res$graph_roots()) > 1){
+    stop("Pipelines can not be disjointed! A common root must exist for all pipelines!")
+  }
+
   # unique string
   ustr <- uuid::UUIDgenerate()
-  
+
   # define file names
   rmdfile <- sprintf("tmp_%s.RMD", ustr)
   rdsfile <-  sprintf("tmp_%s.rds", ustr)
   # generate RMD
   res %>% mt_reporting_generateMD_nonLinear(
-    outfile = rmdfile, 
-    read_from = rdsfile, 
-    title = title, 
+    outfile = rmdfile,
+    read_from = rdsfile,
+    title = title,
     output_calls = output.calls)
   # save temp file that will be input for the RMD
   save(D, file=rdsfile)
@@ -62,5 +67,5 @@ mt_reporting_html_nonLinear <- function(
     file.remove(rmdfile)
     file.remove(rdsfile)
   }
-  
+
 }
