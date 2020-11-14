@@ -9,7 +9,7 @@ mtw_apply_analysis(D, outcomes)
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{outcomes}{A data frame, should contain two columns: outcomes$outcome: name of phenotype columns in colData; outcomes$type: data type of pheotype columns, must be one of numeric/binary/ordinal}
+\item{outcomes}{A data frame, should contain two columns: outcomes$outcome: name of phenotype columns in colData; outcomes$type: data type of pheotype columns, must be one of numeric / binary / ordinal}
 }
 \value{
 D with multiple analysis results and plots

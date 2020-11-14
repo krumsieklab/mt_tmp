@@ -3,9 +3,10 @@
 #' Running standard analyses for multiple phenotypes, analysis steps including lm/cor analysis, 
 #' multi-test with histgram, QQ-plot and volcano plot showing p-values, and box/scatter plot for the 
 #' visualization of significant metabolites.
+#' 
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param outcomes A data frame, should contain two columns: outcomes$outcome: name of phenotype columns in colData; outcomes$type: data type of pheotype columns, must be one of numeric/binary/ordinal
+#' @param outcomes A data frame, should contain two columns: outcomes$outcome: name of phenotype columns in colData; outcomes$type: data type of pheotype columns, must be one of numeric / binary / ordinal
 #' 
 #'
 #' @return D with multiple analysis results and plots
@@ -19,8 +20,6 @@
 #'
 #' @export
 
-
-# Loop function
 mtw_apply_analysis <- function(D, outcomes){
   
   #nrow(outcomes)
@@ -40,24 +39,10 @@ mtw_apply_analysis <- function(D, outcomes){
     
     # ordinal variables are actually modeled by their numeric counterparts and Kendall's tau
     if (outcome_type == 'ordinal') {
-      D %<>% mt_reporting_heading(strtitle = paste0(outcome," analysis"), lvl = 3) %>% 
+      D %<>% mt_reporting_heading(strtitle = paste0(outcome,'\n'), lvl = 2) %>% 
         mt_modify_mutate(anno_type = "samples", col_name = outcome, 
                          term = as.numeric(as.matrix(!!sym(outcome))))
       
-      if (outcome == 'Diag_num') {
-        input_list_add <- list(
-          D = D,
-          test_type = 'cor',
-          cor_options = list(method = 'kendall', var = outcome, stat_name = outcome_name),
-          box_scatter_options = list(plot_type = 'box',
-                                     x                  = sym(outcome),
-                                     fill               = quote(Diagnosis),
-                                     metab_filter       = quote(p.adj < 0.05),
-                                     metab_sort         = quote(p.value),
-                                     annotation         = "{sprintf('P-value: %.2e', p.value)}\nPadj: {sprintf('%.2e', p.adj)}",
-                                     cols               = 3)
-        )
-      } else{
         input_list_add <- list(
           D = D,
           test_type = 'cor',
@@ -70,14 +55,13 @@ mtw_apply_analysis <- function(D, outcomes){
                                      annotation         = "{sprintf('P-value: %.2e', p.value)}\nPadj: {sprintf('%.2e', p.adj)}",
                                      cols               = 3)
         )
-      }
       # analysis wrapper
       input_list[names(input_list_add)] <- input_list_add
       D <- do.call('mtw_analysis', input_list) # for numeric, twofactor, or multifactor: use lm
       
     } else if (outcome_type == 'numeric') {
       
-      D %<>% mt_reporting_heading(strtitle = paste0(outcome," analysis"), lvl = 3) %>% 
+      D %<>% mt_reporting_heading(strtitle = paste0(outcome,'\n'), lvl = 2) %>% 
         mt_modify_mutate(anno_type = "samples", col_name = outcome, 
                          term = as.numeric(as.matrix(!!sym(outcome))))
       
@@ -100,7 +84,7 @@ mtw_apply_analysis <- function(D, outcomes){
       
     } else if (outcome_type == 'binary'){
       
-      D %<>% mt_reporting_heading(strtitle = paste0(outcome," analysis"), lvl = 3) %>% 
+      D %<>% mt_reporting_heading(strtitle = paste0(outcome,'\n'), lvl = 2) %>% 
         mt_modify_mutate(anno_type = "samples", col_name = outcome, 
                          term = as.factor(!!sym(outcome)))
       
@@ -124,5 +108,5 @@ mtw_apply_analysis <- function(D, outcomes){
       D <- do.call('mtw_analysis', input_list)
     }
   }
-  
+  return(D)
 }
