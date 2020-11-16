@@ -13,8 +13,6 @@ mt_plots_boxplot_scatter(
   metab_filter = p.value < 0.05,
   metab_sort = p.value,
   annotation = "{sprintf('P-value: \%.1e', p.value)}",
-  rows,
-  cols,
   full_info = F,
   text_size = 3.88,
   jitter = "beeswarm",
@@ -40,10 +38,6 @@ mt_plots_boxplot_scatter(
 \item{metab_filter}{if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05}
 
 \item{metab_sort}{if given, arrange will be applied to data variables will be sorted, default p.value}
-
-\item{rows}{number rows of boxplots in $result}
-
-\item{cols}{number columns of boxplots in $result}
 
 \item{full_info}{add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F}
 

@@ -15,7 +15,7 @@ mt_pre_norm_quot(
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{vars}{index vector of variables of be used, default: all}
+\item{vars}{index vector of variables to be used, default: all}
 
 \item{na_err}{T/F, throw error for NA's or just ignore?}
 

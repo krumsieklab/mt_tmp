@@ -37,11 +37,12 @@ rowData or colData: new annotations added
 }
 \description{
 Loads annotations and merges them into current SummarizedExperiment.
-Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
-Can load annotations for both metabolites (rowData) and samples (colData)
+  Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
+  Can load annotations for both metabolites (rowData) and samples (colData)
 }
 \details{
-If annotation fields are already existing, this function will fill up any NAs with the values from the new file. Existing values are not overwritten/
+If annotation fields are already existing, this function will fill up any NAs with the values from the new file.
+  Existing values are not overwritten.
 }
 \examples{
 # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file

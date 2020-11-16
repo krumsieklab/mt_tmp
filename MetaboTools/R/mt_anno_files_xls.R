@@ -1,10 +1,11 @@
 #' Load annotations from Excel file.
 #'
 #' Loads annotations and merges them into current SummarizedExperiment.
-#' Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
-#' Can load annotations for both metabolites (rowData) and samples (colData)
+#'   Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
+#'   Can load annotations for both metabolites (rowData) and samples (colData).
 #'
-#' If annotation fields are already existing, this function will fill up any NAs with the values from the new file. Existing values are not overwritten/
+#' If annotation fields are already existing, this function will fill up any NAs with the values from the new file.
+#'   Existing values are not overwritten.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param file input Excel file
@@ -37,15 +38,14 @@
 #'
 #' @export
 
-mt_anno_files_xls <-
-  function(D,
-           file,
-           sheet,
-           anno_type,
-           anno_ID,
-           data_ID = anno_ID,
-           no_map_err = F,
-           col_names = NA) {
+mt_anno_files_xls <-function(D,
+                             file,
+                             sheet,
+                             anno_type,
+                             anno_ID,
+                             data_ID = anno_ID,
+                             no_map_err = F,
+                             col_names = NA) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
