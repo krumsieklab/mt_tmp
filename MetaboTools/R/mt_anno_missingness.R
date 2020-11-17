@@ -1,12 +1,12 @@
-#' Missingness Annotation for Metabolites / Samples
+#' Add missingness annotation column.
 #'
 #' Adds a rowData or colData column representing the missingness of metabolites or samples, respectively.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param anno_type "samples" (colData) or "metabolites" (rowNames) to add missingness column to
-#' @param out_col name of new missingness column (if missing, use "missingness")
+#' @param anno_type "samples" (colData) or "metabolites" (rowData) to add missingness column to
+#' @param out_col name of new missingness column; default="missingness"
 #'
-#' @return rowData or colData: new annotation column added
+#' @return rowData or colData: new missingness annotation column added
 #'
 #' @examples
 #' # example of how to run function
@@ -26,7 +26,7 @@
 
 mt_anno_missingness <- function(D,
                                 anno_type,
-                                out_col){
+                                out_col="missingness"){
 
   # helper function
   # form mt_plots_qc_missingness - should be moved to mt_internal_helpers
@@ -47,9 +47,6 @@ mt_anno_missingness <- function(D,
     miss_col <- missingness(X)
 
     # add missingness column to rowData
-    if(missing(out_col)){
-      out_col <- "missingness"
-    }
     rowData(D)[[out_col]] <- miss_col
 
     logtxt = sprintf("Added missingness annotation for %i metabolites", length(miss_col))

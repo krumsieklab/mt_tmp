@@ -1,18 +1,18 @@
 #' Add pathway information.
 #'
 #' Adds custom pathways to the already existing SummarizedExperiment
-#' data structure using the HMDB .xml file.
+#'  data structure using the HMDB .xml file.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param in_col Column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
-#' @param out_col A new column name for D to output pathway information to
+#' @param in_col rowData column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
+#' @param out_col new column name for rowData to output pathway information to
 #' @param pwdb_name Name of the pathway database to use. Can use either SMP or KEGG for this argument
 #' @param db_dir Name of the directory where the parsed HMDB files are stored
 #' @param db_file File name of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds
 #' @param export_raw_db OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 #'
-#' @return rowData: new pathway annotation for metabolites
-#' @return $pathways: a dataframe of pathway information
+#' @return rowData: new pathway annotation column added
+#' @return $result$pathways: a dataframe of pathway information
 #'
 #' @examples
 #' # annotate metabolites using smp_db
@@ -25,8 +25,6 @@
 #' @author Parviz Gomari
 #'
 #' @importFrom data.table :=
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
 
