@@ -32,23 +32,25 @@ mt_stats_univ_missingness <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
   stopifnot(length(comp_col)==1)
 
+  # merge data with sample info
+  Ds <- D %>% MetaboTools:::mti_format_se_samplewise()
+
   ## FILTER SAMPLES
-  Ds <- D
   if(!missing(sample_filter)) {
 
     filter_q <- dplyr::enquo(sample_filter)
-    num_samp <- ncol(D)
+    num_samp <- ncol(Ds)
     samples.used <- MetaboTools:::mti_filter_samples(Ds, filter_q, num_samp)
     Ds <- Ds[samples.used,]
 
   } else {
-    samples.used = rep(T, ncol(D))
+    samples.used = rep(T, ncol(Ds))
   }
 
   # get variable to compare to
-  if (!(comp_col %in% colnames(colData(Ds)))) stop(sprintf("'%s' not found in sample annotations.", comp_col))
+  if (!(comp_col %in% colnames(colData(D)))) stop(sprintf("'%s' not found in sample annotations.", comp_col))
   fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)}
-  vc = fixorder(as.factor(colData(Ds)[[comp_col]]))
+  vc = fixorder(as.factor(colData(D)[[comp_col]]))
   if (length(levels(vc))<2) stop(sprintf("'%s' has less than 2 factor levels",comp_col))
 
 
@@ -59,7 +61,7 @@ mt_stats_univ_missingness <- function(
     # for (i in 1:nrow(Ds)) {
 
     # get metabolite
-    m <- assay(Ds)[i,]
+    m <- assay(D)[i,]
 
     # construct table
     tab <- table(is.na(m), vc)
@@ -79,7 +81,7 @@ mt_stats_univ_missingness <- function(
     ex <- gdata::unmatrix(tab)
     names(ex) = gsub("TRUE","missing",gsub("FALSE","present", names(ex)))
     # return
-    as.data.frame(cbind(data.frame(var=rownames(Ds)[i], statistic=test$estimate, p.value=test$p.value),t(as.data.frame(ex))))
+    as.data.frame(cbind(data.frame(var=rownames(D)[i], statistic=test$estimate, p.value=test$p.value),t(as.data.frame(ex))))
 
     # }
   },simplify=F)
@@ -103,7 +105,6 @@ mt_stats_univ_missingness <- function(
 
   ## return
   D
-
 
 }
 
