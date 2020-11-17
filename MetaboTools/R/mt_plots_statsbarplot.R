@@ -169,7 +169,7 @@ mt_plots_statsbarplot <- function(D,
         dplyr::rename(color=sym(colorby))
       
       # create annotation data
-      anno <- anno <- data.frame(name = rep(rd$name, times=sapply(rd[[aggregate]], length) %>% as.vector()), 
+      anno <- data.frame(name = rep(rd$name, times=sapply(rd[[aggregate]], length) %>% as.vector()), 
                                  var = rep(rd$var, times=sapply(rd[[aggregate]], length) %>% as.vector()), 
                                  pathway = unlist(rd[[aggregate]]),
                                  color = ifelse(!is.null(colorby), rep(rd[[colorby]], times=sapply(rd[[aggregate]], length) %>% as.vector()),"pathway")) %>%
