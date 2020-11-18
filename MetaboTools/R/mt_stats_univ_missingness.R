@@ -42,7 +42,7 @@ mt_stats_univ_missingness <- function(
     num_samp <- ncol(Ds)
     samples.used <-  Ds %>% MetaboTools:::mti_format_se_samplewise() %>%
       MetaboTools:::mti_filter_samples(filter_q, num_samp)
-    Ds <- Ds[samples.used,]
+    Ds <- Ds[,samples.used]
 
   } else {
     samples.used = rep(T, ncol(Ds))
@@ -91,9 +91,9 @@ mt_stats_univ_missingness <- function(
   rownames(res) <- NULL
 
   ## add status information & results
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("missingness analysis with variable %s", as.character(comp_col)),
       output = list(
