@@ -32,17 +32,20 @@ mt_stats_univ_missingness <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
   stopifnot(length(comp_col)==1)
 
-  ## FILTER SAMPLES
+  # merge data with sample info
   Ds <- D
+
+  ## FILTER SAMPLES
   if(!missing(sample_filter)) {
 
     filter_q <- dplyr::enquo(sample_filter)
-    num_samp <- ncol(D)
-    samples.used <- MetaboTools:::mti_filter_samples(Ds, filter_q, num_samp)
-    Ds <- Ds[samples.used,]
+    num_samp <- ncol(Ds)
+    samples.used <-  Ds %>% MetaboTools:::mti_format_se_samplewise() %>%
+      MetaboTools:::mti_filter_samples(filter_q, num_samp)
+    Ds <- Ds[,samples.used]
 
   } else {
-    samples.used = rep(T, ncol(D))
+    samples.used = rep(T, ncol(Ds))
   }
 
   # get variable to compare to
@@ -88,9 +91,9 @@ mt_stats_univ_missingness <- function(
   rownames(res) <- NULL
 
   ## add status information & results
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("missingness analysis with variable %s", as.character(comp_col)),
       output = list(
@@ -103,7 +106,6 @@ mt_stats_univ_missingness <- function(
 
   ## return
   D
-
 
 }
 

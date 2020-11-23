@@ -1,26 +1,26 @@
 #' Add pathway information.
 #'
 #' Adds custom pathways to the already existing SummarizedExperiment
-#' data structure using a flat file. 
-#' NOTE: The flat file should be an Excel file, containing 3 columns: 
-#' met_ID, containing metabolite IDs, pw_ID containing pathway IDs, 
-#' and pw_name containing pathway names.
-#' The pathway columns pw_ID and pw_name should be in long format, meaning 
-#' if a metabolite is assigned to multiple pathways, each metabolite pathway 
-#' pair should appear in a separate row.
+#'  data structure using a flat file.
+#'  NOTE: The flat file should be an Excel file, containing 3 columns:
+#'  met_ID, containing metabolite IDs, pw_ID containing pathway IDs,
+#'  and pw_name containing pathway names.
+#'  The pathway columns pw_ID and pw_name should be in long format, meaning
+#'  if a metabolite is assigned to multiple pathways, each metabolite pathway
+#'  pair should appear in a separate row.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param in_col Column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
-#' @param out_col A new column name for D to output pathway information to
-#' @param file Path where the pathway annotation flat file is stored
-#' @param sheet Sheet name or number or number to read in flat file
-#' @param met_ID Flat file colname: this column should contain metabolite IDs
-#' @param pw_ID Flat file colname: this column should contain pathway IDs
-#' @param pw_name Flat file colname: this column should contain pathway names
+#' @param in_col rowData column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
+#' @param out_col new column name for rowData to output pathway information to
+#' @param file path where the pathway annotation flat file is stored
+#' @param sheet sheet name or number to read in flat file
+#' @param met_ID flat file colname: this column should contain metabolite IDs
+#' @param pw_ID flat file colname: this column should contain pathway IDs
+#' @param pw_name flat file colname: this column should contain pathway names
 #' @param export_raw_db OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
 #'
-#' @return rowData: new pathway annotation for metabolites
-#' @return $pathways: a dataframe of pathway information
+#' @return rowData: new pathway annotation column added
+#' @return $result$pathways: a dataframe of pathway information
 #'
 #' @examples
 #' \dontrun{# annotate metabolites using the SMP column of the pathway database flat file
@@ -36,8 +36,6 @@
 #' @author Parviz Gomari
 #'
 #' @importFrom data.table :=
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
 

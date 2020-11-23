@@ -1,13 +1,13 @@
 #' Remove redundant pathway annotations.
 #'
 #' Remove identical pathways from an existing SummarizedExperiment
-#' data structure that has a column of pathway annotations.
+#'  data structure that has a column of pathway annotations.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param met_ID Column containing metabolite IDs
-#' @param pw_ID Column containing pathways IDs
+#' @param met_ID column containing metabolite IDs
+#' @param pw_ID column containing pathways IDs
 #'
-#' @return rowData: redundant pathway annotation from SE pw_ID column will be filtered.
+#' @return rowData[[pw_id]]: redundant pathway annotation filtered.
 #'
 #' @examples
 #' # first annotate metabolites using smp_db and then remove redundant pathways
@@ -18,9 +18,6 @@
 #' ...}
 #'
 #' @author Parviz Gomari
-#'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
 
@@ -73,11 +70,11 @@ mt_anno_pathways_remove_redundant <- function(
     dplyr::group_by(met_ID) %>%
     dplyr::summarise(ID = stringr::str_c(ID, collapse = ", ")) %>%
     dplyr::mutate(ID = stringr::str_split(ID, ", "))
-  
+
   # match the nested pathways to our lieblings IDs
   match_idx <-match(row_data$met_ID, pw_ID_replacement$met_ID)
   pw_ID_replacement <- pw_ID_replacement$ID[match_idx]
-  
+
   pwdb_summary_replacement <-
     dplyr::inner_join(metadata(D)$pathways[[pw_ID]],
                dplyr::select(row_data_indexed, -met_ID) %>%

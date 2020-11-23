@@ -5,9 +5,9 @@
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param in_col string name of the rowData column containing the HMDB identifiers
-#' @param out_col string name of the new rowData column to be created with the KEGG identifiers
+#' @param out_col string name of the new rowData column to be created with the KEGG identifiers; default="KEGG"
 #'
-#' @return rowData: new annotations added
+#' @return rowData: new identifier annotation column added
 #'
 #' @examples
 #' # Load data, sheet with sample annotations, sheet with metabolite annotations and add KEGG identifiers
@@ -23,9 +23,6 @@
 #'   ...}
 #'
 #' @author EB
-#'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
 

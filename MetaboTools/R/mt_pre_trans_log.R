@@ -27,17 +27,17 @@ mt_pre_trans_log <- function(
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
-  stopifnot(base%%1==0) # integer number
+  if(base%%1!=0) warning(sprintf("Base not integer. Please double check. Base %f.", base))
 
   # log
   assay(D) = log(assay(D), base = base)
 
   # add status information
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("log%d", base)
+      logtxt = sprintf("log%f", base)
     )
 
   # return

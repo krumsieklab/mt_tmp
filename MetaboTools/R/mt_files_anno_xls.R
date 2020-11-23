@@ -1,21 +1,21 @@
 #' Load annotations from Excel file.
 #'
 #' Loads annotations and merges them into current SummarizedExperiment.
-#' Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
-#' Can load annotations for both metabolites (rowData) and samples (colData)
+#'  Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
+#'  Can load annotations for both metabolites (rowData) and samples (colData).
 #'
-#' If annotation fields are already existing, this function will fill up any NAs with the values from the new file. Existing values are not overwritten/
+#' @description If annotation fields are already existing, this function will fill up any NAs with the values from the new file. Existing values are not overwritten/
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param file input Excel file
 #' @param sheet name or number of sheet
-#' @param anno_type "samples" or "metabolites"
+#' @param anno_type "samples" (colData) or "metabolites" (rowData) to add annotation columns to
 #' @param anno_ID column in annotation file that contains ID information for mapping
-#' @param data_ID column in existing data that contains ID information for mapping
+#' @param data_ID column in existing annotation data frame that contains ID information for mapping
 #' @param no_map_err throw error (T) or warning (F) if something does not map. default: F
-#' @param col_names take column from new annotation file and overwite colnames (i.e. sample names) of SE (default: none)
+#' @param col_names take column from new annotation file and overwite colnames (i.e. sample names) of SE; default: NA
 #'
-#' @return rowData or colData: new annotations added
+#' @return rowData or colData: new annotation columns added
 #'
 #' @examples
 #' # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
@@ -32,20 +32,16 @@
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
 
-mt_files_anno_xls <-
-  function(D,
-           file,
-           sheet,
-           anno_type,
-           anno_ID,
-           data_ID = anno_ID,
-           no_map_err = F,
-           col_names = NA) {
+mt_files_anno_xls <-function(D,
+                             file,
+                             sheet,
+                             anno_type,
+                             anno_ID,
+                             data_ID = anno_ID,
+                             no_map_err = F,
+                             col_names = NA) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

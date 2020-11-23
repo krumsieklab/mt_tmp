@@ -37,6 +37,7 @@
 #' @import magrittr
 #' @import openxlsx
 #' @import SummarizedExperiment
+#' @importFrom tidyselect any_of
 #'
 #' @export
 
@@ -65,6 +66,7 @@ mt_plots_statsbarplot <- function(D,
   if(!is.null(colorby))
     if(!(colorby %in% colnames(rowData(D))))
       stop(sprintf("colorby column '%s' not found in rowData", colorby))
+  
   ## rowData
   rd <- rowData(D) %>%
     as.data.frame() %>%
@@ -169,7 +171,7 @@ mt_plots_statsbarplot <- function(D,
         dplyr::rename(color=sym(colorby))
       
       # create annotation data
-      anno <- anno <- data.frame(name = rep(rd$name, times=sapply(rd[[aggregate]], length) %>% as.vector()), 
+      anno <- data.frame(name = rep(rd$name, times=sapply(rd[[aggregate]], length) %>% as.vector()), 
                                  var = rep(rd$var, times=sapply(rd[[aggregate]], length) %>% as.vector()), 
                                  pathway = unlist(rd[[aggregate]]),
                                  color = ifelse(!is.null(colorby), rep(rd[[colorby]], times=sapply(rd[[aggregate]], length) %>% as.vector()),"pathway")) %>%
@@ -226,7 +228,17 @@ mt_plots_statsbarplot <- function(D,
   if((sapply(data$dt, function(ss){dim(ss)[1]}) %>% sum()) >0) {
     # merge list into a single dataframe
     data_plot <- do.call(rbind, data$dt) %>% as.data.frame()
-    anno <- do.call(rbind, data$anno) %>% as.data.frame()
+    # get common colnames in stat table
+    tt <- sapply(data$anno, colnames) %>% unlist %>% table %>% as.data.frame
+    colnames(tt)[1] <- "var"
+    tt %<>% 
+      dplyr::filter(Freq == max(Freq)) %>% 
+      dplyr::pull(var) %>% 
+      as.character
+    anno <- lapply(data$anno, function(x){
+      x %>%
+        dplyr::select(tidyselect::any_of(tt))
+    }) %>% {do.call(rbind, .)} %>% as.data.frame()
 
     # optional sorting (only for single statistical results)
     if (sort){
