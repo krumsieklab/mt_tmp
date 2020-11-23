@@ -34,7 +34,7 @@ mt_files_load_metabolon_lipidomics <- function(
 
   # validate arguments
   if (missing(file)) stop("file must be provided")
-  if (missing(sheet)) stop("sheet must be provided")
+  if (missing(sheet_list)) stop("sheet must be provided")
 
   # save input information
   result$info$file <- file
