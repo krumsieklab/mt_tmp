@@ -1,20 +1,22 @@
-#' Wrapper function to run global statistics
+#' Wrapper function to run global statistics visualization
 #'
 #' Generating PCA, UMAP and heatmap plots of dataset
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param annos_pca_umap List of names in colData column to be colored in PCA and UMAP
+#' @param annos_pca_umap List of names in colData column to be colored in PCA and UMAP, column names should be quoted by quote()
 #' @param do_pca Logical. Whether to generate PCA plot
-#' @param pca_options A list of parameters for \code{mt_plots_PCA} 
+#' @param pca_options A list of parameters for \code{mt_plots_PCA}, expressions should be quoted by quote()
 #' @param do_umap Logical. Whether to generate UMAP plot 
-#' @param umap_options A list of parameters for \code{mt_plots_UMAP}
+#' @param umap_options A list of parameters for \code{mt_plots_UMAP}, expressions should be quoted by quote()
 #' @param do_heatmap Logical. Whether to generate heatmap
-#' @param heatmap_options A list of parameters for \code{mt_plots_pheatmap}
+#' @param heatmap_options A list of parameters for \code{mt_plots_pheatmap}, expressions should be quoted by quote()
 #'
 #' @return D with PCA, UMAP and heatmap plots
 #' @examples
-#' \dontrun{... %>% mtw_global_stats() %>% ...}
-#' \dontrun{... %>% mtw_global_stats(annos_pca_umap = c('Group'),umap_options = list(n_neighbors = 2)) %>% ...}
+#' \dontrun{... %>% mtw_global_stats(annos_pca_umap = list(quote(Cohort)),
+#' pca_options = list(scaledata = T, size = 2, ggadd=quote(scale_size_identity())),
+#' umap_options = list(scaledata = T, size = 2, ggadd=quote(scale_size_identity())),
+#' heatmap_options = list(scaledata = T, fontsize = 5)) %>% ...}
 #'
 #' @author Zeyu Wang
 #'
@@ -60,7 +62,8 @@ mtw_global_stats <-
       ellipse = NA,
       expvarplot = F,
       store.matrices = F,
-      ggadd = NULL
+      ggadd = NULL,
+      size = 2
     )
     
     umap_options_def = list(
@@ -70,7 +73,8 @@ mtw_global_stats <-
       textrepel = T,
       store.matrices = F,
       ggadd = NULL,
-      n_neighbors = 15
+      n_neighbors = 15,
+      size = 2
     )
     
     heatmap_options_def = list(
@@ -78,40 +82,42 @@ mtw_global_stats <-
       sym0 = F,
       ggadd = NULL,
       return.gg = T,
-      gg.scale = 1
+      gg.scale = 1,
+      fontsize = 5
     )
     
+    
     # PCA
-    if (do_pca == T) {
+    if(do_pca == T){
       pca_options <- map_lists(pca_options_def, pca_options)
-      pca_options$D <- D
-      if (!missing(annos_pca_umap)) {
-        for (s in annos_pca_umap) {
+      if(!missing(annos_pca_umap)){
+        for(s in annos_pca_umap){
           pca_options$D <- D
           pca_options$color <- s
           D <- do.call("mt_plots_PCA", pca_options)
         }
-      } else {
+      }else{
+        pca_options$D <- D
         D <- do.call("mt_plots_PCA", pca_options)
       }
     }
     
     # UMAP
-    if (do_umap == T) {
+    if(do_umap == T){
       umap_options <- map_lists(umap_options_def, umap_options)
-      umap_options$D <- D
-      if (!missing(annos_pca_umap)) {
-        for (s in annos_pca_umap) {
+      if(!missing(annos_pca_umap)){
+        for(s in annos_pca_umap){
           umap_options$D <- D
           umap_options$color <- s
           D <- do.call("mt_plots_UMAP",umap_options)
         }
-      } else{
-        D <- do.call("mt_plots_UMAP",umap_options )
+      }else{
+        umap_options$D <- D
+        D <- do.call("mt_plots_UMAP",umap_options)
       }
     }
     # Heatmap
-    if (do_pheatmap == T) {
+    if(do_pheatmap == T){
       heatmap_options <- map_lists(heatmap_options_def,heatmap_options)
       heatmap_options$D <- D
       D <- do.call("mt_plots_pheatmap",heatmap_options)
