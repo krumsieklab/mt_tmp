@@ -21,9 +21,11 @@ mtw_preprocess(
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{batch_col}{Batch column if needed}
+\item{batch_col}{Batch column}
 
 \item{batch_fun}{Batch function to use. Default is \code{mt_pre_batch_median}}
+
+\item{batch_ref_samples}{Expression to filter out reference samples to use from rowData. Default is NULL}
 
 \item{boxplot_options}{A list of parameters for \code{mt_plots_sampleboxplot}}
 
@@ -35,7 +37,7 @@ mtw_preprocess(
 
 \item{log_base}{Base for log function, default is 2}
 
-\item{do_impute}{Logical. Whether to run imputation}
+\item{do_impute}{Logical. Whether to run imputation, default is TRUE}
 
 \item{knn_options}{A list of parameters for \code{mt_pre_impute_knn}}
 }
@@ -47,7 +49,7 @@ Preprocess on data, including batch correction, quotient normalization, log tran
 }
 \examples{
 \dontrun{... \%>\% mtw_preprocess() \%>\% ...}
-\dontrun{... \%>\% mtw_preprocess(batch_col = "BATCH_MOCK",comp_fac = c('num1','Group'), batch_col = "BATCH_MOCK",comp_fac = c("num1","Group"),quot_options = list(ref_samples = quote(Group == 'Vehicle'))) \%>\% ...}
+\dontrun{... \%>\% mtw_preprocess(batch_col = "BATCH_MOCK", batch_fun = mt_pre_batch_median,comp_fac = c("num1","Group"),quot_options = list(ref_samples = quote(Group == 'Vehicle'))) \%>\% ...}
 
 }
 \author{

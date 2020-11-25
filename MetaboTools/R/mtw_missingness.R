@@ -64,23 +64,33 @@ mtw_missingness <- function (D,
   
   # missingness plot before filtering
   plot_options <- map_lists(plot_options_def, plot_options)
+  samp_max <- plot_options$samp_max
+  plot_options$samp_max <- NULL
   plot_options$D <- D
   D <- do.call("mt_plots_qc_missingness", plot_options)
-  # filtering metabolites?
+  
+  # filtering metabolites
   filter_options <- map_lists(filter_options_def, filter_options)
   sample_max <- filter_options$sample_max
   filter_options$sample_max <- NULL
   filter_options$D <- D
   D <- do.call("mt_pre_filtermiss", filter_options)
-  # plot missingness after filtering metabolites?
+  
+  # plot missingness after filtering metabolites
   plot_options$D <- D
   D <- do.call("mt_plots_qc_missingness", plot_options)
-  # filtering samples?
+  
+  # filtering samples
   filter_options$sample_max <- sample_max
   filter_options$met_max <- NULL
   filter_options$D <- D
   D <- do.call("mt_pre_filtermiss", filter_options)
-  # plot missingness after filtering samples?
+  
+  # plot missingness after filtering samples
+  plot_options$plot_mets <- F
+  plot_options$plot_samples <- T
+  plot_options$samp_max <- samp_max
+  plot_options$met_max <- NULL
   plot_options$D <- D
   D <- do.call("mt_plots_qc_missingness", plot_options)
   

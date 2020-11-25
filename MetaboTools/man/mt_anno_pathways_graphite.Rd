@@ -17,26 +17,26 @@ mt_anno_pathways_graphite(
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{in_col}{Column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)}
+\item{in_col}{rowData olumn to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)}
 
-\item{out_col}{A new column name for D to output pathway information to}
+\item{out_col}{new column name for rowData to output pathway information to}
 
-\item{pwdb_species}{Name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species}
+\item{pwdb_species}{name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species}
 
-\item{pwdb_name}{The name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species}
+\item{pwdb_name}{name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species}
 
-\item{n_cores}{Number of cores to use for parallelizaion (used in convertIdentifiers)}
+\item{n_cores}{number of cores to use for parallelizaion (used in convertIdentifiers)}
 
 \item{export_raw_db}{# OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.}
 }
 \value{
-rowData: new pathway annotation for metabolites
+rowData: new pathway annotation column added
 
-$pathways: a dataframe of pathway information
+$result$pathways: a dataframe of pathway information
 }
 \description{
 Adds custom pathways to the already existing SummarizedExperiment
-data structure using the graphite package.
+ data structure using the graphite package.
 }
 \examples{
 # annotate metabolites using the humancyc database from the graphite package

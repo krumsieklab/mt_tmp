@@ -7,12 +7,12 @@
 #' @param stat_name Name under which this comparison will be stored, must be unique to all other statistical results.
 #' @param test_type Type of correlation to run, must be either "lm" or "cor"
 #' @param is_bin Logical. Whether the data is binary or not.
-#' @param lm_options A list of parameters for \code{mt_stats_univ_lm()}
-#' @param cor_options A list of parameters for \code{mt_stats_univ_cor()}
-#' @param multT_options A list of parameters for \code{mt_post_mulTest()}
-#' @param logging_stats_options A list of parameters for \code{mt_logging_statsinfo()}
-#' @param volcano_options A list of parameters for \code{mt_plots_volcano()}
-#' @param box_scatter_options A list of parameters for \code{mt_plots_boxplot_scatter()}
+#' @param lm_options A list of parameters for \code{mt_stats_univ_lm()}, expressions should be quoted by quote()
+#' @param cor_options A list of parameters for \code{mt_stats_univ_cor()}, expressions should be quoted by quote()
+#' @param multT_options A list of parameters for \code{mt_post_mulTest()}, expressions should be quoted by quote()
+#' @param logging_stats_options A list of parameters for \code{mt_logging_statsinfo()}, expressions should be quoted by quote()
+#' @param volcano_options A list of parameters for \code{mt_plots_volcano()}, expressions should be quoted by quote()
+#' @param box_scatter_options A list of parameters for \code{mt_plots_boxplot_scatter()}, expressions and columns in plot should be quoted by quote()
 #' 
 #'
 #' @return D with analysis results
@@ -155,9 +155,7 @@ mtw_analysis <-
       mt_plots_pvalqq(stat_name = stat_name)
       
     
-    # Currently here!!!
     # stat_name, stat_filter
-    
     logging_stats_options <- map_lists(logging_stats_options_def, logging_stats_options)
     
     # s <- logging_stats_options$stat_filter
