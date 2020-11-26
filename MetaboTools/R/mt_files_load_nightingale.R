@@ -74,13 +74,12 @@ get_data <- function(mat, met_info, sample_id, sample_qc=F){
     col_ids <- c(which(mat[tab_header, ] %in%sample_id): imetlast)
     col_names <- unlist(c(sample_id, mat[(tab_header-1), col_ids[-1]]))
     mat <- mat[data_start:isamplast, col_ids]
-    names(mat) <- col_names
   } else{
     # find the names of the table
     col_names <- c(sample_id, met_info[['Excel_column_name']])
     mat <- mat[data_start:isamplast, which(mat[tab_header, ] %in%col_names)]
-    names(mat) <- col_names
   }
+  names(mat) <- gsub(' ', '_', col_names)
   return(mat)
 }
 
@@ -95,15 +94,18 @@ load_multiple_sheet_format <- function(excel_file,
   colnames(met_info) <- gsub(" ", "_", colnames(met_info))
   
   result <- list()
-  
   raw_data <- get_data(mat=raw, met_info, sample_id)
   qc_met <- get_data(mat=qc_met, met_info, sample_id) %>% t() %>% data.frame()
   names(qc_met) <- unlist(qc_met[1, ])
-  qc_met <- qc_met[-1, ] %>% mutate('Excel_column_name' = rownames(qc_met[-1, ]))
+  qc_met <- data.frame(qc_met[-1, ]) %>% mutate('Excel_column_name' = rownames(qc_met[-1, ]))
   qc_sample <- get_data(mat=qc_sample, met_info, sample_id, sample_qc = T)
+  sample_id <- gsub(' ', '_', sample_id)
   # add sample information
-  result$sampleinfo <- data.frame(raw_data %>% select(sample_id), stringsAsFactors = F, check.names = F) %>%
-    left_join(qc_sample, by=sample_id)
+  result$sampleinfo <- qc_sample[match(raw_data$Sample_id, qc_sample$Sample_id), ]
+  # Following way creates issues with duplicate sample ids
+    #data.frame(raw_data %>% select(sample_id), stringsAsFactors = F, check.names = F) %>%
+    #left_join(qc_sample, by=sample_id)
+  
   # add metabolite information
   result$metinfo <- data.frame(met_info, check.names = F) %>% 
     left_join(qc_met, by='Excel_column_name')
@@ -114,15 +116,16 @@ load_multiple_sheet_format <- function(excel_file,
   
   # set info flags
   result$info$file <- excel_file
-  result$info$raw_sheet <- raw_sheet
+  result$info$data_sheet <- data_sheet
   result$info$met_sheet <- met_sheet
   result$info$met_qc <- met_qc
   result$info$sample_qc <- sample_qc
-  
+
   # add display name
   result$metinfo$name   <- result$metinfo$Excel_column_name
   # fix variable names
   colnames(result$data) <- result$metinfo$CSV_column_name
+
   # generate summarized experiment
   D <- SummarizedExperiment(assay    = t(result$data),
                             colData  = result$sampleinfo,
