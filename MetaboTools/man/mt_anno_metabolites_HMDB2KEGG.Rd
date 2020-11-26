@@ -11,10 +11,10 @@ mt_anno_metabolites_HMDB2KEGG(D, in_col, out_col = "KEGG")
 
 \item{in_col}{string name of the rowData column containing the HMDB identifiers}
 
-\item{out_col}{string name of the new rowData column to be created with the KEGG identifiers}
+\item{out_col}{string name of the new rowData column to be created with the KEGG identifiers; default="KEGG"}
 }
 \value{
-rowData: new annotations added
+rowData: new identifier annotation column added
 }
 \description{
 Creates annotations and merges them into current SummarizedExperiment.

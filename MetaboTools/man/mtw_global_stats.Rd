@@ -2,7 +2,7 @@
 % Please edit documentation in R/mtw_global_stats.R
 \name{mtw_global_stats}
 \alias{mtw_global_stats}
-\title{Wrapper function to run global statistics}
+\title{Wrapper function to run global statistics visualization}
 \usage{
 mtw_global_stats(
   D,
@@ -18,17 +18,17 @@ mtw_global_stats(
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{annos_pca_umap}{List of names in colData column to be colored in PCA and UMAP}
+\item{annos_pca_umap}{List of names in colData column to be colored in PCA and UMAP, column names should be quoted by quote()}
 
 \item{do_pca}{Logical. Whether to generate PCA plot}
 
-\item{pca_options}{A list of parameters for \code{mt_plots_PCA}}
+\item{pca_options}{A list of parameters for \code{mt_plots_PCA}, expressions should be quoted by quote()}
 
 \item{do_umap}{Logical. Whether to generate UMAP plot}
 
-\item{umap_options}{A list of parameters for \code{mt_plots_UMAP}}
+\item{umap_options}{A list of parameters for \code{mt_plots_UMAP}, expressions should be quoted by quote()}
 
-\item{heatmap_options}{A list of parameters for \code{mt_plots_pheatmap}}
+\item{heatmap_options}{A list of parameters for \code{mt_plots_pheatmap}, expressions should be quoted by quote()}
 
 \item{do_heatmap}{Logical. Whether to generate heatmap}
 }
@@ -39,8 +39,10 @@ D with PCA, UMAP and heatmap plots
 Generating PCA, UMAP and heatmap plots of dataset
 }
 \examples{
-\dontrun{... \%>\% mtw_global_stats() \%>\% ...}
-\dontrun{... \%>\% mtw_global_stats(annos_pca_umap = c('Group'),umap_options = list(n_neighbors = 2)) \%>\% ...}
+\dontrun{... \%>\% mtw_global_stats(annos_pca_umap = list(quote(Cohort)),
+pca_options = list(scaledata = T, size = 2, ggadd=quote(scale_size_identity())),
+umap_options = list(scaledata = T, size = 2, ggadd=quote(scale_size_identity())),
+heatmap_options = list(scaledata = T, fontsize = 5)) \%>\% ...}
 
 }
 \author{

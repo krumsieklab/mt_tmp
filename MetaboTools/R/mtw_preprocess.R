@@ -3,20 +3,21 @@
 #' Preprocess on data, including batch correction, quotient normalization, log transformation and kNN imputations
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param batch_col Batch column if needed
+#' @param batch_col Batch column
 #' @param batch_fun Batch function to use. Default is \code{mt_pre_batch_median}
+#' @param batch_ref_samples Expression to filter out reference samples to use from rowData. Default is NULL
 #' @param boxplot_options A list of parameters for \code{mt_plots_sampleboxplot}
 #' @param quot_options A list of parameters for \code{mt_pre_norm_quot}
 #' @param comp_fac List of names in colData column to correlate dilution factors with
 #' @param dilution_options A list of parameters for \code{mt_plots_qc_dilutionplot}
 #' @param log_base Base for log function, default is 2
-#' @param do_impute Logical. Whether to run imputation
+#' @param do_impute Logical. Whether to run imputation, default is TRUE
 #' @param knn_options A list of parameters for \code{mt_pre_impute_knn}
 #'
 #' @return D that has been preprocessed
 #' @examples
 #' \dontrun{... %>% mtw_preprocess() %>% ...}
-#' \dontrun{... %>% mtw_preprocess(batch_col = "BATCH_MOCK",comp_fac = c('num1','Group'), batch_col = "BATCH_MOCK",comp_fac = c("num1","Group"),quot_options = list(ref_samples = quote(Group == 'Vehicle'))) %>% ...}
+#' \dontrun{... %>% mtw_preprocess(batch_col = "BATCH_MOCK", batch_fun = mt_pre_batch_median,comp_fac = c("num1","Group"),quot_options = list(ref_samples = quote(Group == 'Vehicle'))) %>% ...}
 #'
 #' @author Zeyu Wang
 #'
@@ -63,14 +64,25 @@ mtw_preprocess <-
       ggadd = NULL
     )
     
+    quot_options_def = list(
+      vars = 1:dim(D)[1],
+      na_err = F,
+      ref_samples = NULL,
+      met_max = 1
+    )
+    
     dilution_options_def = list(boxpl = T, ggadd = NULL)
     knn_options_def = list(method = "knn.obs.euc.sel",
                            K = 10,
                            verbose = F)
-    #Batch function must have paratemeter "D" and "batches"
-    # add batch_ref_samples
+    
+    # Batch function must have paratemeter "D" and "batches"
     if (!missing(batch_col)) {
-      #add another if statement
+      # Boxplot
+      boxplot_options <- map_lists(boxplot_options_def, boxplot_options)
+      boxplot_options$D <- D
+      D <- do.call("mt_plots_sampleboxplot", boxplot_options)
+      
       if(!is.null(batch_ref_samples)){
         D %<>%
           batch_fun(batches = batch_col, ref_samples = dplyr::enquo(batch_ref_samples))
@@ -79,17 +91,13 @@ mtw_preprocess <-
           batch_fun(batches = batch_col)
       }
     }
-
+    
+    # Boxplot
     boxplot_options <- map_lists(boxplot_options_def, boxplot_options)
     boxplot_options$D <- D
     D <- do.call("mt_plots_sampleboxplot", boxplot_options)
     
-    quot_options_def = list(
-      vars = 1:nrow(D),
-      na_err = F,
-      ref_samples = NULL,
-      met_max = 1
-    )
+    # Quotient normalization
     quot_options <- map_lists(quot_options_def, quot_options)
     quot_options$D <- D
     if (!is.null(quot_options$ref_samples)) {
@@ -99,6 +107,7 @@ mtw_preprocess <-
       D <- do.call("mt_pre_norm_quot", quot_options)
     }
 
+    # Dilution plot
     if (!missing(comp_fac)) {
       dilution_options <-
         map_lists(dilution_options_def, dilution_options)
@@ -114,7 +123,6 @@ mtw_preprocess <-
     boxplot_options$D <- D
     D <- do.call("mt_plots_sampleboxplot", boxplot_options)
     # logging
-    # base = 2
     D %<>%  mt_pre_trans_log(base = log_base)
     
     # KNN imputation

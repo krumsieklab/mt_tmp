@@ -22,26 +22,26 @@ mt_files_anno_xls(
 
 \item{sheet}{name or number of sheet}
 
-\item{anno_type}{"samples" or "metabolites"}
+\item{anno_type}{"samples" (colData) or "metabolites" (rowData) to add annotation columns to}
 
 \item{anno_ID}{column in annotation file that contains ID information for mapping}
 
-\item{data_ID}{column in existing data that contains ID information for mapping}
+\item{data_ID}{column in existing annotation data frame that contains ID information for mapping}
 
 \item{no_map_err}{throw error (T) or warning (F) if something does not map. default: F}
 
-\item{col_names}{take column from new annotation file and overwite colnames (i.e. sample names) of SE (default: none)}
+\item{col_names}{take column from new annotation file and overwite colnames (i.e. sample names) of SE; default: NA}
 }
 \value{
-rowData or colData: new annotations added
+rowData or colData: new annotation columns added
 }
 \description{
-Loads annotations and merges them into current SummarizedExperiment.
-Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
-Can load annotations for both metabolites (rowData) and samples (colData)
+If annotation fields are already existing, this function will fill up any NAs with the values from the new file. Existing values are not overwritten/
 }
 \details{
-If annotation fields are already existing, this function will fill up any NAs with the values from the new file. Existing values are not overwritten/
+Loads annotations and merges them into current SummarizedExperiment.
+ Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
+ Can load annotations for both metabolites (rowData) and samples (colData).
 }
 \examples{
 # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file

@@ -26,17 +26,17 @@ mtw_analysis(
 
 \item{is_bin}{Logical. Whether the data is binary or not.}
 
-\item{lm_options}{A list of parameters for \code{mt_stats_univ_lm()}}
+\item{lm_options}{A list of parameters for \code{mt_stats_univ_lm()}, expressions should be quoted by quote()}
 
-\item{cor_options}{A list of parameters for \code{mt_stats_univ_cor()}}
+\item{cor_options}{A list of parameters for \code{mt_stats_univ_cor()}, expressions should be quoted by quote()}
 
-\item{multT_options}{A list of parameters for \code{mt_post_mulTest()}}
+\item{multT_options}{A list of parameters for \code{mt_post_mulTest()}, expressions should be quoted by quote()}
 
-\item{logging_stats_options}{A list of parameters for \code{mt_logging_statsinfo()}}
+\item{logging_stats_options}{A list of parameters for \code{mt_logging_statsinfo()}, expressions should be quoted by quote()}
 
-\item{volcano_options}{A list of parameters for \code{mt_plots_volcano()}}
+\item{volcano_options}{A list of parameters for \code{mt_plots_volcano()}, expressions should be quoted by quote()}
 
-\item{box_scatter_options}{A list of parameters for \code{mt_plots_boxplot_scatter()}}
+\item{box_scatter_options}{A list of parameters for \code{mt_plots_boxplot_scatter()}, expressions and columns in plot should be quoted by quote()}
 }
 \value{
 D with analysis results
