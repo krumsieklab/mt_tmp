@@ -1,4 +1,4 @@
-#' Pathway enrichment script using statistical analysis results from metabotools pipeline.
+#' Pathway enrichment script using statistical analysis results from metabotools pipeline
 #'
 #' This script runs a pathway enrichment analysis using Fisher's exact test from statistics
 #' calculated by mt_stats_univ_lm().
@@ -6,12 +6,12 @@
 #' Implemented approaches:
 #' 1. Fisher's exact test.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param pw_col column containing pathways IDs
-#' @param stat_name name of statistical analysis to use with mti_get_stat_by_name()
-#' @param cutoff cutoff to use for assigning whether a metabolite/gene is significant. Used in Fisher's exact test
+#' @param D \code{SummarizedExperiment} input.
+#' @param pw_col Column containing pathways IDs.
+#' @param stat_name Name of statistical analysis to use with mti_get_stat_by_name().
+#' @param cutoff Cutoff to use for assigning whether a metabolite/gene is significant. Used in Fisher's exact test. Default: 0.05.
 #'
-#' @return $pathways$enrichment_results: a dataframe containing the pathway enrichment results
+#' @return $results$pathways$enrichment_results: a dataframe containing the pathway enrichment results
 #'
 #' @examples
 #' \dontrun{%>% mt_stats_pathway_enrichment("kegg_db",
@@ -21,19 +21,10 @@
 #' }
 #'
 #'
-#' @author Parviz Gomari
-#'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
+#' @author PG
 #'
 #' @export
-
-mt_stats_pathway_enrichment <- function(
-  D,          # SummarizedExperiment input
-  pw_col,      # string, column name for pathway annotations
-  stat_name,
-  cutoff = 0.05
-) {
+mt_stats_pathway_enrichment <- function(D, pw_col, stat_name, cutoff = 0.05) {
 
   stopifnot("SummarizedExperiment" %in% class(D))
 

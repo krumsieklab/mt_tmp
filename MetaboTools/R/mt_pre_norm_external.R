@@ -1,29 +1,21 @@
 #' Normalize by an external sample annotation
 #'
-#' Normalize by a field in colData, e.g. sample weight, DNA content, protein content (BRADFORD) etc.
-#'
+#' Normalize by a column in colData, e.g. sample weight, DNA content, protein content (BRADFORD) etc.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param field numeric field in \code{colData} (samples) to normalize by
+#' @param col_name Numeric column in \code{colData} (samples) to normalize by
 #'
 #' @return assay: normalized version
 #'
 #' @examples
 #' \dontrun{#' # in the context of a SE pipeline
-#' ... %>% mt_pre_norm_quot(field='DNA') %>% ...    # normalize by values in field DNA
+#' ... %>% mt_pre_norm_quot(col_name='DNA') %>% ...    # normalize by values in column DNA
 #' }
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_pre_norm_external = function(
-  D,                 #
-  field
-) {
+mt_pre_norm_external = function(D, col_name) {
 
   # validate and extract arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -31,9 +23,9 @@ mt_pre_norm_external = function(
   if (any(unlist(X)[!is.na(unlist(X))]<0)) stop("Matrix contains negative values. Did you input logged data?")
 
   # get variable to normalize by
-  if (!(field %in% colnames(colData(D)))) stop(sprintf("'%s' not found in sample annotations.", field))
-  vc = colData(D)[[field]]
-  if (!is.numeric(vc)) stop(sprintf("'%s' is not numeric.", field))
+  if (!(col_name %in% colnames(colData(D)))) stop(sprintf("'%s' not found in sample annotations.", col_name))
+  vc = colData(D)[[col_name]]
+  if (!is.numeric(vc)) stop(sprintf("'%s' is not numeric.", col_name))
 
   # run normalization
   Y = t(sapply(1:dim(X)[1], function(i)unlist(X[i,]/vc[i])))
@@ -44,7 +36,7 @@ mt_pre_norm_external = function(
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = glue::glue("normalized by '{field}'")
+      logtxt = glue::glue("normalized by '{col_name}'")
     )
 
   # return

@@ -2,14 +2,14 @@
 % Please edit documentation in R/mt_modify_filter.R
 \name{mt_modify_filter_metabolites}
 \alias{mt_modify_filter_metabolites}
-\title{Filter metabolites.}
+\title{Filter metabolites}
 \usage{
-mt_modify_filter_metabolites(D, metab_filter)
+mt_modify_filter_metabolites(D, filter)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{metab_filter}{Logical expression. Can use fields from \code{rowData()}.}
+\item{filter}{Logical expression. Can use fields from \code{rowData()}.}
 }
 \value{
 assay: filtered data matrix with removed metabolites

@@ -3,7 +3,7 @@
 %   R/mt_stats_pathway_enrichment_with_differential_analysis.R
 \name{mt_stats_pathway_enrichment_with_differential_analysis}
 \alias{mt_stats_pathway_enrichment_with_differential_analysis}
-\title{Pathway enrichment using different methods.}
+\title{Pathway enrichment using different methods}
 \usage{
 mt_stats_pathway_enrichment_with_differential_analysis(
   D,
@@ -15,17 +15,17 @@ mt_stats_pathway_enrichment_with_differential_analysis(
 )
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{pw_col}{column containing pathways IDs}
+\item{pw_col}{Column containing pathways IDs.}
 
-\item{grp_col}{column name of column containing grouping variables}
+\item{grp_col}{Column name of column containing grouping variables.}
 
-\item{ctrl_grp}{name(s) of control group(s) found in grp_col column}
+\item{ctrl_grp}{Name(s) of control group(s) found in grp_col column.}
 
-\item{case_grp}{name(s) of case/phenotype group(s) found in grp_col column}
+\item{case_grp}{Name(s) of case/phenotype group(s) found in grp_col column.}
 
-\item{method}{one of: "gage", "fishers"}
+\item{method}{One of: "gage", "fishers".}
 }
 \value{
 $pathways$enrichment_results: a dataframe containing the pathway enrichment results
@@ -50,5 +50,5 @@ Implemented approaches:
 
 }
 \author{
-Parviz Gomari
+PG
 }

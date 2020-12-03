@@ -3,11 +3,11 @@
 #' Implementation according to Dieterle et al., 2006\cr
 #' \href{https://www.ncbi.nlm.nih.gov/pubmed/16808434}{https://www.ncbi.nlm.nih.gov/pubmed/16808434}
 #'
-#' @param D \code{SummarizedExperiment} input
+#' @param D \code{SummarizedExperiment} input.
 #' @param vars index vector of variables to be used, default: all
 #' @param na_err T/F, throw error for NA's or just ignore?
-#' @param ref_samples expression filtering reference samples from colData
-#' @param met_max maximum fraction of missingness to select metabolites to be used in the reference (default: 1, i.e. all metabolites)
+#' @param ref_samples Expression filtering reference samples from colData.
+#' @param met_max Maximum fraction of missingness to select metabolites to be used in the reference. Default: 1 (i.e. all metabolites).
 #'
 #' @return assay: quotient-normalized version
 #' @return $result: dilution factors
@@ -21,17 +21,12 @@
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-mt_pre_norm_quot <- function(
-  D,                 #
-  vars=1:dim(D)[1],  #
-  na_err=F,         #
-  ref_samples=NULL,   #
-  met_max=1           #
-) {
+mt_pre_norm_quot <- function(D,
+                             vars=1:dim(D)[1],
+                             na_err=F,
+                             ref_samples=NULL,
+                             met_max=1) {
 
   # validate and extract arguments
   stopifnot("SummarizedExperiment" %in% class(D))

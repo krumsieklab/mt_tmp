@@ -7,7 +7,7 @@
 mt_pre_confounding_correction_stepwise_aic(D, cols_to_cor, n_cores = 1)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
 \item{cols_to_cor}{vector of column numbers from colData to correct for}
 
@@ -19,11 +19,8 @@ SE with corrected data
 $output: returns data.frame with the metabolite, its covars and the fit pval and rsq values
 }
 \description{
-\code{mt_pre_confounding_correction_stepwise_aic} returns the corrected data
-}
-\details{
-each metabolite is corrected by lm with the confounding variables determined by stepwise aic
-and residuals are returned in lieu of uncorrected metabolites expressions.
+Each metabolite is corrected by lm with the confounding variables determined by stepwise aic and residuals are returned
+in lieu of uncorrected metabolites expressions.
 }
 \examples{
  \dontrun{#... \%>\% mt_pre_confounding_correction_stepwise_aic(cols_to_cor = c(1, 4, 5), n_cores = 10)
@@ -32,5 +29,5 @@ and residuals are returned in lieu of uncorrected metabolites expressions.
 
 }
 \author{
-Annalise Schweickart, RB (modified on 2020-08-22)
+AS, RB
 }

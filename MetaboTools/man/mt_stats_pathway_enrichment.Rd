@@ -2,21 +2,21 @@
 % Please edit documentation in R/mt_stats_pathway_enrichment.R
 \name{mt_stats_pathway_enrichment}
 \alias{mt_stats_pathway_enrichment}
-\title{Pathway enrichment script using statistical analysis results from metabotools pipeline.}
+\title{Pathway enrichment script using statistical analysis results from metabotools pipeline}
 \usage{
 mt_stats_pathway_enrichment(D, pw_col, stat_name, cutoff = 0.05)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{pw_col}{column containing pathways IDs}
+\item{pw_col}{Column containing pathways IDs.}
 
-\item{stat_name}{name of statistical analysis to use with mti_get_stat_by_name()}
+\item{stat_name}{Name of statistical analysis to use with mti_get_stat_by_name().}
 
-\item{cutoff}{cutoff to use for assigning whether a metabolite/gene is significant. Used in Fisher's exact test}
+\item{cutoff}{Cutoff to use for assigning whether a metabolite/gene is significant. Used in Fisher's exact test. Default: 0.05.}
 }
 \value{
-$pathways$enrichment_results: a dataframe containing the pathway enrichment results
+$results$pathways$enrichment_results: a dataframe containing the pathway enrichment results
 }
 \description{
 This script runs a pathway enrichment analysis using Fisher's exact test from statistics
@@ -36,5 +36,5 @@ Implemented approaches:
 
 }
 \author{
-Parviz Gomari
+PG
 }

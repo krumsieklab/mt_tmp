@@ -3,30 +3,21 @@
 #' Implementation according to Schäfer and Strimmer, 2006\cr
 #' https://www.ncbi.nlm.nih.gov/pubmed/16646851
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param stat_name name of the correlation matrix
-#' @param sample_filter term defining which samples to use for GGM calculation (default: all samples)
+#' @param D \code{SummarizedExperiment} input.
+#' @param stat_name Name of the correlation matrix.
+#' @param sample_filter Term defining which samples to use for GGM calculation. Default: missing (use all samples).
 #'
-#' @return original SummarizedExperiment as in input
-#' @return $output: list of pairwise partial correlation coefficients and pvalues, as well as the corresponding variable names
+#' @return $results$output: list of pairwise partial correlation coefficients and pvalues, as well as the corresponding variable names
 #'
 #' @examples
 #' \dontrun{... %>%
-#'   mt_stats_multiv_net_GeneNet(stat_name ="pcor") %>%
+#'   mt_stats_multiv_GeneNet(stat_name ="pcor") %>%
 #' ...}
 #'
 #' @author EB
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_stats_multiv_net_GeneNet = function(
-  D,                       # SummarizedExperiment input
-  stat_name,                    # unique name for this particular partial correlation matrix
-  sample_filter
-) {
+mt_stats_multiv_GeneNet = function(D, stat_name, sample_filter) {
 
   # validate and extract arguments
   stopifnot("SummarizedExperiment" %in% class(D))

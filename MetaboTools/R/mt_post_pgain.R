@@ -1,12 +1,15 @@
+# QUESTIONS: DELETE ONCE ANSWERED
+# 1. Why returning output = NULL here?
+
 #' Compute p-gain from metabolite ratio test
 #'
-#' Add p-gain to result table
+#' Add p-gain to result table.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param stat_name name of the statistical comparison
-#' @param p_col name of p-value column to compute p-gain from
+#' @param D \code{SummarizedExperiment} input.
+#' @param stat_name Name of the statistical comparison.
+#' @param p_col Name of p-value column to compute p-gain from. Default: p.value.
 #'
-#' @return $result: statistical object
+#' @return $results[[stat_name]]$output: pgain column added to statistical table
 #'
 #' @examples
 #' \dontrun{# add p-gains to the result table of the statistical comparison called "comparison1"
@@ -18,8 +21,9 @@
 #'
 #' @export
 mt_post_pgain <- function(D,
-                             stat_name,
-                             p_col = p.value){
+                          stat_name,
+                          p_col = p.value){
+
     p_col <- dplyr::enquo(p_col)
 
     ## are these ratio results?

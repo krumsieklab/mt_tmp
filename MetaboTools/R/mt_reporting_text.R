@@ -1,11 +1,11 @@
-#' Store text that will be added to html report later.
+#' Store regular text for html report
 #'
-#' Plain text to add to the html document. Will be used when calling \code{mt_reporting_html} or \code{mt_reporting_html_nonLinear}.
+#' Will be used when calling \code{mt_reporting_html}.
 #'
-#' @param D  \code{SummarizedExperiment} input
-#' @param text Heading text
+#' @param D  \code{SummarizedExperiment} input.
+#' @param text Regular text.
 #'
-#' @return $result: stores plain text for use with html
+#' @return $results$output: stores text
 #'
 #' @examples
 #' \dontrun{... %>%
@@ -16,15 +16,9 @@
 #'
 #' @author EB
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_reporting_text <- function(
-  D,
-  text
-) {
+mt_reporting_text <- function(D,
+                              text){
 
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))

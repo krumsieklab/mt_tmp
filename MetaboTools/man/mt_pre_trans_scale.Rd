@@ -7,19 +7,19 @@
 mt_pre_trans_scale(D, center = T, scale = T, ref_samples)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{center}{T/F, mean-center data? default: T}
+\item{center}{Mean-center data? Default: T.}
 
-\item{scale}{T/F, scale data to sd 1? default: T}
+\item{scale}{Scale data to sd 1? Default: T.}
 
-\item{ref_samples}{term which samples to use for center and scale calculcation}
+\item{ref_samples}{Term which samples to use for center and scale calculcation.}
 }
 \value{
 assay: scaled data
 }
 \description{
-Scale data, mean 0 / sd 1 by default.
+{ADD DESCRIPTION}
 }
 \examples{
 \dontrun{# in the context of a SE pipeline

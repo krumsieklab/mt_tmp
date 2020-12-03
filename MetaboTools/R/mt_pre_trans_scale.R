@@ -1,9 +1,11 @@
 #' Scale data, mean 0 / sd 1 by default.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param center T/F, mean-center data? default: T
-#' @param scale T/F, scale data to sd 1? default: T
-#' @param ref_samples term which samples to use for center and scale calculcation
+#' {ADD DESCRIPTION}
+#'
+#' @param D \code{SummarizedExperiment} input.
+#' @param center Mean-center data? Default: T.
+#' @param scale Scale data to sd 1? Default: T.
+#' @param ref_samples Term which samples to use for center and scale calculcation.
 #'
 #' @return assay: scaled data
 #'
@@ -15,11 +17,7 @@
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
 mt_pre_trans_scale <- function(
   D,        # SummarizedExperiment input
   center=T, # mean 0?

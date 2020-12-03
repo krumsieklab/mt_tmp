@@ -2,19 +2,21 @@
 % Please edit documentation in R/mt_reporting_heading.R
 \name{mt_reporting_heading}
 \alias{mt_reporting_heading}
-\title{Store heading that will be added to report later.}
+\title{Store heading for html report}
 \usage{
-mt_reporting_heading(D, strtitle, lvl = 1)
+mt_reporting_heading(D, heading, lvl = 1)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input (missing if first step in pipeline)}
+\item{D}{\code{SummarizedExperiment} input. Missing if first step in pipeline.}
 
-\item{strtitle}{Heading text}
+\item{heading}{Heading text.}
 
-\item{lvl}{Heading level, default: 1 (can be used for nested outline structures)}
+\item{lvl}{Heading level. Can be used for nested outline structures. Default: 1.}
 }
 \value{
-$result: stores info about heading
+If first step in pipeline, creates \code{SummarizedExperiment} object.
+
+$result$output: stores info about heading
 }
 \description{
 Will be used when calling \code{mt_reporting_generateMD}.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_stats_univ_lm.R
 \name{mt_stats_univ_lm}
 \alias{mt_stats_univ_lm}
-\title{Univariate GLMs.}
+\title{Univariate GLMs}
 \usage{
 mt_stats_univ_lm(D, formula, stat_name, sample_filter, n_cores = 1)
 }
@@ -18,7 +18,7 @@ mt_stats_univ_lm(D, formula, stat_name, sample_filter, n_cores = 1)
 \item{n_cores}{number of cores to use for mclapply... default: 1. More than one core will not work on Windows platforms.}
 }
 \value{
-$result: statistics object
+$result$output: statistics object
 }
 \description{
 Computes univariate GLM for each metabolite.

@@ -1,6 +1,6 @@
-#' Log, base 2 by default.
+#' Log, base 2 by default
 #'
-#' Transform the entire dataset log_based(x), i.e. log(x)/log(base)
+#' Transform the entire dataset log_based(x), i.e. log(x)/log(base).
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param base operation: log(x)/log(base) for every data point
@@ -15,14 +15,8 @@
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_pre_trans_log <- function(
-  D,      # SummarizedExperiment input
-  base=2  # base of logging
+mt_pre_trans_log <- function(D, base=2
 ) {
 
   # validate arguments

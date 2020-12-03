@@ -14,11 +14,7 @@
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
 mt_pre_batch_median = function(
   D,          # SummarizedExperiment input
   batches,    # sample annotation column that contains batch info

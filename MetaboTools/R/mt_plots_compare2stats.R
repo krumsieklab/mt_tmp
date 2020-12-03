@@ -11,7 +11,7 @@
 #' @param filterop  if AND -> two colors, one for those where both stats match the criterion, and one where they don't
 #'                  if OR -> three colors, a third one where only one stat matches the criterion
 #' @param plot_title optional param for plot title
-#' @param   label_column optional argument on which column in the statistical results df to use for labeling points
+#' @param label_column optional argument on which column in the statistical results df to use for labeling points
 #' @param point_size size of the points on the ggplot
 #' @param return.plot.only return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.
 #' @param use_estimate use estimate for comparison, instead of statistic; default: F

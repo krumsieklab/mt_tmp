@@ -13,15 +13,15 @@ mt_pre_norm_quot(
 )
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
 \item{vars}{index vector of variables to be used, default: all}
 
 \item{na_err}{T/F, throw error for NA's or just ignore?}
 
-\item{ref_samples}{expression filtering reference samples from colData}
+\item{ref_samples}{Expression filtering reference samples from colData.}
 
-\item{met_max}{maximum fraction of missingness to select metabolites to be used in the reference (default: 1, i.e. all metabolites)}
+\item{met_max}{Maximum fraction of missingness to select metabolites to be used in the reference. Default: 1 (i.e. all metabolites).}
 }
 \value{
 assay: quotient-normalized version

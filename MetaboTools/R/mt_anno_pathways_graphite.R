@@ -1,18 +1,21 @@
-#' Add pathway information.
+#' Add pathway information
 #'
-#' Adds custom pathways to the already existing SummarizedExperiment
-#' data structure using the graphite package.
+#' Adds custom pathways to the already existing SummarizedExperiment data structure using the graphite package.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param in_col Column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
-#' @param out_col A new column name for D to output pathway information to
-#' @param pwdb_species Name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species
-#' @param pwdb_name The name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species
-#' @param n_cores Number of cores to use for parallelizaion (used in convertIdentifiers)
-#' @param export_raw_db # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
+#' @param D \code{SummarizedExperiment} input.
+#' @param in_col rowData column to use for pathway fetching. The selected column must contain metabolite
+#'    identifiers (e.g. HMBD, KEGG, ChEBI, etc).
+#' @param out_col New column name for rowData to output pathway information to.
+#' @param pwdb_species Name of the species the data was measured in. Use pathwayDatabases() after loading graphite to
+#'    see a full list of databases and species
+#' @param pwdb_name Name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full
+#'    list of databases and species
+#' @param n_cores Number of cores to use for parallelizaion. Used in convertIdentifiers. Default: 2.
+#' @param raw_db_outfile OPTIONAL. Name of file to export the pathway database to. Must be a string containing the path name with a
+#'    .xlsx extension.
 #'
 #' @return rowData: new pathway annotation for metabolites
-#' @return $pathways: a dataframe of pathway information
+#' @return $results$pathways: a dataframe of pathway information
 #'
 #' @examples
 #' # annotate metabolites using the humancyc database from the graphite package
@@ -24,23 +27,16 @@
 #'                     n_cores = 5) %>%
 #' ...}
 #'
-#' @author Parviz Gomari
-#'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
+#' @author PG
 #'
 #' @export
-
-# main
-mt_anno_pathways_graphite <- function(
-  D,             # SummarizedExperiment input
-  in_col,        # column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. KEGG, ChEBI, HMBD, etc)
-  out_col,       # name of the column to output pathway information to in D
-  pwdb_species,    # name of the species the data was measured in. Use pathwayDatabases() after loading graphite to see a full list of databases and species
-  pwdb_name,       # the name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full list of databases and species
-  n_cores = 2,    # number of cores to use for parallelizaion (used in convertIdentifiers)
-  export_raw_db  # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
-) {
+mt_anno_pathways_graphite <- function(D,
+                                      in_col,
+                                      out_col,
+                                      pwdb_species,
+                                      pwdb_name,
+                                      n_cores = 2,
+                                      raw_db_outfile){
 
   # check arguments, SummarizedExperiment, and exactly one cutoff argument must be non-NA
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -154,8 +150,8 @@ mt_anno_pathways_graphite <- function(
   metadata(D)$pathways[[out_col]] <- pwdb_summary
 
 
-  if(!missing(export_raw_db)) {
-    openxlsx::write.xlsx(pwdb, export_raw_db)
+  if(!missing(raw_db_outfile)) {
+    openxlsx::write.xlsx(pwdb, raw_db_outfile)
   }
 
 

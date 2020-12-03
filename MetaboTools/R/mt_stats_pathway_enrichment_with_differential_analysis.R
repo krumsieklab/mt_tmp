@@ -1,4 +1,5 @@
-#' Pathway enrichment using different methods.
+# WHY IS stat_name MISSING?
+#' Pathway enrichment using different methods
 #'
 #' This pathway enrichment analysis script calculats differential metabolites either
 #' by a classical t-test or the GAGE package and then performs pathway enrichment
@@ -8,12 +9,12 @@
 #' 1. GAGE: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-161
 #' 2. Fisher's exact test. Will NOT scale() data before. Data matrix can have NAs.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param pw_col column containing pathways IDs
-#' @param grp_col column name of column containing grouping variables
-#' @param ctrl_grp name(s) of control group(s) found in grp_col column
-#' @param case_grp name(s) of case/phenotype group(s) found in grp_col column
-#' @param method one of: "gage", "fishers"
+#' @param D \code{SummarizedExperiment} input.
+#' @param pw_col Column containing pathways IDs.
+#' @param grp_col Column name of column containing grouping variables.
+#' @param ctrl_grp Name(s) of control group(s) found in grp_col column.
+#' @param case_grp Name(s) of case/phenotype group(s) found in grp_col column.
+#' @param method One of: "gage", "fishers".
 #'
 #' @return $pathways$enrichment_results: a dataframe containing the pathway enrichment results
 #'
@@ -25,21 +26,15 @@
 #' }
 #'
 #'
-#' @author Parviz Gomari
-#'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
+#' @author PG
 #'
 #' @export
-
-mt_stats_pathway_enrichment_with_differential_analysis <- function(
-  D,          # SummarizedExperiment input
-  pw_col,       # string, column name for pathway annotations
-  grp_col,
-  ctrl_grp,
-  case_grp,
-  method = "gage"
-) {
+mt_stats_pathway_enrichment_with_differential_analysis <- function(D,
+                                                                   pw_col,
+                                                                   grp_col,
+                                                                   ctrl_grp,
+                                                                   case_grp,
+                                                                   method = "gage") {
 
   stopifnot("SummarizedExperiment" %in% class(D))
   if (!method %in% c("fishers","gage")) stop("'method' must be either 'gage' or 'fishers'")

@@ -2,16 +2,16 @@
 % Please edit documentation in R/mt_anno_missingness.R
 \name{mt_anno_missingness}
 \alias{mt_anno_missingness}
-\title{Missingness Annotation for Metabolites / Samples}
+\title{Add missingness annotation column}
 \usage{
-mt_anno_missingness(D, anno_type, out_col)
+mt_anno_missingness(D, anno_type, out_col = "missingness")
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{anno_type}{"samples" (colData) or "metabolites" (rowNames) to add missingness column to}
+\item{anno_type}{Either "samples" (colData) or "metabolites" (rowData) to add missingness column to.}
 
-\item{out_col}{name of new missingness column (if missing, use "missingness")}
+\item{out_col}{Name of new missingness column. Default="missingness".}
 }
 \value{
 rowData or colData: new annotation column added
@@ -22,8 +22,8 @@ Adds a rowData or colData column representing the missingness of metabolites or 
 \examples{
 # example of how to run function
 \dontrun{
-#load data
-mt_files_load_metabolon(file=file, sheet="data") \%>\%
+# load data
+mt_load_metabolon(file=file, sheet="data") \%>\%
 # add metabolite missingness column to rowData
 mt_anno_missingness(anno_type = "metabolites", out_col = "Metab_Missing")
 # add sample missingness column to colData

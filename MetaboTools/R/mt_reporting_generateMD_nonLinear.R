@@ -11,12 +11,11 @@
 #' @param first_heading Name of the first heading (default: "Output")
 #' @param output_calls Output full information about all parameters of each function call into RMD? (default: F)
 #'
-#' @return Nothing
+#' @return Nothing.
 #'
 #' @author KC
 #'
 #' @noRd
-
 mt_reporting_generateMD_nonLinear <- function(res,
                                               outfile = "MT_NL.RMD",
                                               read_from = "mt_nl.rds",

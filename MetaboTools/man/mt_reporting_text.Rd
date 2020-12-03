@@ -2,20 +2,20 @@
 % Please edit documentation in R/mt_reporting_text.R
 \name{mt_reporting_text}
 \alias{mt_reporting_text}
-\title{Store text that will be added to html report later.}
+\title{Store regular text for html report}
 \usage{
 mt_reporting_text(D, text)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{text}{Heading text}
+\item{text}{Regular text.}
 }
 \value{
-$result: stores plain text for use with html
+$results$output: stores text
 }
 \description{
-Plain text to add to the html document. Will be used when calling \code{mt_reporting_html} or \code{mt_reporting_html_nonLinear}.
+Will be used when calling \code{mt_reporting_html}.
 }
 \examples{
 \dontrun{... \%>\%

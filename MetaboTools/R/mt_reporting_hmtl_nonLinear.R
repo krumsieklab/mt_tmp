@@ -1,34 +1,38 @@
-#' Generates markdown-based HTML output for Non-Linear Pipelines from a list of SummarizedExperiment Objects
+# QUESTIONS: DELETE ONCE ANSWERED
+# 1. Should this return something? mt_reporting_html returns D, but this works on a LIST of objects, so can't be part of a pipeline
+
+# FIXES
+# 1. Need to update description when integrate mt_reporting_generateMD
+# 2. Add @examples
+
+#' Generates markdown-based HTML output for non-linear pipelines from a list of SummarizedExperiment objects
 #'
 #' Shortcut for mt_reporting_generateMD_nonLinear with subsequent knitting and clean-up.
 #'
-#' @param pipelines A list of SummarizedExperiment objects
-#' @param outfile # output HTML file name
-#' @param title Title of RMD document
-#' @param output.calls Output detailed info on function calls? default: F (passed through to mt_reporting_generateMD)
-#' @param keep.tmp Keep temporary files? (default: No). Can be used to manually edit RMD afterwards.
+#' @param D_list A list of \code{SummarizedExperiment} objects.
+#' @param outfile Output HTML filename.
+#' @param title Title of RMD document. Default: 'Non-Linear RMD output'.
+#' @param output_calls Output detailed info on function calls? Default: F.
+#' @param keep_tmp Keep temporary files? Can be used to manually edit RMD afterwards. Default: F.
+#'
+#' @return Nothing. This does not pass through \code{SummarizedExperiment} objects.
 #'
 #' @author JK, KC
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_reporting_html_nonLinear <- function(
-  pipelines,
-  outfile,
-  title = 'RMD output',
-  output.calls=F,
-  keep.tmp=F
+mt_reporting_html_nonlinear <- function(D_list,
+                                        outfile,
+                                        title = 'Non-Linear RMD output',
+                                        output_calls=F,
+                                        keep_tmp=F
 ) {
   
   # validate argument
-  ## pipelines
-  stopifnot("list" %in% class(pipelines))
-  check_SE <- sapply(pipelines, function(p){"SummarizedExperiment" %in% class(p)})
+  ## D_list
+  stopifnot("list" %in% class(D_list))
+  check_SE <- sapply(D_list, function(p){"SummarizedExperiment" %in% class(p)})
   if(any(check_SE==FALSE)){
-    stop("Argument pipelines must be a list of SummarizedExperiment objects.")
+    stop("Argument D_list must be a list of SummarizedExperiment objects.")
   }
   ## outfile
   if(missing(outfile)){
@@ -37,8 +41,13 @@ mt_reporting_html_nonLinear <- function(
   
   
   res <- MTResultCollector$new()
-  res$addMultiple(pipelines)
-  
+  res$addMultiple(D_list)
+
+  # throw error if multiple roots (i.e. disjointed D_list)
+  if(length(res$graph_roots()) > 1){
+    stop("D_list can not be disjointed! A common root must exist for all D_list!")
+  }
+
   # unique string
   ustr <- uuid::UUIDgenerate()
   
@@ -47,10 +56,10 @@ mt_reporting_html_nonLinear <- function(
   rdsfile <-  sprintf("tmp_%s.rds", ustr)
   # generate RMD
   res %>% mt_reporting_generateMD_nonLinear(
-    outfile = rmdfile, 
-    read_from = rdsfile, 
-    title = title, 
-    output_calls = output.calls)
+    outfile = rmdfile,
+    read_from = rdsfile,
+    title = title,
+    output_calls = output_calls)
   # save temp file that will be input for the RMD
   save(D, file=rdsfile)
   # knit
@@ -58,7 +67,7 @@ mt_reporting_html_nonLinear <- function(
   # rename to correct name
   file.rename(paste0(tools::file_path_sans_ext(rmdfile),'.html'), outfile)
   # clean up
-  if (!keep.tmp) {
+  if (!keep_tmp) {
     file.remove(rmdfile)
     file.remove(rdsfile)
   }

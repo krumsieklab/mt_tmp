@@ -1,4 +1,4 @@
-#' Univariate GLMs.
+#' Univariate GLMs
 #'
 #' Computes univariate GLM for each metabolite.
 #'
@@ -14,10 +14,7 @@
 #' @param sample_filter term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison
 #' @param n_cores number of cores to use for mclapply... default: 1. More than one core will not work on Windows platforms.
 #'
-#' @return $result: statistics object
-#'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
+#' @return $result$output: statistics object
 #'
 #' @examples
 #' \donttest{# run lm with no confounders, "Group" as outcome
@@ -34,13 +31,11 @@
 #' @author JK, JZ
 #'
 #' @export
-mt_stats_univ_lm <- function(
-  D,              # SummarizedExperiment input
-  formula,        # formula defining statistical model, see above.
-  stat_name,           # name of comparison,
-  sample_filter,
-  n_cores = 1
-) {
+mt_stats_univ_lm <- function(D,
+                             formula,
+                             stat_name,
+                             sample_filter,
+                             n_cores = 1) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

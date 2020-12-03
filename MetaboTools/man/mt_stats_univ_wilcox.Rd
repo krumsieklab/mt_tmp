@@ -6,31 +6,32 @@
 \usage{
 mt_stats_univ_wilcox(
   D,
-  y,
+  in_col,
   stat_name,
   sample_filter,
-  paired_flag = F,
-  exact_flag = NULL
+  paired = F,
+  exact = NULL
 )
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{y}{name of the column in colData to compare with metabolite}
+\item{in_col}{Name of the column in colData to compare with metabolite.}
 
-\item{stat_name}{name under which this comparison will be stored, must be unique to all other statistical results}
+\item{stat_name}{Name under which this comparison will be stored, must be unique to all other statistical results}
 
-\item{sample_filter}{term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison}
+\item{sample_filter}{Term which samples to filter to first... e.g. used if the data contains >2 groups but the user
+wants to run a two-group comparison.}
 
-\item{paired_flag}{optional to set the paired flag in wilcox.test function, would be applied for numeric y}
+\item{paired}{OPTIONAL. Set the paired flag in wilcox.test function, would be applied for numeric in_col. Default: F.}
 
-\item{exact_flag}{optional to set the exact flag in wilcox.test function}
+\item{exact}{OPTIONAL. Set the exact flag in wilcox.test function. Default: NULL.}
 }
 \value{
 $result: statistics object
 }
 \description{
-Wilcox test
+{ADD DESCRIPTION}
 }
 \examples{
 \donttest{# run lm with no confounders, "Group" as outcome
@@ -38,7 +39,7 @@ Wilcox test
 # name the comparison "Li's"
 ... \%>\%
  mt_stats_univ_wilcox(
-   y     = Group,
+   in_col     = Group,
    sample_filter = (Group \%in\% c("Li_2","Li_5")),
    stat_name         = "Li's"
  ) \%>\% ...

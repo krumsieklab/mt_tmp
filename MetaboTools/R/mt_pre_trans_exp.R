@@ -1,4 +1,4 @@
-#' Exponentiate, base 2 by default.
+#' Exponentiate, base 2 by default
 #'
 #' Transform the the entire dataset base^x.
 #'
@@ -15,15 +15,8 @@
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_pre_trans_exp <- function(
-  D,      # SummarizedExperiment input
-  base=2  # base of exp
-) {
+mt_pre_trans_exp <- function(D, base=2) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

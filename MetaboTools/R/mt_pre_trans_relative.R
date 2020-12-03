@@ -1,12 +1,12 @@
-#' Scale each sample relative to the mean of a given group of samples.
+#' Scale each sample relative to the mean of a given group of samples
 #'
 #' Usually used to make all concentrations relative to a control group, for example.
 #' If data are logged, will use a 'minus' operation, if data are non-logged, will divide.
 #' Whether data are logged is determine by whether they have been logged inside the MT pipeline.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param ref_samples expression filtering reference samples from colData
-#' @param is_logged data logged?
+#' @param D \code{SummarizedExperiment} input.
+#' @param ref_samples Expression filtering reference samples from colData.
+#' @param is_logged Is the data logged?
 #'
 #' @return assay: relatively scaled data
 #'
@@ -17,16 +17,8 @@
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_pre_trans_relative <- function(
-  D,        # SummarizedExperiment input
-  ref_samples,
-  is_logged
-) {
+mt_pre_trans_relative <- function(D, ref_samples, is_logged) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

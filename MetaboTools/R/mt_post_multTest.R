@@ -1,28 +1,33 @@
+# QUESTIONS: DELETE ONCE ANSWERED
+# 1. Why returning output = NULL here?
+# 2. Can the commented out code be deleted?
+
 #' Multiple testing correction
 #'
-#' Adjust output of statistical tests for multiple testing
+#' Adjust output of statistical tests for multiple testing.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param stat_name name of the statistical comparison to adjust
-#' @param p_col name of p-value column to adjust
-#' @param method which method to use for multiple testing (see p.adjust)
+#' @param D \code{SummarizedExperiment} input.
+#' @param stat_name Name of the statistical comparison to adjust.
+#' @param p_col Name of p-value column to adjust. Default: p.value.
+#' @param method Which method to use for multiple testing. See \code{p.adjust} documentation.
 #'
-#' @return $result: statistical object
+#' @return $results[[stat_name]]$output: p.adj column added to statistical table
 #'
 #' @examples
 #' \dontrun{# correct the statistical comparison called "Li's" using Benjamini-Hochberg
 #' ... %>%
-#'  mt_post_multTest(stat_name="Li's", method="BH") %>% ...
+#'  mt_post_multtest(stat_name="Li's", method="BH") %>% ...
 #'  }
 #'
 #' @author JK, JZ
 #'
 #' @export
-mt_post_multTest <- function(D,
+mt_post_multtest <- function(D,
                              stat_name,
                              p_col = p.value,
                              method = "bonferroni"){
-    p_col <- dplyr::enquo(p_col)
+
+   p_col <- dplyr::enquo(p_col)
 
     ## stat
     if(missing(stat_name))

@@ -2,23 +2,37 @@
 % Please edit documentation in R/mt_pre_impute_knn.R
 \name{mt_pre_impute_knn}
 \alias{mt_pre_impute_knn}
-\title{Impute using kNN method.}
+\title{Impute using kNN method}
 \usage{
-mt_pre_impute_knn(D, method = "knn.obs.euc.sel", K = 10, verbose = F)
+mt_pre_impute_knn(
+  D,
+  method = "knn.obs.euc.sel",
+  K = 10,
+  verbose = F,
+  use_multicore = F,
+  n_cores = 5
+)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{K}{Number of nearest neighbors to consider, default is 10 (recommendation: do not touch)}
+\item{method}{Specific KNN method to use. Default: "knn.obs.euc.sel" (recommendation: do not touch).}
 
-\item{verbose}{T/F, whether to output intermediate steps, default: F}
+\item{K}{Number of nearest neighbors to consider. Default: 10 (recommendation: do not touch).}
 
-\item{methods}{Specific KNN method to use, default is "knn.obs.euc.sel" (recommendation: do not touch)}
+\item{verbose}{Output intermediate steps? Default: F.}
+
+\item{use_multicore}{Use multicore KNN imputation method? Default: F.}
+
+\item{n_cores}{If use_multicore==T, number of cores to use for imputation. Default: 5.}
 }
 \value{
 assay: imputed data
 }
 \description{
+Multi-core functionality is available by setting the flag use_multicore=T.
+}
+\details{
 Default settings are from the winning approach of our paper.
 https://link.springer.com/article/10.1007%2Fs11306-018-1420-2
 }
@@ -29,5 +43,5 @@ https://link.springer.com/article/10.1007%2Fs11306-018-1420-2
 
 }
 \author{
-JK
+JK, PG
 }

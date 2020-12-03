@@ -1,16 +1,17 @@
 #' Wilcox test
 #'
+#' {ADD DESCRIPTION}
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param y name of the column in colData to compare with metabolite
-#' @param stat_name name under which this comparison will be stored, must be unique to all other statistical results
-#' @param sample_filter term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison
-#' @param exact_flag optional to set the exact flag in wilcox.test function
-#' @param paired_flag optional to set the paired flag in wilcox.test function, would be applied for numeric y
+#' @param D \code{SummarizedExperiment} input.
+#' @param in_col Name of the column in colData to compare with metabolite.
+#' @param stat_name Name under which this comparison will be stored, must be unique to all other statistical results
+#' @param sample_filter Term which samples to filter to first... e.g. used if the data contains >2 groups but the user
+#'    wants to run a two-group comparison.
+#' @param exact OPTIONAL. Set the exact flag in wilcox.test function. Default: NULL.
+#' @param paired OPTIONAL. Set the paired flag in wilcox.test function, would be applied for numeric in_col. Default: F.
+#'
 #' @return $result: statistics object
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #' @import glue
 #'
 #' @examples
@@ -19,7 +20,7 @@
 #' # name the comparison "Li's"
 #' ... %>%
 #'  mt_stats_univ_wilcox(
-#'    y     = Group,
+#'    in_col     = Group,
 #'    sample_filter = (Group %in% c("Li_2","Li_5")),
 #'    stat_name         = "Li's"
 #'  ) %>% ...
@@ -28,20 +29,12 @@
 #' @author RB
 #'
 #' @export
-
-mt_stats_univ_wilcox <- function(
-  D,              # SummarizedExperiment input
-  y,        # name of the column in colData to compare with metabolite
-  stat_name,      # name of comparison,
-  sample_filter,
-  paired_flag=F, # if tests should be paired
-  exact_flag=NULL
-) {
+mt_stats_univ_wilcox <- function(D, in_col, stat_name, sample_filter, paired=F, exact=NULL) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
-  # check that y is in the colData
-  if (!(y %in% colnames(colData(D)))) stop(sprintf("There is no column called %s in the colData", y))
+  # check that in_col is in the colData
+  if (!(in_col %in% colnames(colData(D)))) stop(sprintf("There is no column called %s in the colData", in_col))
   # make sure name does not exist yet
   if (stat_name %in% unlist(MetaboTools:::mti_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("name"))) stop(sprintf("stat element with name '%s' already exists",stat_name))
 
@@ -62,7 +55,7 @@ mt_stats_univ_wilcox <- function(
 
   # check that outcome is either binary or numerical and run test accordingly
   mets <- rownames(D)
-  outvec <- Ds[[y]]
+  outvec <- Ds[[in_col]]
   cl <- outvec %>% class()
 
   if (("character" %in% cl) || ("factor" %in% cl)) {
@@ -74,8 +67,8 @@ mt_stats_univ_wilcox <- function(
     # run wilcox
     # we want to model metabolite ~ outcome
     wt <- lapply(mets, function(x){
-      input <- split(Ds[,x], Ds[[y]])
-      res  <- wilcox.test(input[[1]], input[[2]], alternative = "two.sided", exact=exact_flag)
+      input <- split(Ds[,x], Ds[[in_col]])
+      res  <- wilcox.test(input[[1]], input[[2]], alternative = "two.sided", exact=exact)
       res <- data.frame("statistic"=res$statistic, "p.value"=res$p.value, "method"=res$method)
       return(res)
     }) %>% do.call(rbind,.) %>% data.frame()
@@ -85,14 +78,14 @@ mt_stats_univ_wilcox <- function(
     # run wilcox
     # we want to model metabolite ~ outcome
     wt <- lapply(mets, function(x){
-      res  <- wilcox.test(Ds[,x], Ds[[y]], paired=paired_flag, alternative = "two.sided", exact=exact_flag)
+      res  <- wilcox.test(Ds[,x], Ds[[in_col]], paired=paired, alternative = "two.sided", exact=exact)
       res <- data.frame("statistic"=res$statistic, "p.value"=res$p.value, "method"=res$method)
       return(res)
     }) %>% do.call(rbind,.) %>% data.frame()
   }
 
-  # add columns with metabolite names and y variable
-  wt %<>% mutate(var=mets, term=y)
+  # add columns with metabolite names and in_col variable
+  wt %<>% mutate(var=mets, term=in_col)
   # reorder columns
   wt %<>% select(var, term, statistic, p.value)
   # rearrange back to original metabolite order
@@ -100,22 +93,22 @@ mt_stats_univ_wilcox <- function(
   stopifnot(!any(is.na(o))) # sanity check
   wt <- wt[o,]
   # make sure that NAs in the outcome are set to FALSE in the list of used samples
-  samples.used[is.na(Ds[[y]])] <- F
+  samples.used[is.na(Ds[[in_col]])] <- F
 
   ## add status information & results
   funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("Wilcox rank sum test, %s", y),
+      logtxt = sprintf("Wilcox rank sum test, %s", in_col),
       output = list(
         table = wt,
-        #formula = as.formula(glue::glue("~ {y}")),
+        #formula = as.formula(glue::glue("~ {in_col}")),
         name    = stat_name,
         groups = outgroups,
         #lstobj = NULL,
         samples.used = samples.used,
-        outcome = y
+        outcome = in_col
       )
     )
 
