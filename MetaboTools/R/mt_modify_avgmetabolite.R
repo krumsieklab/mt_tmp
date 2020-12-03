@@ -43,7 +43,7 @@ mt_modify_avgmetabolite <- function(
   D <- D[unique_rows, ]
   
   # replace assay data with means
-  assay(D) <- X[match(rowData(D)[[avg_by]], X[[avg_by]]), ] %>% select(-!!as.name(avg_by))
+  assay(D, withDimnames=F) <- X[match(rowData(D)[[avg_by]], X[[avg_by]]), ] %>% select(-!!as.name(avg_by))
   
   ## add status information
   funargs <- mti_funargs()
