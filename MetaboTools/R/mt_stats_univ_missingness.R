@@ -8,7 +8,7 @@
 #' @param stat_name Name of comparison for later reference.
 #' @param sample_filter Sample filter term to restrict to.
 #'
-#' @return $result: statistics object
+#' @return $results$output: Statistics object.
 #'
 #' @examples
 #' \dontrun{# run on sample field 'Group', name output stats object 'miss'

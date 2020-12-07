@@ -4,21 +4,21 @@
 #' in lieu of uncorrected metabolites expressions.
 #'
 #' @param D \code{SummarizedExperiment} input.
-#' @param cols_to_cor vector of column numbers from colData to correct for
-#' @param n_cores number of cores to use in parallelization
+#' @param cols_to_cor Vector of column numbers from colData to correct for.
+#' @param n_cores Number of cores to use in parallelization. Default: 1.
 #'
-#' @return SE with corrected data
-#' @return $output: returns data.frame with the metabolite, its covars and the fit pval and rsq values
+#' @return assay: Corrected data.
+#' @return $results$output: Returns data.frame with the metabolite, its covars and the fit pval and rsq values.
 #'
 #' @examples
-#'  \dontrun{#... %>% mt_pre_confounding_correction_stepwise_aic(cols_to_cor = c(1, 4, 5), n_cores = 10)
+#'  \dontrun{#... %>% mt_pre_confounding_correction_stepAIC(cols_to_cor = c(1, 4, 5), n_cores = 10)
 #'  }
 #'
 #'
 #' @author AS, RB
 #'
 #' @export
-mt_pre_confounding_correction_stepwise_aic <- function(D, cols_to_cor, n_cores = 1) {
+mt_pre_confounding_correction_stepAIC <- function(D, cols_to_cor, n_cores = 1) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -106,7 +106,7 @@ mt_pre_confounding_correction_stepwise_aic <- function(D, cols_to_cor, n_cores =
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf('Adjusted for covariate effects with stepwiseAIC'),
+      logtxt = sprintf('Adjusted for covariate effects with stepAIC'),
       output = covars_log
     )
   D

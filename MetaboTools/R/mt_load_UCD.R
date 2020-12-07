@@ -19,11 +19,7 @@
 #' @author JK
 #'
 #' @export
-mt_load_UCD <- function(D,
-                        file,
-                        sheet,
-                        zero_to_na=T,
-                        gen_valid_varnames=F) {
+mt_load_UCD <- function(D, file, sheet, zero_to_na=T, gen_valid_varnames=F) {
 
   # initialize result list
   result=list()

@@ -1,4 +1,4 @@
-#' Computes partial correlation matrix using the GeneNet estimator.
+#' Computes partial correlation matrix using the GeneNet estimator
 #'
 #' Implementation according to Schäfer and Strimmer, 2006\cr
 #' https://www.ncbi.nlm.nih.gov/pubmed/16646851
@@ -7,7 +7,7 @@
 #' @param stat_name Name of the correlation matrix.
 #' @param sample_filter Term defining which samples to use for GGM calculation. Default: missing (use all samples).
 #'
-#' @return $results$output: list of pairwise partial correlation coefficients and pvalues, as well as the corresponding variable names
+#' @return $results$output: List of pairwise partial correlation coefficients and pvalues, as well as the corresponding variable names.
 #'
 #' @examples
 #' \dontrun{... %>%

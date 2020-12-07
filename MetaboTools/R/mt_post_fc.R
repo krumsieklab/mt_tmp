@@ -1,8 +1,3 @@
-# QUESTIONS: DELETE ONCE ANSWERED
-# 1. Why returning output = NULL here?
-# 2. This function had a correct_confounders argument, but never used it. However, there is code for correcting confounders down
-#    below. Is the code correct?
-
 #' Compute fold-change
 #'
 #' Add metabolite fold-changes to statistical results table.
@@ -124,8 +119,7 @@ mt_post_fc <- function(D,
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("Calculated foldchanges for %s", stat_name),
-      output = NULL
+      logtxt = sprintf("Calculated foldchanges for %s", stat_name)
     )
   ## RETURN
   D

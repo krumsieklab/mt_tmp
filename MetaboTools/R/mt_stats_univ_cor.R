@@ -4,14 +4,14 @@
 #'
 #'
 #' @param D \code{SummarizedExperiment} input.
+#' @param method Correlation method to use. Can be any among "pearson", "kendall", "spearman".
 #' @param in_col Name of the colData column to use for the correlation calculation. If method="kendall", class(D[[in_col]]) needs
 #'    to be numeric.
-#' @param method Correlation method to use. Can be any among "pearson", "kendall", "spearman".
 #' @param stat_name Name under which this comparison will be stored, must be unique to all other statistical results.
 #' @param sample_filter OPTIONAL. Sample filter condition.
 #' @param exact OPTIONAL. Set the exact flag in cor.test function.
 #'
-#' @return $results$output: list of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names
+#' @return $results$output: List of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names.
 #'
 #' @examples
 #' \dontrun{... %>%

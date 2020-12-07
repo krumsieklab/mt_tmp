@@ -1,6 +1,3 @@
-# QUESTIONS: DELETE ONCE ANSWERED
-# 1. Why returning output = NULL here?
-
 #' Compute p-gain from metabolite ratio test
 #'
 #' Add p-gain to result table.
@@ -20,9 +17,7 @@
 #' @author JZ
 #'
 #' @export
-mt_post_pgain <- function(D,
-                          stat_name,
-                          p_col = p.value){
+mt_post_pgain <- function(D, stat_name, p_col = p.value){
 
     p_col <- dplyr::enquo(p_col)
 
@@ -65,8 +60,7 @@ mt_post_pgain <- function(D,
     metadata(D)$results %<>%
                   mti_generate_result(
                       funargs = funargs,
-                      logtxt = sprintf("Calculate p-gains for '%s'", stat_name),
-                      output = NULL
+                      logtxt = sprintf("Calculate p-gains for '%s'", stat_name)
                   )
     ## RETURN
     D

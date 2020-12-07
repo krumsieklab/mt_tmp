@@ -1,13 +1,9 @@
-# QUESTIONS: DELETE ONCE ANSWERED
-# 1. Should this return something? mt_reporting_html returns D, but this works on a LIST of objects, so can't be part of a pipeline
-
-# FIXES
-# 1. Need to update description when integrate mt_reporting_generateMD
-# 2. Add @examples
-
 #' Generates markdown-based HTML output for non-linear pipelines from a list of SummarizedExperiment objects
 #'
-#' Shortcut for mt_reporting_generateMD_nonLinear with subsequent knitting and clean-up.
+#' Generates a fully automated report version of non-linear pipeline.
+#'
+#' @description
+#' Will generate RMD markdown document that can be adapted and then knitted to HTML.
 #'
 #' @param D_list A list of \code{SummarizedExperiment} objects.
 #' @param outfile Output HTML filename.
@@ -15,7 +11,7 @@
 #' @param output_calls Output detailed info on function calls? Default: F.
 #' @param keep_tmp Keep temporary files? Can be used to manually edit RMD afterwards. Default: F.
 #'
-#' @return Nothing. This does not pass through \code{SummarizedExperiment} objects.
+#' @return Does not change the \code{SummarizedExperiment} objects. This does not pass through \code{SummarizedExperiment} objects.
 #'
 #' @author JK, KC
 #'
@@ -24,9 +20,8 @@ mt_reporting_html_nonlinear <- function(D_list,
                                         outfile,
                                         title = 'Non-Linear RMD output',
                                         output_calls=F,
-                                        keep_tmp=F
-) {
-  
+                                        keep_tmp=F) {
+
   # validate argument
   ## D_list
   stopifnot("list" %in% class(D_list))
@@ -38,8 +33,8 @@ mt_reporting_html_nonlinear <- function(D_list,
   if(missing(outfile)){
     stop("Argument outfile must be provided.")
   }
-  
-  
+
+
   res <- MTResultCollector$new()
   res$addMultiple(D_list)
 
@@ -50,7 +45,7 @@ mt_reporting_html_nonlinear <- function(D_list,
 
   # unique string
   ustr <- uuid::UUIDgenerate()
-  
+
   # define file names
   rmdfile <- sprintf("tmp_%s.RMD", ustr)
   rdsfile <-  sprintf("tmp_%s.rds", ustr)
@@ -71,5 +66,5 @@ mt_reporting_html_nonlinear <- function(D_list,
     file.remove(rmdfile)
     file.remove(rdsfile)
   }
-  
+
 }

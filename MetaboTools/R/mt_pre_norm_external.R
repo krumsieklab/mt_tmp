@@ -3,13 +3,13 @@
 #' Normalize by a column in colData, e.g. sample weight, DNA content, protein content (BRADFORD) etc.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param col_name Numeric column in \code{colData} (samples) to normalize by
+#' @param col_name Numeric-value column in colData (samples) to normalize by.
 #'
-#' @return assay: normalized version
+#' @return assay: Normalized version.
 #'
 #' @examples
 #' \dontrun{#' # in the context of a SE pipeline
-#' ... %>% mt_pre_norm_quot(col_name='DNA') %>% ...    # normalize by values in column DNA
+#' ... %>% mt_pre_norm_external(col_name='DNA') %>% ...    # normalize by values in column DNA
 #' }
 #'
 #' @author JK

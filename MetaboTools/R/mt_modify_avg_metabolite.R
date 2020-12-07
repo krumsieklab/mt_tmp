@@ -5,7 +5,7 @@
 #' @param D \code{SummarizedExperiment} input.
 #' @param group_col Name of rowData column (metabolite annotation) by which duplicates can be identified.
 #'
-#' @return D with duplicate metabolites combined
+#' @return assay: duplicate metabolites (rows) combined
 #'
 #' @examples
 #' \dontrun{... %>% mt_modify_avg_metabolite(group_col = 'name') %>% ...}

@@ -20,10 +20,7 @@
 #' @author JK
 #'
 #' @export
-mt_load_WCM <- function(D,
-                        file,
-                        sheet,
-                        zero_to_na=T){
+mt_load_WCM <- function(D, file, sheet, zero_to_na=T){
 
   # initialize outer result list
   result <- list()

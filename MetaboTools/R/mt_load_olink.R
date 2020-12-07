@@ -19,7 +19,7 @@
 #' @examples
 #' \dontrun{D <-
 #'   # load data
-#'   mt_load_files_olink(codes.makepath("mt/olink_sampledata.xlsx")) %>%
+#'   mt_load_olink(file=codes.makepath("mt/olink_sampledata.xlsx")) %>%
 #'   ...}
 #'
 #' @author KS
@@ -28,8 +28,7 @@
 #' @import tidyverse
 #'
 #' @export
-mt_load_olink <- function(D,
-                          file){
+mt_load_olink <- function(D, file){
 
   # initialize outer result list
   result <- list()

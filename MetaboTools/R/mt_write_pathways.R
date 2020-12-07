@@ -1,7 +1,7 @@
 #' Write out all pathway annotations, possible redundant pathways, and metabolite annotations
 #'
-#' Creates an Excel file that contains detailed metabolite-to-pathway mapping information. Writes out 4 different forms of the mapping information.
-#' Also includes information about which pathways are redundant, i.e. contain the same set of metabolites.
+#' Creates an Excel file that contains detailed metabolite-to-pathway mapping information. Writes out 4 different forms of the mapping
+#' information. Also includes information about which pathways are redundant, i.e. contain the same set of metabolites.
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param pw_col Name of the pathway annotation column.
@@ -11,10 +11,10 @@
 #'
 #' @examples
 #' \dontrun{... %>%
-#' mt_add_pathways(in_col = "KEGG",
-#'                 out_col = "kegg_db",
-#'                 pw_species = "hsapiens",
-#'                 pw_name = "kegg") %>%
+#' mt_anno_pathways_graphite(in_col = "KEGG",
+#'                           out_col = "kegg_db",
+#'                           pwdb_species = "hsapiens",
+#'                           pwdb_name = "kegg") %>%
 #' mt_anno_pathways_remove_redundant(met_ID_col = "KEGG", pw_col = "kegg_db") %>%
 #' mt_write_pathways(pw_col='kegg_db', file='pwannos.xlsx')}
 #'

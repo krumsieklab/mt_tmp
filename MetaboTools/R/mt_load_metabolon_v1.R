@@ -1,6 +1,7 @@
 #' Load Metabolon-format data
 #'
-#' Loads data from a Metabolon-format Excel file. Needs to be in the original "Client Data Table" format that they deliver.
+#' For Metabolon-format version used prior to {DATE}. Loads data from a Metabolon-format Excel file. Needs to be in the original "Client
+#' Data Table" format that they deliver.
 #'
 #' @param D \code{SummarizedExperiment} input. Missing if first step in pipeline.
 #' @param file Name of input Excel file.
@@ -18,10 +19,7 @@
 #' @author JK
 #'
 #' @export
-mt_load_metabolon_v1 <- function(D,
-                                 file,
-                                 sheet,
-                                 copy_nan_sheet='') {
+mt_load_metabolon_v1 <- function(D, file, sheet, copy_nan_sheet='') {
 
   # initialize result list
   result=list()

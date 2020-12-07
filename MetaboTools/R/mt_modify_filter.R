@@ -2,11 +2,11 @@
 #'
 #' Filters metabolites according to an expression. Expression can access entries of rowData.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param filter Logical expression. Can use fields from \code{rowData()}.
+#' @param D \code{SummarizedExperiment} input.
+#' @param filter Logical expression. Can use colums from rowData.
 #'
-#' @return assay: filtered data matrix with removed metabolites
-#' @return rowData: filtered down
+#' @return assay: Filtered metabolites (rows) removed.
+#' @return rowData: Filtered metabolites removed.
 #'
 #' @examples
 #' \dontrun{... %>% mt_modify_filter_metabolites(SUPER_PATHWAY=="Nucleotide") %>% ...}
@@ -42,15 +42,15 @@ mt_modify_filter_metabolites <- function(D, filter){
     D
 }
 
-#' Filter samples.
+#' Filter samples
 #'
 #' Filters samples according to an expression. Expression can access entries of colData.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param filter Logical expression. Can use fields from \code{colData()}.
+#' @param D \code{SummarizedExperiment} input.
+#' @param filter Logical expression. Can use columns from colData.
 #'
-#' @return assay: filtered data matrix with removed samples
-#' @return colData: filtered down
+#' @return assay: Filtered samples (columns) removed.
+#' @return colData: Filtered samples removed.
 #'
 #' @examples
 #' # filter to two specific groups of samples

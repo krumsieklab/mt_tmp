@@ -2,10 +2,10 @@
 #'
 #' Performs batch correction via ComBat method from \code{sva} package.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param batches sample annotation (colData) column name that contains batch assignment
+#' @param D \code{SummarizedExperiment} input.
+#' @param batches Sample annotation (colData) column name that contains batch assignment.
 #'
-#' @return assay: batch-corrected version
+#' @return assay: Batch-corrected version.
 #'
 #' @examples
 #' \dontrun{... %>% mt_pre_batch_ComBat(batches="BATCH") %>% ...

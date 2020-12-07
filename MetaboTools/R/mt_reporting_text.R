@@ -5,7 +5,7 @@
 #' @param D  \code{SummarizedExperiment} input.
 #' @param text Regular text.
 #'
-#' @return $results$output: stores text
+#' @return $results$output: Stores text.
 #'
 #' @examples
 #' \dontrun{... %>%
@@ -17,8 +17,7 @@
 #' @author EB
 #'
 #' @export
-mt_reporting_text <- function(D,
-                              text){
+mt_reporting_text <- function(D, text){
 
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))

@@ -1,4 +1,4 @@
-#' Calculate ICC - intraclass correlation
+#' Calculate intraclass correlation (ICC)
 #'
 #' {ADD DESCRIPTION}
 #'

@@ -8,11 +8,10 @@
 #' @param strata Strata classes for stratified confounding correction, should be a column from colData(D).
 #' @param scale_data Should data be scaled after correction? Default: F.
 #'
-#' @return assay: corrected data
-#' @return $results$output: lm.fit pvalue per metabolites to show confounding affect on them
+#' @return assay: Corrected data.
+#' @return $results$output: The lm.fit pvalue per metabolites to show confounding affect on them.
 #'
 #' @examples
-#'
 #'  \dontrun{# not run
 #'  #... %>% mt_pre_confounding_correction( formula = ~batch + age, strata = "RUN_DAY" )
 #'  }

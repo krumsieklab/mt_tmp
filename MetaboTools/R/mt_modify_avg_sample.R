@@ -5,7 +5,7 @@
 #' @param D \code{SummarizedExperiment} input.
 #' @param group_col Name of colData column (sample annotation) by which duplicates can be identified.
 #'
-#' @return D with duplicate samples combined
+#' @return assay: duplicate samples (columns) combined
 #'
 #' @examples
 #' \dontrun{... %>% mt_modify_avg_sample(group_col = "RID") %>% ...}

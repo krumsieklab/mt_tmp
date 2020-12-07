@@ -13,7 +13,7 @@
 #' @param use_multicore Use multicore KNN imputation method? Default: F.
 #' @param n_cores If use_multicore==T, number of cores to use for imputation. Default: 5.
 #'
-#' @return assay: imputed data
+#' @return assay: Imputed data.
 #'
 #' @examples
 #' \dontrun{# in the context of a SE pipeline

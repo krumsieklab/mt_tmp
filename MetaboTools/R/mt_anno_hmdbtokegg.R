@@ -7,7 +7,7 @@
 #' @param in_col Name of the rowData column containing the HMDB identifiers.
 #' @param out_col Name of the new rowData column to be created with the KEGG identifiers. Default="KEGG".
 #'
-#' @return rowData: new annotation column added
+#' @return rowData: New annotation column added.
 #'
 #' @examples
 #' # Load data, sheet with sample annotations, sheet with metabolite annotations and add KEGG identifiers
@@ -25,9 +25,7 @@
 #' @author EB
 #'
 #' @export
-mt_anno_hmdbtokegg <- function(D,
-                               in_col,
-                               out_col = "KEGG") {
+mt_anno_hmdbtokegg <- function(D, in_col, out_col = "KEGG") {
 
   ## check input
   stopifnot("SummarizedExperiment" %in% class(D))

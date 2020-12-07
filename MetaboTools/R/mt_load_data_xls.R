@@ -17,13 +17,13 @@
 #' # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
 #' \dontrun{D <-
 #'   # load raw data
-#'   mt_load_files_data_xls(file=file, sheet="data", samples_in_rows=T, id_col="SAMPLE_NAME") %>%
+#'   mt_load_data_xls(file=file, sheet="data", samples_in_rows=T, id_col="SAMPLE_NAME") %>%
 #'   # sample annotations from metabolomics run
-#'   mt_files_anno_xls(file=file, sheet="sampleinfo", annosfor="samples", IDanno = "SAMPLE_NAME") %>%
+#'   mt_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_id = "SAMPLE_NAME") %>%
 #'   # sample annotations from clinical table
-#'   mt_files_anno_xls(file=file, sheet="clinicals", annosfor="samples", IDanno="SAMPLE_NAME") %>%
+#'   mt_anno_xls(file=file, sheet="clinicals", anno_type="samples", anno_id="SAMPLE_NAME") %>%
 #'   # metabolite annotations`
-#'   mt_files_anno_xls(file=file, sheet="metinfo", annosfor="metabolites", IDanno="BIOCHEMICAL", IDdata = "name") %>%
+#'   mt_anno_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_id="BIOCHEMICAL", data_id = "name") %>%
 #'   ...}
 #'
 #' @author JK

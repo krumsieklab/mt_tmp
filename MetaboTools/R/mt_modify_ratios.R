@@ -1,14 +1,16 @@
-#' Generate metabolite ratios.
+#' Generate metabolite ratios
 #'
 #' Transforms the dataset into a new dataset where each 'metabolite' represents a ratio of two metabolites. Warning: For a dataset
-#' with originally p metabolites, this will result in p*(p-1) new variables. (e.g. 500 metabolits becomes 249500 ratios).
+#' with originally p metabolites, this will result in p*(p-1) new variables (e.g. 500 metabolits becomes 249500 ratios).
 #'
+#' @description
 #' mt_post_pgain provides a special operation on a ratio data matrix for better interpretation of the resulting p-values.
 #'
-#' @param D SummarizedExperiment object
-#' @param stat_name Name of previous network generation call (e.g. \link{mt_stats_multiv_net_GeneNet}). Default: None, i.e. no network-based ratios
+#' @param D \code{SummarizedExperiment} object.
+#' @param stat_name Name of previous network generation call (e.g. \link{mt_stats_multiv_net_GeneNet}). Default: None, i.e. no
+#'    network-based ratios.
 #' @param edge_filter Filter criterion for edge selection, e.g. "p.adj < 0.05", as a term.
-#' @param neighborhood Neighborhood degree to use (e.g. first neighbors, second neighbors), default: 1
+#' @param neighborhood Neighborhood degree to use (e.g. first neighbors, second neighbors). Default: 1.
 
 #'
 #' @examples
@@ -16,17 +18,13 @@
 #' ... %>%  mt_modify_ratios() %>% ... # proceed with statistical analysis
 #' }
 #'
-#' @return SummarizedExperiment containing pairwise ratios from all variables of input
+#' @return assay: Pairwise ratios from all variables of input.
+#' @return rowData: Pairwise ratios from all variables of input.
 #'
 #' @author JZ, JK
 #'
 #' @export
-mt_modify_ratios <- function(
-    D,
-    stat_name,
-    edge_filter,
-    neighborhood = 1
-){
+mt_modify_ratios <- function(D, stat_name, edge_filter, neighborhood = 1){
 
     stopifnot("SummarizedExperiment" %in% class(D))
 

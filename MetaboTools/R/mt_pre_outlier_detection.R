@@ -1,16 +1,17 @@
 #' Identifies sample outliers
 #'
-#' Uses either univariate or multivariate (leverage) approaches, won't do both in one call.
+#' Uses either univariate or multivariate (leverage) approaches. Won't do both in one call.
 #'
 #' @param D \code{SummarizedExperiment} input.
-#' @param method Can be either "univariate" or "leverage" (for now).
-#' @param reduce_dim Perform PCA-based dimension reduction before outlier detection? Needed for multivariate methods in low-rank datasets.
+#' @param method Can be either "univariate" or "leverage" (for now). Default: "univariate".
+#' @param reduce_dim Perform PCA-based dimension reduction before outlier detection? Needed for multivariate methods in low-rank
+#'    datasets. Default: F.
 #' @param thresh Number of standard deviations or m/n units to use as threshold to define the outlier, default value set to 4
 #' @param perc For the univariate method, percentage of metabolites that need to be outliers in order to consider the whole sample an outlier, default value set to 0.5
 #' @param pval For the mahalanobis distance method, p-val of chi-squared test to threshold at, default = 0.01
 #'
-#' @return colData: new columns including a binary vector and a numeric score vector
-#' @return $results$output: returns the specific parameters used to determine outliers for the method selected
+#' @return colData: New columns including a binary vector and a numeric score vector.
+#' @return $results$output: Returns the specific parameters used to determine outliers for the method selected.
 #'
 #' @examples
 #' \dontrun{# first identify samples that have more than 50% univariate outliers, then identify multivariate outliers with a leverage >4m/n

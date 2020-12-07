@@ -1,6 +1,3 @@
-# QUESTIONS: DELETE ONCE ANSWERED
-# 1. Why is =NULL used here instead of just using missing()?
-
 #' Export statistical results from pipeline into an Excel file
 #'
 #' Writes out the statistics data frame with p-values, adjusted p-values, fold changes, test statistics etc. into an Excel sheet.
@@ -8,7 +5,7 @@
 #' @param D \code{SummarizedExperiment} input.
 #' @param file Output filename to write to.
 #' @param stat_names Names of one or more statistical comparison to be written out. If NULL, will export all.
-#' @param sort_by_p Automatically sort by p-values? Default: False.
+#' @param sort_by_p Automatically sort by p-values? Default: F.
 #' @param met_name OPTIONAL. Name of rowdata column to include in the output.
 #'
 #' @return Does not change the \code{SummarizedExperiment} object.

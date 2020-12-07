@@ -12,13 +12,13 @@
 #' @param raw_db_outfile OPTIONAL. Name of file to export the pathway database to. Must be a string containing the path name with a
 #'    .xlsx extension.
 #'
-#' @return rowData: new pathway annotation for metabolites
-#' @return $pathways: a dataframe of pathway information
+#' @return rowData: New pathway annotation column added.
+#' @return $results$pathways: A dataframe of pathway information.
 #'
 #' @examples
 #' # annotate metabolites using smp_db
 #' \dontrun{... %>%
-#'   mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db",
+#'   mt_anno_pathways_hmdb(in_col = "HMDb_ID", out_col = "smp_db",
 #'                         pwdb_name = "SMP",
 #'                         db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) %>%
 #' ...}

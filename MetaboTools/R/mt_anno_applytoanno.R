@@ -3,7 +3,7 @@
 #' Works in the same way as lapply/sapply, with a function to be executed on each entry of a given metabolite or sample annotation.
 #'
 #' @param D \code{SummarizedExperiment} input.
-#' @param anno_type Either "samples" or "metabolites".
+#' @param anno_type Either "samples" (colData) or "metabolites" (rowData).
 #' @param col_name Name of column to access.
 #' @param fun Function to be applied.
 #'
@@ -21,12 +21,7 @@
 #' @author JK
 #'
 #' @export
-mt_anno_applytoanno <- function(
-  D,          # SummarizedExperiment input
-  anno_type,   # "samples" or "metabolites"
-  col_name,      # name of column to access
-  fun         # function to be applied
-) {
+mt_anno_applytoanno <- function(D, anno_type, col_name, fun) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

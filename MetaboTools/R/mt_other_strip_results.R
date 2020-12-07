@@ -12,6 +12,8 @@
 #' @param D \code{SummarizedExperiment} input.
 #' @param strip What to remove. Has to be "all" or "plots". Default: "all".
 #'
+#' @return $results: Either all plots removed or all results entries removed.
+#'
 #' @examples
 #' \dontrun{# at the end of a pipeline
 #' ... %>% mt_other_strip_results(strip="plots")

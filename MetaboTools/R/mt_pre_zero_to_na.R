@@ -4,7 +4,7 @@
 #'
 #' @param D \code{SummarizedExperiment} input.
 #'
-#' @return assay: zeros replaced by NA
+#' @return assay: Zeros replaced by NA.
 #'
 #' @examples
 #' \dontrun{# in the context of a SE pipeline

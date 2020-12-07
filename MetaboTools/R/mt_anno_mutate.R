@@ -2,8 +2,8 @@
 #'
 #' Creates a new variable using dplyr's mutate() mechanism. Formula can use any column in the respective colData/rowData.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param anno_type direction, "samples" or "metabolites"
+#' @param D \code{SummarizedExperiment} input.
+#' @param anno_type Either "samples" (colData) or "metabolites" (rowData).
 #' @param col_name Name of new annotation column to store result of expression.
 #' @param term Mutate term to forward to \code{dplyr::mutate()}.
 #'

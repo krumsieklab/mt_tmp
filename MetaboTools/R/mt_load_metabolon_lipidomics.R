@@ -21,9 +21,7 @@
 #' @import tidyverse
 #'
 #' @export
-mt_load_metabolon_lipidomics <- function(D,
-                                         file,
-                                         sheet_list) {
+mt_load_metabolon_lipidomics <- function(D, file, sheet_list) {
 
   # initialize outer result list
   result <- list()

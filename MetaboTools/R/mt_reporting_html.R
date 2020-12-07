@@ -1,21 +1,17 @@
-# QUESTIONS: DELETECE ONCE ANSWERED
-# 1. Can (experimental) be deleted?
-
-# FIXES
-# 1. Need to update description when integrate mt_reporting_generateMD
-# 2. Add @examples
-
 #' Generates markdown-based HTML output from SummarizedExperiment
 #'
-#' Shortcut for mt_reporting_generateMD with subsequent knitting and clean-up.
+#' Generates a fully automated report version of an entire (linear) pipeline.
+#'
+#' @description
+#' Will generate RMD markdown document that can be adapted and then knitted to HTML.
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param file Output HTML filename.
 #' @param title Title of RMD document. Default: 'RMD output'.
 #' @param output_calls Output detailed info on function calls? Default: F.
 #' @param number_sections Number sections and sub-sections? Default: F.
-#' @param start_after UUID of pipeline step AFTER which to start. Default: NA, i.e. output entire pipeline. (passed through to mt_reporting_generateMD)
-#' @param use_plotly Output interactive plotly plots? Default: F. (experimental)
+#' @param start_after UUID of pipeline step AFTER which to start. Default: NA, i.e. output entire pipeline.
+#' @param use_plotly EXPERIMENTAL. Output interactive plotly plots? Default: F.
 #' @param keep_tmp Keep temporary files? Can be used to manually edit RMD afterwards. Default: F.
 #'
 #' @return Does not change the \code{SummarizedExperiment} object.

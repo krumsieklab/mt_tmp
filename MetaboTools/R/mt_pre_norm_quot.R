@@ -4,13 +4,13 @@
 #' \href{https://www.ncbi.nlm.nih.gov/pubmed/16808434}{https://www.ncbi.nlm.nih.gov/pubmed/16808434}
 #'
 #' @param D \code{SummarizedExperiment} input.
-#' @param vars index vector of variables to be used, default: all
-#' @param na_err T/F, throw error for NA's or just ignore?
+#' @param vars Index vector of variables to be used. Default: all.
+#' @param na_err T/F, throw error for NA's or just ignore? Default: F.
 #' @param ref_samples Expression filtering reference samples from colData.
 #' @param met_max Maximum fraction of missingness to select metabolites to be used in the reference. Default: 1 (i.e. all metabolites).
 #'
-#' @return assay: quotient-normalized version
-#' @return $result: dilution factors
+#' @return assay: Quotient-normalized version.
+#' @return $results$output: List of dilution factors.
 #'
 #' @examples
 #' \dontrun{#' # in the context of a SE pipeline

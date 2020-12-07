@@ -2,19 +2,21 @@
 #'
 #' Computes univariate GLM for each metabolite.
 #'
+#' @description
 #' \enumerate{
 #'   \item Will treat the first term of the formula as outcome.
 #'   \item If outcome has >2 factors, will perform ANOVA.
-#'   \item If random effect term is contained, will used lmer function. (can also be used for paired analysis, e.g. before/after)
+#'   \item If random effect term is contained, will used lmer function (can also be used for paired analysis, e.g. before/after).
 #' }
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param formula left-hand side of formula to be put into glm function.
-#' @param stat_name name under which this comparison will be stored, must be unique to all other statistical results
-#' @param sample_filter term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison
-#' @param n_cores number of cores to use for mclapply... default: 1. More than one core will not work on Windows platforms.
+#' @param D \code{SummarizedExperiment} input.
+#' @param formula Left-hand side of formula to be put into glm function.
+#' @param stat_name Name under which this comparison will be stored, must be unique to all other statistical results.
+#' @param sample_filter Term which samples to filter to first (e.g. used if the data contains >2 groups but the user wants to
+#'    run a two-group comparison).
+#' @param n_cores Number of cores to use for mclapply. More than one core will not work on Windows platforms. Default: 1.
 #'
-#' @return $result$output: statistics object
+#' @return $result$output: Statistics object.
 #'
 #' @examples
 #' \donttest{# run lm with no confounders, "Group" as outcome

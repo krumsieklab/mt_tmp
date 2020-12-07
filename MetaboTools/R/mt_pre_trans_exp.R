@@ -2,10 +2,10 @@
 #'
 #' Transform the the entire dataset base^x.
 #'
-#' @param D  \code{SummarizedExperiment} input
-#' @param base operation: base^x for every data point
+#' @param D  \code{SummarizedExperiment} input.
+#' @param base Operation: base^x for every data point. Default: 2.
 #'
-#' @return assay: exponentiated data
+#' @return assay: Exponentiated data.
 #'
 #' @examples
 #' \dontrun{# in the context of a SE pipeline

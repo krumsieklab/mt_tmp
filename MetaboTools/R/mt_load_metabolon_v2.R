@@ -1,39 +1,31 @@
-# QUESTIONS: DELETE ONCE ANSWERED
-# 1. Is there a reason not to change raw_sheet -> data_sheet?
-
-# FIXES:
-# 1. Add ability to accept SE object.
-
 #' Load NEW Metabolon-format data
 #'
-#' Loads data from a NEW Metabolon-format Excel file. Needs to be in the original "Client Data Table" new format that they deliver.
+#' For Metabolon-format version used after {DATE}. Loads data from a NEW Metabolon-format Excel file. Needs to be in the original "Client
+#' Data Table" new format that they deliver.
 #'
 #' @param file Name of input Excel file.
-#' @param raw_sheet name of sheet with raw data
-#' @param met_sheet name of sheet with metabolite info
-#' @param sample_sheet name of sheet with sample info
+#' @param data_sheet Name of sheet with raw data.
+#' @param met_sheet Name of sheet with metabolite info.
+#' @param sample_sheet Name of sheet with sample info.
 #'
 #' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry.
 #'
 #' @examples
 #' \dontrun{D <-
 #'   # load data
-#'   mt_files_load_metabolon_new_format(codes.makepath("Mt/sampledata.xlsx"),
-#'   raw_sheet="Raw Data", met_sheet="Chemical Annotation", sample_sheet="Sample Meta Data") %>%
+#'   mt_load_metabolon_v2(file=codes.makepath("Mt/sampledata.xlsx"),
+#'     data_sheet="Raw Data", met_sheet="Chemical Annotation", sample_sheet="Sample Meta Data") %>%
 #'   ...}
 #'
 #' @author RB
 #'
 #' @export
-mt_load_metabolon_v2 <- function(file,
-                                 raw_sheet,
-                                 met_sheet,
-                                 sample_sheet) {
+mt_load_metabolon_v2 <- function(file, data_sheet, met_sheet, sample_sheet) {
 
   cols2discard <- c('PARENT_SAMPLE_NAME', 'SAMPLE_TYPE', 'CLIENT_IDENTIFIER',
                     'MATRIX_DESIGNATION')
   # using readxl package:
-  raw = readxl::read_excel(path=file, sheet=raw_sheet, col_names = T)
+  raw = readxl::read_excel(path=file, sheet=data_sheet, col_names = T)
   met_info = readxl::read_excel(path=file, sheet=met_sheet, col_names = T)
   sample_info = readxl::read_excel(path=file, sheet=sample_sheet, col_names = T)
 
@@ -58,7 +50,7 @@ mt_load_metabolon_v2 <- function(file,
 
   # set info flags
   result$info$file = file
-  result$info$raw_sheet = raw_sheet
+  result$info$data_sheet = data_sheet
   result$info$met_sheet = met_sheet
   result$info$sample_sheet = sample_sheet
 
@@ -84,7 +76,7 @@ mt_load_metabolon_v2 <- function(file,
     MetaboTools:::mti_generate_result(
       funargs = funargs,
       logtxt = sprintf("loaded Metabolon file: %s, sheets: %s, %s, %s",
-                       basename(file), raw_sheet, met_sheet, sample_sheet)
+                       basename(file), data_sheet, met_sheet, sample_sheet)
     )
 
   # return

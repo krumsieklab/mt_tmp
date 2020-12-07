@@ -1,7 +1,3 @@
-# QUESTIONS: DELETE ONCE ANSWERED
-# 1. Why returning output = NULL here?
-# 2. Can the commented out code be deleted?
-
 #' Multiple testing correction
 #'
 #' Adjust output of statistical tests for multiple testing.
@@ -9,7 +5,7 @@
 #' @param D \code{SummarizedExperiment} input.
 #' @param stat_name Name of the statistical comparison to adjust.
 #' @param p_col Name of p-value column to adjust. Default: p.value.
-#' @param method Which method to use for multiple testing. See \code{p.adjust} documentation.
+#' @param method Which method to use for multiple testing. See \code{p.adjust} documentation. Default: "bonferroni".
 #'
 #' @return $results[[stat_name]]$output: p.adj column added to statistical table
 #'
@@ -58,8 +54,7 @@ mt_post_multtest <- function(D,
     metadata(D)$results %<>%
                   mti_generate_result(
                       funargs = funargs,
-                      logtxt = sprintf("Multiple testing correction of '%s' using '%s'", stat_name, method),
-                      output = NULL
+                      logtxt = sprintf("Multiple testing correction of '%s' using '%s'", stat_name, method)
                   )
     ## RETURN
     D

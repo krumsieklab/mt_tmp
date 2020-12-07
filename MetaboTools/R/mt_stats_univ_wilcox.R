@@ -5,14 +5,12 @@
 #' @param D \code{SummarizedExperiment} input.
 #' @param in_col Name of the column in colData to compare with metabolite.
 #' @param stat_name Name under which this comparison will be stored, must be unique to all other statistical results
-#' @param sample_filter Term which samples to filter to first... e.g. used if the data contains >2 groups but the user
-#'    wants to run a two-group comparison.
-#' @param exact OPTIONAL. Set the exact flag in wilcox.test function. Default: NULL.
+#' @param sample_filter Term which samples to filter to first (e.g. used if the data contains >2 groups but the user
+#'    wants to run a two-group comparison).
 #' @param paired OPTIONAL. Set the paired flag in wilcox.test function, would be applied for numeric in_col. Default: F.
+#' @param exact OPTIONAL. Set the exact flag in wilcox.test function. Default: NULL.
 #'
-#' @return $result: statistics object
-#'
-#' @import glue
+#' @return $results$output: Statistics object.
 #'
 #' @examples
 #' \donttest{# run lm with no confounders, "Group" as outcome
@@ -27,6 +25,8 @@
 #'  }
 #'
 #' @author RB
+#'
+#' @import glue
 #'
 #' @export
 mt_stats_univ_wilcox <- function(D, in_col, stat_name, sample_filter, paired=F, exact=NULL) {

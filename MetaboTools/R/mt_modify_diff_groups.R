@@ -17,12 +17,7 @@
 #' @author JK
 #'
 #' @export
-mt_modify_diff_groups <- function(D,
-                                 id_col,
-                                 group_col,
-                                 grp1,
-                                 grp2
-) {
+mt_modify_diff_groups <- function(D, id_col, group_col, grp1, grp2) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

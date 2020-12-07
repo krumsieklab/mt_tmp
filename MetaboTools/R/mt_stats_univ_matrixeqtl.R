@@ -1,15 +1,15 @@
-#' Fast linear models using MatrixEQTL package.
+#' Fast linear models using MatrixEQTL package
 #'
-#' Substantially fasters than regular lm as implemented in mt_stats_univ_lm.
+#' Substantially faster than regular lm as implemented in mt_stats_univ_lm.
 #' Only supports standard linear models of the form: outcome ~ metabolite + [covariates].
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param formula Right-hand side of formula to be put into glm function.
 #' @param stat_name Name under which this comparison will be stored, must be unique to all other statistical results.
-#' @param sample_filter Term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants
-#'    to run a two-group comparison
+#' @param sample_filter Term which samples to filter to first (e.g. used if the data contains >2 groups but the user wants
+#'    to run a two-group comparison).
 #'
-#' @return $results$output: statistics object
+#' @return $results$output: Statistics object.
 #'
 #' @import MatrixEQTL
 #'

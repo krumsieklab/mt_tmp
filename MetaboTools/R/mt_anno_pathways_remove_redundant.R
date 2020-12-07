@@ -1,11 +1,10 @@
 #' Remove redundant pathway annotations
 #'
-#' Remove identical pathways from an existing SummarizedExperiment
-#' data structure that has a column of pathway annotations.
+#' Remove identical pathways from an existing SummarizedExperiment data structure that has a column of pathway annotations.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param met_id Column containing metabolite IDs
-#' @param pw_id Column containing pathways IDs
+#' @param D \code{SummarizedExperiment} input.
+#' @param met_id Column containing metabolite IDs.
+#' @param pw_id Column containing pathways IDs.
 #'
 #' @return rowData: Redundant pathway annotation from SE pw_id column filtered.
 #'
@@ -20,9 +19,7 @@
 #' @author PG
 #'
 #' @export
-mt_anno_pathways_remove_redundant <- function(D,
-                                              met_id,
-                                              pw_id ) {
+mt_anno_pathways_remove_redundant <- function(D, met_id, pw_id ) {
 
   # check arguments
   stopifnot("SummarizedExperiment" %in% class(D))

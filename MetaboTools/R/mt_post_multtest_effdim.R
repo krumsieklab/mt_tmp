@@ -1,9 +1,3 @@
-# QUESTIONS: DELETE ONCE ANSWERED
-# 1. Why returning output = NULL here?
-
-# BUG:
-# 1. pipeline entry is not reuturned
-
 #' Multiple Testing Correction using Effective Number of Independent Tests
 #'
 #' Adjust output of statistical test using the method described in Li J, Ji L (2005) Adjusting multiple testing in
@@ -61,8 +55,7 @@ mt_post_multtest_effdim <- function(D,
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("Multiple testing correction of '%s' using effective dimension method", stat_name),
-      output = NULL
+      logtxt = sprintf("Multiple testing correction of '%s' using effective dimension method", stat_name)
     )
 
   ## RETURN

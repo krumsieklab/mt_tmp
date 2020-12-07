@@ -1,14 +1,14 @@
-#' Calculate CV - coefficient of variation
+#' Calculate coefficient of variation (CV)
 #'
 #' {ADD DESCRIPTION}
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param qc_samples Logical expression. Can use fields from colData.
+#' @param D \code{SummarizedExperiment} input.
+#' @param qc_samples Logical expression. Can use columns from colData.
 #' @param out_col Name of new rowData column to store the cv values.
 #' @param replicates OPTIONAL. Flag to indicate if the selected samples are replicates. Default: F.
 #' @param id_col OPTIONAL. If replicates is T, it is the name of the column in colData containing sample IDs.
 #'
-#' @return rowData: new column added
+#' @return rowData: New annotation column added.
 #'
 #' @examples
 #' \dontrun{... %>% mt_anno_cv(qc_samples=="PQC", out_col = "PQC_cv") %>% ...}
@@ -16,11 +16,7 @@
 #' @author AS, RB
 #'
 #' @export
-mt_anno_cv <- function(D,
-                       qc_samples,
-                       out_col,
-                       replicates=F,
-                       id_col=NULL){
+mt_anno_cv <- function(D, qc_samples, out_col, replicates=F, id_col=NULL){
 
   stopifnot("SummarizedExperiment" %in% class(D))
 

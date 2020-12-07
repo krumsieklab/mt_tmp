@@ -1,21 +1,21 @@
 #' Add pathway information
 #'
-#' Adds custom pathways to the already existing SummarizedExperiment data structure using the graphite package.
+#' Adds custom pathways to the already existing \code{SummarizedExperiment} data structure using the \code{graphite} package.
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param in_col rowData column to use for pathway fetching. The selected column must contain metabolite
 #'    identifiers (e.g. HMBD, KEGG, ChEBI, etc).
 #' @param out_col New column name for rowData to output pathway information to.
-#' @param pwdb_species Name of the species the data was measured in. Use pathwayDatabases() after loading graphite to
-#'    see a full list of databases and species
-#' @param pwdb_name Name of the pathway database to use. Use pathwayDatabases() after loading graphite to see a full
-#'    list of databases and species
-#' @param n_cores Number of cores to use for parallelizaion. Used in convertIdentifiers. Default: 2.
+#' @param pwdb_species Name of the species the data was measured in. Use \code{pathwayDatabases()} after loading graphite to
+#'    see a full list of databases and species.
+#' @param pwdb_name Name of the pathway database to use. Use \code{pathwayDatabases()} after loading graphite to see a full
+#'    list of databases and species.
+#' @param n_cores Number of cores to use for parallelizaion. Used in \code{convertIdentifiers()}. Default: 2.
 #' @param raw_db_outfile OPTIONAL. Name of file to export the pathway database to. Must be a string containing the path name with a
 #'    .xlsx extension.
 #'
-#' @return rowData: new pathway annotation for metabolites
-#' @return $results$pathways: a dataframe of pathway information
+#' @return rowData: New pathway annotation column added.
+#' @return $results$pathways: A dataframe of pathway information.
 #'
 #' @examples
 #' # annotate metabolites using the humancyc database from the graphite package

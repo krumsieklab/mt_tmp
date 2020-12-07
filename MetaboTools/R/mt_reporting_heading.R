@@ -1,13 +1,13 @@
 #' Store heading for html report
 #'
-#' Will be used when calling \code{mt_reporting_generateMD}.
+#' Store heading text and level to be used when calling \code{mt_reporting_html}.
 #'
 #' @param D  \code{SummarizedExperiment} input. Missing if first step in pipeline.
 #' @param heading Heading text.
 #' @param lvl Heading level. Can be used for nested outline structures. Default: 1.
 #'
 #' @return If first step in pipeline, creates \code{SummarizedExperiment} object.
-#' @return $result$output: stores info about heading
+#' @return $result$output: Stores info about heading.
 #'
 #' @examples
 #' \dontrun{... %>%
@@ -19,9 +19,7 @@
 #' @author JK
 #'
 #' @export
-mt_reporting_heading <- function(D,
-                                 heading,
-                                 lvl=1) {
+mt_reporting_heading <- function(D, heading, lvl=1) {
 
   # if first step in pipeline, create SE
   if(missing(D)){

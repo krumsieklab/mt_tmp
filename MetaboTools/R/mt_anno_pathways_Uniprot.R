@@ -2,13 +2,14 @@
 #'
 #' Modified from mt_anno_pathways_HMDB. Adds custom pathways to the already existing SummarizedExperiment data taken from KEGGREST.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param in_col Column to use for pathway fetching. The selected column must contain protein uniprot identifier
-#' @param out_col A new column name for D to output pathway information to
-#' @param raw_db_outfile OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
+#' @param D \code{SummarizedExperiment} input.
+#' @param in_col Column to use for pathway fetching. The selected column must contain protein Uniprot identifier.
+#' @param out_col A new column name for D to output pathway information to.
+#' @param raw_db_outfile OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a
+#'    .xlsx extension.
 #'
-#' @return rowData: new pathway annotation for proteins
-#' @return $results$pathways: a dataframe of pathway information
+#' @return rowData: New pathway annotation column for proteins.
+#' @return $results$pathways: A dataframe of pathway information.
 #'
 #' @examples
 #' # annotate proteins using kegg
@@ -21,10 +22,8 @@
 #' @importFrom data.table :=
 #'
 #' @export
-mt_anno_pathways_uniprot <- function(D,
-                                     in_col,
-                                     out_col,
-                                     raw_db_outfile) {
+mt_anno_pathways_uniprot <- function(D, in_col, out_col, raw_db_outfile) {
+
   # check arguments
   stopifnot("SummarizedExperiment" %in% class(D))
 

@@ -1,57 +1,3 @@
-# list of settings, including types and default parameters
-
-# Return default list
-# -> This is where MT developers define the parameters
-mti_settings_list <- function() {
-  list(
-    ggplot_fix = list(class="logical", default=T),
-    dummy = list(class="numeric", default=5)
-  )
-}
-
-# Ensures that a pipeline has settings stored in its metadata. Will initialize with default list if not.
-# -> Only called internally in this script.
-mti_ensure_settings <- function(D) {
-  # validate argument
-  stopifnot("SummarizedExperiment" %in% class(D))
-  # check if settings missing
-  if (!("settings" %in% names(metadata(D)))) {
-    # build list
-    fulllist <- mti_settings_list()
-    lst <- names(fulllist) %>% lapply(function(s){fulllist[[s]]$default})
-    names(lst) <- names(fulllist)
-    # set list
-    metadata(D)$settings <- lst
-  }
-  # return
-  D
-}
-
-# Retrieve setting.
-# Will use default list of no settings have been made so far.
-# Important: Does not add a default list to the SummarizedExperiment (i.e., does not affect the SE), but simply access the default argument.
-# -> This function should be called internally by all mt_ functions to check a parameter setting.
-mti_get_setting <-  function(D, sname) {
-  # validate argument
-  stopifnot("SummarizedExperiment" %in% class(D))
-  # check if settings missing
-  if (!("settings" %in% names(metadata(D)))) {
-    # no, use default
-    # build list
-    fulllist <- mti_settings_list()
-    lst <- names(fulllist) %>% lapply(function(s){fulllist[[s]]$default})
-    names(lst) <- names(fulllist)
-  } else {
-    # yes, take from metadata
-    lst <- metadata(D)$settings
-  }
-  # error control
-  if (!(sname %in% names(lst))){stop(glue::glue("Invalid pipeline setting name: '{sname}'"))}
-  # return
-  lst[[sname]]
-}
-
-
 #' Sets and outputs global pipeline settings
 #'
 #' Call without parameters to show current settings. Call with list of parameters to set settings. Will crash for invalid setting names.
@@ -118,3 +64,55 @@ mt_other_settings <- function(D, settings) {
 
 }
 
+# list of settings, including types and default parameters
+
+# Return default list
+# -> This is where MT developers define the parameters
+mti_settings_list <- function() {
+  list(
+    ggplot_fix = list(class="logical", default=T),
+    dummy = list(class="numeric", default=5)
+  )
+}
+
+# Ensures that a pipeline has settings stored in its metadata. Will initialize with default list if not.
+# -> Only called internally in this script.
+mti_ensure_settings <- function(D) {
+  # validate argument
+  stopifnot("SummarizedExperiment" %in% class(D))
+  # check if settings missing
+  if (!("settings" %in% names(metadata(D)))) {
+    # build list
+    fulllist <- mti_settings_list()
+    lst <- names(fulllist) %>% lapply(function(s){fulllist[[s]]$default})
+    names(lst) <- names(fulllist)
+    # set list
+    metadata(D)$settings <- lst
+  }
+  # return
+  D
+}
+
+# Retrieve setting.
+# Will use default list of no settings have been made so far.
+# Important: Does not add a default list to the SummarizedExperiment (i.e., does not affect the SE), but simply access the default argument.
+# -> This function should be called internally by all mt_ functions to check a parameter setting.
+mti_get_setting <-  function(D, sname) {
+  # validate argument
+  stopifnot("SummarizedExperiment" %in% class(D))
+  # check if settings missing
+  if (!("settings" %in% names(metadata(D)))) {
+    # no, use default
+    # build list
+    fulllist <- mti_settings_list()
+    lst <- names(fulllist) %>% lapply(function(s){fulllist[[s]]$default})
+    names(lst) <- names(fulllist)
+  } else {
+    # yes, take from metadata
+    lst <- metadata(D)$settings
+  }
+  # error control
+  if (!(sname %in% names(lst))){stop(glue::glue("Invalid pipeline setting name: '{sname}'"))}
+  # return
+  lst[[sname]]
+}

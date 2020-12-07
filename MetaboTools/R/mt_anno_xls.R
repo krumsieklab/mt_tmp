@@ -4,32 +4,33 @@
 #' Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
 #' Can load annotations for both metabolites (rowData) and samples (colData).
 #'
+#' @description
 #' If annotation fields are already existing, this function will fill up any NAs with the values from the new file.
 #' Existing values are not overwritten.
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param file Name of input Excel file.
-#' @param sheet Name or number of sheet
-#' @param anno_type Either "samples" or "metabolites".
+#' @param sheet Name or number of sheet.
+#' @param anno_type Either "samples" (colData) or "metabolites" (rowData).
 #' @param anno_id Column in annotation file that contains ID information for mapping.
-#' @param data_id Column in existing data that contains ID information for mapping.
+#' @param data_id Column in existing data that contains ID information for mapping. Default: Equal to anno_id.
 #' @param no_map_err Throw error (T) or warning (F) if something does not map. Default: F.
-#' @param col_names Take column from new annotation file and overwite colnames (i.e. sample names) of SE (default: none).
+#' @param col_names Take column from new annotation file and overwite colnames (i.e. sample names) of SE. Default: none.
 #'
-#' @return rowData or colData: new annotation columns added
+#' @return rowData or colData: New annotation columns added.
 #'
 #' @examples
 #' \dontrun{
 #'   # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
 #'   D <-
 #'   # load raw data
-#'   mt_files_data_xls(file=file, sheet="data", samplesInRows=T, ID="SAMPLE_NAME") %>%
+#'   mt_load_data_xls(file=file, sheet="data", samples_in_rows=T, id_col="SAMPLE_NAME") %>%
 #'   # sample annotations from metabolomics run
-#'   mt_anno_files_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_id = "SAMPLE_NAME") %>%
+#'   mt_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_id = "SAMPLE_NAME") %>%
 #'   # sample annotations from clinical table
-#'   mt_anno_files_xls(file=file, sheet="clinicals", anno_type="samples", anno_id="SAMPLE_NAME") %>%
+#'   mt_anno_xls(file=file, sheet="clinicals", anno_type="samples", anno_id="SAMPLE_NAME") %>%
 #'   # metabolite annotations`
-#'   mt_anno_files_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_id="BIOCHEMICAL", data_id = "name") %>%
+#'   mt_anno_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_id="BIOCHEMICAL", data_id = "name") %>%
 #'   ...}
 #'
 #' @author JK
@@ -70,7 +71,7 @@ mt_anno_xls <-function(D,
     df[[anno_id]] %<>% as.character()
     colData(D)[[data_id]] %<>% as.character()
     # merge data frames
-    newdf <- mti_coalesce_join(data.frame(colData(D), check.names=F), df, by = setNames(anno_id ,data_id), join = dplyr::left_join)
+    newdf <- coalesce_join(data.frame(colData(D), check.names=F), df, by = setNames(anno_id ,data_id), join = dplyr::left_join)
     newdf[[anno_id]] <- newdf[[data_id]] # make sure anno column name also exists (if different from data column name)
     stopifnot(all.equal(newdf[[data_id]],colData(D)[[data_id]])) # to make sure nothing was mixed up
     rownames(newdf) <- colnames(D)
@@ -98,7 +99,7 @@ mt_anno_xls <-function(D,
     df[[anno_id]] %<>% as.character()
     rowData(D)[[data_id]] %<>% as.character()
     # merge data frames
-    newdf <- mti_coalesce_join(data.frame(rowData(D)), df, by = setNames(anno_id,data_id), join=dplyr::left_join)
+    newdf <- coalesce_join(data.frame(rowData(D)), df, by = setNames(anno_id,data_id), join=dplyr::left_join)
     newdf[[anno_id]] <- newdf[[data_id]] # make sure anno column name also exists (if different from data column name)
     stopifnot(all.equal(newdf[[data_id]],rowData(D)[[data_id]])) # to make sure nothing was mixed up
     rownames(newdf) <- rownames(D)
@@ -137,9 +138,11 @@ mt_anno_xls <-function(D,
 # from https://alistaire.rbind.io/blog/coalescing-joins/
 # edited to be able to handle completely disjunct column sets (as in normal left_join). - JK 6/21/20
 # edited to make type safe, if two merged columns are incompatible (one numeric, one factor/string) - JK 6/21/20
-mti_coalesce_join <- function(x, y,
-                              by = NULL, suffix = c(".x", ".y"),
-                              join = dplyr::full_join, ...) {
+coalesce_join <- function(x,
+                          y,
+                          by = NULL,
+                          suffix = c(".x", ".y"),
+                          join = dplyr::full_join, ...) {
   joined <- join(x, y, by = by, suffix = suffix, ...)
   # names of desired output
   cols <- union(names(x), names(y))
