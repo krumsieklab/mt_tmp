@@ -39,7 +39,7 @@ mt_files_load_WCM <- function(
 
   # save input information
   result$info$file <- file
-  result$info$sheet <- paste(sheet_list, collapse = ", ")
+  result$info$sheet <- paste(sheet, collapse = ", ")
 
   # get metadata from D if present
   if(!missing(D)){
