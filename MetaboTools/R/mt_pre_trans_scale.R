@@ -1,4 +1,6 @@
-#' Scale data, mean 0 / sd 1 by default.
+#' Scale data, mean 0 / sd 1 by default
+#'
+#' {ADD DESCRIPTION}
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param center T/F, mean-center data? default: T

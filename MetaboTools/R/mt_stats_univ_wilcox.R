@@ -1,5 +1,6 @@
 #' Wilcox test
 #'
+#' {ADD DESCRIPTION}
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param y name of the column in colData to compare with metabolite

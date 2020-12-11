@@ -1,6 +1,6 @@
-#' mt-modify_averagesample
-#'
 #' Averages duplicate samples.
+#'
+#' {ADD DESCRIPTION}
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param group_by name of colData column (sample annotation) by which duplicates can be identified

@@ -1,7 +1,7 @@
 #' Generate a new data matrix that is one group minus a second group. (e.g. difference between two timepoints).
 #'
 #' Takes the name of a sample factor variable (from colData), and two factor levels. Creates a new data matrix that
-#' is made of the second minus the first levels. Will only produce results for cases where both
+#' is made of the second minus the first levels. Will only produce results for cases where both {FINISH DESCRIPTION}
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param idvar sample ID variable  (e.g. patient ID)

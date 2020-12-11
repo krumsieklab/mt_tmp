@@ -31,7 +31,7 @@ D <-
   # validate checksum
   mt_files_checksum(file=file_data, checksum = "80afcd72481c6cf3dcf83342e3513699") %>%
   # load data - this function loads the assay data only
-  #   alternative loading functions: mt_files_load_metabolon, mt_files_load_metabolon_lipidomics, mt_files_load_olink,
+  #   alternative loading functions: mt_files_load_metabolon(), mt_files_load_metabolon_lipidomics(), mt_files_load_olink(),
   #     mt_files_load_UCD, mt_files_load_WCM
   mt_files_data_xls(file=file_data, sheet="data", samples_in_row=T, ID_col="sample") %>%
   # load metabolite (rowData) annotations
