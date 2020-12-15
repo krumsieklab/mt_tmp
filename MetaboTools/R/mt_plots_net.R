@@ -90,9 +90,11 @@ mt_plots_net <- function(
   ## plot
   e <- edges
   n <- data.frame(id=nodes$label, label= nodes$label, color=nodes$node_color)
-  p_vis <- visNetwork::visNetwork(n,e, height = height, width = "100%")
+  p_vis <- visNetwork::visNetwork(n,e, height = height, width = "100%") %>%
+    # disable physics
+    visNetwork::visIgraphLayout(layout = "layout_nicely", physics = F, smooth = F)
 
-  # greate ggnetwork object
+  # create ggnetwork object
   df <- list()
   df$edges <- data.frame(from = data_plot[,which(colnames(data_plot)=="var1")], to = data_plot[,which(colnames(data_plot)=="var2")], weight = cor.scaled/10)
   df$vertices <- nodes$label
