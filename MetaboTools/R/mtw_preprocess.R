@@ -4,7 +4,8 @@
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param batch_col Batch column
-#' @param batch_fun Batch function to use. Default is \code{mt_pre_batch_median}
+#' @param batch_fun Batch function to use, should be rather median or combat method. Default is \code{mt_pre_batch_median}
+#' @param batch_loc Where should batch normalization take place, should be 'begin'/'middle'/'end', 'begin' means before quotient normalization, 'middle' means between quotient and kNN imputation, 'end' means after imputation. Default is 'begin'
 #' @param batch_ref_samples Expression to filter out reference samples to use from rowData. Default is NULL
 #' @param boxplot_options A list of parameters for \code{mt_plots_sampleboxplot}
 #' @param quot_options A list of parameters for \code{mt_pre_norm_quot}
@@ -17,7 +18,9 @@
 #' @return D that has been preprocessed
 #' @examples
 #' \dontrun{... %>% mtw_preprocess() %>% ...}
-#' \dontrun{... %>% mtw_preprocess(batch_col = "BATCH_MOCK", batch_fun = mt_pre_batch_median,comp_fac = c("num1","Group"),quot_options = list(ref_samples = quote(Group == 'Vehicle'))) %>% ...}
+#' \dontrun{... %>% mtw_preprocess(batch_col = "BATCH_MOCK", 
+#' batch_loc = 'begin', comp_fac = c("num1","Group"), 
+#' quot_options = list(ref_samples = quote(Group == 'Vehicle'))) %>% ...}
 #'
 #' @author Zeyu Wang
 #'
@@ -26,10 +29,13 @@
 #'
 #' @export
 
+
+### Add choice to batch function -> when to run
 mtw_preprocess <-
   function(D,
            batch_col,
            batch_fun = mt_pre_batch_median,
+           batch_loc = 'begin',
            batch_ref_samples = NULL,
            boxplot_options = list(),
            quot_options = list(),
@@ -56,6 +62,19 @@ mtw_preprocess <-
       def
     }
     
+    batch_norm <- function(D){
+      # Batch normalization based on ref_sample
+      if(!is.null(batch_ref_samples)){
+        D %<>%
+          batch_fun(batches = batch_col, ref_samples = dplyr::enquo(batch_ref_samples))
+      } else{
+        D %<>%
+          batch_fun(batches = batch_col)
+      }
+    }
+    
+    run_batch = F
+    
     boxplot_options_def = list(
       plottile = "Sample boxplot",
       legend = T,
@@ -70,32 +89,39 @@ mtw_preprocess <-
       ref_samples = NULL,
       met_max = 1
     )
-    
     dilution_options_def = list(boxpl = T, ggadd = NULL)
     knn_options_def = list(method = "knn.obs.euc.sel",
                            K = 10,
                            verbose = F)
     
-    # Batch function must have paratemeter "D" and "batches"
-    if (!missing(batch_col)) {
-      # Boxplot
-      boxplot_options <- map_lists(boxplot_options_def, boxplot_options)
-      boxplot_options$D <- D
-      D <- do.call("mt_plots_sampleboxplot", boxplot_options)
-      
-      if(!is.null(batch_ref_samples)){
-        D %<>%
-          batch_fun(batches = batch_col, ref_samples = dplyr::enquo(batch_ref_samples))
-      } else{
-        D %<>%
-          batch_fun(batches = batch_col)
-      }
-    }
-    
-    # Boxplot
+    # Boxplot at first
     boxplot_options <- map_lists(boxplot_options_def, boxplot_options)
     boxplot_options$D <- D
     D <- do.call("mt_plots_sampleboxplot", boxplot_options)
+    
+    # Batch function check
+    if (!missing(batch_col)) {
+      # if(!(batch_fun == mt_pre_batch_median || batch_fun == mt_pre_batch_median)){
+      #   stop('Batch function must be median/COMBAT')
+      # }
+      if(!(batch_loc == 'begin' || batch_loc == 'middle' || batch_loc == 'end')){
+        stop('Batch location must be "begin"/"middle"/"end" ')
+      }
+      run_batch = T
+    }
+    
+    browser()
+    # Batch at the beginning
+    if (run_batch == T && batch_loc == 'begin') {
+      # Batch normalization
+      D %<>% batch_norm()
+      
+      # Boxplot after batch normalization
+      boxplot_options <- map_lists(boxplot_options_def, boxplot_options)
+      boxplot_options$D <- D
+      D <- do.call("mt_plots_sampleboxplot", boxplot_options)
+      run_batch = F
+    }
     
     # Quotient normalization
     quot_options <- map_lists(quot_options_def, quot_options)
@@ -106,11 +132,11 @@ mtw_preprocess <-
       quot_options$ref_samples <- NULL
       D <- do.call("mt_pre_norm_quot", quot_options)
     }
-
+    
     # Dilution plot
+    # check if there is any correlation between dilution factors and outcomes (bad sign if so)
     if (!missing(comp_fac)) {
-      dilution_options <-
-        map_lists(dilution_options_def, dilution_options)
+      dilution_options <- map_lists(dilution_options_def, dilution_options)
       
       for (s in comp_fac) {
         dilution_options$D <- D
@@ -118,10 +144,23 @@ mtw_preprocess <-
         D <- do.call("mt_plots_qc_dilutionplot", dilution_options)
       }
     }
-
-    # check if there is any correlation between normalization factors and outcomes (bad sign if so)
+    
+    # Boxplot after quotient
     boxplot_options$D <- D
     D <- do.call("mt_plots_sampleboxplot", boxplot_options)
+    
+    # Batch after quot norm
+    if (run_batch == T && batch_loc == 'middle') {
+      D %<>% batch_norm()
+      
+      # Boxplot after batch normalization
+      boxplot_options <- map_lists(boxplot_options_def, boxplot_options)
+      boxplot_options$D <- D
+      D <- do.call("mt_plots_sampleboxplot", boxplot_options)
+      run_batch = F
+    } 
+    
+    
     # logging
     D %<>%  mt_pre_trans_log(base = log_base)
     
@@ -133,6 +172,16 @@ mtw_preprocess <-
       boxplot_options$D <- D
       D <- do.call("mt_plots_sampleboxplot", boxplot_options)
     }
+    
+    # Batch at end
+    if (run_batch == T && batch_loc == 'end') {
+      # Batch normalization
+      D %<>% batch_norm()
+      
+      # Boxplot after batch normalization
+      boxplot_options <- map_lists(boxplot_options_def, boxplot_options)
+      boxplot_options$D <- D
+      D <- do.call("mt_plots_sampleboxplot", boxplot_options)
+    }
     D
   }
-
