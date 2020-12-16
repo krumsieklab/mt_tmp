@@ -50,12 +50,12 @@ mt_plots_volcano <- function(D,
     as.data.frame() %>%
     dplyr::mutate(var = rownames(D))
   # remove rows not needed for plotting
-  vars <- c(mti_extract_variables(c(dplyr::enquo(x), dplyr::enquo(metab_filter), quos(...))),"var","name")
+  vars <- c(MetaboTools:::mti_extract_variables(c(dplyr::enquo(x), dplyr::enquo(metab_filter), quos(...))),"var","name")
   rd <- rd[,colnames(rd) %in% vars,drop=F]
 
 
   ## stat
-  data_plot <- mti_get_stat_by_name(D, stat_name) %>%
+  data_plot <- MetaboTools:::mti_get_stat_by_name(D, stat_name) %>%
     dplyr::inner_join(rd, by = "var") %>%
     dplyr::mutate(xxx = !!x)
 
@@ -70,7 +70,7 @@ mt_plots_volcano <- function(D,
 
   ## determine if and where to draw hline
   if (!missing(hline)) {
-    hliney <- mti_get_stat_by_name(D, stat_name) %>%
+    hliney <- MetaboTools:::mti_get_stat_by_name(D, stat_name) %>%
       dplyr::inner_join(rd, by = "var") %>%
       dplyr::mutate(xxx = !!x) %>% dplyr::filter(!!dplyr::enquo(hline)) %>% .$p.value %>% max()
   } else {
@@ -98,7 +98,7 @@ mt_plots_volcano <- function(D,
 
   ## ADD METABOLITE LABELS
   if(!missing(metab_filter)){
-    mti_logstatus("add label")
+    MetaboTools:::mti_logstatus("add label")
     metab_filter_q <- dplyr::enquo(metab_filter)
     data_annotate <- data_plot %>%
       dplyr::filter(!!metab_filter_q)
@@ -107,23 +107,23 @@ mt_plots_volcano <- function(D,
   }
 
   ## ADD AXIS GROUPS
-  d <- mti_get_stat_by_name(D, stat_name, fullstruct=T)
+  d <- MetaboTools:::mti_get_stat_by_name(D, stat_name, fullstruct=T)
   if ("groups" %in% names(d) && length(d$groups)==2) {
-    p <- mti_add_leftright_gg(p, paste0(d$groups[1],' high'), paste0(d$groups[2],' high'))
+    p <- MetaboTools:::mti_add_leftright_gg(p, paste0(d$groups[1],' high'), paste0(d$groups[2],' high'))
   }
 
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
 
   # fix ggplot environment
-  if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
+  if (D %>% MetaboTools:::mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
 
   ## add status information & plot
-  funargs <- mti_funargs()
+  funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
-    mti_generate_result(
+    MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("volcano plot, aes: %s", mti_dots_to_str(...)),
+      logtxt = sprintf("volcano plot, aes: %s", MetaboTools:::mti_dots_to_str(...)),
       output = list(p)
     )
   ## return
