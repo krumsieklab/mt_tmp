@@ -110,7 +110,6 @@ mtw_preprocess <-
       run_batch = T
     }
     
-    browser()
     # Batch at the beginning
     if (run_batch == T && batch_loc == 'begin') {
       # Batch normalization
