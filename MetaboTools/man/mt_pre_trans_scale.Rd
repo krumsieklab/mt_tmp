@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_pre_trans_scale.R
 \name{mt_pre_trans_scale}
 \alias{mt_pre_trans_scale}
-\title{Scale data, mean 0 / sd 1 by default.}
+\title{Scale data, mean 0 / sd 1 by default}
 \usage{
 mt_pre_trans_scale(D, center = T, scale = T, ref_samples)
 }
@@ -19,7 +19,8 @@ mt_pre_trans_scale(D, center = T, scale = T, ref_samples)
 assay: scaled data
 }
 \description{
-Scale data, mean 0 / sd 1 by default.
+This function scales each metabolite by subtracting its mean and dividing by its standard deviation.
+Both steps are optional. This function is the direct equivalent of R's scale() function.
 }
 \examples{
 \dontrun{# in the context of a SE pipeline

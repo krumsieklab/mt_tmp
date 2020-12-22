@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_modify_icc.R
 \name{mt_modify_icc}
 \alias{mt_modify_icc}
-\title{mt_modify_icc}
+\title{Calculate ICC - intraclass correlation}
 \usage{
 mt_modify_icc(D, qc_samples, col_lab, id_col, icc_lmer = F)
 }
@@ -21,10 +21,10 @@ mt_modify_icc(D, qc_samples, col_lab, id_col, icc_lmer = F)
 rowData(D)[[col_lab]] contains column with ICC score for each metabolite
 }
 \description{
-Calculate ICC - intraclass correlation
+{ADD DESCRIPTION}
 }
 \examples{
-\dontrun{... \%>\% mt_modify_icc(qc_samples= (RID\%in\%RID[duplicated(RID)]), 
+\dontrun{... \%>\% mt_modify_icc(qc_samples= (RID\%in\%RID[duplicated(RID)]),
 col_lab = "Dup_icc", id_col='RID') \%>\% ...}
 
 }

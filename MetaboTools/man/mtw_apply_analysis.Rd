@@ -4,15 +4,36 @@
 \alias{mtw_apply_analysis}
 \title{mtw_apply_analysis}
 \usage{
-mtw_apply_analysis(D, outcomes)
+mtw_apply_analysis(
+  D,
+  outcomes,
+  stat_metab_filter = quote(p.adj < 0.05),
+  lm_options = list(),
+  cor_options = list(),
+  multT_options = list(),
+  volcano_options = list(),
+  box_scatter_options = list()
+)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
 \item{outcomes}{A data frame, should contain two columns: outcomes$outcome: name of phenotype columns in colData; outcomes$type: data type of pheotype columns, must be one of numeric / binary / ordinal}
+
+\item{stat_metab_filter}{Filter formula for metabolites, used as "stat_filter" in \code{mt_logging_statsinfo()} and "metab_filter" in \code{mt_plots_volcano()}, should be quoted by \code{quote()}}
+
+\item{lm_options}{A list of parameters for \code{mt_stats_univ_lm()}, expressions should be quoted by \code{quote()}}
+
+\item{cor_options}{A list of parameters for \code{mt_stats_univ_cor()}, expressions should be quoted by \code{quote()}}
+
+\item{multT_options}{A list of parameters for \code{mt_post_mulTest()}, expressions should be quoted by \code{quote()}}
+
+\item{volcano_options}{A list of parameters for \code{mt_plots_volcano()}, expressions and variable names should be quoted by \code{quote()}}
+
+\item{box_scatter_options}{A list of parameters for \code{mt_plots_boxplot_scatter()}, expressions and variable names should be quoted by \code{quote()}}
 }
 \value{
-D with multiple analysis results and plots
+D with analysis results and plots of multiple phenotypes
 }
 \description{
 Running standard analyses for multiple phenotypes, analysis steps including lm/cor analysis, 
@@ -20,7 +41,7 @@ multi-test with histgram, QQ-plot and volcano plot showing p-values, and box/sca
 visualization of significant metabolites.
 }
 \examples{
-\dontrun{... \%>\% mtw_apply_analysis(outcomes) \%>\% ...}
+\dontrun{... \%>\% mtw_apply_analysis(outcomes1, multT_options = list(method = 'BH')) \%>\% ...}
 
 }
 \author{

@@ -1,11 +1,12 @@
-#####
-##### MetaboTools Example Pipeline
-#####
+#
+# ------------ MetaboTools Example Pipeline ------------
+
 # MetaboTools is an R statistical toolbox for performing Metabolomics analyses
 # Built upon the packages SummarizedExperiment
 # Designed to utilize the magrittr pipe operator for a smooth, continuous workflow
 # Below is an example pipeline demonstrating the use of many of the functions provided by MetaboTools
 # The MetaboTools user documentation provides an overview of all of the functions utilized in this example
+# This example is divided into sections. Use SHIFT+CTRL+O to see the document outline.
 
 library(MetaboTools)
 library(tidyverse)
@@ -22,9 +23,8 @@ file_data <- "/Users/kelsey/Desktop/KrumsiekLab/simulated_data.xlsx"
 # NOTE: IN THIS EXAMPLE WE DO NOT GROUP REUSABLE FUNCTION STEPS INTO FUNCTIONS BUT REPEAT THEM AS A DEMONSTRATION OF THE BROAD
 # FUNCITON OF THE TOOLBOX
 
-##############################################################################################################################
-# PART 1 - STARTING A METABOTOOLS PIPELINE
-##############################################################################################################################
+# PART 1 - STARTING A METABOTOOLS PIPELINE ----------------------------------------------------
+
 D <-
   # set the pipeline settings
   mt_settings(settings = list(ggplot_fix=T)) %>%
@@ -46,9 +46,8 @@ D <-
 # additional functions used at beginning of pipelines:
 #   - mt_flag_logged - for flagging a loaded dataset as already log transformed
 
-##############################################################################################################################
-# PART 2 - DATA CLEANING
-##############################################################################################################################
+
+# PART 2 - DATA CLEANING ----------------------------------------------------
 
 D <- D %>%
   # heading
@@ -72,9 +71,7 @@ D <- D %>%
 #   - mt_pre_zeroToNA - for platforms that represent sub-LOD/missing values as zeros
 
 
-##############################################################################################################################
-# PART 3.1 - PREPROCESSING: FILTERING MISSING VALUES
-##############################################################################################################################
+# PART 3.1 - PREPROCESSING: FILTERING MISSING VALUES ----------------------------------------------------
 
 D <- D %>%
   # heading for html file
@@ -97,9 +94,8 @@ D <- D %>%
   mt_anno_missingness(anno_type = "metabolites", out_col = "missing") %>%
   {.}
 
-##############################################################################################################################
-# PART 3.2 - PREPROCESSING: NORMALIZATION
-##############################################################################################################################
+
+# PART 3.2 - PREPROCESSING: NORMALIZATION ----------------------------------------------------
 
 D <- D %>%
   # heading for html file
@@ -128,7 +124,7 @@ D <- D %>%
   #   other data transformation functions: mt_pre_trans_exp, mt_pre_trans_relative, mt_pre_trans_scale
   mt_pre_trans_log() %>%
   # impute missing values using knn
-  #   alternative imputation function: mt_pre_impute_knn_multicore
+  #   alternative imputation functions: mt_pre_impute_min
   mt_pre_impute_knn() %>%
   # plot sample boxplot after imputation
   mt_plots_sampleboxplot(color=Diagnosis, plottitle = "After imputation", logged = T) %>%
@@ -146,9 +142,15 @@ D <- D %>%
   mt_files_write_xls(file = "PreprocessedData.xlsx") %>%
   {.}
 
-##############################################################################################################################
-# PART 4 - GET PATHWAY ANNOTATIONS
-##############################################################################################################################
+# Additional pre-processing functions
+#   - mt_pre_confounding_correction() - function for correcting confounding variables
+#   - mt_pre_confounding_correction_stepwise_aic() - an alterenative function for correcting confounders that uses stepwise aic
+# NOTES ON BEST PRACTICES: If incorporated in this pipeline, these functions would correct for the variable age such that
+#     none of the following functions have to take care of those confounders anymore. If this function is included, confounders
+#     should not be included in any of the following functions. It is generally agreed that including the confounders in the
+#     linear models themselves is preferable to pre-correction.
+
+# PART 4 - GET PATHWAY ANNOTATIONS ----------------------------------------------------
 
 D <- D %>%
   # heading for html file
@@ -164,9 +166,8 @@ D <- D %>%
   mt_files_write_pathwayannos(file="ExamplePipeline_PathwayAnnotations.xlsx", pwfield = "pathway") %>%
   {.}
 
-##############################################################################################################################
-# PART 5 - GLOBAL STATISTICS
-##############################################################################################################################
+
+# PART 5 - GLOBAL STATISTICS ----------------------------------------------------
 
 D <- D %>%
   # heading for html file
@@ -181,9 +182,8 @@ D <- D %>%
                     clustering_method = "ward.D2", fontsize = 5, cutree_rows = 3, cutree_cols = 3) %>%
                     {.}
 
-##############################################################################################################################
-# PART 6.1 - STATISTICAL ANALYSIS, OUTCOME: DIAGNOSIS, METHOD: MISSINGNESS ANALYSIS
-##############################################################################################################################
+
+# PART 6.1 - STATISTICAL ANALYSIS, OUTCOME: DIAGNOSIS, METHOD: MISSINGNESS ANALYSIS ---------------------------------------
 
 #create another SE object for first analysis branch (missingness)
 D1 <- D
@@ -203,9 +203,8 @@ D1 <- D1 %>%
   mt_post_multTest(stat_name="missingness", method="BH") %>%
   {.}
 
-##############################################################################################################################
-# PART 6.2 - STATISTICAL ANALYSIS, OUTCOME: AGE, METHOD: LINEAR REGRESSION
-##############################################################################################################################
+
+# PART 6.2 - STATISTICAL ANALYSIS, OUTCOME: AGE, METHOD: LINEAR REGRESSION -----------------------------------------------
 
 D1 <- D1 %>%
   # heading for html file
@@ -240,9 +239,8 @@ D1 <- D1 %>%
                            annotation = "{sprintf('P-value: %.2e', p.value)}\nP.adj: {sprintf('%.2e', p.adj)}") %>%
                            {.}
 
-##############################################################################################################################
-# PART 6.3 - STATISTICAL ANALYSIS, OUTCOME: DIAGNOSIS, METHOD: LINEAR REGRESSION (t-test)
-##############################################################################################################################
+
+# PART 6.3 - STATISTICAL ANALYSIS, OUTCOME: DIAGNOSIS, METHOD: LINEAR REGRESSION (t-test) ----------------------------
 
 D1 <- D1 %>%
   # heading for html file
@@ -278,9 +276,8 @@ D1 <- D1 %>%
                            cols               = 3) %>%
                            {.}
 
-##############################################################################################################################
-# PART 7.1 - STATISTICAL RESULTS PRESENTATION: STATS BARPLOT & PATHVIEW
-##############################################################################################################################
+
+# PART 7.1 - STATISTICAL RESULTS PRESENTATION: STATS BARPLOT & PATHVIEW ----------------------------------------------------
 
 D1 <- D1 %>%
   # heading for html file
@@ -323,9 +320,8 @@ D1 <- D1 %>%
                     add.pwname.suffix = TRUE) %>%
                     {.}
 
-##############################################################################################################################
-# PART 7.2 - STATISTICAL RESULT PRESENTATION: MULTIPLE STATISTICS HEATMAP
-##############################################################################################################################
+
+# PART 7.2 - STATISTICAL RESULT PRESENTATION: MULTIPLE STATISTICS HEATMAP --------------------------------------------------
 
 D1 <- D1 %>%
   # heading for html file
@@ -334,9 +330,8 @@ D1 <- D1 %>%
   mt_plots_multstats_heatmap(color_cutoff = 0.05)
 {.}
 
-##############################################################################################################################
-# PART 7.3 - STATISTICAL RESULT PRESENTATION: RESULT COMPARISON
-##############################################################################################################################
+
+# PART 7.3 - STATISTICAL RESULT PRESENTATION: RESULT COMPARISON ----------------------------------------------------
 
 D1 <- D1 %>%
   # heading for html file
@@ -349,9 +344,8 @@ D1 <- D1 %>%
 
 
 
-##############################################################################################################################
-# PART 8 - PARTIAL CORRELATION NETWORK
-##############################################################################################################################
+
+# PART 8 - PARTIAL CORRELATION NETWORK ----------------------------------------------------
 
 # THE DATA TABLE IS TOO LARGE TO INCLUDE IN AN HTML FILE
 
@@ -366,9 +360,8 @@ D1 <- D1 %>%
 #  mt_plots_net(stat_name = "GGM", corr_filter = p.adj < 0.05, node_coloring = "Age met") %>%
 #  {.}
 
-##############################################################################################################################
-# PART 9 - PATHWAY AGGREGATION ANALYSIS
-##############################################################################################################################
+
+# PART 9 - PATHWAY AGGREGATION ANALYSIS ----------------------------------------------------
 # This is now first aggregating the metabolite matrix into pathways creating a new matrix of pathway
 # conentration values, and then repeating the parts of the same pipeline as above
 # In a real scenario, you would include a statistical analysis performed on metabolites AND have to pick between part 9 and the sections above
@@ -454,13 +447,19 @@ D2 <- D2 %>%
   mt_plots_compare2stats(stat1 = "Age pw", filter1 = p.adj < 0.05,
                          D2 = D2, stat2 = "Diagnosis pw", filter2 = p.adj < 0.05,
                          filterop = "OR") %>%
+
+  # OPTIONAL - this function will remove all plot entries in the pipeline
+  mt_stripresults(strip = "plots")
+
+
   # end timing
   mt_logging_toc()
 {.}
 
-##############################################################################################################################
-# PART 7 - CREATE ANALYSIS REPORTS
-##############################################################################################################################
+
+
+
+# PART 7 - CREATE ANALYSIS REPORTS ----------------------------------------------------
 
 # metabolite analysis html report
 D1 %>% mt_reporting_html(outfile = "Example_Pipeline_Metabolite_Analysis.html",

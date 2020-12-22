@@ -9,15 +9,15 @@ mt_pre_outlier(D, method = "univariate", reduce_dim = F, ...)
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{method}{Can be either "univariate" or "leverage" (for now)}
+\item{method}{Can be either "univariate", "leverage" or "mahalanobis"}
 
-\item{reduce_dim}{Perform PCA-based dimension reduction before outlier detection? Needed for multivariate methods in low-rank datasets.}
+\item{reduce_dim}{boolean, if TRUE performs PCA-based dimensionality reduction before outlier detection. Can be used to apply multivariate outlier detection methods to low-rank datasets.}
 
-\item{thresh}{Number of standard deviations or m/n units to use as threshold to define the outlier, default value set to 4}
+\item{thresh}{numeric. For the univariate method, number of standard deviations to use as threshold to define an outlier. For the leverage method, number of m/n units to use as threshold to define an outlier. Default value 4.}
 
-\item{perc}{For the univariate method, percentage of metabolites that need to be outliers in order to consider the whole sample an outlier, default value set to 0.5}
+\item{perc}{numeric. For the univariate method, ratio of metabolites that need to be outliers in order to consider the whole sample an outlier. Default value 0.5.}
 
-\item{pval}{For the mahalanobis distance method, p-val of chi-squared test to threshold at, default = 0.01}
+\item{pval}{numeric between 0 and 1. For the mahalanobis method, quantile of the chi-squared distribution to use as threshold to define a sample an outlier. Default value 0.01.}
 }
 \value{
 SE with additional colData columns including a binary vector and a numeric score vector
@@ -25,7 +25,11 @@ SE with additional colData columns including a binary vector and a numeric score
 $output: returns the specific parameters used to determine outliers for the specific method selected
 }
 \description{
-Uses either univariate or multivariate (leverage) approaches, won't do both in one call.
+Uses either univariate or multivariate (leverage, mahalanobis) approaches, won't do both in one call. 
+The function supports three modes of operation:
+1. univariate: a metabolite value is defined as an outlier if it is more than _thresh_ standard deviations from the mean. A sample is defined an outlier if more than _perc_ of its metabolites are univariate outliers.
+2. leverage: multivariate approach that uses leverage to define outliers. A sample is defined an outlier if its leverage is larger than _thresh_ times m/n (where m is the number of metabolites and n is the number of samples in the dataset).
+3. mahalanobins: multivariate approach that uses the Mahalanobis distance to define outliers. A sample is defined an outlier if its Mahalanobis distance is in the _pval_ quantile of the chi-square distribution.
 }
 \examples{
 \dontrun{# first identify samples that have more than 50\% univariate outliers, then identify multivariate outliers with a leverage >4m/n

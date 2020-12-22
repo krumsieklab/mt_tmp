@@ -30,7 +30,7 @@ mt_stats_univ_wilcox(
 $result: statistics object
 }
 \description{
-Wilcox test
+{ADD DESCRIPTION}
 }
 \examples{
 \donttest{# run lm with no confounders, "Group" as outcome

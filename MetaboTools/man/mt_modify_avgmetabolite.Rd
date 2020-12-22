@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_modify_avgmetabolite.R
 \name{mt_modify_avgmetabolite}
 \alias{mt_modify_avgmetabolite}
-\title{mt-modify_avgmetabolite}
+\title{Averages duplicate metabolites}
 \usage{
 mt_modify_avgmetabolite(D, avg_by)
 }
@@ -15,7 +15,7 @@ mt_modify_avgmetabolite(D, avg_by)
 D with duplicate metabolites combined
 }
 \description{
-Averages duplicate metabolites
+{ADD DESCRIPTION}
 }
 \examples{
 \dontrun{... \%>\% mt_modify_avgmetabolite(avg_by = 'name') \%>\% ...}

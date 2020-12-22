@@ -11,13 +11,25 @@ mt_modify_diffgroups(D, idvar, groupvar, grp1, grp2)
 
 \item{idvar}{sample ID variable  (e.g. patient ID)}
 
-\item{groupvar}{sample variable from colData (e.g. timepoint)}
+\item{groupvar}{sample variable from colData (e.g. "timepoint")}
 
 \item{grp1}{group level 1 (e.g. "day1")}
 
-\item{grp2}{group level 2 (e.g. "day2")}
+\item{grp2}{group level 2 (e.g. "day2")
+
+#'}
+}
+\value{
+SummarizedExperiment with new assay containing difference of two groups.
 }
 \description{
 Takes the name of a sample factor variable (from colData), and two factor levels. Creates a new data matrix that
-is made of the second minus the first levels. Will only produce results for cases where both
+is made of the second minus the first levels. Will only produce results for cases where both data points were present
+in the dataset.
+}
+\examples{
+\dontrun{# Generate new dataset as differences between day2 and day1
+... \%>\%  mt_modify_diffgroups(idvar = "patientID", groupvar = "timepoint", grp1 = "day1", grp2 = "day2")  \%>\% ... # proceed with statistical analysis
+}
+
 }

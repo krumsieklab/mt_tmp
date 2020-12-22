@@ -12,7 +12,7 @@ mtw_analysis(
   lm_options = list(),
   cor_options = list(),
   multT_options = list(),
-  logging_stats_options = list(),
+  stat_metab_filter = quote(p.adj < 0.05),
   volcano_options = list(),
   box_scatter_options = list()
 )
@@ -22,21 +22,21 @@ mtw_analysis(
 
 \item{stat_name}{Name under which this comparison will be stored, must be unique to all other statistical results.}
 
-\item{test_type}{Type of correlation to run, must be either "lm" or "cor"}
+\item{test_type}{Type of correlation to run, must be either "lm" or "cor". Default is "lm".}
 
-\item{is_bin}{Logical. Whether the data is binary or not.}
+\item{is_bin}{Logical. Whether the data is binary or not. Default is TRUE}
 
-\item{lm_options}{A list of parameters for \code{mt_stats_univ_lm()}, expressions should be quoted by quote()}
+\item{lm_options}{A list of parameters for \code{mt_stats_univ_lm()}, expressions should be quoted by \code{quote()}}
 
-\item{cor_options}{A list of parameters for \code{mt_stats_univ_cor()}, expressions should be quoted by quote()}
+\item{cor_options}{A list of parameters for \code{mt_stats_univ_cor()}, expressions should be quoted by \code{quote()}}
 
-\item{multT_options}{A list of parameters for \code{mt_post_mulTest()}, expressions should be quoted by quote()}
+\item{multT_options}{A list of parameters for \code{mt_post_mulTest()}, expressions should be quoted by \code{quote()}}
 
-\item{logging_stats_options}{A list of parameters for \code{mt_logging_statsinfo()}, expressions should be quoted by quote()}
+\item{stat_metab_filter}{Filter formula for metabolites, used as "stat_filter" in \code{mt_logging_statsinfo()} and "metab_filter" in \code{mt_plots_volcano()}, should be quoted by \code{quote()}. Default is \code{quote(p.adj < 0.05)}}
 
-\item{volcano_options}{A list of parameters for \code{mt_plots_volcano()}, expressions should be quoted by quote()}
+\item{volcano_options}{A list of parameters for \code{mt_plots_volcano()}, expressions and variable names should be quoted by \code{quote()}}
 
-\item{box_scatter_options}{A list of parameters for \code{mt_plots_boxplot_scatter()}, expressions and columns in plot should be quoted by quote()}
+\item{box_scatter_options}{A list of parameters for \code{mt_plots_boxplot_scatter()}, expressions and variable names should be quoted by \code{quote()}}
 }
 \value{
 D with analysis results
@@ -45,20 +45,17 @@ D with analysis results
 Creates an analysis result based on the type of analysis function chose by users, with plots for visulization
 }
 \examples{
-\dontrun{ ... \%>\% 
-mtw_analysis(
+\dontrun{ ... \%>\% mtw_analysis(
 stat_name = 'Diag_mets',
 test_type = 'cor',
 is_bin = F,
 cor_options = list(method = 'kendall', var = 'Diag_num', stat_name = 'Diag_mets'),
 multT_options = list(method = 'BH'),
-logging_stats_options = list(stat_filter = quote(p.adj < 0.05)),
-volcano_options = list(x = quote(statistic), metab_filter = quote(p.adj < 0.05), 
-                       colour = quote(p.adj < 0.05)),
+stat_metab_filter = quote(p.adj < 0.05)),
+volcano_options = list(x = quote(statistic), colour = quote(p.adj < 0.05)),
 box_scatter_options = list(plot_type = 'box',
                            x                  = quote(Diagnosis),
                            fill               = quote(Diagnosis),
-                           metab_filter       = quote(p.adj < 0.05),
                            metab_sort         = quote(p.value),
                            annotation         = "{sprintf('P-value: \%.2e', p.value)}\nPadj: {sprintf('\%.2e', p.adj)}",
                            cols               = 3)) \%>\% ...}

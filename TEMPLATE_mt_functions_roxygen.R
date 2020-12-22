@@ -2,9 +2,10 @@
 
 # exported functions
 # Notes on the exported function template below:
-#   1. import and importFrom are included as needed
+#   1. @import and @importFrom are included as needed
 #   2. @export is required for function to be accessible to package users
 #   3. put example code in between braces of \dontrun{} if the code cannot be run on its own - e.g. if following ... or requires data not automatically loaded
+#   4. @import / @importFrom and @export are namespace flags, every other "@" field indicates a section of the documentation
 # Exported functions template below the line
 # ------------------------------
 #' Title / Header of Function

@@ -70,6 +70,14 @@ params:
   if (!is.na(start.after)) {
     # extract all UUIDs
     allids <- D %>% metadata() %>% .$results %>% purrr::map("uuid") %>% unlist()
+
+    # if tag name provided, get uuid
+    tag_name_list <- MetaboTools:::mti_res_get_path(D, c("reporting", "tag")) %>% purrr::map("output") %>% unlist()
+    tag_name_idx <- match(start.after, tag_name_list)
+    if(!is.na(tag_name_idx)){
+      start.after <- tag_name_list[tag_name_idx] %>% names() %>% gsub("reporting_tag.", "", .)
+    }
+
     # find the one to start after
     start.from <- which(allids==start.after)
     # error-check

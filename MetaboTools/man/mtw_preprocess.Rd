@@ -8,6 +8,7 @@ mtw_preprocess(
   D,
   batch_col,
   batch_fun = mt_pre_batch_median,
+  batch_loc = "begin",
   batch_ref_samples = NULL,
   boxplot_options = list(),
   quot_options = list(),
@@ -23,7 +24,9 @@ mtw_preprocess(
 
 \item{batch_col}{Batch column}
 
-\item{batch_fun}{Batch function to use. Default is \code{mt_pre_batch_median}}
+\item{batch_fun}{Batch function to use, should be rather median or combat method. Default is \code{mt_pre_batch_median}}
+
+\item{batch_loc}{Where should batch normalization take place, should be 'begin'/'middle'/'end', 'begin' means before quotient normalization, 'middle' means between quotient and kNN imputation, 'end' means after imputation. Default is 'begin'}
 
 \item{batch_ref_samples}{Expression to filter out reference samples to use from rowData. Default is NULL}
 
@@ -49,7 +52,9 @@ Preprocess on data, including batch correction, quotient normalization, log tran
 }
 \examples{
 \dontrun{... \%>\% mtw_preprocess() \%>\% ...}
-\dontrun{... \%>\% mtw_preprocess(batch_col = "BATCH_MOCK", batch_fun = mt_pre_batch_median,comp_fac = c("num1","Group"),quot_options = list(ref_samples = quote(Group == 'Vehicle'))) \%>\% ...}
+\dontrun{... \%>\% mtw_preprocess(batch_col = "BATCH_MOCK", 
+batch_loc = 'begin', comp_fac = c("num1","Group"), 
+quot_options = list(ref_samples = quote(Group == 'Vehicle'))) \%>\% ...}
 
 }
 \author{

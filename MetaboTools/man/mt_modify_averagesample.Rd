@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_modify_averagesample.R
 \name{mt_modify_averagesample}
 \alias{mt_modify_averagesample}
-\title{mt-modify_averagesample}
+\title{Averages duplicate samples.}
 \usage{
 mt_modify_averagesample(D, group_by)
 }
@@ -15,7 +15,7 @@ mt_modify_averagesample(D, group_by)
 D with duplicate samples combined
 }
 \description{
-Averages duplicate samples.
+{ADD DESCRIPTION}
 }
 \examples{
 \dontrun{... \%>\% mt_modify_averagesample(group_by = "RID") \%>\% ...}
