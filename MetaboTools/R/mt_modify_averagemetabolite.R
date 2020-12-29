@@ -1,6 +1,6 @@
 #' Averages duplicate metabolites
 #'
-#' {ADD DESCRIPTION}
+#' Averages values of metabolites (rows) with same values in specified rowData column. 
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param avg_by name of rowData column (metabolite annotation) by which duplicates can be identified
@@ -8,7 +8,7 @@
 #' @return D with duplicate metabolites combined
 #'
 #' @examples
-#' \dontrun{... %>% mt_modify_avgmetabolite(avg_by = 'name') %>% ...}
+#' \dontrun{... %>% mt_modify_averagemetabolite(avg_by = 'name') %>% ...}
 #'
 #' @author RB
 #'
@@ -16,7 +16,7 @@
 #' @import SummarizedExperiment
 #'
 #' @export
-mt_modify_avgmetabolite <- function(
+mt_modify_averagemetabolite <- function(
   D,       # SummarizedExperiment input
   avg_by   # metabolite annotation column to compare with
 ) {
