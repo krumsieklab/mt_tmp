@@ -26,13 +26,11 @@ file_data <- "/Users/kelsey/Desktop/KrumsiekLab/simulated_data.xlsx"
 # PART 1 - STARTING A METABOTOOLS PIPELINE ----------------------------------------------------
 
 D <-
-  # set the pipeline settings
-  mt_settings(settings = list(ggplot_fix=T)) %>%
   # validate checksum
   mt_files_checksum(file=file_data, checksum = "80afcd72481c6cf3dcf83342e3513699") %>%
   # load data - this function loads the assay data only
   #   alternative loading functions: mt_files_load_metabolon(), mt_files_load_metabolon_lipidomics(), mt_files_load_olink(),
-  #     mt_files_load_UCD, mt_files_load_WCM
+  #     mt_files_load_UCD, mt_files_load_WCM, mt_files_load_nightingale, mt_files_load_metabolon_new_format()
   mt_files_data_xls(file=file_data, sheet="data", samples_in_row=T, ID_col="sample") %>%
   # load metabolite (rowData) annotations
   mt_files_anno_xls(file=file_data, sheet="metinfo",anno_type="metabolites", anno_ID="name", data_ID="name") %>%
@@ -44,6 +42,7 @@ D <-
   mt_logging_tic() %>%
   {.}
 # additional functions used at beginning of pipelines:
+#   - mt_settings - set global settings for MetaboTools pipeline
 #   - mt_flag_logged - for flagging a loaded dataset as already log transformed
 
 
@@ -105,7 +104,6 @@ D <- D %>%
                     normalization, plot boxplot with dilution factors from quotient normalization, plot sample boxplot after
                     normalization, log transform the data, impute missing data using knn, plot sample boxplot after imputation,
                     detect outliers, log dataset info, write pre-processed data to file.") %>%
-  # NOTE: the wrapper function mtw_preprocess can be used in place of the functions below
   # plot sample boxplots
   mt_plots_sampleboxplot(color=Diagnosis, plottitle = "Original", logged = T) %>%
   # apply batch correction
@@ -172,7 +170,6 @@ D <- D %>%
 D <- D %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Global Statistics", lvl = 1) %>%
-  # NOTE: the wrapper function mtw_global_statistics() can alternatively be used in place of the functions below
   # plot PCA
   mt_plots_PCA(scaledata = T, title = "scaled PCA - Diagnosis", color=Diagnosis, size=2.5, ggadd=scale_size_identity()) %>%
   # plot UMAP
@@ -446,20 +443,109 @@ D2 <- D2 %>%
   # comparison plot from pw analysis
   mt_plots_compare2stats(stat1 = "Age pw", filter1 = p.adj < 0.05,
                          D2 = D2, stat2 = "Diagnosis pw", filter2 = p.adj < 0.05,
-                         filterop = "OR") %>%
+                         filterop = "OR")
+
+
+# PART 10 - METABOLITE RATIO ANALYSIS ----------------------------------------------------
+# create another SE object for third analysis branch (pathway)
+D3 <- D
+
+D3 <- D3 %>%
+  # aggregate metabolites in the same pathways
+  mt_modify_ratios()
+  mt_modify_aggPW(pw_col = "pathway", method = "aggmean") %>%
+
+  # STATISTICAL ANALYSIS, OUTCOME: AGE
+  # heading for html file
+  mt_reporting_heading(strtitle = "Pathway Aggregation Analysis", lvl = 1) %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Age analysis", lvl = 2) %>%
+  # Pearson correlation
+  mt_stats_univ_cor(method = "pearson",
+                    var = "Age",
+                    stat_name = "Age pw") %>%
+  # add multiple testing correction
+  mt_post_multTest(stat_name = "Age pw", method = "BH") %>%
+  # add stats logging
+  mt_logging_statsinfo(stat_name = "Age pw", stat_filter = p.adj < 0.05) %>%
+  # pvalue histogram
+  mt_plots_pvalhist(stat_names = "Age pw") %>%
+  # volcano plot as overview of results
+  mt_plots_volcano(stat_name = "Age pw",
+                   x = statistic,
+                   metab_filter = p.adj < 0.05,
+                   colour = p.adj < 0.05) %>%
+  # scatter plot
+  mt_plots_boxplot_scatter(stat_name = "Age pw",
+                           x = Age,
+                           plot_type = "scatter",
+                           metab_filter = p.adj < 1E-10,
+                           metab_sort = p.value,
+                           annotation = "{sprintf('P-value: %.2e', p.value)}\nP.adj: {sprintf('%.2e', p.adj)}",
+                           rows = 3,
+                           cols = 3) %>%
+
+  # STATISTICAL ANALYSIS, OUTCOME: DIAGNOSIS
+  # heading for html file
+  mt_reporting_heading(strtitle = "Diagnosis analysis", lvl = 2) %>%
+  # linear model for binary function (equivalent to t-test)
+  mt_stats_univ_lm(formula = ~ Diagnosis,
+                   stat_name = "Diagnosis pw") %>%
+  # add fold change
+  mt_post_addFC(stat_name = "Diagnosis pw") %>%
+  # add multiple testing correction
+  mt_post_multTest(stat_name = "Diagnosis pw", method = "BH") %>%
+  # add stats logging
+  mt_logging_statsinfo(stat_name = "Diagnosis pw", stat_filter = p.adj < 0.05) %>%
+  # pvalue histogram
+  mt_plots_pvalhist(stat_names = "Diagnosis pw") %>%
+  # volcano plot as overview of results
+  mt_plots_volcano(stat_name = "Diagnosis pw",
+                   x = fc,
+                   metab_filter = p.adj < 0.05,
+                   colour       = p.adj < 0.05) %>%
+  # boxplot
+  mt_plots_boxplot_scatter(stat_name          ="Diagnosis pw",
+                           x                  = Diagnosis,
+                           fill               = Diagnosis,
+                           plot_type          = "box",
+                           metab_filter       = p.adj < 0.05,
+                           metab_sort         = p.value,
+                           annotation         = "{sprintf('P-value: %.2e', p.value)}\nPadj: {sprintf('%.2e', p.adj)}")
+
+D3 <- D3 %>%
+  # MULTIPLE STATISTICS HEATMAP
+  # heading for html file
+  mt_reporting_heading(strtitle = "Statistical Results Presentation", lvl = 2) %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Multiple Statistics Heatmap", lvl = 2) %>%
+  # heatmap of all statistical results
+  mt_plots_multstats_heatmap(color_cutoff = 0.05) %>%
+
+  # COMPARE STATISTICAL RESULTS
+  # heading for html file
+  mt_reporting_heading(strtitle = "Result Comparison", lvl = 2) %>%
+  # comparison plot from pw analysis
+  mt_plots_compare2stats(stat1 = "Age pw", filter1 = p.adj < 0.05,
+                         D2 = D3, stat2 = "Diagnosis pw", filter2 = p.adj < 0.05,
+                         filterop = "OR")
+
+
+
+# PART 11 - SUPER AND SUB PATHWAY COMPARISON
 
   # OPTIONAL - this function will remove all plot entries in the pipeline
-  mt_stripresults(strip = "plots")
+  #mt_stripresults(strip = "plots") %>%
 
 
   # end timing
-  mt_logging_toc()
-{.}
+  mt_logging_toc() %>%
+  {.}
 
 
 
 
-# PART 7 - CREATE ANALYSIS REPORTS ----------------------------------------------------
+# PART 11 - CREATE ANALYSIS REPORTS ----------------------------------------------------
 
 # metabolite analysis html report
 D1 %>% mt_reporting_html(outfile = "Example_Pipeline_Metabolite_Analysis.html",
