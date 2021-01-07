@@ -116,7 +116,6 @@ mtw_preprocess <-
       D %<>% batch_norm()
       
       # Boxplot after batch normalization
-      boxplot_options <- map_lists(boxplot_options_def, boxplot_options)
       boxplot_options$D <- D
       D <- do.call("mt_plots_sampleboxplot", boxplot_options)
       run_batch = F
@@ -153,7 +152,6 @@ mtw_preprocess <-
       D %<>% batch_norm()
       
       # Boxplot after batch normalization
-      boxplot_options <- map_lists(boxplot_options_def, boxplot_options)
       boxplot_options$D <- D
       D <- do.call("mt_plots_sampleboxplot", boxplot_options)
       run_batch = F
@@ -178,7 +176,6 @@ mtw_preprocess <-
       D %<>% batch_norm()
       
       # Boxplot after batch normalization
-      boxplot_options <- map_lists(boxplot_options_def, boxplot_options)
       boxplot_options$D <- D
       D <- do.call("mt_plots_sampleboxplot", boxplot_options)
     }

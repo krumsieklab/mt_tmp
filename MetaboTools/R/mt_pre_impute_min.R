@@ -1,5 +1,6 @@
-#' Impute using minimum value of that metabolite across the samples
+#'Impute using minimum value
 #'
+#'Impute using minimum value of that metabolite across the samples
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param verbose T/F, whether to output intermediate steps, default: F

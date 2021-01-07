@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_pre_impute_min.R
 \name{mt_pre_impute_min}
 \alias{mt_pre_impute_min}
-\title{Impute using minimum value of that metabolite across the samples}
+\title{Impute using minimum value}
 \usage{
 mt_pre_impute_min(D, verbose = F)
 }
