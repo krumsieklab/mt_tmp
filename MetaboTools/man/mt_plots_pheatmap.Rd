@@ -22,7 +22,6 @@ mt_plots_pheatmap(
   clustering_distance_rows = "euclidean",
   clustering_distance_cols = "euclidean",
   clustering_method = "complete",
-  clustering_callback = pheatmap:::identity2,
   cutree_rows = NA,
   cutree_cols = NA,
   treeheight_row = ifelse((class(cluster_rows) == "hclust") || cluster_rows, 50, 0),

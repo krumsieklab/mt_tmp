@@ -38,7 +38,7 @@ mt_plots_pheatmap <- function(D, scaledata=F, sym0=F, fD = function(x){ if(scale
                               color = grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA,
                               border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE,
                               clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete",
-                              clustering_callback = pheatmap:::identity2, cutree_rows = NA, cutree_cols = NA,
+                              cutree_rows = NA, cutree_cols = NA,
                               treeheight_row = ifelse((class(cluster_rows) == "hclust") || cluster_rows, 50, 0),
                               treeheight_col = ifelse((class(cluster_cols) == "hclust") || cluster_cols, 50, 0),
                               legend = TRUE, legend_breaks = NA, legend_labels = NA,
