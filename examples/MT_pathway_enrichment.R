@@ -5,9 +5,11 @@
 library(MetaboTools)
 # without differential analysis
 
+file_data <- system.file("extdata", "example_data/sampledata.xlsx", package = "MetaboTools")
+
 # Preprocess dataset ------------------------------------------------------
 D_pre <-
-  mt_files_load_metabolon(file=codes.makepath("Mt/sampledata.xlsx"), sheet="OrigScale") %>%
+  mt_files_load_metabolon(file=file_data, sheet="OrigScale") %>%
   mt_anno_pathways_HMDB(in_col = "HMDb_ID",
                         out_col = "kegg_db",
                         pwdb_name = "KEGG",

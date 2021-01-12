@@ -23,7 +23,14 @@ colData(D_ds)$Sample_ID %>% duplicated() %>% sum()
 
 # Average Duplciate Metabolites -----------------
 # Load toy SE object with duplicated metabolites
+data("D_ex2")
 
+D_ex2 %>% assay() %>% as.data.frame() %>% dim()
+rowData(D_ex2)$COMP_ID %>% duplicated() %>% sum()
 
+D_ex2 <- D_ex2 %>%
+  mt_modify_averagemetabolite(avg_by = "COMP_ID")
 
+D_ex2 %>% assay() %>% as.data.frame() %>% dim()
+rowData(D_ex2)$COMP_ID %>% duplicated() %>% sum()
 

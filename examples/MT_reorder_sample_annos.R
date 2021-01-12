@@ -3,9 +3,11 @@
 
 library(MetaboTools)
 
+file_data <- system.file("extdata", "example_data/sampledata.xlsx", package = "MetaboTools")
+
 D <-
   # load data
-  mt_files_load_metabolon(file = codes.makepath("Mt/sampledata.xlsx"), sheet = "OrigScale") %>%
+  mt_files_load_metabolon(file = file_data, sheet = "OrigScale") %>%
   # timing start
   mt_logging_tic() %>%
 

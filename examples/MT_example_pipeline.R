@@ -14,14 +14,11 @@ library(pathview)
 
 zap()
 
-# NTS: DELETE THIS WHEN EXAMPLE FINISHED
-setwd("/Users/kelsey/Desktop/KrumsiekLab/")
-
 # NTS: need to be able to load this via data()
-file_data <- "/Users/kelsey/Desktop/KrumsiekLab/simulated_data.xlsx"
+file_data <- system.file("extdata", "example_data/simulated_data.xlsx", package = "MetaboTools")
 
-# NOTE: IN THIS EXAMPLE WE DO NOT GROUP REUSABLE FUNCTION STEPS INTO FUNCTIONS BUT REPEAT THEM AS A DEMONSTRATION OF THE BROAD
-# FUNCITON OF THE TOOLBOX
+# NOTE: IN THIS EXAMPLE WE DO NOT GROUP REUSABLE FUNCTION STEPS INTO FUNCTIONS BUT REPEAT THEM AS A DEMONSTRATION OF THE
+# BROAD FUNCITON OF THE TOOLBOX
 
 # PART 1 - STARTING A METABOTOOLS PIPELINE ----------------------------------------------------
 
@@ -324,8 +321,8 @@ D1 <- D1 %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Multiple Statistics Heatmap", lvl = 2) %>%
   # heatmap of all statistical results
-  mt_plots_multstats_heatmap(color_cutoff = 0.05)
-{.}
+  mt_plots_multstats_heatmap(color_cutoff = 0.05) %>%
+  {.}
 
 
 # PART 7.3 - STATISTICAL RESULT PRESENTATION: RESULT COMPARISON ----------------------------------------------------
@@ -446,37 +443,36 @@ D2 <- D2 %>%
                          filterop = "OR")
 
 
-# PART 10 - METABOLITE RATIO ANALYSIS ----------------------------------------------------
+# PART 10 - SUB PATHWAY ANALYSIS ----------------------------------------------------
 # create another SE object for third analysis branch (pathway)
 D3 <- D
 
 D3 <- D3 %>%
   # aggregate metabolites in the same pathways
-  mt_modify_ratios()
-  mt_modify_aggPW(pw_col = "pathway", method = "aggmean") %>%
+  mt_modify_aggPW(pw_col = "SUB_PATHWAY", method = "aggmean") %>%
 
   # STATISTICAL ANALYSIS, OUTCOME: AGE
   # heading for html file
-  mt_reporting_heading(strtitle = "Pathway Aggregation Analysis", lvl = 1) %>%
+  mt_reporting_heading(strtitle = "Sub Pathway Aggregation Analysis", lvl = 1) %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Age analysis", lvl = 2) %>%
   # Pearson correlation
   mt_stats_univ_cor(method = "pearson",
                     var = "Age",
-                    stat_name = "Age pw") %>%
+                    stat_name = "Age sub pw") %>%
   # add multiple testing correction
-  mt_post_multTest(stat_name = "Age pw", method = "BH") %>%
+  mt_post_multTest(stat_name = "Age sub pw", method = "BH") %>%
   # add stats logging
-  mt_logging_statsinfo(stat_name = "Age pw", stat_filter = p.adj < 0.05) %>%
+  mt_logging_statsinfo(stat_name = "Age sub pw", stat_filter = p.adj < 0.05) %>%
   # pvalue histogram
-  mt_plots_pvalhist(stat_names = "Age pw") %>%
+  mt_plots_pvalhist(stat_names = "Age sub pw") %>%
   # volcano plot as overview of results
-  mt_plots_volcano(stat_name = "Age pw",
+  mt_plots_volcano(stat_name = "Age sub pw",
                    x = statistic,
                    metab_filter = p.adj < 0.05,
                    colour = p.adj < 0.05) %>%
   # scatter plot
-  mt_plots_boxplot_scatter(stat_name = "Age pw",
+  mt_plots_boxplot_scatter(stat_name = "Age sub pw",
                            x = Age,
                            plot_type = "scatter",
                            metab_filter = p.adj < 1E-10,
@@ -490,22 +486,22 @@ D3 <- D3 %>%
   mt_reporting_heading(strtitle = "Diagnosis analysis", lvl = 2) %>%
   # linear model for binary function (equivalent to t-test)
   mt_stats_univ_lm(formula = ~ Diagnosis,
-                   stat_name = "Diagnosis pw") %>%
+                   stat_name = "Diagnosis sub pw") %>%
   # add fold change
-  mt_post_addFC(stat_name = "Diagnosis pw") %>%
+  mt_post_addFC(stat_name = "Diagnosis sub pw") %>%
   # add multiple testing correction
-  mt_post_multTest(stat_name = "Diagnosis pw", method = "BH") %>%
+  mt_post_multTest(stat_name = "Diagnosis sub pw", method = "BH") %>%
   # add stats logging
-  mt_logging_statsinfo(stat_name = "Diagnosis pw", stat_filter = p.adj < 0.05) %>%
+  mt_logging_statsinfo(stat_name = "Diagnosis sub pw", stat_filter = p.adj < 0.05) %>%
   # pvalue histogram
-  mt_plots_pvalhist(stat_names = "Diagnosis pw") %>%
+  mt_plots_pvalhist(stat_names = "Diagnosis sub pw") %>%
   # volcano plot as overview of results
-  mt_plots_volcano(stat_name = "Diagnosis pw",
+  mt_plots_volcano(stat_name = "Diagnosis sub pw",
                    x = fc,
                    metab_filter = p.adj < 0.05,
                    colour       = p.adj < 0.05) %>%
   # boxplot
-  mt_plots_boxplot_scatter(stat_name          ="Diagnosis pw",
+  mt_plots_boxplot_scatter(stat_name          ="Diagnosis sub pw",
                            x                  = Diagnosis,
                            fill               = Diagnosis,
                            plot_type          = "box",
@@ -526,26 +522,118 @@ D3 <- D3 %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Result Comparison", lvl = 2) %>%
   # comparison plot from pw analysis
-  mt_plots_compare2stats(stat1 = "Age pw", filter1 = p.adj < 0.05,
-                         D2 = D3, stat2 = "Diagnosis pw", filter2 = p.adj < 0.05,
-                         filterop = "OR")
-
-
-
-# PART 11 - SUPER AND SUB PATHWAY COMPARISON
-
-  # OPTIONAL - this function will remove all plot entries in the pipeline
-  #mt_stripresults(strip = "plots") %>%
-
-
-  # end timing
-  mt_logging_toc() %>%
+  mt_plots_compare2stats(stat1 = "Age sub pw", filter1 = p.adj < 0.05,
+                         D2 = D3, stat2 = "Diagnosis sub pw", filter2 = p.adj < 0.05,
+                         filterop = "OR") %>%
   {.}
 
 
 
 
-# PART 11 - CREATE ANALYSIS REPORTS ----------------------------------------------------
+# PART 11 - SUB PATHWAY ANALYSIS  ----------------------------------------------------
+# create another SE object for third analysis branch (pathway)
+D4 <- D
+
+D4 <- D4 %>%
+  # aggregate metabolites in the same pathways
+  mt_modify_aggPW(pw_col = "SUPER_PATHWAY", method = "aggmean") %>%
+
+  # STATISTICAL ANALYSIS, OUTCOME: AGE
+  # heading for html file
+  mt_reporting_heading(strtitle = "Super Pathway Aggregation Analysis", lvl = 1) %>%
+  # add tag
+  mt_reporting_tag(tag_name = "Beginning of Super PW Age Analysis") %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Age analysis", lvl = 2) %>%
+  # Pearson correlation
+  mt_stats_univ_cor(method = "pearson",
+                    var = "Age",
+                    stat_name = "Age super pw") %>%
+  # add multiple testing correction
+  mt_post_multTest(stat_name = "Age super pw", method = "BH") %>%
+  # add stats logging
+  mt_logging_statsinfo(stat_name = "Age super pw", stat_filter = p.adj < 0.05) %>%
+  # pvalue histogram
+  mt_plots_pvalhist(stat_names = "Age super pw") %>%
+  # volcano plot as overview of results
+  mt_plots_volcano(stat_name = "Age super pw",
+                   x = statistic,
+                   metab_filter = p.adj < 0.05,
+                   colour = p.adj < 0.05) %>%
+  # scatter plot
+  mt_plots_boxplot_scatter(stat_name = "Age super pw",
+                           x = Age,
+                           plot_type = "scatter",
+                           metab_filter = p.adj < 1E-10,
+                           metab_sort = p.value,
+                           annotation = "{sprintf('P-value: %.2e', p.value)}\nP.adj: {sprintf('%.2e', p.adj)}",
+                           rows = 3,
+                           cols = 3) %>%
+
+  # STATISTICAL ANALYSIS, OUTCOME: DIAGNOSIS
+  # add tag
+  mt_reporting_tag(tag_name = "Beginning of Super PW Diagnosis Analysis") %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Diagnosis analysis", lvl = 2) %>%
+  # linear model for binary function (equivalent to t-test)
+  mt_stats_univ_lm(formula = ~ Diagnosis,
+                   stat_name = "Diagnosis super pw") %>%
+  # add fold change
+  mt_post_addFC(stat_name = "Diagnosis super pw") %>%
+  # add multiple testing correction
+  mt_post_multTest(stat_name = "Diagnosis super pw", method = "BH") %>%
+  # add stats logging
+  mt_logging_statsinfo(stat_name = "Diagnosis super pw", stat_filter = p.adj < 0.05) %>%
+  # pvalue histogram
+  mt_plots_pvalhist(stat_names = "Diagnosis super pw") %>%
+  # volcano plot as overview of results
+  mt_plots_volcano(stat_name = "Diagnosis super pw",
+                   x = fc,
+                   metab_filter = p.adj < 0.05,
+                   colour       = p.adj < 0.05) %>%
+  # boxplot
+  mt_plots_boxplot_scatter(stat_name          ="Diagnosis super pw",
+                           x                  = Diagnosis,
+                           fill               = Diagnosis,
+                           plot_type          = "box",
+                           metab_filter       = p.adj < 0.05,
+                           metab_sort         = p.value,
+                           annotation         = "{sprintf('P-value: %.2e', p.value)}\nPadj: {sprintf('%.2e', p.adj)}")
+
+D4 <- D4 %>%
+  # MULTIPLE STATISTICS HEATMAP
+  # heading for html file
+  mt_reporting_heading(strtitle = "Statistical Results Presentation", lvl = 2) %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Multiple Statistics Heatmap", lvl = 2) %>%
+  # heatmap of all statistical results
+  mt_plots_multstats_heatmap(color_cutoff = 0.05) %>%
+
+  # COMPARE STATISTICAL RESULTS
+  # heading for html file
+  mt_reporting_heading(strtitle = "Result Comparison", lvl = 2) %>%
+  # comparison plot from pw analysis
+  mt_plots_compare2stats(stat1 = "Age super pw", filter1 = p.adj < 0.05,
+                         D2 = D4, stat2 = "Diagnosis super pw", filter2 = p.adj < 0.05,
+                         filterop = "OR") %>%
+  {.}
+
+# PART 12 - COMPARE SUPER- AND SUB- PATHWAY ANALYSES  ----------------------------------------------------
+D4 <- D4 %>% mt_plots_equalizer(comp1 = "Age super pw",
+                                D2 = D3,
+                                comp2 = "Age sub pw",
+                                legend.fine="sub pathway",
+                                legend.coarse='super pathway',
+                                vertline.fine = p.adj < 0.1,
+                                vertline.coarse = p.adj < 0.1) %>%
+  # end timing
+  mt_logging_toc() %>%
+  {.}
+
+# PART 13 - CREATE ANALYSIS REPORTS ----------------------------------------------------
+
+# OPTIONAL - this function will remove all plot entries in the pipeline
+#   - mt_stripresults(strip = "plots")
 
 # metabolite analysis html report
 D1 %>% mt_reporting_html(outfile = "Example_Pipeline_Metabolite_Analysis.html",
@@ -554,6 +642,15 @@ D1 %>% mt_reporting_html(outfile = "Example_Pipeline_Metabolite_Analysis.html",
 D2 %>% mt_reporting_html(outfile = "Example_Pipeline_Pathway_Analysis.html",
                          title = "Example Pipeline - Pathway Aggregation Analysis")
 
+# sub-pathway analysis html report
+D3 %>% mt_reporting_html(outfile = "Example_Pipeline_Sub_Pathway_Analysis.html",
+                         title = "Example Pipeline - Sub Pathway Aggregation Analysis")
+
+# super-pathway analysis html report
+D4 %>% mt_reporting_html(outfile = "Example_Pipeline_Super_Pathway_Analysis.html",
+                         title = "Example Pipeline - Super Pathway Aggregation Analysis",
+                         start.after = "Beginning of Super PW Age Analysis")
+
 # create a combined report with both analsyses
-mt_reporting_html_nonLinear(pipelines = list(D1, D2), outfile = "ExamplePipeline_CombinedReport.hmtl",
+mt_reporting_html_nonLinear(pipelines = list(D1, D2, D3, D4), outfile = "ExamplePipeline_CombinedReport.hmtl",
                             title = "Combined Report")
