@@ -1,6 +1,6 @@
-#' Boxplots
+#' Plot Boxplots
 #'
-#' Creates one boxplot plot per metabolite based on given sample annotations
+#' Creates one boxplot plot per metabolite based on given sample annotations.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param x what phenotype (from colData(D)) should be used on x axis, default "x"

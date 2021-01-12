@@ -7,8 +7,13 @@
 #' @param scaledata scaling the data, TRUE by default
 #' @param sym0 make color scale symmetric around 0? (should only be used for scaled data), default: F
 #' @param fD function to transform/scale \code{t(assay(D))}, ie \code{mat = fD(t(assay(D)))} will be plotted
+#' @param silent Don't draw the table? A pheatmap argument, MetaboTools uses a different default. Default: T.
 #' @param return.gg should pheatmap object be converted to gg object, TRUE for default.
 #' @param gg.scale scaling of plot to be converted to gg object
+#' @param gg.ymin
+#' @param gg.xmin
+#' @param gg.xmax
+#' @param gg.ymax
 #' @param ggadd  further elements/functions to add (+) to the ggplot object
 #' @param \dots  see \code{pheatmap::pheatmap} for pheatmap arguments
 #'
@@ -32,25 +37,18 @@
 #'
 #' @export
 
-mt_plots_pheatmap <- function(D, scaledata=F, sym0=F, fD = function(x){ if(scaledata) return(scale(x)); x}, # metabotools arguments
-
-                              # pheatmap::pheatmap arguments
-                              color = grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA,
-                              border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE,
-                              clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete",
-                              clustering_callback = pheatmap:::identity2, cutree_rows = NA, cutree_cols = NA,
-                              treeheight_row = ifelse((class(cluster_rows) == "hclust") || cluster_rows, 50, 0),
-                              treeheight_col = ifelse((class(cluster_cols) == "hclust") || cluster_cols, 50, 0),
-                              legend = TRUE, legend_breaks = NA, legend_labels = NA,
-                              annotation_row = NA, annotation_col = NA, annotation_colors = NA, annotation_legend = TRUE,
-                              annotation_names_row = TRUE, annotation_names_col = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T,
-                              main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f",
-                              number_color = "grey30", fontsize_number = 0.8 * fontsize, gaps_row = NULL, gaps_col = NULL, labels_row = NULL,
-                              labels_col = NULL, filename = NA, width = NA, height = NA, silent = TRUE, na_col = "#DDDDDD",
+mt_plots_pheatmap <- function(D,
+                              scaledata=F,
+                              sym0=F,
+                              fD = function(x){ if(scaledata) return(scale(x)); x},
+                              silent = TRUE,
                               ggadd=NULL,
-                              # returned plot type, and specs
-                              return.gg = T, gg.scale = 1, gg.ymin = 1 - gg.scale, gg.xmin = 1 - gg.scale,
-                              gg.xmax = gg.scale, gg.ymax = gg.scale,
+                              return.gg = T,
+                              gg.scale = 1,
+                              gg.ymin = 1 - gg.scale,
+                              gg.xmin = 1 - gg.scale,
+                              gg.xmax = gg.scale,
+                              gg.ymax = gg.scale,
                               ...){
 
   # upon Jan's comment annotation_col and annotation_row are swapped for compatibility with SummarizedExperiment

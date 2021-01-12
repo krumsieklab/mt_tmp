@@ -8,6 +8,7 @@
 #' @param labelby field to label. default: none
 #' @param textrepel try to avoid all text overlaps when labeling? default:T
 #' @param store.matrices store scores in result structure? default: F
+#' @param n_neighbors ADD DESCRIPTION
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... # additional expression directly passed to aes() of ggplot, can refer to colData
 #'

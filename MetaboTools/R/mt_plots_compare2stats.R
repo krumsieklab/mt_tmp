@@ -14,6 +14,7 @@
 #' @param label_column optional argument on which column in the statistical results df to use for labeling points
 #' @param point_size size of the points on the ggplot
 #' @param return.plot.only return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.
+#' @param export.file WHAT DOES THIS DO?
 #' @param use_estimate use estimate for comparison, instead of statistic; default: F
 #'
 #' @return $result: plot, p-value histogram

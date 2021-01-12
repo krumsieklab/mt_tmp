@@ -1,14 +1,12 @@
-#' mt_plots_pathview
-#'
 #' Creates KEGG pathways visualization
+#'
+#' ADD DESCRIPTION
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param gene.id string name of the rowData column containing the gene identifiers.
 #' @param gene.data either vector (single sample) or a matrix-like data (multiple sample). Vector should be numeric with gene IDs as names or it may also be character of gene IDs. Character vector is treated as discrete or count data. Matrix-like data structure has genes as rows and samples as columns. Row names should be gene IDs. Here gene ID is a generic concepts, including multiple types of gene, transcript and protein uniquely mappable to KEGG gene IDs. KEGG ortholog IDs are also treated as gene IDs as to handle metagenomic data. Check details for mappable ID types. Default gene.data=NULL.
-#' @param gene.idtype character, ID type used for the gene.data, case insensitive. Default gene.idtype="entrez", i.e. Entrez Gene, which are the primary KEGG gene ID for many common model organisms. For other species, gene.idtype should be set to "KEGG" as KEGG use other types of gene IDs. For the common model organisms (to check the list, do: data(bods); bods), you may also specify other types of valid IDs. To check the ID list, do: data(gene.idtype.list); gene.idtype.list.
-#' @param met.id string name of the rowData column containing the metabolite identifiers
-#' @param cpd.data the same as gene.data, excpet named with IDs mappable to KEGG compound IDs. Over 20 types of IDs included in CHEMBL database can be used here. Check details for mappable ID types. Default cpd.data=NULL. Note that gene.data and cpd.data can't be NULL simultaneously.
-#' @param cpd.idtype character, ID type used for the cpd.data. Currently only works with "kegg".
+#' @param met.id String name of the rowData column containing the metabolite identifiers. If this parameter given, cpd.data cannot be used.
+#' @param cpd.data The same as gene.data, excpet named with IDs mappable to KEGG compound IDs. See \code{pathview::pathview} for details.
 #' @param stat_name name of the statistics object to apply metab.filter to
 #' @param metab.filter if given, filter will be applied to data and only variables satisfying the condition will be included
 #' @param color.scale if given, this will be used to map colors to a continuous scale
@@ -23,6 +21,11 @@
 #' @param out.suffix character, the suffix to be added after the pathway name as part of the output graph file. Default out.suffix="pathview".
 #' @param add.pwname.suffix logical, if TRUE will add the pathway name to the output filename. If FALSE, will use what stored in out.suffix for all files. Default add.pwname.to.filename=FALSE.
 #' @param db_path path to the pathway database to read annotations from.
+#' @param min.nnodes
+#' @param expand.node
+#' @param split.group
+#' @param map.symbol
+#' @param node.sum
 #' @param \dots  see \code{pathview::pathview} for pathview arguments
 #'
 #' @return $result: pathview images
@@ -55,11 +58,9 @@ mt_plots_pathview <- function(D,
                              # only one between gene.id and gene.data can be given
                              gene.id = NULL,
                              gene.data = NULL,
-                             gene.idtype = "entrez",
                              # only one between met.id and cpd.data can be given
                              met.id = NULL,
                              cpd.data = NULL,
-                             cpd.idtype = "kegg",
                              # if gene.id or met.id is given, variables can be selected from the results of a statistical analysis
                              stat_name,
                              metab.filter,
@@ -82,12 +83,12 @@ mt_plots_pathview <- function(D,
                              out.suffix = "pathview",
                              add.pwname.suffix = FALSE,
                              db_path = system.file("extdata", "precalc/pathview/KeggPathways.Rds", package = "MetaboTools"),
-
                              # other pathview::pathview arguments
-                             species = "hsa", gene.annotpkg = NULL, min.nnodes = 1, kegg.native = TRUE,
-                             map.null = TRUE, expand.node = TRUE, split.group = TRUE, map.symbol = FALSE, map.cpdname = TRUE, node.sum = "median",
-                             discrete=list(gene=FALSE,cpd=FALSE), limit = list(gene = 1, cpd = 1), bins = list(gene = 10, cpd = 10),
-                             both.dirs = list(gene = TRUE, cpd = TRUE), trans.fun = list(gene = NULL, cpd = NULL), na.col = "transparent"
+                             min.nnodes = 1,
+                             expand.node = TRUE,
+                             split.group = TRUE,
+                             map.symbol = FALSE,
+                             node.sum = "median"
                              ) {
 
   ## check input
@@ -379,9 +380,9 @@ mt_plots_pathview <- function(D,
       # print(sprintf("pathway %d, %s", x, pathway.id[x]))
       suppressMessages(
         pv.out <- pathview::pathview(gene.data = gene.data, cpd.data = cpd.data, pathway.id = pathway.id[x], kegg.dir = save.path,
-                                     species = species, cpd.idtype = cpd.idtype, gene.idtype = gene.idtype, gene.annotpkg = gene.annotpkg, min.nnodes = min.nnodes, kegg.native = kegg.native,
-                                     map.null = map.null, expand.node = expand.node, split.group = split.group, map.symbol = map.symbol, map.cpdname = map.cpdname, node.sum = node.sum,
-                                     discrete = discrete, limit = limit, bins = bins,
+                                     min.nnodes = min.nnodes, expand.node = expand.node, split.group = split.group, map.symbol = map.symbol,
+                                     map.cpdname = map.cpdname, node.sum = node.sum,
+                                     limit = limit, bins = bins,
                                      both.dirs = both.dirs, trans.fun = trans.fun, low = low, mid = mid, high = high, na.col = na.col,
                                      same.layer = same.layer, out.suffix = out.suffix)
       )
