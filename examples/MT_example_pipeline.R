@@ -14,7 +14,6 @@ library(pathview)
 
 zap()
 
-# NTS: need to be able to load this via data()
 file_data <- system.file("extdata", "example_data/simulated_data.xlsx", package = "MetaboTools")
 
 # NOTE: IN THIS EXAMPLE WE DO NOT GROUP REUSABLE FUNCTION STEPS INTO FUNCTIONS BUT REPEAT THEM AS A DEMONSTRATION OF THE
@@ -343,16 +342,16 @@ D1 <- D1 %>%
 
 # THE DATA TABLE IS TOO LARGE TO INCLUDE IN AN HTML FILE
 
-#D1 <- D1 %>%
-# heading for html file
-#  mt_reporting_heading(strtitle = "Partial Correlation Network", lvl = 2) %>%
-# compute partial correlation matrix
-#  mt_stats_multiv_net_GeneNet(stat_name = "GGM") %>%
-# add multiple testing correction
-#  mt_post_multTest(stat_name = "GGM", method = "BH") %>%
-# plot network and color according to age analysis
-#  mt_plots_net(stat_name = "GGM", corr_filter = p.adj < 0.05, node_coloring = "Age met") %>%
-#  {.}
+D1 <- D1 %>%
+  # heading for html file
+  mt_reporting_heading(strtitle = "Partial Correlation Network", lvl = 2) %>%
+  # compute partial correlation matrix
+  mt_stats_multiv_net_GeneNet(stat_name = "GGM") %>%
+  # add multiple testing correction
+  mt_post_multTest(stat_name = "GGM", method = "BH") %>%
+  # plot network and color according to age analysis
+  mt_plots_net(stat_name = "GGM", corr_filter = p.adj < 0.05, node_coloring = "Age met") %>%
+  {.}
 
 
 # PART 9 - PATHWAY AGGREGATION ANALYSIS ----------------------------------------------------
