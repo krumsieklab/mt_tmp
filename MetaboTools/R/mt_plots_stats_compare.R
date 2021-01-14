@@ -22,7 +22,7 @@
 #' @examples
 #' \dontrun{## compare two stats from inside the same pipeline
 #' ... %>%
-#' mt_plots_compare2stats(stat1='WT',
+#' mt_plots_stats_compare(stat1='WT',
 #'   filter1= p.adj<0.1,
 #'   stat2='KO',
 #'   filter2= p.adj<0.1,
@@ -31,7 +31,7 @@
 #'
 #' ## compare two stats from different pipelines, as part of the pipeline of the second
 #' # 'comp' is a string that contains the name of a comparison (here both SEs have the same comparison on two datasets)
-#' .. %>% mt_plots_compare2stats(
+#' .. %>% mt_plots_stats_compare(
 #'   stat1 = comp, filter1 = p.adj<0.1,
 #'   D2 = firstPipeSE, stat2 = comp, filter2 = p.adj<0.1,
 #'   filterop = "OR") %>% ...
@@ -39,7 +39,7 @@
 #' ## compare two stats from different pipelines, output as plot object
 #' ## not part of the actual MT pipelines, but separate call
 #' # 'comp' is a string that contains the name of a comparison (here both SEs have the same comparison on two datasets)
-#' gg <- mt_plots_compare2stats(
+#' gg <- mt_plots_stats_compare(
 #'   D1 = D1, stat1 = comp, filter1 = p.adj<0.1,
 #'   D2 = D2, stat2 = comp, filter2 = p.adj<0.1,
 #'   filterop = "OR", return.plot.only=T)
@@ -53,7 +53,7 @@
 #'
 #' @export
 
-mt_plots_compare2stats <- function(
+mt_plots_stats_compare <- function(
   D1,       # first SE dataset to compare; the one in the %>% pipeline
   stat1,    # name of statistical comparison in first dataset
   filter1,  # filter criterion, which samples to label

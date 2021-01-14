@@ -8,7 +8,7 @@
 #' @return $result: plot, p-value qq plot
 #'
 #' @examples
-#' \dontrun{... %>% mt_plots_pvalqq(stat_name='comp') %>% ...  # for one
+#' \dontrun{... %>% mt_plots_pval_qq(stat_name='comp') %>% ...  # for one
 #' }
 #'
 #' @import ggplot2
@@ -19,7 +19,7 @@
 #'
 #' @export
 
-mt_plots_pvalqq <- function(
+mt_plots_pval_qq <- function(
   D,
   stat_name
 ) {

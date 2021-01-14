@@ -1,4 +1,4 @@
-#' mt_plots_statsbarplot
+#' mt_plots_stats_bar
 #'
 #' Creates a bar plot
 #'
@@ -20,7 +20,7 @@
 #' @examples
 #' \dontrun{# Barplot as overview of results with a result already in 'comp'
 #' ... %>%
-#' mt_plots_statsbarplot(stat_name     = "comp",
+#' mt_plots_stats_bar(stat_name     = "comp",
 #'  metab_filter = p.adj < 0.05,
 #'  aggregate    = "SUB_PATHWAY",
 #'  colorby      = "SUPER_PATHWAYdevtools::install(codes.makepath("MT/MetaboTools"))",
@@ -38,7 +38,7 @@
 #'
 #' @export
 
-mt_plots_statsbarplot <- function(D,
+mt_plots_stats_bar <- function(D,
                                   stat_name,
                                   metab_filter = p.value < 1,
                                   aggregate = "SUB_PATHWAY",
@@ -103,7 +103,7 @@ mt_plots_statsbarplot <- function(D,
           sel <- sel[match(sel$var,rd$var),] %>%
             dplyr::mutate(association=ifelse(sign(!!sym(assoc_sign))>0, "positive", "negative")) %>%
             dplyr::select(var,association)
-          
+
           data_plot <- data.frame(name=rd[[aggregate]] %>% unlist %>% as.vector,
                                   association=rep(sel$association, times= (rd[[aggregate]] %>% sapply(length)))) %>%
             table(exclude = NULL) %>% as.data.frame()
@@ -245,11 +245,11 @@ mt_plots_statsbarplot <- function(D,
 
     # add custom elements?
     if (!is.null(ggadd)) p <- p + ggadd
-    
+
     # save plot parameters to be passed to the html generator for dynamical plot height
     re <- p %>%
       ggplot2::ggplot_build() %>%
-      magrittr::extract2('layout') %>% 
+      magrittr::extract2('layout') %>%
       magrittr::extract2('layout')
 
     nr <- data_plot$name %>% unique %>% length # number of pathways
@@ -263,7 +263,7 @@ mt_plots_statsbarplot <- function(D,
 
     p <- ggplot() +
       geom_text(aes(x=0,y=0, label="No significant results"), size=10)
-    
+
     # save plot parameters to be passed to the html generator for dynamical plot height
     nr <- 0 # number of pathways
     ncol <- NULL

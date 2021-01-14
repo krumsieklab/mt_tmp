@@ -8,8 +8,8 @@
 #' @return $result: plot, p-value histogram
 #'
 #' @examples
-#' \dontrun{... %>% mt_plots_pvalhist() %>% ...                  # for all
-#' ... %>% mt_plots_pvalhist(stat_names='comp') %>% ...  # for one
+#' \dontrun{... %>% mt_plots_pval_hist() %>% ...                  # for all
+#' ... %>% mt_plots_pval_hist(stat_names='comp') %>% ...  # for one
 #' }
 #'
 #' @author JK
@@ -20,7 +20,7 @@
 #'
 #' @export
 
-mt_plots_pvalhist <- function(
+mt_plots_pval_hist <- function(
   D,
   stat_names=NULL
 ) {

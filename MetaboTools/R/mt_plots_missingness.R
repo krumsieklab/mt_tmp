@@ -17,8 +17,8 @@
 #' @return $result: plot, two plots
 #'
 #' @examples
-#' \dontrun{%>%  mt_plots_qc_missingness() %>% # without horizontal line
-#' %>%  mt_plots_qc_missingness(met_max=0.5) %>% # with horizontal line at 50%
+#' \dontrun{%>%  mt_plots_missingness() %>% # without horizontal line
+#' %>%  mt_plots_missingness(met_max=0.5) %>% # with horizontal line at 50%
 #' }
 #'
 #' @author JK
@@ -29,7 +29,7 @@
 #'
 #' @export
 
-mt_plots_qc_missingness <- function(
+mt_plots_missingness <- function(
   D,         # SummarizedExperiment input
   met_max=NA, # which % to mark on the y axis,
   samp_max=NA, # which % to mark on the y axis,

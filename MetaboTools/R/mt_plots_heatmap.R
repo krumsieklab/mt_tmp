@@ -23,7 +23,7 @@
 #'
 #' @examples
 #' \dontrun{D %>%
-#' mt_plots_pheatmap(annotation_row = c("SUPER_PATHWAY", "PLATFORM", "RI"),
+#' mt_plots_heatmap(annotation_row = c("SUPER_PATHWAY", "PLATFORM", "RI"),
 #'                   annotation_col = c("GROUP_DESC","BATCH_MOCK","gender"),
 #'                   fD = function(x) scale(exp(scale(x))),
 #'                   clustering_distance_cols =  "correlation",
@@ -37,7 +37,7 @@
 #'
 #' @export
 
-mt_plots_pheatmap <- function(D,
+mt_plots_heatmap <- function(D,
                               scaledata=F,
                               sym0=F,
                               fD = function(x){ if(scaledata) return(scale(x)); x},

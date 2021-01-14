@@ -17,7 +17,7 @@
 #
 #' @examples
 #' \dontrun{## UMAP on scaledata, color and shape by "Group" variable in colData
-#' ... $>$ mt_plots_UMAP(scaledata=T, color=Group, shape=Group, title="UMAP - scaled data") %>% ...
+#' ... $>$ mt_plots_umap(scaledata=T, color=Group, shape=Group, title="UMAP - scaled data") %>% ...
 #' }
 #'
 #' @author JK
@@ -28,7 +28,7 @@
 #'
 #' @export
 
-mt_plots_UMAP <- function(
+mt_plots_umap <- function(
   D,
   title="UMAP",
   scaledata=F,

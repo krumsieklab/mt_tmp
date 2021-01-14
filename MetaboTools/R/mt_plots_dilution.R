@@ -14,7 +14,7 @@
 #' @return $result: plot, comparison with dilution factors
 #'
 #' @examples
-#' \dontrun{%>% mt_plots_qc_dilutionplot(comp="group") %>% # compare with 'group' sample annotation
+#' \dontrun{%>% mt_plots_dilution(comp="group") %>% # compare with 'group' sample annotation
 #' }
 #'
 #' @author JK
@@ -25,7 +25,7 @@
 #'
 #' @export
 
-mt_plots_qc_dilutionplot <- function(
+mt_plots_dilution <- function(
   D,       # SummarizedExperiment input
   comp,    # sample annotation column to compare with
   boxpl=T,  #

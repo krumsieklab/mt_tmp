@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' \dontrun{## sample boxplot, color by colData 'group' variable, with specific title, on log scale,
-#' ... %>% mt_plots_sampleboxplot(color=group, plottitle='after quotient normalization', logged=T) %>% ...
+#' ... %>% mt_plots_sample_box(color=group, plottitle='after quotient normalization', logged=T) %>% ...
 #' }
 #'
 #' @author JK
@@ -25,7 +25,7 @@
 #'
 #' @export
 
-mt_plots_sampleboxplot <- function(
+mt_plots_sample_box <- function(
   D,         # SummarizedExperiment input
   plottitle="Sample boxplot",
   legend=T,  # keep legend?  [could be removed]

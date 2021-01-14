@@ -24,7 +24,7 @@
 #' @examples
 #' \dontrun{# boxplots as overview of results with a result already in 'comp'
 #' # color by "Group" variable in colData
-#' mt_plots_boxplot(x                  = Group,
+#' mt_plots_box(x                  = Group,
 #'                  stat_name           = "comp",
 #'                  correct_confounder = ~BATCH_MOCK,
 #'                  metab_filter       = p.value<0.01,
@@ -43,22 +43,22 @@
 #'
 #' @export
 
-mt_plots_boxplot <- function(D,
-                             x = "x",
-                             stat_name,
-                             correct_confounder,
-                             metab_filter = p.value < 0.05,
-                             metab_sort   = p.value,
-                             annotation   = "{sprintf('P-value: %.1e', p.value)}",
-                             text.size = 3.88,
-                             jitter       = T,
-                             rows,
-                             cols,
-                             restrict.to.used.samples=T,
-                             full.info=F,
-                             manual.ylab=NULL,
-                             ggadd        = NULL,
-                             ...){
+mt_plots_box <- function(D,
+                         x = "x",
+                         stat_name,
+                         correct_confounder,
+                         metab_filter = p.value < 0.05,
+                         metab_sort   = p.value,
+                         annotation   = "{sprintf('P-value: %.1e', p.value)}",
+                         text.size = 3.88,
+                         jitter       = T,
+                         rows,
+                         cols,
+                         restrict.to.used.samples=T,
+                         full.info=F,
+                         manual.ylab=NULL,
+                         ggadd        = NULL,
+                         ...){
 
   stopifnot("SummarizedExperiment" %in% class(D))
   x <- dplyr::enquo(x)

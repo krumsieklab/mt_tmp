@@ -21,9 +21,9 @@
 #
 #' @examples
 #' \dontrun{## PCA on scaledata, color and shape by "Group" variable in colData
-#' ... $>$ mt_plots_PCA(scaledata=T, color=Group, shape=Group, title="PCA - scaled data") %>% ...
+#' ... $>$ mt_plots_pca(scaledata=T, color=Group, shape=Group, title="PCA - scaled data") %>% ...
 #' ## PCA scores plot on non-scaled data, with ellipse and extra explained variance plot, and two ggadds (white background and centering of title)
-#' mt_plots_PCA(title="PCA scores", show = 'scores', scaledata=F, PCa=1, PCb=2, ellipse=0.95, expvarplot=T, ggadd = theme_bw() + theme(plot.title=element_text(hjust=0.5)))
+#' mt_plots_pca(title="PCA scores", show = 'scores', scaledata=F, PCa=1, PCb=2, ellipse=0.95, expvarplot=T, ggadd = theme_bw() + theme(plot.title=element_text(hjust=0.5)))
 #' }
 #'
 #' @author JK, BGP
@@ -34,7 +34,7 @@
 #'
 #' @export
 
-mt_plots_PCA <- function(
+mt_plots_pca <- function(
   D,
   title="PCA",
   scaledata=F,

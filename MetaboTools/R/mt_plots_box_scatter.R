@@ -30,23 +30,23 @@
 #' @export
 
 
-mt_plots_boxplot_scatter <- function(D,
-                                     x = "x",
-                                     stat_name,
-                                     plot_type,
-                                     correct_confounder,
-                                     metab_filter = p.value < 0.05,
-                                     metab_sort = p.value,
-                                     annotation = "{sprintf('P-value: %.1e', p.value)}",
-                                     full_info = F,
-                                     text_size = 3.88,
-                                     jitter = "beeswarm",
-                                     restrict_to_used_samples = T,
-                                     manual_ylab=NULL,
-                                     fitline = T,
-                                     fitline_se = T,
-                                     ggadd = NULL,
-                                     ...){
+mt_plots_box_scatter <- function(D,
+                                 x = "x",
+                                 stat_name,
+                                 plot_type,
+                                 correct_confounder,
+                                 metab_filter = p.value < 0.05,
+                                 metab_sort = p.value,
+                                 annotation = "{sprintf('P-value: %.1e', p.value)}",
+                                 full_info = F,
+                                 text_size = 3.88,
+                                 jitter = "beeswarm",
+                                 restrict_to_used_samples = T,
+                                 manual_ylab=NULL,
+                                 fitline = T,
+                                 fitline_se = T,
+                                 ggadd = NULL,
+                                 ...){
 
   stopifnot("SummarizedExperiment" %in% class(D))
   x <- dplyr::enquo(x)
