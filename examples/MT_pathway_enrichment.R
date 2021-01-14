@@ -1,9 +1,8 @@
-### -- MT Pathway Enrichment Analysis -- ###
-# Perform pathway enrichment analysis using the function mt_stats_pathway_enrichment()
+### -- Stand-Alone Example: Pathway Enrichment Analysis -- ###
+# This script demonstrates the functionality of mt_stats_pathway_enrichment().
 
 
 library(MetaboTools)
-# without differential analysis
 
 file_data <- system.file("extdata", "example_data/sampledata.xlsx", package = "MetaboTools")
 
@@ -49,5 +48,5 @@ D_pw <-
                               cutoff = 0.4)
 
 
-# show results
+# Show results ---------------------------------------
 metadata(D_pw)$pathways$enrichment_results

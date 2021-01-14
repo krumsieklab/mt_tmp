@@ -183,6 +183,11 @@ htmltools::tagList(setNames(plotlist, NULL))
 
         ## statistical result table?
         if (r[[i]]$fun[1]=="stats") {
+          # write warning if df too large
+          if(nrow(r[[i]]$output$table) > 1000){
+            out(glue::glue('WARNING: Large data frame ({nrow(r[[i]]$output$table)} rows). Displaying first
+                           1000 rows.'))
+          }
           # write out datatable
           writechunk(glue::glue('
 # extract result table
@@ -191,11 +196,9 @@ df<-r[[{i}]]$output$table
 rd <- rowData(D)
 df <- cbind(name=as.data.frame(rd)$name[match(df$var, rownames(rd))], df) %>%
   dplyr::arrange(p.value)
+# subset large data frames
+if(nrow(df) > 1000) df <- df[1:1000, ]
 # output
-if(nrow(df) > 1000){
-  df <- df[1:1000, ]
-  print("Large data frame abridged to 1000 rows.")
-}
 DT::datatable(df, rownames = FALSE, filter = "top", options = list(pageLength = 20, lengthMenu = c(10*(2^(0:3)), nrow(df)), autoWidth = TRUE, width = 1200, dom = "Bitlrp", buttons = c("copy", "csv", "excel", "pdf", "print")), class = "cell-border stripe", extensions = "Buttons")  %>% DT::formatStyle(columns = c(1:ncol(df)), fontSize = "80%", target= "row", lineHeight="80%")'),
                      params = "results='asis'")
 

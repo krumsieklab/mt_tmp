@@ -1,5 +1,5 @@
-### -- MT Replace Metabolites with Ratios -- ###
-# Users can transform a dataset so that each "metabolite" represents a ratio of two metabolites with the function mt_modify_ratios.
+### -- Stand-Alone Example: Replace Metabolites with Ratios -- ###
+# This script demonstrates the functionality of mt_modify_ratios() and mt_post_pgain().
 
 library(MetaboTools)
 
@@ -9,7 +9,7 @@ D <-
   # timing start
   mt_logging_tic() %>%
 
-  ###
+  ### Preprocessing ---------
   # heading
   mt_reporting_heading("Preprocessing") %>%
   mt_reporting_heading("Part 1", lvl=2) %>%
@@ -36,14 +36,13 @@ D <-
 
 
 
-  # ratios
-
+  # Modify data frame to represent metabolites as ratios ---------
   # GGM
   mt_stats_multiv_net_GeneNet(stat_name ="GGM") %>%
   mt_post_multTest(stat_name = "GGM", method="fdr") %>%
   mt_modify_ratios(nbr_stat_name = "GGM", nbr_edge_filter = p.adj<0.5, nbr_neighborhood = 2) %>% # liberal cutoff because this is a mock dataset
 
-  ###
+  # Perform analysis on metabolite ratios ---------
   mt_reporting_heading("Statistics") %>%
   # linear model, differential test on Group
   mt_stats_univ_lm(
@@ -68,7 +67,7 @@ D <-
                    {.}
 
 
-#### generate and knit markdown ----
+# Generate HTML report ---------
 
-D %>% mt_reporting_html(outfile="example_NBR.html", output.calls = T)
+D %>% mt_reporting_html(outfile="example_ratios.html", output.calls = T)
 

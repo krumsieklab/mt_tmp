@@ -159,6 +159,11 @@ mt_reporting_generateMD_nonLinear <- function(res,
 
       ## statistical result table?
       if (res$lst[[i]]$fun[1]=="stats") {
+        # write warning if df too large
+        if(nrow(res$lst[[i]]$output$table) > 1000){
+          out(glue::glue('WARNING: Large data frame ({nrow(res$lst[[i]]$output$table)} rows). Displaying first
+                         1000 rows.'))
+        }
         # write out datatable
         writechunk(glue::glue('
                               # extract result table
@@ -167,6 +172,8 @@ mt_reporting_generateMD_nonLinear <- function(res,
                               rd <- rowData(D)
                               df <- cbind(name=as.data.frame(rd)$name[match(df$var, rownames(rd))], df) %>%
                               dplyr::arrange(p.value)
+                              # subset large data frames
+                              if(nrow(df) > 1000) df <- df[1:1000, ]
                               # output
                               DT::datatable(df, rownames = FALSE, filter = "top", options = list(pageLength = 20, lengthMenu = c(10*(2^(0:3)), nrow(df)), autoWidth = TRUE, width = 1200, dom = "Bitlrp", buttons = c("copy", "csv", "excel", "pdf", "print")), class = "cell-border stripe", extensions = "Buttons")  %>% DT::formatStyle(columns = c(1:ncol(df)), fontSize = "80%", target= "row", lineHeight="80%")'),
                    params = "results='asis'")

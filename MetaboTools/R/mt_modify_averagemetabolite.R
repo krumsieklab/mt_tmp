@@ -1,6 +1,6 @@
 #' Averages duplicate metabolites
 #'
-#' Averages values of metabolites (rows) with same values in specified rowData column. 
+#' Averages values of metabolites (rows) with same values in specified rowData column.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param avg_by name of rowData column (metabolite annotation) by which duplicates can be identified
@@ -50,7 +50,7 @@ mt_modify_averagemetabolite <- function(
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf('%d duplicate metabolites averaged', (total_rows-unique_rows))
+      logtxt = sprintf('%d duplicate metabolites averaged', (total_rows-length(unique_rows)))
     )
 
   ##return

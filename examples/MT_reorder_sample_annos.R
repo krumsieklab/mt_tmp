@@ -1,5 +1,5 @@
-### -- MT Reorder Samples Annotations for Plotting -- ###
-# MetaboTools allows users to reorder sample annotations for plotting using the function mt_modify_sampanno_reorder()
+### -- Stand-Alone Example: Reorder Samples Annotations for Plotting -- ###
+# This script demonstrates the functionalit of mt_modify_sampleanno_reorder().
 
 library(MetaboTools)
 
@@ -11,7 +11,7 @@ D <-
   # timing start
   mt_logging_tic() %>%
 
-  ###
+  # Preprocessing ---------
   # heading
   mt_reporting_heading("Sample Annotation Re-ordering") %>%
   mt_reporting_text("Users can reorder specific sample annotations using the function mt_modify_sampleanno_reorder. Annotations remain
@@ -28,7 +28,8 @@ D <-
   # quotient normalization
   mt_pre_norm_quot() %>%
   mt_plots_qc_dilutionplot(comp="Group") %>%
-  # Reorder groups
+
+  # Reorder groups ---------
   mt_modify_sampleanno_reorder(col_name = "Group", new_order = c("Vehicle", "treatment1", "treatment2")) %>%
   # dilution plot after reordering
   mt_plots_qc_dilutionplot(comp = "Group") %>%
@@ -36,4 +37,5 @@ D <-
   mt_plots_sampleboxplot(color=Group, plottitle = 'final')
 
 
+# Generate HTML Report ---------
 D %>% mt_reporting_html(outfile="example_sample_reorder.html", output.calls = T)

@@ -1,23 +1,20 @@
-#
 # ------------ MetaboTools Example Pipeline ------------
+# This example pipeline demonstrates the use of 79 of the 86 functions available from MetaboTools.
+# Users can use `?` to find additional information on each function. Users can also review the User Manual avaiable on
+# {GITHUB_MARKDOWN_REF}.
+#
+# NOTE: This example is divided into sections. Use SHIFT+CTRL+O to see the document outline.
+#
+# NOTE: One of the main features of MetaboTools is the ability to easily group reusable function steps into meta-functions.
+#   However, for the sake of readability, we present the steps of this example pipeline in a linear manner.
+#   To see how the MetaboTools can take advantage of these types of meta-functions, see {EXAMPLE_WITH_META_FUNCTIONS}.
 
-# MetaboTools is an R statistical toolbox for performing Metabolomics analyses
-# Built upon the packages SummarizedExperiment
-# Designed to utilize the magrittr pipe operator for a smooth, continuous workflow
-# Below is an example pipeline demonstrating the use of many of the functions provided by MetaboTools
-# The MetaboTools user documentation provides an overview of all of the functions utilized in this example
-# This example is divided into sections. Use SHIFT+CTRL+O to see the document outline.
 
 library(MetaboTools)
-library(tidyverse)
-library(pathview)
 
-zap()
+purrr::zap()
 
 file_data <- system.file("extdata", "example_data/simulated_data.xlsx", package = "MetaboTools")
-
-# NOTE: IN THIS EXAMPLE WE DO NOT GROUP REUSABLE FUNCTION STEPS INTO FUNCTIONS BUT REPEAT THEM AS A DEMONSTRATION OF THE
-# BROAD FUNCITON OF THE TOOLBOX
 
 # PART 1 - STARTING A METABOTOOLS PIPELINE ----------------------------------------------------
 
@@ -124,11 +121,7 @@ D <- D %>%
   mt_plots_sampleboxplot(color=Diagnosis, plottitle = "After imputation", logged = T) %>%
   # outlier detection (univariate)
   #   related function: mt_pre_outliercorrection
-  # KELSEY: talk to Richa & Annalise
   mt_pre_outlier(method="univariate") %>%
-  # correct metabolite abundances for Age
-  #   alternative function: mt_pre_confounding_correction_stepwise_aic
-  #mt_pre_confounding_correction(formula = ~ Age) %>%
   # print infos about dataset
   mt_logging_datasetinfo() %>%
   # write preprocessed data to Excel file
@@ -139,7 +132,7 @@ D <- D %>%
 # Additional pre-processing functions
 #   - mt_pre_confounding_correction() - function for correcting confounding variables
 #   - mt_pre_confounding_correction_stepwise_aic() - an alterenative function for correcting confounders that uses stepwise aic
-# NOTES ON BEST PRACTICES: If incorporated in this pipeline, these functions would correct for the variable age such that
+# NOTES ON BEST PRACTICES: If incorporated in this pipeline, the above functions would correct for the variable age such that
 #     none of the following functions have to take care of those confounders anymore. If this function is included, confounders
 #     should not be included in any of the following functions. It is generally agreed that including the confounders in the
 #     linear models themselves is preferable to pre-correction.
@@ -178,7 +171,7 @@ D <- D %>%
 
 # PART 6.1 - STATISTICAL ANALYSIS, OUTCOME: DIAGNOSIS, METHOD: MISSINGNESS ANALYSIS ---------------------------------------
 
-#create another SE object for first analysis branch (missingness)
+#create another SE object for first analysis branch (missingness & metabolites)
 D1 <- D
 
 D1 <- D1 %>%
@@ -340,8 +333,6 @@ D1 <- D1 %>%
 
 # PART 8 - PARTIAL CORRELATION NETWORK ----------------------------------------------------
 
-# THE DATA TABLE IS TOO LARGE TO INCLUDE IN AN HTML FILE
-
 D1 <- D1 %>%
   # heading for html file
   mt_reporting_heading(strtitle = "Partial Correlation Network", lvl = 2) %>%
@@ -355,11 +346,11 @@ D1 <- D1 %>%
 
 
 # PART 9 - PATHWAY AGGREGATION ANALYSIS ----------------------------------------------------
-# This is now first aggregating the metabolite matrix into pathways creating a new matrix of pathway
-# conentration values, and then repeating the parts of the same pipeline as above
-# In a real scenario, you would include a statistical analysis performed on metabolites AND have to pick between part 9 and the sections above
+# NOTE ON BEST PRACTICES: This is now first aggregating the metabolite matrix into pathways creating a new matrix of pathway
+#   conentration values, and then repeating the parts of the same pipeline as above. In a real scenario, you would not
+#   perform both kinds of analysis within the same pipeline.
 
-# create another SE object for third analysis branch (pathway)
+# create another SE object for second analysis branch (pathways)
 D2 <- D
 
 D2 <- D2 %>%
@@ -443,7 +434,7 @@ D2 <- D2 %>%
 
 
 # PART 10 - SUB PATHWAY ANALYSIS ----------------------------------------------------
-# create another SE object for third analysis branch (pathway)
+# create another SE object for third analysis branch (sub-pathways)
 D3 <- D
 
 D3 <- D3 %>%
@@ -530,7 +521,7 @@ D3 <- D3 %>%
 
 
 # PART 11 - SUB PATHWAY ANALYSIS  ----------------------------------------------------
-# create another SE object for third analysis branch (pathway)
+# create another SE object for third analysis branch (super-pathways)
 D4 <- D
 
 D4 <- D4 %>%

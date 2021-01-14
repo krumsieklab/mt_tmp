@@ -55,6 +55,7 @@ mt_stats_pathway_enrichment <- function(
     rowData(D) %>%
     as.data.frame() %>%
     dplyr::select(COMP_IDstr, !!rlang::sym(pw_col)) %>%
+    dplyr::mutate(met_ID=rownames(.)) %>%
     dplyr::filter(!!rlang::sym(pw_col) != "NULL") %>%
     tidyr::unnest(!!rlang::sym(pw_col)) %>%
     dplyr::filter(!!rlang::sym(pw_col) != "NA") %>%
@@ -76,7 +77,7 @@ mt_stats_pathway_enrichment <- function(
     dplyr::mutate(significant = dplyr::if_else(p.adj < cutoff, TRUE, FALSE),
                   n_total = dplyr::n(),
                   n_total_sig = sum(significant)) %>%
-    dplyr::inner_join(geneset, by = c("var" = "COMP_IDstr")) %>%
+    dplyr::inner_join(geneset, by = c("var" = "met_ID")) %>%
     dplyr::group_by(!!rlang::sym(pw_col)) %>%
 
     # calculate summary numbers for Fisher's test
