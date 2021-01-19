@@ -5,7 +5,7 @@
 #' @param D \code{SummarizedExperiment} input
 #' @param stat_list List of stat names to plot; default NA (for all stat objects in D)
 #' @param color_signif Boolean. Color only significant values? default: F
-#' @param color_cutoff p.adj value significance cutoff
+#' @param cutoff p.adj value significance cutoff
 #' @param met_anno rowData() column name to use as column annotation
 #' @param signif_mark Marker used to indicate significant p-values; default "•"
 #' @param show_mark show significance marker? default: T
@@ -29,7 +29,7 @@
 
 mt_plots_multstats_heatmap <- function(D,
                                        stat_list=NA,
-                                       color_cutoff,
+                                       cutoff,
                                        met_anno,
                                        signif_mark = "•",
                                        mark_size = 20,
@@ -52,18 +52,18 @@ mt_plots_multstats_heatmap <- function(D,
   stopifnot("SummarizedExperiment" %in% class(D))
 
   if(color_signif==T){
-    if(missing(color_cutoff)){
-      stop("color_signif is set to True, but no values provided for color_cutoff")
-    }else if(length(color_cutoff) != 1){
-      stop("color_cutoff must consist of two and only two elements")
-    }else if(!is.numeric(color_cutoff)){
-      stop("color_cutoff must contain only numeric values")
+    if(missing(cutoff)){
+      stop("color_signif is set to True, but no values provided for cutoff")
+    }else if(length(cutoff) != 1){
+      stop("cutoff must consist of two and only two elements")
+    }else if(!is.numeric(cutoff)){
+      stop("cutoff must contain only numeric values")
     }
   }
 
-  color_cutoff <- -log10(color_cutoff)
-  left_bound <- -color_cutoff
-  right_bound <- color_cutoff
+  cutoff <- -log10(cutoff)
+  left_bound <- -cutoff
+  right_bound <- cutoff
 
   # if NA, stat_list is all stat results
   if(is.na(stat_list)){
@@ -147,7 +147,7 @@ mt_plots_multstats_heatmap <- function(D,
   # maximum absolut value
   range <- max(abs(color_matrix), na.rm=T)
   # check if anything is significant at all
-  if (range>color_cutoff) {
+  if (range>cutoff) {
 
     # if coloring by significance, need to calculate breaks
     if(color_signif == T){
@@ -160,11 +160,11 @@ mt_plots_multstats_heatmap <- function(D,
 
       # find breaks that represent significant values
       graycolor <- "#CCCCCC"
-      left_side <- {color_breaks < -color_cutoff} %>% which() %>% max() # values between -cutoff and cutoff will have the same constant color
-      right_side <- {color_breaks > color_cutoff} %>% which() %>% min()
+      left_side <- {color_breaks < -cutoff} %>% which() %>% max() # values between -cutoff and cutoff will have the same constant color
+      right_side <- {color_breaks > cutoff} %>% which() %>% min()
 
 
-      color_breaks <- c(color_breaks[1:left_side], -color_cutoff, color_cutoff, color_breaks[right_side:length(color_breaks)])
+      color_breaks <- c(color_breaks[1:left_side], -cutoff, cutoff, color_breaks[right_side:length(color_breaks)])
       # rearrange colors
       colors <- c(colors[1:(left_side)], graycolor, colors[(right_side-3):length(colors)])
 

@@ -4,15 +4,15 @@
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param title Title of the plot, default: "PCA"
-#' @param scaledata  scale data before plotting? (mean 0, std 1), default: FALSE
-#' @param PCa first PC to plot, default is 1 (PC1)
-#' @param PCb second PC to plot, default is 2 (PC2)
-#' @param show show 'scores' or 'loadings'
-#' @param labelby field to label. default: none
-#' @param textrepel try to avoid all text overlaps when labeling? default:T
+#' @param scale_data  scale data before plotting? (mean 0, std 1), default: FALSE
+#' @param PC1 first PC to plot, default is 1 (PC1)
+#' @param PC2 second PC to plot, default is 2 (PC2)
+#' @param data_type Data of type 'scores' or 'loadings'
+#' @param label_col field to label. default: none
+#' @param text_repel try to avoid all text overlaps when labeling? default:T
 #' @param ellipse confidence interval for ellipse. default: none (no ellipse)
-#' @param expvarplot add explained variance plot? default: F
-#' @param store.matrices store scores and loadings matrices in result structure? default: F
+#' @param exp_var_plot add explained variance plot? default: F
+#' @param store_matrices store scores and loadings matrices in result structure? default: F
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... # additional expression directly passed to aes() of ggplot, can refer to colData
 #'
@@ -20,10 +20,10 @@
 #' @return result output2: scores and loadings matrix
 #
 #' @examples
-#' \dontrun{## PCA on scaledata, color and shape by "Group" variable in colData
-#' ... $>$ mt_plots_pca(scaledata=T, color=Group, shape=Group, title="PCA - scaled data") %>% ...
+#' \dontrun{## PCA on scale_data, color and shape by "Group" variable in colData
+#' ... $>$ mt_plots_pca(scale_data=T, color=Group, shape=Group, title="PCA - scaled data") %>% ...
 #' ## PCA scores plot on non-scaled data, with ellipse and extra explained variance plot, and two ggadds (white background and centering of title)
-#' mt_plots_pca(title="PCA scores", show = 'scores', scaledata=F, PCa=1, PCb=2, ellipse=0.95, expvarplot=T, ggadd = theme_bw() + theme(plot.title=element_text(hjust=0.5)))
+#' mt_plots_pca(title="PCA scores", data_type = 'scores', scale_data=F, PC1=1, PC2=2, ellipse=0.95, exp_var_plot=T, ggadd = theme_bw() + theme(plot.title=element_text(hjust=0.5)))
 #' }
 #'
 #' @author JK, BGP
@@ -37,15 +37,15 @@
 mt_plots_pca <- function(
   D,
   title="PCA",
-  scaledata=F,
-  PCa=1,
-  PCb=2,
-  show='scores',
-  labelby='',
-  textrepel=T,
+  scale_data=F,
+  PC1=1,
+  PC2=2,
+  data_type='scores',
+  label_col='',
+  text_repel=T,
   ellipse=NA,
-  expvarplot=F,
-  store.matrices=F,
+  exp_var_plot=F,
+  store_matrices=F,
   ggadd=NULL,
   ...
 ) {
@@ -63,32 +63,32 @@ mt_plots_pca <- function(
   # extract data and verify that there are no NA values
   X = t(assay(D))
   if (any(is.na(X))) stop("Data matrix for PCA cannot contain NAs")
-  # check that show is either "scores" or "loadings"
-  if (!(show %in% c("scores","loadings"))) stop("Show must be either 'scores' or 'loadings'")
+  # check that data_type is either "scores" or "loadings"
+  if (!(data_type %in% c("scores","loadings"))) stop("Show must be either 'scores' or 'loadings'")
 
   # scale?
-  if (scaledata) X <- scale(X) #By default, the scale R-function: mean-centers and scales to unit variance the X matrix
+  if (scale_data) X <- scale(X) #By default, the scale R-function: mean-centers and scales to unit variance the X matrix
 
   # PCA
   pca <- stats::prcomp(x=as.matrix(X), center=F, scale=F)
   expvar = (pca$sdev)^2 / sum(pca$sdev^2)
   # assemble data frame, two PCS and sample info
-  if (show=='scores') df = data.frame(x = pca$x[,PCa], y = pca$x[,PCb], colData(D)) # scores and colData
-  else  df = data.frame(x = pca$rotation[,PCa], y = pca$rotation[,PCb], rowData(D)) # loadings and rowData
-  colnames(df)[1:2] <- c(sprintf("PC%d",PCa),sprintf("PC%d",PCb))
+  if (data_type=='scores') df = data.frame(x = pca$x[,PC1], y = pca$x[,PC2], colData(D)) # scores and colData
+  else  df = data.frame(x = pca$rotation[,PC1], y = pca$rotation[,PC2], rowData(D)) # loadings and rowData
+  colnames(df)[1:2] <- c(sprintf("PC%d",PC1),sprintf("PC%d",PC2))
 
   # prep
-  pc1name = sprintf('PC%d (%.1f%%)', PCa, expvar[PCa]*100)
-  pc2name = sprintf('PC%d (%.1f%%)', PCb, expvar[PCb]*100)
+  pc1name = sprintf('PC%d (%.1f%%)', PC1, expvar[PC1]*100)
+  pc2name = sprintf('PC%d (%.1f%%)', PC2, expvar[PC2]*100)
 
   # plot
-  p <- ggplot(data=df, combine_aes(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb)),aes(...))) +
+  p <- ggplot(data=df, combine_aes(aes_string(x=sprintf("PC%d",PC1),y=sprintf("PC%d",PC2)),aes(...))) +
     geom_point() +
     xlab(pc1name) + ylab(pc2name) + ggtitle(title)
   # add text?
-  if (nchar(labelby)>0) {
-    if (textrepel) p <- p + ggrepel::geom_text_repel(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb),label=labelby,...))
-    else p <- p + geom_text(combine_aes(aes_string(x=sprintf("PC%d",PCa),y=sprintf("PC%d",PCb),label=labelby),aes(...)))
+  if (nchar(label_col)>0) {
+    if (text_repel) p <- p + ggrepel::geom_text_repel(aes_string(x=sprintf("PC%d",PC1),y=sprintf("PC%d",PC2),label=label_col,...))
+    else p <- p + geom_text(combine_aes(aes_string(x=sprintf("PC%d",PC1),y=sprintf("PC%d",PC2),label=label_col),aes(...)))
   }
   # add ellipse?
   if (!is.na(ellipse)) p <- p + stat_ellipse(level=ellipse)
@@ -101,7 +101,7 @@ mt_plots_pca <- function(
 
   # add explained variance plot?
   plotlist <- list(p)
-  if (expvarplot) {
+  if (exp_var_plot) {
     nlimit <- 10
     expdf <- data.frame(n=1:length(expvar), expvar=expvar*100)
     # cut to first nlimit at most
@@ -116,7 +116,7 @@ mt_plots_pca <- function(
   }
 
   # prep output matrices
-  if (store.matrices) {
+  if (store_matrices) {
     scores=pca$x
     loadings=pca$rotation
     rownames(loadings) <- D %>% rowData %>% .$name
@@ -130,7 +130,7 @@ mt_plots_pca <- function(
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("PCA, %s, labelby: %s, aes: %s", show, labelby,  mti_dots_to_str(...)),
+      logtxt = sprintf("PCA, %s, label_col: %s, aes: %s", data_type, label_col,  mti_dots_to_str(...)),
       output = plotlist,
       output2 = output2
     )

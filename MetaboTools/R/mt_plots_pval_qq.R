@@ -33,7 +33,7 @@ mt_plots_pval_qq <- function(
   res <- mti_get_stat_by_name(D, stat_name)
 
   # create plot
-  p <- mti_gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", stat_name))
+  p <- gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", stat_name))
 
   # fix ggplot environment
   if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
@@ -72,11 +72,11 @@ mt_plots_pval_qq <- function(
 #' @return A ggplot2 plot.
 #'
 #' @examples
-#' \dontrun{mti_gg_qqplot(runif(1e2)) + theme_grey(base_size = 24)
+#' \dontrun{gg_qqplot(runif(1e2)) + theme_grey(base_size = 24)
 #' }
 #'
 #' @noRd
-mti_gg_qqplot <- function(ps, ci = 0.95) {
+gg_qqplot <- function(ps, ci = 0.95) {
   n  <- length(ps)
   df <- data.frame(
     observed = -log10(sort(ps)),

@@ -3,15 +3,15 @@
 #' Creates a bar plot
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param stat_name list of names of the statistics objects to be used for filtering
+#' @param stat_list list of names of the statistics objects to be used for filtering
 #' @param metab_filter filter will be applied to data and remaining variables will be used to create plot
-#' @param aggregate rowData variable used to aggregate variables.
-#' @param colorby optional rowData variable used to color barplot. Default NULL.
-#' @param yscale plot percentage or frequency of variables. Values c("fraction","count"). Default "fraction".
-#' @param sort sort pathways in plot according to yscale. Default FALSE.
-#' @param assoc_sign optional parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_name.
-#' @param keep.unmapped boolean, if TRUE keeps metabolites with no pathway annotations. Default "FALSE".
+#' @param group_col rowData variable used to aggregate variables.
+#' @param color_col optional rowData variable used to color barplot. Default NULL.
+#' @param y_scale plot percentage or frequency of variables. Values c("fraction","count"). Default "fraction".
+#' @param sort sort pathways in plot according to y_scale. Default FALSE.
+#' @param assoc_sign optional parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_list.
 #' @param add_empty boolean, if TRUE adds also empty pathways to the barplot.
+#' @param keep_unmapped boolean, if TRUE keeps metabolites with no pathway annotations. Default "FALSE".
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #'
@@ -20,11 +20,11 @@
 #' @examples
 #' \dontrun{# Barplot as overview of results with a result already in 'comp'
 #' ... %>%
-#' mt_plots_stats_bar(stat_name     = "comp",
+#' mt_plots_stats_bar(stat_list     = "comp",
 #'  metab_filter = p.adj < 0.05,
-#'  aggregate    = "SUB_PATHWAY",
-#'  colorby      = "SUPER_PATHWAYdevtools::install(codes.makepath("MT/MetaboTools"))",
-#'  yscale       = "count",
+#'  group_col    = "SUB_PATHWAY",
+#'  color_col      = "SUPER_PATHWAYdevtools::install(codes.makepath("MT/MetaboTools"))",
+#'  y_scale       = "count",
 #'  sort         = TRUE) %>%
 #'  ...}
 #'
@@ -39,47 +39,47 @@
 #' @export
 
 mt_plots_stats_bar <- function(D,
-                                  stat_name,
+                                  stat_list,
                                   metab_filter = p.value < 1,
-                                  aggregate = "SUB_PATHWAY",
-                                  colorby = NULL,
+                                  group_col = "SUB_PATHWAY",
+                                  color_col = NULL,
                                   ggadd = NULL,
-                                  yscale = "fraction",
+                                  y_scale = "fraction",
                                   sort = FALSE,
                                   assoc_sign,
                                   add_empty = FALSE,
-                                  keep.unmapped = FALSE,
+                                  keep_unmapped = FALSE,
                                   ...){
 
   ## check input
   stopifnot("SummarizedExperiment" %in% class(D))
-  if(missing(stat_name) & !missing(metab_filter))
-    stop("stat_name must be given for metab_filter to work.")
-  if(missing(stat_name) & !missing(assoc_sign))
-    stop("stat_name must be given for assoc_sign to work.")
-  if(!(aggregate %in% colnames(rowData(D))))
-    stop(sprintf("aggregate column '%s' not found in rowData", aggregate))
-  if(!is.null(colorby))
-    if(!(colorby %in% colnames(rowData(D))))
-      stop(sprintf("colorby column '%s' not found in rowData", colorby))
+  if(missing(stat_list) & !missing(metab_filter))
+    stop("stat_list must be given for metab_filter to work.")
+  if(missing(stat_list) & !missing(assoc_sign))
+    stop("stat_list must be given for assoc_sign to work.")
+  if(!(group_col %in% colnames(rowData(D))))
+    stop(sprintf("group_col column '%s' not found in rowData", group_col))
+  if(!is.null(color_col))
+    if(!(color_col %in% colnames(rowData(D))))
+      stop(sprintf("color_col column '%s' not found in rowData", color_col))
 
   ## rowData
   rd <- rowData(D) %>%
     as.data.frame() %>%
     dplyr::mutate(var = rownames(D))
   # set the nulls to unknown
-  if(keep.unmapped){
-    rd[[aggregate]][which(rd[[aggregate]]=="NULL")] <- "Unmapped"
+  if(keep_unmapped){
+    rd[[group_col]][which(rd[[group_col]]=="NULL")] <- "Unmapped"
   }
 
-  perc <- rd[[aggregate]] %>%
+  perc <- rd[[group_col]] %>%
     unlist %>% table(exclude = NULL) %>% as.data.frame()
   colnames(perc) <- c("name","count")
 
   flag_filter <- ifelse((!missing(metab_filter)), T,F)
   flag_sign <- ifelse((!missing(assoc_sign)), T,F)
 
-  data_plot <- lapply(stat_name %>% {names(.)=.;.}, function(ss){
+  data_plot <- lapply(stat_list %>% {names(.)=.;.}, function(ss){
     ## subselect variables
     if(flag_filter) {
       metab_filter_q <- dplyr::enquo(metab_filter)
@@ -97,15 +97,15 @@ mt_plots_stats_bar <- function(D,
       # if assoc_sign given, include in data
       if(flag_sign){
         if(!(assoc_sign %in% colnames(sel))) {
-          stop(sprintf("Could not find column called %s in the statistical results called %s", assoc_sign, stat_name))
+          stop(sprintf("Could not find column called %s in the statistical results called %s", assoc_sign, stat_list))
         } else {
           # reorder sel according to rd
           sel <- sel[match(sel$var,rd$var),] %>%
             dplyr::mutate(association=ifelse(sign(!!sym(assoc_sign))>0, "positive", "negative")) %>%
             dplyr::select(var,association)
 
-          data_plot <- data.frame(name=rd[[aggregate]] %>% unlist %>% as.vector,
-                                  association=rep(sel$association, times= (rd[[aggregate]] %>% sapply(length)))) %>%
+          data_plot <- data.frame(name=rd[[group_col]] %>% unlist %>% as.vector,
+                                  association=rep(sel$association, times= (rd[[group_col]] %>% sapply(length)))) %>%
             table(exclude = NULL) %>% as.data.frame()
           colnames(data_plot) <- c("name","association","count")
 
@@ -114,15 +114,15 @@ mt_plots_stats_bar <- function(D,
         sel <- sel[match(sel$var,rd$var),] %>%
           dplyr::select(var)
 
-        data_plot <- rd[[aggregate]] %>%
+        data_plot <- rd[[group_col]] %>%
           unlist %>% table(exclude = NULL) %>% as.data.frame()
         colnames(data_plot) <- c("name","count")
 
       }
 
       if(add_empty){
-        # check which aggregate entries are not included
-        agg <- rowData(D) %>% as.data.frame() %>% .[[aggregate]] %>% unlist %>% unique
+        # check which group_col entries are not included
+        agg <- rowData(D) %>% as.data.frame() %>% .[[group_col]] %>% unlist %>% unique
         agg_empty <- agg[which(!(agg %in% unique(as.character(data_plot$name))))]
 
         # create data frame
@@ -143,26 +143,26 @@ mt_plots_stats_bar <- function(D,
         dplyr::mutate(fraction= count/perc$count)
 
       # add color column if not given
-      if(is.null(colorby)) {
-        colorby <- paste(aggregate,"color", collapse = "_")
-        rd[[colorby]] <- "pathway"
+      if(is.null(color_col)) {
+        color_col <- paste(group_col,"color", collapse = "_")
+        rd[[color_col]] <- "pathway"
       }
 
-      # create dictionary between aggregate and colorby variables
-      dict <- rd %>% dplyr::select(!!sym(aggregate),!!sym(colorby)) %>% tidyr::unnest(cols=c(aggregate)) %>% as.data.frame()
-      dict <- dict[!duplicated(dict[[aggregate]]),]
+      # create dictionary between group_col and color_col variables
+      dict <- rd %>% dplyr::select(!!sym(group_col),!!sym(color_col)) %>% tidyr::unnest(cols=c(group_col)) %>% as.data.frame()
+      dict <- dict[!duplicated(dict[[group_col]]),]
 
       # add color to data_plot
       data_plot <- data_plot %>%
-        dplyr::left_join(dict, by=c("name"=aggregate)) %>%
-        dplyr::rename(color=sym(colorby))
+        dplyr::left_join(dict, by=c("name"=group_col)) %>%
+        dplyr::rename(color=sym(color_col))
 
       # if pathway mapping exists in the metadata, use the names provided there
       x <- D %>% metadata
       if ("pathways" %in% names(x)){
-        if (aggregate %in% names(x$pathways)) {
+        if (group_col %in% names(x$pathways)) {
           # add pathway names to dataframe
-          data_plot %<>% dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("name"="ID"))
+          data_plot %<>% dplyr::left_join(x$pathways[[group_col]][,c("ID","pathway_name")], by=c("name"="ID"))
           # set Unknown pathway names to Unknown
           if(length(which(is.na(data_plot$pathway_name)))>0){
             data_plot$pathway_name[which(is.na(data_plot$pathway_name))] <- "Unknown"
@@ -170,7 +170,7 @@ mt_plots_stats_bar <- function(D,
           # substitute codes for names
           data_plot$name <- data_plot$pathway_name
         } else{
-          warning(sprintf("%s field not found in the metadata",aggregate))
+          warning(sprintf("%s field not found in the metadata",group_col))
         }
       }
       # create labels for plotting
@@ -194,30 +194,30 @@ mt_plots_stats_bar <- function(D,
 
     # optional sorting (only for single statistical results)
     if (sort){
-      data_plot$label <- reorder(data_plot$label, -data_plot[[yscale]])
+      data_plot$label <- reorder(data_plot$label, -data_plot[[y_scale]])
     }
     # sort comp so that facets appear in the same order given by the user
-    data_plot$comp <- factor(data_plot$comp,levels=stat_name)
+    data_plot$comp <- factor(data_plot$comp,levels=stat_list)
 
     # convert count to numeric
     data_plot$count %<>% as.numeric
 
     ## CREATE PLOT
     p <- ggplot(data_plot, aes(label)) +
-      (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "positive"), aes(y = !!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)}) +
-      (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "negative"), aes(y = -!!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)} else{geom_bar(aes(x=label, y=!!sym(yscale), fill=color), stat = "identity", color="black", size=0.4)}) +
-      (if(yscale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
-      (if(yscale=="count" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-max(data_plot$count, na.rm = T)*1.7, max(data_plot$count, na.rm = T)*1.7))}) +
-      (if(yscale=="count" & !("association" %in% colnames(data_plot))) {expand_limits(y=c(0, max(data_plot$count, na.rm = T)*1.7))}) +
-      (if(yscale=="fraction" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-1, 1))}) +
+      (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "positive"), aes(y = !!sym(y_scale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)}) +
+      (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "negative"), aes(y = -!!sym(y_scale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)} else{geom_bar(aes(x=label, y=!!sym(y_scale), fill=color), stat = "identity", color="black", size=0.4)}) +
+      (if(y_scale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
+      (if(y_scale=="count" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-max(data_plot$count, na.rm = T)*1.7, max(data_plot$count, na.rm = T)*1.7))}) +
+      (if(y_scale=="count" & !("association" %in% colnames(data_plot))) {expand_limits(y=c(0, max(data_plot$count, na.rm = T)*1.7))}) +
+      (if(y_scale=="fraction" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-1, 1))}) +
       geom_hline(yintercept = 0,colour = "black", size=0.4) +
-      labs(x="",fill = colorby) +
+      labs(x="",fill = color_col) +
       theme(plot.title = element_text(hjust = 0.4)) +
       scale_x_discrete(limits = rev(levels(data_plot$label)))
 
     # add phenotype labels to x axis
-    if("association" %in% colnames(data_plot) & length(stat_name)==1){
-      d <- MetaboTools:::mti_get_stat_by_name(D, stat_name, fullstruct=T)
+    if("association" %in% colnames(data_plot) & length(stat_list)==1){
+      d <- MetaboTools:::mti_get_stat_by_name(D, stat_list, fullstruct=T)
       if ("groups" %in% names(d) && length(d$groups)==2) {
         # get breaks
         ggbld <- ggplot2::ggplot_build(p)
@@ -235,11 +235,11 @@ mt_plots_stats_bar <- function(D,
     # flip axes and add annotations on bars
     p <- p +
       coord_flip() +
-      (if(yscale=="count" & !("association" %in% colnames(data_plot))) {geom_text(data=data_plot, aes(label, !!sym(yscale), label= sprintf("%.2f%%", fraction*100)),
+      (if(y_scale=="count" & !("association" %in% colnames(data_plot))) {geom_text(data=data_plot, aes(label, !!sym(y_scale), label= sprintf("%.2f%%", fraction*100)),
                                                                                position = position_dodge(width=0.9), hjust = -0.1, size=2.5)}) +
-      (if(yscale=="count" & "association" %in% colnames(data_plot)) {geom_text(data=dplyr::filter(data_plot, association=="positive"), aes(label, !!sym(yscale), group= association,label= sprintf("%.2f%%", fraction*100)),
+      (if(y_scale=="count" & "association" %in% colnames(data_plot)) {geom_text(data=dplyr::filter(data_plot, association=="positive"), aes(label, !!sym(y_scale), group= association,label= sprintf("%.2f%%", fraction*100)),
                 position = position_dodge(width=0.9), hjust = -0.1, size=2.5)}) +
-      (if(yscale=="count" & "association" %in% colnames(data_plot)) {geom_text(data=data_plot %>% dplyr::filter(association=="negative"), aes(label, -!!sym(yscale), group= association,label= sprintf("%.2f%%", fraction*100)),
+      (if(y_scale=="count" & "association" %in% colnames(data_plot)) {geom_text(data=data_plot %>% dplyr::filter(association=="negative"), aes(label, -!!sym(y_scale), group= association,label= sprintf("%.2f%%", fraction*100)),
                 position = position_dodge(width=0.9), hjust = 1.1, size=2.5)}) +
       facet_wrap(~comp)
 
@@ -276,8 +276,8 @@ mt_plots_stats_bar <- function(D,
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = ifelse(exists("stat_name"), sprintf("bar plot for comparison %s, by %s, filtered for %s, using %s", paste(stat_name,collapse = ", "), aggregate, gsub("~", "", rlang::expr_text(enquo(metab_filter))), yscale),
-                      sprintf("bar plot by %s using %s", aggregate, yscale)),
+      logtxt = ifelse(exists("stat_list"), sprintf("bar plot for comparison %s, by %s, filtered for %s, using %s", paste(stat_list,collapse = ", "), group_col, gsub("~", "", rlang::expr_text(enquo(metab_filter))), y_scale),
+                      sprintf("bar plot by %s using %s", group_col, y_scale)),
       output = list(p),
       output2 = list(nr = nr, npancol = ncol, npanrow = nrow)
     )

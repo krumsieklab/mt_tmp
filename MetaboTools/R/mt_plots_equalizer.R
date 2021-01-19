@@ -6,11 +6,11 @@
 #' @param comp1  name of first comparison output to take arguments from, the coarse one [first one has to be the less granular one (e.g. D1 super, D2 sub)]
 #' @param D2 \code{SummarizedExperiment} input 2, the fine one
 #' @param comp2 name of second comparison output to take arguments from, the fine one
-#' @param legend.fine fine legend to be plotted
-#' @param legend.coarse coarse legend to be plotted
-#' @param vertline.fine filter expression where to draw the red, dashed line, for fine. default: 0.05
-#' @param vertline.coarse filter expression where to draw the red, dashed line, for coarse. default: 0.05
-#' @param clrs colors for fine and coarse, default: c("#9494FF","red") (light blue and red)
+#' @param legend_fine fine legend to be plotted
+#' @param legend_coarse coarse legend to be plotted
+#' @param vertline_fine filter expression where to draw the red, dashed line, for fine. default: 0.05
+#' @param vertline_coarse filter expression where to draw the red, dashed line, for coarse. default: 0.05
+#' @param colors colors for fine and coarse, default: c("#9494FF","red") (light blue and red)
 #'
 #' @return $result: plot, equalizer
 #'
@@ -22,10 +22,10 @@
 #'   comp1='comp',
 #'   D2=D_sub,
 #'   comp2=='comp',
-#'   legend.fine="sub pathway",
-#'   legend.coarse='super pathway',
-#'   vertline.fine = p.adj < 0.1,
-#'   vertline.coarse = p.adj < 0.1) %>%
+#'   legend_fine="sub pathway",
+#'   legend_coarse='super pathway',
+#'   vertline_fine = p.adj < 0.1,
+#'   vertline_coarse = p.adj < 0.1) %>%
 #' ...}
 #'
 #' @author JK, MB
@@ -41,11 +41,11 @@ mt_plots_equalizer <- function(
   comp1,    # name of first comparison output to take arguments from, the coarse one [first one has to be the less granular one (e.g. D1 super, D2 sub)]
   D2,       # SummarizedExperiment input 2, the fine one
   comp2,    # name of second comparison output to take arguments from, the fine one
-  legend.fine, # fine label to be plotted
-  legend.coarse = NULL, # coarse legend to be plotted
-  vertline.fine = p.adj < 0.05, # filter expression where to draw the red, dashed line, for fine
-  vertline.coarse = p.adj < 0.05, # filter expression where to draw the red, dashed line, for coarse
-  clrs = c("#9494FF","red") # colors for sub and super pathways
+  legend_fine, # fine label to be plotted
+  legend_coarse = NULL, # coarse legend to be plotted
+  vertline_fine = p.adj < 0.05, # filter expression where to draw the red, dashed line, for fine
+  vertline_coarse = p.adj < 0.05, # filter expression where to draw the red, dashed line, for coarse
+  colors = c("#9494FF","red") # colors for sub and super pathways
 ) {
 
   # validate arguments
@@ -79,8 +79,8 @@ mt_plots_equalizer <- function(
 
   col2 = col2 %>% which %>% names
   colnames(rd2)[colnames(rd2) == col2] = "COARSE"
-  # if legend.coarse not given
-  if(is.null(legend.coarse)) legend.coarse = col2
+  # if legend_coarse not given
+  if(is.null(legend_coarse)) legend_coarse = col2
 
   colnames(rd1)[1] = "COARSE"
   colnames(rd2)[1] = "FINE"
@@ -92,7 +92,7 @@ mt_plots_equalizer <- function(
   # df2: data.frame for super pathways, columns: SUPER_PATHWAY", "statistic", "p.value"
   # name.df2: foreign key(column) name in df2
   # th: log10(p.value) threholds for red dashed lines
-  # clrs: colors for sub and super pathways
+  # colors: colors for sub and super pathways
 
   mti_plot_equalizer_gg <- function(df, name.df="SUB", df2=NULL, name.df2="SUPER" ){
 
@@ -102,16 +102,16 @@ mt_plots_equalizer <- function(
     a = max(abs(df$x))
 
     # find x coordinates for cutoff lines
-    xfine <- res2 %>% dplyr::filter(!!dplyr::enquo(vertline.fine)) %>% .$p.value %>% max()
-    xcoarse <- res1 %>% dplyr::filter(!!dplyr::enquo(vertline.coarse)) %>% .$p.value %>% max()
+    xfine <- res2 %>% dplyr::filter(!!dplyr::enquo(vertline_fine)) %>% .$p.value %>% max()
+    xcoarse <- res1 %>% dplyr::filter(!!dplyr::enquo(vertline_coarse)) %>% .$p.value %>% max()
 
     # main facetted plot
     gg<-
       ggplot(df, aes(x = x, y = FINE)) +
       geom_vline(xintercept = 0, color ="gray") +
-      geom_vline(xintercept = c(-log10(xfine),log10(xfine)), color=clrs[1], alpha=0.4) +
-      geom_vline(xintercept = c(-log10(xcoarse),log10(xcoarse)), color=clrs[2], alpha=0.4) +
-      geom_point(pch = 22, fill = clrs[1], size = 3) +
+      geom_vline(xintercept = c(-log10(xfine),log10(xfine)), color=colors[1], alpha=0.4) +
+      geom_vline(xintercept = c(-log10(xcoarse),log10(xcoarse)), color=colors[2], alpha=0.4) +
+      geom_point(pch = 22, fill = colors[1], size = 3) +
       facet_grid(COARSE~. , scales = "free_y", space = "free_y") +
       theme(strip.background =element_rect(fill=NA),
             strip.text = element_text(colour = 'black', face = "bold"),
@@ -140,13 +140,13 @@ mt_plots_equalizer <- function(
 
 
     gg = gg + geom_point(data = df.super, aes(x = xx,y = yy),pch = 22,
-                         fill = clrs[2], size = 5, alpha = 0.7)
+                         fill = colors[2], size = 5, alpha = 0.7)
 
     # add legend
     df.legend = data.frame(x = rep(1,2), y = rep(NA,2), class = factor(c(name.df2, name.df),levels = c(name.df, name.df2)))
     gg + geom_point(data = df.legend,aes(x= x,y=y, fill =class),pch = 22, size = 4) +
       labs(fill="", x = expression(paste("directed log10(p)")), y = "") +
-      scale_fill_manual(values = clrs) +
+      scale_fill_manual(values = colors) +
       theme(legend.position = "top", legend.key = element_blank(),
             legend.direction = "vertical", legend.justification = c(0,0))
 
@@ -154,8 +154,8 @@ mt_plots_equalizer <- function(
 
 
 
-  p =  mti_plot_equalizer_gg(df = data.frame(rd2, res2), name.df = legend.fine,
-                             df2 = data.frame(rd1, res1), name.df2 = legend.coarse )
+  p =  mti_plot_equalizer_gg(df = data.frame(rd2, res2), name.df = legend_fine,
+                             df2 = data.frame(rd1, res1), name.df2 = legend_coarse )
 
   ## ADD AXIS GROUPS
   d <- mti_get_stat_by_name(D1, comp1, fullstruct=T)

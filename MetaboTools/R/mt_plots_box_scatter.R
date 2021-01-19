@@ -1,6 +1,6 @@
-#' Plot Box Plots or Scatter Plots
+#' Plot Box or Scatter Plots
 #'
-#' Creates one box plot or  scatter plot per metabolite based on given sample annotations.
+#' Creates one box plot or scatter plot per metabolite based on given sample annotations.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param x what phenotype (from colData(D)) should be used on x axis, default "x"
@@ -15,8 +15,8 @@
 #' @param jitter add geom_jitter ("jitter") or geom_beeswarm ("beeswarm") to boxplot, exclude if NULL;  default "beeswarm"
 #' @param restrict_to_used_samples whether to filter to the samples that were used in the statistical test, default: T
 #' @param manual_ylab manual ylabel (default: none)
-#' @param fitline add fit line? (default: T)
-#' @param fitline_se add standard error range? (default: T)
+#' @param fit_line add fit line? (default: T)
+#' @param fit_line_se add standard error range? (default: T)
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #'
@@ -43,8 +43,8 @@ mt_plots_box_scatter <- function(D,
                                  jitter = "beeswarm",
                                  restrict_to_used_samples = T,
                                  manual_ylab=NULL,
-                                 fitline = T,
-                                 fitline_se = T,
+                                 fit_line = T,
+                                 fit_line_se = T,
                                  ggadd = NULL,
                                  ...){
 
@@ -141,7 +141,7 @@ mt_plots_box_scatter <- function(D,
         ## do plot
         ggplot() +
         ## add fit line?
-        {if (fitline) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fitline_se, color = "black") else NULL} +
+        {if (fit_line) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fit_line_se, color = "black") else NULL} +
         geom_point(aes(x = !!x, y = value, ...)) +
         labs(x = dplyr::quo_name(x), y="metabolite") +
         ggtitle(plottitle)
@@ -176,7 +176,7 @@ mt_plots_box_scatter <- function(D,
         ## do plot
         ggplot() +
         ## add fit line?
-        {if (fitline) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fitline_se, color = "black") else NULL} +
+        {if (fit_line) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fit_line_se, color = "black") else NULL} +
         geom_point(aes(x = !!x, y = value, ...)) +
         labs(x = dplyr::quo_name(x), y="metabolite") +
         ggtitle(plottitle)

@@ -3,13 +3,13 @@
 #' Either for a given list of statistical results, or all.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param stat_names Name of the statistical results. If not given, will generate histogram for all.
+#' @param stat_list Name of the statistical results. If not given, will generate histogram for all.
 #'
 #' @return $result: plot, p-value histogram
 #'
 #' @examples
 #' \dontrun{... %>% mt_plots_pval_hist() %>% ...                  # for all
-#' ... %>% mt_plots_pval_hist(stat_names='comp') %>% ...  # for one
+#' ... %>% mt_plots_pval_hist(stat_list='comp') %>% ...  # for one
 #' }
 #'
 #' @author JK
@@ -22,17 +22,17 @@
 
 mt_plots_pval_hist <- function(
   D,
-  stat_names=NULL
+  stat_list=NULL
 ) {
 
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
 
-  # if no stat_names given -> get all
-  if (is.null(stat_names)) stat_names <- D %>% mti_res_get_stats_entries() %>% purrr::map("output") %>% purrr::map("name") %>% unlist()
+  # if no stat_list given -> get all
+  if (is.null(stat_list)) stat_list <- D %>% mti_res_get_stats_entries() %>% purrr::map("output") %>% purrr::map("name") %>% unlist()
 
-  # loop over stat_names
-  plots <- lapply(stat_names, function(statname){
+  # loop over stat_list
+  plots <- lapply(stat_list, function(statname){
     # breaks
     st <- D %>% mti_get_stat_by_name(statname)
     breaks <- pretty(range(st$p.value), n = grDevices::nclass.FD(st$p.value), min.n = 1)
@@ -56,7 +56,7 @@ mt_plots_pval_hist <- function(
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = glue::glue("P-value histograms for {paste0(stat_names, collapse=', ')}"),
+      logtxt = glue::glue("P-value histograms for {paste0(stat_list, collapse=', ')}"),
       output = plots
     )
 

@@ -9,13 +9,13 @@
 #' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
 #' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
 #' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}"
-#' @param text.size text size of the annotations
+#' @param text_size text size of the annotations
 #' @param jitter whether to add jitter to boxplot,  default T
 #' @param rows number rows of boxplots in $result
 #' @param cols number columns of boxplots in $result
-#' @param restrict.to.used.samples whether to filter to the samples that were used in the statistical test, default: T
-#' @param full.info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
-#' @param manual.ylab manual ylabel (default: none)
+#' @param restrict_to_used_samples whether to filter to the samples that were used in the statistical test, default: T
+#' @param full_info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
+#' @param manual_ylab manual ylabel (default: none)
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #'
@@ -50,13 +50,13 @@ mt_plots_box <- function(D,
                          metab_filter = p.value < 0.05,
                          metab_sort   = p.value,
                          annotation   = "{sprintf('P-value: %.1e', p.value)}",
-                         text.size = 3.88,
+                         text_size = 3.88,
                          jitter       = T,
                          rows,
                          cols,
-                         restrict.to.used.samples=T,
-                         full.info=F,
-                         manual.ylab=NULL,
+                         restrict_to_used_samples=T,
+                         full_info=F,
+                         manual_ylab=NULL,
                          ggadd        = NULL,
                          ...){
 
@@ -81,7 +81,7 @@ mt_plots_box <- function(D,
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd
-    restrict.to.used.samples <- F # not dependend on a stat
+    restrict_to_used_samples <- F # not dependend on a stat
   }
 
   ## FILTER METABOLITES
@@ -109,14 +109,14 @@ mt_plots_box <- function(D,
     mti_format_se_samplewise() %>% # NOTE: No explosion of dataset size due to active restriction - 6/2/20, JK
     tidyr::gather(var, value, dplyr::one_of(rownames(D)))
   ## filter to groups?
-  if (restrict.to.used.samples) {
+  if (restrict_to_used_samples) {
     filterto <- mti_get_stat_by_name(D, stat_name, fullstruct=T)$samples.used
     dummy <- dummy[filterto,]
   }
 
 
 
-  if (!full.info) {
+  if (!full_info) {
     # filter down only to the variables needed for plotting
     # need to parse x and ... list
     vars <- x %>% as.character() %>% gsub("~","",.)
@@ -160,8 +160,8 @@ mt_plots_box <- function(D,
   }
 
   ## add ylabel
-  if (!is.null(manual.ylab)) {
-    p <- p + ylab(manual.ylab)
+  if (!is.null(manual_ylab)) {
+    p <- p + ylab(manual_ylab)
   } else {
     # add label if this is logged data
     r <- D %>% mti_res_get_path(c("pre","trans","log"))
@@ -183,7 +183,7 @@ mt_plots_box <- function(D,
       dplyr::distinct(name, annotate)
     p <- p + geom_text(data = data_annotate,
                        aes(label = annotate),
-                       x = -Inf, y = Inf, hjust = -0.05, vjust = 1.05, size=text.size )
+                       x = -Inf, y = Inf, hjust = -0.05, vjust = 1.05, size=text_size )
   }
 
   if (!is.null(ggadd)) p <- p+ggadd

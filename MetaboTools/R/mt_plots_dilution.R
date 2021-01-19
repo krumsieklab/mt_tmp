@@ -1,3 +1,5 @@
+#' Plot dilution factors
+#'
 #' Correlate variable with dilution factors from quotient normalization.
 #'
 #' \itemize{
@@ -7,14 +9,14 @@
 #' }
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param comp name of colData colum  (sample annotation) to correlation dilution factors with
-#' @param boxpl  produce boxplot (TRUE, default), or beeswarm plot (FALSE) .... only relevant for factor comparison
+#' @param in_col name of colData colum  (sample annotation) to correlation dilution factors with
+#' @param box_plot  produce boxplot (TRUE, default), or beeswarm plot (FALSE) .... only relevant for factor comparison
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #'
 #' @return $result: plot, comparison with dilution factors
 #'
 #' @examples
-#' \dontrun{%>% mt_plots_dilution(comp="group") %>% # compare with 'group' sample annotation
+#' \dontrun{%>% mt_plots_dilution(in_col="group") %>% # compare with 'group' sample annotation
 #' }
 #'
 #' @author JK
@@ -27,14 +29,14 @@
 
 mt_plots_dilution <- function(
   D,       # SummarizedExperiment input
-  comp,    # sample annotation column to compare with
-  boxpl=T,  #
+  in_col,    # sample annotation column to compare with
+  box_plot=T,  #
   ggadd=NULL
 ) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
-  stopifnot(length(comp)==1)
+  stopifnot(length(in_col)==1)
 
   # validate that there has been exactly one quotient normalization step
   q <- D%>% mti_res_get_path(c("pre","norm","quot"))
@@ -44,34 +46,34 @@ mt_plots_dilution <- function(
   vd = q[[1]]$output$dilution
 
   # get variable to compare to
-  if (!(comp %in% colnames(colData(D)))) stop(sprintf("'%s' not found in sample annotations.", comp))
-  vc = colData(D)[[comp]]
+  if (!(in_col %in% colnames(colData(D)))) stop(sprintf("'%s' not found in sample annotations.", in_col))
+  vc = colData(D)[[in_col]]
 
   # generate data frame for plotting
   dfplot <- data.frame(
     dilution.factor = vd,
     y = vc
   )
-  colnames(dfplot)[2] <- comp
+  colnames(dfplot)[2] <- in_col
 
   # either produce boxplot or scatter plot
   if (is.character(vc) || is.factor(vc)) {
     # ensure factor
-    dfplot[[comp]] = as.factor(dfplot[[comp]])
+    dfplot[[in_col]] = as.factor(dfplot[[in_col]])
     # boxplot
     p <- dfplot %>%
-      ggplot(aes_string(x=comp,y="dilution.factor",color=comp)) +
+      ggplot(aes_string(x=in_col,y="dilution.factor",color=in_col)) +
       ggtitle("quotient normalization dilution factors")
-    if (boxpl)
+    if (box_plot)
       p <- p+geom_boxplot()
-    if (!boxpl)
+    if (!box_plot)
       p <- p+ggbeeswarm::geom_quasirandom()
 
   } else {
-    if (!is.numeric(vc)) stop(sprintf("'%s' has to be character, factor, or numeric.", comp))
+    if (!is.numeric(vc)) stop(sprintf("'%s' has to be character, factor, or numeric.", in_col))
     # scatter
     p <- dfplot %>% ggplot() +
-      geom_point(aes_string(x=comp,y="dilution.factor")) +
+      geom_point(aes_string(x=in_col,y="dilution.factor")) +
       ggtitle("quotient normalization dilution factors")
   }
 
@@ -85,7 +87,7 @@ mt_plots_dilution <- function(
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("dilution factor plot, '%s'",comp),
+      logtxt = sprintf("dilution factor plot, '%s'",in_col),
       output = list(p)
     )
 

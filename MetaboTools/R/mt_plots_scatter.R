@@ -11,9 +11,9 @@
 #' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}"
 #' @param rows number rows of boxplots in $result
 #' @param cols number columns of boxplots in $result
-#' @param fitline add fit line? (default: T)
-#' @param fitline_se add standard error range? (default: T)
-#' @param full.info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
+#' @param fit_line add fit line? (default: T)
+#' @param fit_line_se add standard error range? (default: T)
+#' @param full_info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional ggplot parameters
 #'
@@ -50,9 +50,9 @@ mt_plots_scatter <- function(D,
                              annotation   = "{sprintf('P-value: %.1e', p.value)}",
                              rows,
                              cols,
-                             fitline = T,
-                             fitline_se = T,
-                             full.info=F,
+                             fit_line = T,
+                             fit_line_se = T,
+                             full_info=F,
                              ggadd        = NULL,
                              ...){
 
@@ -106,7 +106,7 @@ mt_plots_scatter <- function(D,
     tidyr::gather(var, value, dplyr::one_of(rownames(D)))
 
 
-  if (!full.info) {
+  if (!full_info) {
     # filter down only to the variables needed for plotting
     # need to parse x and ... list
     vars <- x %>% as.character() %>% gsub("~","",.)
@@ -126,7 +126,7 @@ mt_plots_scatter <- function(D,
       ## do plot
       ggplot() +
       ## add fit line?
-      {if (fitline) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fitline_se, color = "black") else NULL} +
+      {if (fit_line) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fit_line_se, color = "black") else NULL} +
       geom_point(aes(x = !!x, y = value, ...)) +
       labs(x = dplyr::quo_name(x), y="metabolite") +
       ggtitle(plottitle)
@@ -143,7 +143,7 @@ mt_plots_scatter <- function(D,
       ## do plot
       ggplot() +
       ## add fit line?
-      {if (fitline) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fitline_se, color = "black") else NULL} +
+      {if (fit_line) geom_smooth(aes(x = !!x, y = value), method = "lm", se=fit_line_se, color = "black") else NULL} +
       geom_point(aes(x = !!x, y = value, ...)) +
       labs(x = dplyr::quo_name(x), y="metabolite") +
       ggtitle(plottitle)

@@ -8,13 +8,13 @@
 #' @param D2 second SE dataset, if not given, will be the same as the first
 #' @param stat2 name of statistical comparison in second dataset
 #' @param filter2 filter term, defining which metabolites to label from second comparison (can use elements of stats table)
-#' @param filterop  if AND -> two colors, one for those where both stats match the criterion, and one where they don't
+#' @param filter_op  if AND -> two colors, one for those where both stats match the criterion, and one where they don't
 #'                  if OR -> three colors, a third one where only one stat matches the criterion
 #' @param plot_title optional param for plot title
 #' @param label_column optional argument on which column in the statistical results df to use for labeling points
 #' @param point_size size of the points on the ggplot
-#' @param return.plot.only return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.
-#' @param export.file WHAT DOES THIS DO?
+#' @param return_plot_only return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.
+#' @param export_file WHAT DOES THIS DO?
 #' @param use_estimate use estimate for comparison, instead of statistic; default: F
 #'
 #' @return $result: plot, p-value histogram
@@ -26,7 +26,7 @@
 #'   filter1= p.adj<0.1,
 #'   stat2='KO',
 #'   filter2= p.adj<0.1,
-#'   filterop = 'OR'
+#'   filter_op = 'OR'
 #' ) %>% ...
 #'
 #' ## compare two stats from different pipelines, as part of the pipeline of the second
@@ -34,7 +34,7 @@
 #' .. %>% mt_plots_stats_compare(
 #'   stat1 = comp, filter1 = p.adj<0.1,
 #'   D2 = firstPipeSE, stat2 = comp, filter2 = p.adj<0.1,
-#'   filterop = "OR") %>% ...
+#'   filter_op = "OR") %>% ...
 #'
 #' ## compare two stats from different pipelines, output as plot object
 #' ## not part of the actual MT pipelines, but separate call
@@ -42,7 +42,7 @@
 #' gg <- mt_plots_stats_compare(
 #'   D1 = D1, stat1 = comp, filter1 = p.adj<0.1,
 #'   D2 = D2, stat2 = comp, filter2 = p.adj<0.1,
-#'   filterop = "OR", return.plot.only=T)
+#'   filter_op = "OR", return_plot_only=T)
 #' }
 #'
 #' @author JK
@@ -60,14 +60,14 @@ mt_plots_stats_compare <- function(
   D2 = D1,  # second SE dataset, if not given, will be the same as the first
   stat2,    # name of statistical comparison in second dataset
   filter2,  # filter criterion, which samples to label
-  filterop="AND",  # if AND -> two colors, one for those where both stats match the criterion, and one where they don't
+  filter_op="AND",  # if AND -> two colors, one for those where both stats match the criterion, and one where they don't
   # if OR -> three colors, a third one where only one stat matches the criterion
 
   plot_title = "", # optional argument for plot title
   label_column = "name", # optional argument on which column in the statistical results df to use for labeling points
   point_size = 1.5,
-  return.plot.only=F,  # return only the plot object. note: setting this to true makes the function non-MT pipeline compatible.
-  export.file = NULL,   # export overlap table to file?
+  return_plot_only=F,  # return only the plot object. note: setting this to true makes the function non-MT pipeline compatible.
+  export_file = NULL,   # export overlap table to file?
   use_estimate = F  # use estimate instead of statistic?
 ) {
 
@@ -80,7 +80,7 @@ mt_plots_stats_compare <- function(
   filter1q <- dplyr::enquo(filter1)
   filter2q <- dplyr::enquo(filter2)
 
-  if (!(filterop %in% c("AND","OR"))) stop("filterop must be 'AND' or 'OR'")
+  if (!(filter_op %in% c("AND","OR"))) stop("filter_op must be 'AND' or 'OR'")
 
   ## obtain the two stats structures
   s1 <- MetaboTools:::mti_get_stat_by_name(D1, stat1, fullstruct=T)
@@ -104,10 +104,10 @@ mt_plots_stats_compare <- function(
 
 
   # combine filters
-  if (filterop=="AND")
+  if (filter_op=="AND")
     # AND
     st$filtered = as.numeric(st$filtered1 & st$filtered2)
-  else if (filterop=="OR")
+  else if (filter_op=="OR")
     # OR
     st$filtered = as.numeric(st$filtered1) + as.numeric(st$filtered2)
   else
@@ -144,13 +144,13 @@ mt_plots_stats_compare <- function(
   if (D1 %>% mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
 
   ## export to file?
-  if (!is.null(export.file)) {
+  if (!is.null(export_file)) {
     # can't handle list columns, drop those
     keep = !sapply(st, is.list)
-    openxlsx::write.xlsx(x=st[,keep], file=export.file, asTable=F)
+    openxlsx::write.xlsx(x=st[,keep], file=export_file, asTable=F)
   }
 
-  if (!return.plot.only) {
+  if (!return_plot_only) {
     ## add status information & plot
     funargs <- MetaboTools:::mti_funargs()
     metadata(D1)$results %<>%
