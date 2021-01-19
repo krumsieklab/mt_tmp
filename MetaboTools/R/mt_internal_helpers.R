@@ -580,9 +580,14 @@ mti_check_is_logged <- function(D){
     }
   }
 
-  # NOTE TO SELF: What do for case where pre_trans_log AND flag_logged called? Does the order matter?
   if(any(startsWith(called_functions, "flag_logged"))){
-    is_logged <- TRUE
+    # if pre_trans_log called AND flag_logged called, return is_logged as False
+    if(is_logged){
+      is_logged <- FALSE
+      return(is_logged)
+    }else{
+      is_logged <- TRUE
+    }
   }
 
   is_logged

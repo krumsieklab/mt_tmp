@@ -1,6 +1,7 @@
 #' Median batch correction.
 #'
-#' Same approach that Metabolon uses for runday correction. Divides metabolite values by the median value per batch.
+#' Same approach that Metabolon uses for runday correction. Works for both logged and non-logged data. Subtracts (logged) or
+#' divides (non-logged) metabolite values by the median value per batch.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param batches # sample annotation (colData) column name that contains batch assignment
@@ -37,10 +38,16 @@ mt_pre_batch_median = function(
 
   # no negative values allowed
   if (min(X,na.rm=T)<0) stop("Matrix contains negative values.")
-  # check if data actually have been logged by preprocessing
-  if (length(MetaboTools:::mti_res_get_path(D, c("pre","trans","log"))) > 0 |
-      length(MetaboTools:::mti_res_get_path(D, c("flag", "logged"))) > 0)
-    stop("Median batch correction can only be performed on non-logged data.")
+  # select correct operator for logged or non-logged data
+  is_logged <- MetaboTools:::mti_check_is_logged(D)
+  if(is_logged){
+    op <- `-`
+    opstr <- "-"
+  } else {
+    op <- `/`
+    opstr <- "/"
+  }
+
 
   # get samples to use for median calculation
   if (!missing(ref_samples)) {
@@ -68,7 +75,7 @@ mt_pre_batch_median = function(
     # transform into matrix of the same size as the batch
     med_matrix <- replicate(sum(b==batch), med) %>% t()
     # median normalize
-    X[b==batch,] <-  X[b==batch,] / med_matrix
+    X[b==batch,] <-  op(X[b==batch,], med_matrix)
   }
 
   # ref samples logging string

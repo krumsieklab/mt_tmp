@@ -1,6 +1,7 @@
 #' COMBAT batch correction.
 #'
-#' Performs batch correction via COMBAT method from \code{sva} package
+#' Performs batch correction via COMBAT method from \code{sva} package. Function will check that data is logged. If data is not logged,
+#' this function will log the data, run ComBat, and exponentiate the data before returning it into the assay data frame.
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param batches sample annotation (colData) column name that contains batch assignment
@@ -32,6 +33,12 @@ mt_pre_batch_COMBAT = function(
     stop("COMBAT batch correction cannot work with missing/NA values.")
   }
 
+  # check if data is logged, if not log the data
+  is_logged <- MetaboTools:::mti_check_is_logged(D)
+  if(!is_logged){
+    X <- log(X, base = 2)
+  }
+
   # get variable
   if (!(batches %in% colnames(colData(D)))) stop(sprintf("'%s' not found in sample annotations.", batches))
   b = colData(D)[[batches]]
@@ -61,6 +68,11 @@ mt_pre_batch_COMBAT = function(
       funargs = funargs,
       logtxt = sprintf("COMBAT batch correction, variable: '%s'",batches)
     )
+
+  # if data was logged above, exponentiate it before returning
+  if(!is_logged){
+    Y <- 2^Y
+  }
 
   # return
   assay(D) = Y
