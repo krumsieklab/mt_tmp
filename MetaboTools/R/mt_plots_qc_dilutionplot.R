@@ -37,7 +37,7 @@ mt_plots_qc_dilutionplot <- function(
   stopifnot(length(comp)==1)
 
   # validate that there has been exactly one quotient normalization step
-  q <- D%>% mti_res_get_path(c("pre","norm","quot"))
+  q <- D%>% mtm_res_get_path(c("pre","norm","quot"))
   if (length(q)>1) stop("There has been more than one quotient normalization call.")
   if (length(q)==0) stop("No quotient normalization performed.")
   # get dilution factors

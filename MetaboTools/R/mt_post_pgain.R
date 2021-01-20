@@ -30,7 +30,7 @@ mt_post_pgain <- function(D,
     p_col <- dplyr::enquo(p_col)
 
     ## are these ratio results?
-    if (length(mti_res_get_path(D, c("modify","ratios"))) != 1)
+    if (length(mtm_res_get_path(D, c("modify","ratios"))) != 1)
         stop("must supply ratios to calculate p-gains")
 
     ## stat

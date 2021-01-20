@@ -141,7 +141,7 @@ mt_plots_pathview <- function(D,
 
   ## stat
   if(!missing(stat_name)){
-    stat <- mti_get_stat_by_name(D, stat_name) %>%
+    stat <- mtm_get_stat_by_name(D, stat_name) %>%
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd

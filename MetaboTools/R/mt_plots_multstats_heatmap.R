@@ -67,7 +67,7 @@ mt_plots_multstats_heatmap <- function(D,
 
   # if NA, stat_list is all stat results
   if(is.na(stat_list)){
-    stat_list <- MetaboTools:::mti_res_get_stats_entries(D)%>%
+    stat_list <- MetaboTools::mtm_res_get_stats_entries(D)%>%
       purrr::map_chr(~.x$output$name)
   }
 
@@ -76,7 +76,7 @@ mt_plots_multstats_heatmap <- function(D,
   }
 
   # extract stat results
-  stat_res <- stat_list %>% lapply(function(i){MetaboTools:::mti_get_stat_by_name(D, i) %>%
+  stat_res <- stat_list %>% lapply(function(i){MetaboTools:::mtm_get_stat_by_name(D, i) %>%
       dplyr::mutate(stat_name = i)
   })
 

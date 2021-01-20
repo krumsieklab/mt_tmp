@@ -69,7 +69,7 @@ mt_plots_boxplot_scatter <- function(D,
 
   ## stat
   if(!missing(stat_name)){
-    stat <- MetaboTools:::mti_get_stat_by_name(Ds, stat_name) %>%
+    stat <- MetaboTools:::mtm_get_stat_by_name(Ds, stat_name) %>%
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd
@@ -104,7 +104,7 @@ mt_plots_boxplot_scatter <- function(D,
   ## filter to groups?
   if(plot_type=="box"){
     if (restrict_to_used_samples) {
-      filterto <- MetaboTools:::mti_get_stat_by_name(Ds, stat_name, fullstruct=T)$samples.used
+      filterto <- MetaboTools::mtm_get_stat_by_name(Ds, stat_name, fullstruct=T)$samples.used
       dummy <- dummy[filterto,]
     }
   }
@@ -196,7 +196,7 @@ mt_plots_boxplot_scatter <- function(D,
       p <- p + ylab(manual_ylab)
     } else {
       # add label if this is logged data
-      r <- Ds %>% MetaboTools:::mti_res_get_path(c("pre","trans","log"))
+      r <- Ds %>% MetaboTools:::mtm_res_get_path(c("pre","trans","log"))
       if (length(r)>0) {
         p <- p + ylab(r[[1]]$logtxt) # log text contains e.g. "log2"
       }

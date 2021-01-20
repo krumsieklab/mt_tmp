@@ -30,24 +30,24 @@ mt_modify_ratios <- function(
     nbr_edge_filter,
     nbr_neighborhood = 1
 ){
-    
+
     stopifnot("SummarizedExperiment" %in% class(D))
-    
+
     as <- assay(D)
     p <- nrow(D)
     ## as <- matrix(1:(4*2), nrow = 4, ncol = 2, dimnames = list(letters[23:26], letters[1:2]))
-    
+
     ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
     op <- "/"
-    if (length(MetaboTools:::mti_res_get_path(D, c("pre","trans","log"))) > 0){
+    if (length(MetaboTools::mtm_res_get_path(D, c("pre","trans","log"))) > 0){
         MetaboTools:::mti_logstatus("data already logscale, using '-'")
         op <- "-"
     }
-    
+
     ## CREATE RATIOS
     as_ratio <- purrr::map(1:(nrow(as)-1), ~ sweep(as[(.x+1):nrow(as), , drop = F], 2, as[.x,], op)) %>%
         stats::setNames(rownames(as)[1:(nrow(as)-1)])
-    
+
     ## CREATE NEW ROWDATA
     rd <- D %>%
         rowData() %>%
@@ -67,34 +67,34 @@ mt_modify_ratios <- function(
     rd <- dplyr::bind_rows(rd, rd_new) %>%
         dplyr::select(rownames, m1, m2, name1, name2, dplyr::everything()) %>%
         tibble::column_to_rownames("rownames")
-    
+
     ## COMBINE RATIOS TO SINGLE MATRIX
     as_ratio <- as_ratio %>%
         purrr::imap(~{rownames(.x) <- stringr::str_c(rownames(.x), .y, sep = "_"); .x}) %>%
         purrr::invoke(rbind, .)
     as_ratio <- rbind(as, as_ratio)
-    
+
     ## CHECK NAMES
     if(!identical(rownames(as_ratio), rownames(rd)))
         stop("something went wrong. check data!")
-    
+
     ## FILTER BY NETWORK-BASED RATIOS (NBRs)?
     if (!missing(nbr_stat_name)) {
         # verify that arguments are given
         if (missing(nbr_edge_filter)) stop("If nbr_stat_name is given, nbr_edge_filter must be supplied.")
         # retrieve statistics object
-        res <- D %>% MetaboTools:::mti_get_stat_by_name(nbr_stat_name)
+        res <- D %>% MetaboTools:::mtm_get_stat_by_name(nbr_stat_name)
         # extract metabolite pairs according to formula, only keep metabolite names
-        mpairs <- res %>% dplyr::filter(!!dplyr::enquo(nbr_edge_filter)) %>% dplyr::select(var1,var2) 
+        mpairs <- res %>% dplyr::filter(!!dplyr::enquo(nbr_edge_filter)) %>% dplyr::select(var1,var2)
         # initialize adjacency matrix
         A <- matrix(0, nrow=nrow(D), ncol=nrow(D))
         colnames(A) <- rownames(A) <- rownames(D)
         # build adjacency matrix using indices of mpairs in matrix
-        inds <- data.frame(match(mpairs[,1], colnames(A)),match(mpairs[,2], colnames(A))) %>% as.matrix() 
+        inds <- data.frame(match(mpairs[,1], colnames(A)),match(mpairs[,2], colnames(A))) %>% as.matrix()
         A[inds] <- 1
         A[inds[,c(2,1)]] <- 1 # symmetric
         diag(A) <- 1
-        # get k-neighborhood (A^k matrix multiplication), 
+        # get k-neighborhood (A^k matrix multiplication),
         # found this trick on StackExchange, repeated application of %*%, also works with 1
         N <- Reduce("%*%", replicate(nbr_neighborhood, A, FALSE)) > 0
         # convert back to pairs
@@ -108,13 +108,13 @@ mt_modify_ratios <- function(
         as_ratio <- as_ratio[keep,]
         rd <- rd[keep,]
     }
-    
+
     ## CREATE NEW OBJECT
     D <- SummarizedExperiment(assay    = as_ratio,
                               rowData  = rd,
                               colData  = colData(D),
                               metadata = metadata(D))
-    
+
     ## add status information & plot
     funargs <- MetaboTools:::mti_funargs()
     metadata(D)$results %<>%
@@ -124,7 +124,7 @@ mt_modify_ratios <- function(
             output = NULL
         )
     D
-    
+
 }
 
 
@@ -134,7 +134,7 @@ mt_modify_ratios <- function(
 # diag(A) <- 1
 # A[1,2] <- A[2,3] <- A[3,4] <- 1
 # A[2,1] <- A[3,2] <- A[4,3] <- 1
-# 
+#
 # # k neighborhood (A^k matrix multiplications)
 # k=3
 # Reduce("%*%", replicate(k, A, FALSE))

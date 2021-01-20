@@ -6,7 +6,7 @@
 #' @param patient_id name of the column in colData having patient_ID
 #' @param stat_name name under which this comparison will be stored, must be unique to all other statistical results
 #' @param sample_filter term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison
-#' 
+#'
 #' @return $result: statistics object
 #'
 #' @importFrom magrittr %>% %<>%
@@ -40,7 +40,7 @@ mt_stats_univ_cs <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
 
   # make sure name does not exist yet
-  if (stat_name %in% unlist(MetaboTools:::mti_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("name"))) stop(sprintf("stat element with name '%s' already exists",stat_name))
+  if (stat_name %in% unlist(MetaboTools::mtm_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("name"))) stop(sprintf("stat element with name '%s' already exists",stat_name))
 
   # merge data with sample info
   Ds <- D %>% MetaboTools:::mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 8/17/20, JK
@@ -60,7 +60,7 @@ mt_stats_univ_cs <- function(
   mets <- rownames(D)
   outvec <- Ds[[y]]
   cl <- outvec %>% class()
-  
+
   if (("character" %in% cl) || ("factor" %in% cl)) {
     stop("Composite scores must be numeric!")
   } else {
@@ -76,7 +76,7 @@ mt_stats_univ_cs <- function(
       return(res)
     }) %>% do.call(rbind,.) %>% data.frame()
   }
-  
+
   # add columns with metabolite names and y variable
   cstest %<>% mutate(var=mets, term=y)
   # reorder columns
@@ -87,7 +87,7 @@ mt_stats_univ_cs <- function(
   cstest <- cstest[o,]
   # make sure that NAs in the outcome are set to FALSE in the list of used samples
   samples.used[is.na(Ds[[y]])] <- F
-  
+
   ## add status information & results
   funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
@@ -104,8 +104,8 @@ mt_stats_univ_cs <- function(
         outcome = y
       )
     )
-  
+
   ## return
   D
-  
+
 }

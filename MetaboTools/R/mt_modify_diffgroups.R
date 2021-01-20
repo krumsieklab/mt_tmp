@@ -32,7 +32,7 @@ mt_modify_diffgroups <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
 
   # if data is logged, then subtract, otherwise divide
-  if (length(mti_res_get_path(D, c("pre","trans","log"))) > 0){
+  if (length(mtm_res_get_path(D, c("pre","trans","log"))) > 0){
     op <- `-`
     opstr <- "-"
   } else {

@@ -20,7 +20,7 @@ mt_other_fix_ggplot <- function(D){
   # validate arguments
   if(!"SummarizedExperiment" %in% class(D)) stop("D is not a SummarizedExperiment object!")
 
-  plot_list <-  MetaboTools:::mti_res_get_path(D, c("plots")) %>% purrr::map("output")
+  plot_list <-  MetaboTools::mtm_res_get_path(D, c("plots")) %>% purrr::map("output")
 
   # replace each gg environment with fixed plot
   for(i in 1:length(plot_list)){

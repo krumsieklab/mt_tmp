@@ -29,7 +29,7 @@ mt_files_write_stats <- function(D, file, compnames=NULL, sort.by.p=F, output.di
   stopifnot(is.character(file))
 
   # get all stats entries
-  S <- D %>% MetaboTools:::mti_res_get_stats_entries()
+  S <- D %>% MetaboTools:::mtm_res_get_stats_entries()
   allcomps <- S %>% purrr::map("output") %>% purrr::map("name") %>% unlist()
 
   # restrict to one or output all?
@@ -53,7 +53,7 @@ mt_files_write_stats <- function(D, file, compnames=NULL, sort.by.p=F, output.di
     # else just silently skip this step
     if(is.null(metname)==F && is.na(match(metname, names(rowData(D))))==F){
         df <- cbind.data.frame(df, metname=unlist(data.frame(rowData(D))[metname]))
-    } 
+    }
     # sort?
     if (sort.by.p) {
       df %<>% arrange(p.value)

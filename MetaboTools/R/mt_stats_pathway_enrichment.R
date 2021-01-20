@@ -8,7 +8,7 @@
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param pw_col column containing pathways IDs
-#' @param stat_name name of statistical analysis to use with mti_get_stat_by_name()
+#' @param stat_name name of statistical analysis to use with mtm_get_stat_by_name()
 #' @param cutoff cutoff to use for assigning whether a metabolite/gene is significant. Used in Fisher's exact test
 #'
 #' @return $pathways$enrichment_results: a dataframe containing the pathway enrichment results
@@ -71,7 +71,7 @@ mt_stats_pathway_enrichment <- function(
   # - calculate mean fold change based on mean log value of cases and ctrls
 
   enrichment_results <-
-    mti_get_stat_by_name(D, stat_name) %>%
+    mtm_get_stat_by_name(D, stat_name) %>%
 
     # assign significance
     dplyr::mutate(significant = dplyr::if_else(p.adj < cutoff, TRUE, FALSE),

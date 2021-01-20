@@ -11,7 +11,7 @@ mt_stats_pathway_enrichment(D, pw_col, stat_name, cutoff = 0.05)
 
 \item{pw_col}{column containing pathways IDs}
 
-\item{stat_name}{name of statistical analysis to use with mti_get_stat_by_name()}
+\item{stat_name}{name of statistical analysis to use with mtm_get_stat_by_name()}
 
 \item{cutoff}{cutoff to use for assigning whether a metabolite/gene is significant. Used in Fisher's exact test}
 }

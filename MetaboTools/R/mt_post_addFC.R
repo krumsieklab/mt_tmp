@@ -25,8 +25,8 @@ mt_post_addFC <- function(D,
                           combine = function(x){mean(x,na.rm=T)}){
 
   ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
-  if ((length(MetaboTools:::mti_res_get_path(D, c("pre","trans","log"))) != 1) &&
-      (length(MetaboTools:::mti_res_get_path(D, c("flag","logged"))) != 1))
+  if ((length(MetaboTools:::mtm_res_get_path(D, c("pre","trans","log"))) != 1) &&
+      (length(MetaboTools:::mtm_res_get_path(D, c("flag","logged"))) != 1))
     stop("fold-changes can only be calculated for log-scale data")
 
   ## stat

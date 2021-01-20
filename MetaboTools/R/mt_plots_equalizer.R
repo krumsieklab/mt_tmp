@@ -54,8 +54,8 @@ mt_plots_equalizer <- function(
   # stopifnot(comp1!=comp2)
 
   # get results
-  res1 <- mti_get_stat_by_name(D1, comp1)
-  res2 <- mti_get_stat_by_name(D2, comp2)
+  res1 <- mtm_get_stat_by_name(D1, comp1)
+  res2 <- mtm_get_stat_by_name(D2, comp2)
 
   ##### Mustafa's code starts here
 
@@ -158,7 +158,7 @@ mt_plots_equalizer <- function(
                              df2 = data.frame(rd1, res1), name.df2 = legend.coarse )
 
   ## ADD AXIS GROUPS
-  d <- mti_get_stat_by_name(D1, comp1, fullstruct=T)
+  d <- mtm_get_stat_by_name(D1, comp1, fullstruct=T)
   if ("groups" %in% names(d) && length(d$groups)==2) {
     xlabel <- sprintf("%s high <--     directed log10(p)     --> %s high", d$groups[1], d$groups[2])
     p <- p + xlab(xlabel)

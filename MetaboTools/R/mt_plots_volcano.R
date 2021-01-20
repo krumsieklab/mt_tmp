@@ -55,7 +55,7 @@ mt_plots_volcano <- function(D,
 
 
   ## stat
-  data_plot <- MetaboTools:::mti_get_stat_by_name(D, stat_name) %>%
+  data_plot <- MetaboTools:::mtm_get_stat_by_name(D, stat_name) %>%
     dplyr::inner_join(rd, by = "var") %>%
     dplyr::mutate(xxx = !!x)
 
@@ -70,7 +70,7 @@ mt_plots_volcano <- function(D,
 
   ## determine if and where to draw hline
   if (!missing(hline)) {
-    hliney <- MetaboTools:::mti_get_stat_by_name(D, stat_name) %>%
+    hliney <- MetaboTools:::mtm_get_stat_by_name(D, stat_name) %>%
       dplyr::inner_join(rd, by = "var") %>%
       dplyr::mutate(xxx = !!x) %>% dplyr::filter(!!dplyr::enquo(hline)) %>% .$p.value %>% max()
   } else {
@@ -107,7 +107,7 @@ mt_plots_volcano <- function(D,
   }
 
   ## ADD AXIS GROUPS
-  d <- MetaboTools:::mti_get_stat_by_name(D, stat_name, fullstruct=T)
+  d <- MetaboTools:::mtm_get_stat_by_name(D, stat_name, fullstruct=T)
   if ("groups" %in% names(d) && length(d$groups)==2) {
     p <- MetaboTools:::mti_add_leftright_gg(p, paste0(d$groups[1],' high'), paste0(d$groups[2],' high'))
   }

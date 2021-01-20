@@ -41,7 +41,7 @@ mt_stats_univ_matrixeqtl <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
 
   # make sure name does not exist yet
-  if (stat_name %in% unlist(MetaboTools:::mti_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("name"))) stop(sprintf("stat element with name '%s' already exists",stat_name))
+  if (stat_name %in% unlist(MetaboTools::mtm_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("name"))) stop(sprintf("stat element with name '%s' already exists",stat_name))
 
   # merge data with sample info
   Ds <- D %>% MetaboTools:::mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 8/17/20, JK

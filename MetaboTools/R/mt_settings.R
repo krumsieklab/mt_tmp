@@ -4,7 +4,6 @@
 # -> This is where MT developers define the parameters
 mti_settings_list <- function() {
   list(
-    ggplot_fix = list(class="logical", default=T),
     dummy = list(class="numeric", default=5)
   )
 }

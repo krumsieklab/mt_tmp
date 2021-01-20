@@ -76,7 +76,7 @@ mt_plots_scatter <- function(D,
 
   ## stat
   if(!missing(stat_name)){
-    stat <- mti_get_stat_by_name(Ds, stat_name) %>%
+    stat <- mtm_get_stat_by_name(Ds, stat_name) %>%
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd

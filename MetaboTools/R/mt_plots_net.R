@@ -55,7 +55,7 @@ mt_plots_net <- function(
   rd2$name2 %<>% make.names()
 
   ## stat
-  data_plot <- mti_get_stat_by_name(D, stat_name) %>%
+  data_plot <- mtm_get_stat_by_name(D, stat_name) %>%
     dplyr::inner_join(rd1, by = "var1") %>%
     dplyr::inner_join(rd2, by = "var2")
 
@@ -63,7 +63,7 @@ mt_plots_net <- function(
   nodes <- as.data.frame(unique(rbind(cbind(ids=data_plot$var1,label=data_plot$name1),cbind(ids=data_plot$var2,label=data_plot$name2))))
 
   if(!(missing(node_coloring))) {
-    test <- mti_get_stat_by_name(D, node_coloring);
+    test <- mtm_get_stat_by_name(D, node_coloring);
     test <- test[match(nodes$ids, test$var),];
     nodes$map <- sign(test$statistic)*log10(test$p.value);
     nodes$node_color <- grDevices::colorRampPalette(c('blue', 'white', 'red'))(length(nodes$map))[rank(nodes$map)]
@@ -105,7 +105,7 @@ mt_plots_net <- function(
   mm.net <- network::network(adj[[1]], layout = "kamadakawai", directed = FALSE)
 
   if(!missing(node_coloring)){
-    test <- mti_get_stat_by_name(D, node_coloring)
+    test <- mtm_get_stat_by_name(D, node_coloring)
     test <- test[match(adj[[2]], test$var),]
     map <- sign(test$statistic)*log10(test$p.value)
     mm.net %v% "strength" <- map

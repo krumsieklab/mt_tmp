@@ -88,7 +88,7 @@ mt_plots_statsbarplot <- function(D,
     ## subselect variables
     if(flag_filter) {
       metab_filter_q <- dplyr::enquo(metab_filter)
-      sel <- MetaboTools:::mti_get_stat_by_name(D=D,name=ss) %>%
+      sel <- MetaboTools::mtm_get_stat_by_name(D=D,name=ss) %>%
         dplyr::filter(!!metab_filter_q) %>%
         dplyr::filter(var %in% rd$var)
       rd <- rd %>%
@@ -175,7 +175,7 @@ mt_plots_statsbarplot <- function(D,
                                  var = rep(rd$var, times=sapply(rd[[aggregate]], length) %>% as.vector()),
                                  pathway = unlist(rd[[aggregate]]),
                                  color = ifelse(!is.null(colorby), rep(rd[[colorby]], times=sapply(rd[[aggregate]], length) %>% as.vector()),"pathway")) %>%
-        dplyr::left_join(MetaboTools:::mti_get_stat_by_name(D=D,name=ss) , by="var") %>%
+        dplyr::left_join(MetaboTools::mtm_get_stat_by_name(D=D,name=ss) , by="var") %>%
         dplyr::select(-var)
 
       # if pathway mapping exists in the metadata, use the names provided there
@@ -265,7 +265,7 @@ mt_plots_statsbarplot <- function(D,
 
     # add phenotype labels to x axis
     if("association" %in% colnames(data_plot) & length(stat_name)==1){
-      d <- MetaboTools:::mti_get_stat_by_name(D, stat_name, fullstruct=T)
+      d <- MetaboTools::mtm_get_stat_by_name(D, stat_name, fullstruct=T)
       if ("groups" %in% names(d) && length(d$groups)==2) {
         # get breaks
         ggbld <- ggplot2::ggplot_build(p)

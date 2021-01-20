@@ -79,7 +79,7 @@ mt_plots_boxplot <- function(D,
 
   ## stat
   if(!missing(stat_name)){
-    stat <- mti_get_stat_by_name(Ds, stat_name) %>%
+    stat <- mtm_get_stat_by_name(Ds, stat_name) %>%
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd
@@ -112,7 +112,7 @@ mt_plots_boxplot <- function(D,
     tidyr::gather(var, value, dplyr::one_of(rownames(Ds)))
   ## filter to groups?
   if (restrict.to.used.samples) {
-    filterto <- mti_get_stat_by_name(Ds, stat_name, fullstruct=T)$samples.used
+    filterto <- mtm_get_stat_by_name(Ds, stat_name, fullstruct=T)$samples.used
     dummy <- dummy[filterto,]
   }
 
@@ -166,7 +166,7 @@ mt_plots_boxplot <- function(D,
     p <- p + ylab(manual.ylab)
   } else {
     # add label if this is logged data
-    r <- Ds %>% mti_res_get_path(c("pre","trans","log"))
+    r <- Ds %>% mtm_res_get_path(c("pre","trans","log"))
     if (length(r)>0) {
       p <- p + ylab(r[[1]]$logtxt) # log text contains e.g. "log2"
     }

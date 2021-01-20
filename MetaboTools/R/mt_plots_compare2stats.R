@@ -82,9 +82,9 @@ mt_plots_compare2stats <- function(
   if (!(filterop %in% c("AND","OR"))) stop("filterop must be 'AND' or 'OR'")
 
   ## obtain the two stats structures
-  s1 <- MetaboTools:::mti_get_stat_by_name(D1, stat1, fullstruct=T)
+  s1 <- MetaboTools:::mtm_get_stat_by_name(D1, stat1, fullstruct=T)
   s1t <- s1$table
-  s2 <- MetaboTools:::mti_get_stat_by_name(D2, stat2, fullstruct=T)
+  s2 <- MetaboTools:::mtm_get_stat_by_name(D2, stat2, fullstruct=T)
   s2t <- s2$table
 
   # if use_estimate==T, check that estimate column exists

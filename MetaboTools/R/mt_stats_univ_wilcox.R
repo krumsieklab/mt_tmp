@@ -44,7 +44,7 @@ mt_stats_univ_wilcox <- function(
   # check that y is in the colData
   if (!(y %in% colnames(colData(D)))) stop(sprintf("There is no column called %s in the colData", y))
   # make sure name does not exist yet
-  if (stat_name %in% unlist(MetaboTools:::mti_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("name"))) stop(sprintf("stat element with name '%s' already exists",stat_name))
+  if (stat_name %in% unlist(MetaboTools::mtm_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("name"))) stop(sprintf("stat element with name '%s' already exists",stat_name))
 
   # merge data with sample info
   Ds <- D %>% MetaboTools:::mti_format_se_samplewise() # NOTE: No explosion of dataset size, no gather() - 8/17/20, JK

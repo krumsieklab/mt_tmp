@@ -24,10 +24,10 @@ mt_logging_statsinfo <- function(D, stat_name, stat_filter) {
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
 
-  # trick: access argument so that a missing argument error is thrown from here instead of from inside mti_get_stat_by_name
+  # trick: access argument so that a missing argument error is thrown from here instead of from inside mtm_get_stat_by_name
   stat_name
   # find statistical result (not just the table, but the entire $output block)
-  allstats <- D %>% MetaboTools:::mti_res_get_path(c("stats"))
+  allstats <- D %>% MetaboTools::mtm_res_get_path(c("stats"))
   statind <- allstats %>% purrr::map("output") %>% purrr::map("name") %>% purrr::map(~.==stat_name) %>% unlist() %>% which()
   if (length(statind)==0) stop(sprintf("comparison '%s' not found", stat_name))
   # retrieve actual structures

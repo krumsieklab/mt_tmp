@@ -27,10 +27,10 @@ mt_plots_pvalqq <- function(
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
 
-  # trick: access argument so that a missing argument error is thrown from here instead of from inside mti_get_stat_by_name
+  # trick: access argument so that a missing argument error is thrown from here instead of from inside mtm_get_stat_by_name
   stat_name
   # get statistical result
-  res <- mti_get_stat_by_name(D, stat_name)
+  res <- mtm_get_stat_by_name(D, stat_name)
 
   # create plot
   p <- mti_gg_qqplot(res$p.value) + ggtitle(sprintf("P-value QQ plot for '%s'", stat_name))

@@ -29,12 +29,12 @@ mt_plots_pvalhist <- function(
   stopifnot("SummarizedExperiment" %in% class(D))
 
   # if no stat_names given -> get all
-  if (is.null(stat_names)) stat_names <- D %>% mti_res_get_stats_entries() %>% purrr::map("output") %>% purrr::map("name") %>% unlist()
+  if (is.null(stat_names)) stat_names <- D %>% mtm_res_get_stats_entries() %>% purrr::map("output") %>% purrr::map("name") %>% unlist()
 
   # loop over stat_names
   plots <- lapply(stat_names, function(statname){
     # breaks
-    st <- D %>% mti_get_stat_by_name(statname)
+    st <- D %>% mtm_get_stat_by_name(statname)
     breaks <- pretty(range(st$p.value), n = grDevices::nclass.FD(st$p.value), min.n = 1)
     bwidth <- breaks[2]-breaks[1]
     # histogram
