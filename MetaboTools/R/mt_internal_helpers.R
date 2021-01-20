@@ -384,39 +384,6 @@ mti_extract_variables <- function(lst) {
 }
 
 
-
-#' Fixes the problem of exploding environments when saving ggplots to files
-#'
-#' Magic code by Mustafa (- JK)
-#'
-#' @param x ADD PARAM DESCRIPTION
-#'
-#' @return ADD RETURN DESCRIPTION
-#'
-#'
-#' @author MB (JK)
-#'
-#' @import ggplot2
-#'
-#' @noRd
-mti_fix_ggplot_env <- function(p) {
-  # all the environment for quoted variables leads explosion of the object size
-  # problem is also not that simple to just find those variables and clean up the
-  # respective environment which I did, which did not solve the problem.
-  # best solution so far is to wrap plot, get rid of everything else
-  local(
-    # transformartion of images into blank panel
-    # this is updated
-    ggplot2::ggplot(data.frame(x = 0:1, y = 0:1), ggplot2::aes_(x = ~x, y = ~y)) +
-      ggplot2::geom_blank() +
-      ggplot2::scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) +
-      ggplot2::scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) +
-      ggplot2::annotation_custom(gg_grob, xmin = 0, xmax = 1 , ymin = 0, ymax = 1) +
-      ggplot2::theme_void(),
-    as.environment(list(gg_grob =ggplotGrob(p))) %>% {parent.env(.)=.GlobalEnv;.})
-}
-
-
 #' ADD TITLE
 #'
 #' ADD DESCRIPTION
@@ -430,9 +397,9 @@ mti_fix_ggplot_env <- function(p) {
 fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)} # fix order of a factor
 
 
+#' ADD TITLE
 #'
-#'
-#'
+#' ADD DESCRIPTION
 #'
 #' @param Ds Concatenated dataframe returned by mti_format_se_samplewise
 #' @param sample_filter term which samples to filter to first

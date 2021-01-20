@@ -233,8 +233,6 @@ mt_plots_boxplot_scatter <- function(D,
     output2 <- NULL
   } else {
     p <- p + facet_wrap(.~name, scales = "free_y", ncol=2)
-    # fix ggplot environment
-    if (D %>% MetaboTools:::mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
     p <- list(p)
     output2 <- ceiling(length(unique(stat$name))/2)
   }

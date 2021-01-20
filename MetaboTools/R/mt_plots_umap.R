@@ -76,9 +76,6 @@ mt_plots_UMAP <- function(
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
 
-  # fix ggplot environment
-  if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
-
   # prep output matrices
   if (store.matrices) {
     output2 <- list(layout=umap$layout)

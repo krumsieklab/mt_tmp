@@ -115,9 +115,6 @@ mt_plots_volcano <- function(D,
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
 
-  # fix ggplot environment
-  if (D %>% MetaboTools:::mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
-
   ## add status information & plot
   funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%

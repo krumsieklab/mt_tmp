@@ -184,12 +184,8 @@ mt_plots_scatter <- function(D,
         p[[ pages ]] <- p[[ pages ]] +
           geom_blank(data = data.frame(name = spaces))
       }
-      # fix ggplot environments
-      if (D %>% mti_get_setting("ggplot_fix")) p <- lapply(p, mti_fix_ggplot_env)
     }else{
       p <- p + facet_wrap(.~name, scales = "free_y")
-      # fix ggplot environment
-      if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
       p <- list(p)
     }
   }

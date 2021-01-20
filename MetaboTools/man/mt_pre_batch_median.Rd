@@ -15,7 +15,8 @@ mt_pre_batch_median(D, batches, ref_samples)
 assay: batch-corrected version
 }
 \description{
-Same approach that Metabolon uses for runday correction. Divides metabolite values by the median value per batch.
+Same approach that Metabolon uses for runday correction. Works for both logged and non-logged data. Subtracts (logged) or
+divides (non-logged) metabolite values by the median value per batch.
 }
 \examples{
 \dontrun{... \%>\% mt_pre_batch_median(batches="BATCH") \%>\% ...

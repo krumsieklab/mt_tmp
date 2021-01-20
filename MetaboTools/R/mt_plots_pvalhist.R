@@ -43,8 +43,6 @@ mt_plots_pvalhist <- function(
         geom_histogram(binwidth=bwidth,fill="white",colour="black") +
         xlim(0,1) +
         ggtitle(glue::glue("'{statname}' p-values"))
-    # fix ggplot environment
-    if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
     p
     })
 

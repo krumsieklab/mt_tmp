@@ -15,7 +15,8 @@ mt_pre_batch_COMBAT(D, batches)
 assay: batch-corrected version
 }
 \description{
-Performs batch correction via COMBAT method from \code{sva} package
+Performs batch correction via COMBAT method from \code{sva} package. Function will check that data is logged. If data is not logged,
+this function will log the data, run ComBat, and exponentiate the data before returning it into the assay data frame.
 }
 \examples{
 \dontrun{... \%>\% mt_pre_batch_COMBAT(batches="BATCH") \%>\% ...

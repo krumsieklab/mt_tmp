@@ -180,8 +180,6 @@ mt_plots_multstats_heatmap <- function(D,
   } else {
     # empty plot
     re <- (ggplot() + ggtitle(main)+ geom_text(aes(x=0, y=0, label='no significant results'), size=8))
-    # fix env?
-    if (D %>% mti_get_setting("ggplot_fix")) re %<>% MetaboTools:::mti_fix_ggplot_env()
   }
 
   # NTS: add option to convert to ggplot

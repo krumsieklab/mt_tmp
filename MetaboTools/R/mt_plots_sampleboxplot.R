@@ -65,9 +65,6 @@ mt_plots_sampleboxplot <- function(
   # add custom elements?
   if (!is.null(ggadd)) p <- p+ggadd
 
-  # fix ggplot environment
-  if (D %>% mti_get_setting("ggplot_fix")) p <- mti_fix_ggplot_env(p)
-
   # add status information & plot
   funargs <- mti_funargs()
   metadata(D)$results %<>%

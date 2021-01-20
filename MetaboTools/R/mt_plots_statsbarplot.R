@@ -12,7 +12,7 @@
 #' @param assoc_sign optional parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_name.
 #' @param keep.unmapped boolean, if TRUE keeps metabolites with no pathway annotations. Default "FALSE".
 #' @param add_empty boolean, if TRUE adds also empty pathways to the barplot.
-#' @param output.file optional Excel filename to save data to 
+#' @param output.file optional Excel filename to save data to
 #' @param ggadd further elements/functions to add (+) to the ggplot object
 #' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
 #'
@@ -66,7 +66,7 @@ mt_plots_statsbarplot <- function(D,
   if(!is.null(colorby))
     if(!(colorby %in% colnames(rowData(D))))
       stop(sprintf("colorby column '%s' not found in rowData", colorby))
-  
+
   ## rowData
   rd <- rowData(D) %>%
     as.data.frame() %>%
@@ -101,7 +101,7 @@ mt_plots_statsbarplot <- function(D,
       data_plot <- data.frame(name=as.character(),
                               count = as.numeric())
       anno <- data.frame()
-      
+
     } else {
       # if assoc_sign given, include in data
       if(flag_sign){
@@ -112,8 +112,8 @@ mt_plots_statsbarplot <- function(D,
           sel <- sel[match(sel$var,rd$var),] %>%
             dplyr::mutate(association=ifelse(sign(!!sym(assoc_sign))>0, "positive", "negative")) %>%
             dplyr::select(var,association)
-    
-          # create data.frame for plotting 
+
+          # create data.frame for plotting
           data_plot <- data.frame(name=rd[[aggregate]] %>% unlist %>% as.vector,
                                   association=rep(sel$association, times= (rd[[aggregate]] %>% sapply(length)))) %>%
             table(exclude = NULL) %>% as.data.frame()
@@ -124,7 +124,7 @@ mt_plots_statsbarplot <- function(D,
         # reorder sel according to rd
         sel <- sel[match(sel$var,rd$var),] %>%
           dplyr::select(var)
-        
+
         # create data.frame for plotting
         data_plot <- rd[[aggregate]] %>%
           unlist %>% table(exclude = NULL) %>% as.data.frame()
@@ -139,7 +139,7 @@ mt_plots_statsbarplot <- function(D,
 
         # create data frame
         empty <- data.frame(name = agg_empty, count = rep(0, times=length(agg_empty)))
-        
+
         if("association" %in% colnames(data_plot)){
           empty$association <- "positive"
         }
@@ -169,10 +169,10 @@ mt_plots_statsbarplot <- function(D,
       data_plot <- data_plot %>%
         dplyr::left_join(dict, by=c("name"=aggregate)) %>%
         dplyr::rename(color=sym(colorby))
-      
+
       # create annotation data
-      anno <- data.frame(name = rep(rd$name, times=sapply(rd[[aggregate]], length) %>% as.vector()), 
-                                 var = rep(rd$var, times=sapply(rd[[aggregate]], length) %>% as.vector()), 
+      anno <- data.frame(name = rep(rd$name, times=sapply(rd[[aggregate]], length) %>% as.vector()),
+                                 var = rep(rd$var, times=sapply(rd[[aggregate]], length) %>% as.vector()),
                                  pathway = unlist(rd[[aggregate]]),
                                  color = ifelse(!is.null(colorby), rep(rd[[colorby]], times=sapply(rd[[aggregate]], length) %>% as.vector()),"pathway")) %>%
         dplyr::left_join(MetaboTools:::mti_get_stat_by_name(D=D,name=ss) , by="var") %>%
@@ -184,12 +184,12 @@ mt_plots_statsbarplot <- function(D,
       if ("pathways" %in% names(x)){
         if (aggregate %in% names(x$pathways)) {
           # add pathway names to dataframe
-          data_plot %<>% 
+          data_plot %<>%
             dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("name"="ID"))
-          anno %<>% 
+          anno %<>%
             dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("pathway"="ID")) %>%
             dplyr::select(name,pathway,pathway_name,color,everything())
-          
+
           # set Unknown pathway names to Unknown
           if(length(which(is.na(data_plot$pathway_name)))>0){
             data_plot$pathway_name[which(is.na(data_plot$pathway_name))] <- "Unknown"
@@ -213,13 +213,13 @@ mt_plots_statsbarplot <- function(D,
     }
     list(dt = data_plot, anno = anno)
   })
-  
+
   # function to revert string structure
   revert_list_str_4 <- function(ls) {
     # get sub-elements in same order
     x <- lapply(ls, `[`, names(ls[[1]]))
     # stack and reslice
-    apply(do.call(rbind, x), 2, as.list) 
+    apply(do.call(rbind, x), 2, as.list)
   }
 
   data <- revert_list_str_4(data)
@@ -231,9 +231,9 @@ mt_plots_statsbarplot <- function(D,
     # get common colnames in stat table
     tt <- sapply(data$anno, colnames) %>% unlist %>% table %>% as.data.frame
     colnames(tt)[1] <- "var"
-    tt %<>% 
-      dplyr::filter(Freq == max(Freq)) %>% 
-      dplyr::pull(var) %>% 
+    tt %<>%
+      dplyr::filter(Freq == max(Freq)) %>%
+      dplyr::pull(var) %>%
       as.character
     anno <- lapply(data$anno, function(x){
       x %>%
@@ -249,7 +249,7 @@ mt_plots_statsbarplot <- function(D,
 
     # convert count to numeric
     data_plot$count %<>% as.numeric
-    
+
     ## CREATE PLOT
     p <- ggplot(data_plot, aes(label)) +
       (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "positive"), aes(y = !!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)}) +
@@ -293,25 +293,22 @@ mt_plots_statsbarplot <- function(D,
 
     # add custom elements?
     if (!is.null(ggadd)) p <- p + ggadd
-    
+
     # save plot parameters to be passed to the html generator for dynamical plot height
     re <- p %>%
       ggplot2::ggplot_build() %>%
-      magrittr::extract2('layout') %>% 
+      magrittr::extract2('layout') %>%
       magrittr::extract2('layout')
 
     nr <- data_plot$name %>% unique %>% length # number of pathways
     ncol <- re$COL %>% max() # number of panel columns
     nrow <- re$ROW %>% max() # number of panel rows
 
-    # fix ggplot environment
-    if (D %>% MetaboTools:::mti_get_setting("ggplot_fix")) p <- MetaboTools:::mti_fix_ggplot_env(p)
-
   } else {
 
     p <- ggplot() +
       geom_text(aes(x=0,y=0, label="No significant results"), size=10)
-    
+
     # save plot parameters to be passed to the html generator for dynamical plot height
     nr <- 0 # number of pathways
     ncol <- NULL

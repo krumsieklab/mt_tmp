@@ -113,9 +113,6 @@ mt_plots_pheatmap <- function(D, scaledata=F, sym0=F, fD = function(x){ if(scale
     if (!is.null(ggadd)) re <- re+ggadd
   }
 
-  # fix ggplot environment
-  if (D %>% mti_get_setting("ggplot_fix")) re <- mti_fix_ggplot_env(re)
-
 
   # add status information & plot
   funargs <- mti_funargs()
