@@ -4,26 +4,25 @@
 \alias{mt_pre_confounding_correction}
 \title{Confounding correction}
 \usage{
-mt_pre_confounding_correction(D, formula, strata = NULL, scale = F)
+mt_pre_confounding_correction(D, formula, strata = NULL, scale_data = F)
 }
 \arguments{
-\item{D}{SummarizedExperiment object}
+\item{D}{\code{SummarizedExperiment} object.}
 
-\item{formula}{formula uncluding column names from sample annotation, i.e, ~batch+age}
+\item{formula}{Formula including column names from sample annotation, i.e, ~batch+age.}
 
-\item{strata}{strata classes for stratified confounding correction, should be a column from colData(D)}
+\item{strata}{Strata classes for stratified confounding correction, should be a column from colData(D).}
 
-\item{scale}{should data be scaled after correaction}
+\item{scale_data}{Should data be scaled after correction? Default: F.}
 }
 \value{
-corrected data together bit lm.fit pvalue per metabolites to show confounding affect on them
+assay: corrected data
+
+$results$output: lm.fit pvalue per metabolites to show confounding affect on them
 }
 \description{
-\code{mt_pre_confounding_correction} returns the corrected data
-}
-\details{
-each metabolits is corrected by lm with the confounding variables and residuals are returned
-in lieu of uncorrected metabolites expressions.
+Each metabolite is corrected by lm with the confounding variables and residuals are returned in lieu of uncorrected
+metabolites expressions.
 }
 \examples{
 
@@ -31,8 +30,7 @@ in lieu of uncorrected metabolites expressions.
  #... \%>\% mt_pre_confounding_correction( formula = ~batch + age, strata = "RUN_DAY" )
  }
 
-
 }
 \author{
-mubu
+MB
 }

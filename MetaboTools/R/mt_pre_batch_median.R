@@ -1,12 +1,13 @@
-#' Median batch correction.
+#' Median batch correction
 #'
 #' Same approach that Metabolon uses for runday correction. Works for both logged and non-logged data. Subtracts (logged) or
 #' divides (non-logged) metabolite values by the median value per batch.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param batches # sample annotation (colData) column name that contains batch assignment
+#' @param D \code{SummarizedExperiment} input.
+#' @param batches Sample annotation (colData) column name that contains batch assignment.
+#' @param ref_samples Expression to filter out reference samples to use from colData.
 #'
-#' @return assay: batch-corrected version
+#' @return assay: Batch-corrected version.
 #'
 #' @examples
 #' \dontrun{... %>% mt_pre_batch_median(batches="BATCH") %>% ...
@@ -14,16 +15,8 @@
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_pre_batch_median = function(
-  D,          # SummarizedExperiment input
-  batches,    # sample annotation column that contains batch info
-  ref_samples # expression to filter out reference samples to use from rowData
-) {
+mt_pre_batch_median = function(D, batches, ref_samples) {
 
   # validate and extract arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -78,6 +71,9 @@ mt_pre_batch_median = function(
     X[b==batch,] <-  op(X[b==batch,], med_matrix)
   }
 
+  # replace original assay with batch corrected assay
+  assay(D) = t(X)
+
   # ref samples logging string
   refadd <- if(missing(ref_samples)){""}else{sprintf(": %s", as.character(dplyr::enquo(ref_samples)))}
 
@@ -90,7 +86,6 @@ mt_pre_batch_median = function(
     )
 
   # return
-  assay(D) = t(X)
   D
 
 

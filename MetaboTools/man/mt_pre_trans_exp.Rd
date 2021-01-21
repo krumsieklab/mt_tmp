@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_pre_trans_exp.R
 \name{mt_pre_trans_exp}
 \alias{mt_pre_trans_exp}
-\title{Exponentiate, base 2 by default.}
+\title{Exponentiate, base 2 by default}
 \usage{
 mt_pre_trans_exp(D, base = 2)
 }

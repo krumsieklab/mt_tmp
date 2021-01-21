@@ -11,10 +11,10 @@ library(MetaboTools)
 
 D <-
   # load data
-  mt_files_load_metabolon(codes.makepath("Mt/sampledata.xlsx"), "OrigScale") %>%
+  mt_load_files_metabolon(file=codes.makepath("Mt/sampledata.xlsx"), sheet="OrigScale") %>%
   # timing start
   mt_logging_tic() %>%
-  
+
   ###
   # heading
   mt_reporting_heading("Preprocessing") %>%
@@ -39,16 +39,16 @@ D <-
   mt_pre_trans_log() %>%
   # KNN imputation
   mt_pre_impute_knn() %>%
-  
-  
-  
+
+
+
   # ratios
-  
+
   # GGM
   mt_stats_multiv_net_GeneNet(stat_name ="GGM") %>%
   mt_post_multTest(stat_name = "GGM", method="fdr") %>%
   mt_modify_ratios(nbr_stat_name = "GGM", nbr_edge_filter = p.adj<0.5, nbr_neighborhood = 2) %>% # liberal cutoff because this is a mock dataset
-  
+
   ###
   mt_reporting_heading("Statistics") %>%
   # linear model, differential test on Group
@@ -70,7 +70,7 @@ D <-
   mt_plots_volcano(stat_name     = "comp",
                    metab_filter = p.adj < 0.1 & pgain > 2,
                    colour       = p.adj < 0.1 & pgain > 2) %>%
-  
+
   {.}
 
 # D%>% MetaboTools:::mti_get_stat_by_name("comp") %>% View()

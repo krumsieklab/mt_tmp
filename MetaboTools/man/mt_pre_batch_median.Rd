@@ -9,7 +9,9 @@ mt_pre_batch_median(D, batches, ref_samples)
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{batches}{# sample annotation (colData) column name that contains batch assignment}
+\item{batches}{sample annotation (colData) column name that contains batch assignment}
+
+\item{ref_samples}{expression to filter out reference samples to use from colData}
 }
 \value{
 assay: batch-corrected version

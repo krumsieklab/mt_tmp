@@ -4,12 +4,12 @@
 \alias{mt_modify_filter_samples}
 \title{Filter samples.}
 \usage{
-mt_modify_filter_samples(D, sample_filter)
+mt_modify_filter_samples(D, filter)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{sample_filter}{Logical expression. Can use fields from \code{colData()}.}
+\item{filter}{Logical expression. Can use fields from \code{colData()}.}
 }
 \value{
 assay: filtered data matrix with removed samples
@@ -21,7 +21,7 @@ Filters samples according to an expression. Expression can access entries of col
 }
 \examples{
 # filter to two specific groups of samples
-\dontrun{... \%>\% mt_modify_filter_samples(sample_filter = GROUP \%in\% c("FL","ctrl")) \%>\% ...}
+\dontrun{... \%>\% mt_modify_filter_samples(filter = GROUP \%in\% c("FL","ctrl")) \%>\% ...}
 
 }
 \author{

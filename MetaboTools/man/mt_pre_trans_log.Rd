@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_pre_trans_log.R
 \name{mt_pre_trans_log}
 \alias{mt_pre_trans_log}
-\title{Log, base 2 by default.}
+\title{Log, base 2 by default}
 \usage{
 mt_pre_trans_log(D, base = 2)
 }
@@ -15,7 +15,7 @@ mt_pre_trans_log(D, base = 2)
 assay: logged data
 }
 \description{
-Transform the entire dataset log_based(x), i.e. log(x)/log(base)
+Transform the entire dataset log_based(x), i.e. log(x)/log(base).
 }
 \examples{
 \dontrun{# in the context of a SE pipeline

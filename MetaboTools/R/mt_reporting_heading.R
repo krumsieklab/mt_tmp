@@ -1,12 +1,13 @@
-#' Store heading that will be added to report later.
+#' Store heading for html report
 #'
-#' Will be used when calling \code{mt_reporting_generateMD}.
+#' Store heading text and level to be used when calling \code{mt_reporting_html}.
 #'
-#' @param D  \code{SummarizedExperiment} input (missing if first step in pipeline)
-#' @param strtitle Heading text
-#' @param lvl Heading level, default: 1 (can be used for nested outline structures)
+#' @param D  \code{SummarizedExperiment} input. Missing if first step in pipeline.
+#' @param heading Heading text.
+#' @param lvl Heading level. Can be used for nested outline structures. Default: 1.
 #'
-#' @return $result: stores info about heading
+#' @return If first step in pipeline, creates \code{SummarizedExperiment} object.
+#' @return $result$output: Stores info about heading.
 #'
 #' @examples
 #' \dontrun{... %>%
@@ -17,16 +18,8 @@
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#' @import ggplot2
 #' @export
-
-mt_reporting_heading <- function(
-  D,
-  strtitle,
-  lvl=1
-) {
+mt_reporting_heading <- function(D, heading, lvl=1) {
 
   # if first step in pipeline, create SE
   if(missing(D)){
@@ -42,8 +35,8 @@ mt_reporting_heading <- function(
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = glue::glue("reporting heading, level {lvl}: {strtitle}"),
-      output = list(lvl=lvl,title=strtitle)
+      logtxt = glue::glue("reporting heading, level {lvl}: {heading}"),
+      output = list(lvl=lvl,title=heading)
     )
 
   # return

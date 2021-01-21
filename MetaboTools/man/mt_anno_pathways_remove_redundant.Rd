@@ -2,19 +2,19 @@
 % Please edit documentation in R/mt_anno_pathways_remove_redundant.R
 \name{mt_anno_pathways_remove_redundant}
 \alias{mt_anno_pathways_remove_redundant}
-\title{Remove redundant pathway annotations.}
+\title{Remove redundant pathway annotations}
 \usage{
-mt_anno_pathways_remove_redundant(D, met_ID, pw_ID)
+mt_anno_pathways_remove_redundant(D, met_id, pw_id)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{met_ID}{column containing metabolite IDs}
+\item{met_id}{Column containing metabolite IDs}
 
-\item{pw_ID}{column containing pathways IDs}
+\item{pw_id}{Column containing pathways IDs}
 }
 \value{
-rowData[[pw_id]]: redundant pathway annotation filtered.
+rowData: Redundant pathway annotation from SE pw_id column filtered.
 }
 \description{
 Remove identical pathways from an existing SummarizedExperiment
@@ -25,10 +25,10 @@ Remove identical pathways from an existing SummarizedExperiment
 \dontrun{... \%>\%
   mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db",
   pwdb_name = "SMP", db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) \%>\%
-  mt_anno_pathways_remove_redundant(met_ID = "HMDb_ID", pw_ID = "smp_db") \%>\%
+  mt_anno_pathways_remove_redundant(met_id = "HMDb_ID", pw_id = "smp_db") \%>\%
 ...}
 
 }
 \author{
-Parviz Gomari
+PG
 }

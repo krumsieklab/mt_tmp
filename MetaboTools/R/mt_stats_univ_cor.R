@@ -1,46 +1,37 @@
-#' Computes correlation to a given phenotype.
-#' If present, NAs will be omitted.
+#' Computes correlation to a given phenotype
+#'
+#' {ADD DESCRIPTION}. If present, NAs will be omitted.
 #'
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param var string name of the colData variable to use for the correlation calculation. If method="kendall", class(D[[var]]) needs to be numeric.
-#' @param method string with the correlation method to use. Can be any among "pearson", "kendall", "spearman".
-#' @param stat_name name under which this comparison will be stored, must be unique to all other statistical results
-#' @param sample_filter optional sample filter condition
-#' @param exact_flag optional to set the exact flag in cor.test function
+#' @param D \code{SummarizedExperiment} input.
+#' @param method Correlation method to use. Can be any among "pearson", "kendall", "spearman".
+#' @param in_col Name of the colData column to use for the correlation calculation. If method="kendall", class(D[[in_col]]) needs
+#'    to be numeric.
+#' @param stat_name Name under which this comparison will be stored, must be unique to all other statistical results.
+#' @param sample_filter OPTIONAL. Sample filter condition.
+#' @param exact OPTIONAL. Set the exact flag in cor.test function.
 #'
-#' @return original SummarizedExperiment as in input
-#' @return $output: list of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names
+#' @return $results$output: List of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names.
 #'
 #' @examples
 #' \dontrun{... %>%
-#'   mt_stats_univ_cor(var = "Stage", sample_filter = (GROUP %in% "Tumor"), name = "tau", method = "tau") %>%
+#'   mt_stats_univ_cor(in_col = "Stage", sample_filter = (GROUP %in% "Tumor"), name = "tau", method = "tau") %>%
 #' ...
 #' }
 #'
-#' @author EB, RB (modified on 2020-07-13)
-#'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
+#' @author EB, RB
 #'
 #' @export
-
-mt_stats_univ_cor <- function(
-  D,
-  method,
-  var,
-  stat_name,
-  sample_filter,
-  exact_flag=NULL){
+mt_stats_univ_cor <- function(D, method, in_col, stat_name, sample_filter, exact=NULL) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
   # check method
   stopifnot(method %in% c("pearson", "kendall", "spearman"))
-  # check that "var" is in the colData
-  if (!(var %in% colnames(colData(D)))) stop(sprintf("There is no column called %s in the colData", var))
-  # "var" must be numeric
-  if (class(D[[var]])!="numeric") stop(sprintf("For Kendall's correlation, %s must be numeric",var))
+  # check that "in_col" is in the colData
+  if (!(in_col %in% colnames(colData(D)))) stop(sprintf("There is no column called %s in the colData", in_col))
+  # "in_col" must be numeric
+  if (class(D[[in_col]])!="numeric") stop(sprintf("For Kendall's correlation, %s must be numeric",in_col))
 
   # make sure name does not exist yet
   if (stat_name %in% unlist(MetaboTools::mtm_res_get_stats_entries(D) %>% purrr::map("output") %>% purrr::map("stat_name"))) stop(sprintf("stat element with stat_name '%s' already exists",stat_name))
@@ -63,7 +54,7 @@ mt_stats_univ_cor <- function(
   met <- colnames(Ds)[(length(colnames(colData(D)))+2):length(colnames(Ds))]
   # compute association to the phenotype
   rr <- lapply(met, function(x){
-    d=stats::cor.test(Ds[,x], Ds[[var]], method=method, alternative = "two.sided", exact=exact_flag)
+    d=stats::cor.test(Ds[,x], Ds[[in_col]], method=method, alternative = "two.sided", exact=exact)
     list("statistic"=d$estimate, "p.value"=d$p.value, "method"=d$method)
   })
   names(rr) <- met
@@ -84,30 +75,30 @@ mt_stats_univ_cor <- function(
   colnames(tab) <- c("statistic","p.value","method")
 
   # add term column with ordinal variable
-  tab$term <- rep(var, dim(tab)[1])
+  tab$term <- rep(in_col, dim(tab)[1])
   # add column with names
-  tab$var <- rownames(tab)
+  tab$in_col <- rownames(tab)
 
   # reorder columns
-  cc <- c("var","term","statistic","p.value")
+  cc <- c("in_col","term","statistic","p.value")
   tab <- tab[,match(cc,colnames(tab))]
 
   ## construct output groups variable
-  outgroups <- unique(Ds[[var]])
+  outgroups <- unique(Ds[[in_col]])
 
   # add status information
   funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("%s correlation to %s", method, var),
+      logtxt = sprintf("%s correlation to %s", method, in_col),
       output = list(
         table = tab,
         name = stat_name,
         lstobj = NULL,
         groups = outgroups,
         samples.used = samples.used,
-        outcome = var
+        outcome = in_col
       )
     )
 

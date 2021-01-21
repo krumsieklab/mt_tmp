@@ -1,0 +1,81 @@
+#' Boxplot of samples.
+#'
+#' Can be colored by factor.
+#'
+#' @param D \code{SummarizedExperiment} input
+#' @param title title of boxplot, default "Sample boxplot"
+#' @param legend show legend? default: T
+#' @param ylab y axis label, default: "Metabolite concentrations"
+#' @param plot_logged show plot logged? default: F. note: plot will still be logged if data have been logged before in pipeline.
+#' @param ggadd further elements/functions to add (+) to the ggplot object
+#' @param ...  additional arguments directly passed to aes() of ggplot
+#'
+#' @return $result: plot, sample boxplot
+#'
+#' @examples
+#' \dontrun{## sample boxplot, color by colData 'group' variable, with specific title, on log scale,
+#' ... %>% mt_plots_sample_box(color=group, title='after quotient normalization', plot_logged=T) %>% ...
+#' }
+#'
+#' @author JK
+#'
+#' @import ggplot2
+#' @importFrom magrittr %>% %<>%
+#' @import SummarizedExperiment
+#'
+#' @export
+
+mt_plots_sample_box <- function(
+  D,         # SummarizedExperiment input
+  title="Sample boxplot",
+  legend=T,  # keep legend?  [could be removed]
+  ylab = "Metabolite concentrations",  # y axis label
+  plot_logged=F,  # plot logged
+  ggadd=NULL,   # further elements/functions to add (+) to the ggplot object
+  ...        # additional arguments directly passed to aes() of ggplot
+) {
+
+  # validate arguments
+  stopifnot("SummarizedExperiment" %in% class(D))
+
+  # plot_logged?
+  Dplot = D
+  if (plot_logged) {
+    assay(Dplot) <- log2(assay(Dplot))
+    ylab = sprintf("%s [log2]", ylab)
+  }
+
+  # merge with sample annotations, only keep the ones that were actually used
+  cd <- Dplot %>% colData() %>% as.data.frame() %>% tibble::rownames_to_column("merge.primary")
+  keep <- c(mti_extract_variables(quos(...)), "merge.primary")
+  cd <- cd[,colnames(cd) %in% keep,drop=F]
+  df <- cbind(cd, t(assay(Dplot)))
+  # generate ggplot
+  p <- df %>%  tidyr::gather(metab, value, dplyr::one_of(rownames(Dplot))) %>%
+    ggplot(aes(x = merge.primary, y = value, ...)) +
+    geom_boxplot() +
+    ylab(ylab) +
+    ggtitle(title) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  # todo add rowname
+
+  # remove legend?
+  if (!legend) p = p + theme(legend.position="none")
+
+  # add custom elements?
+  if (!is.null(ggadd)) p <- p+ggadd
+
+  # add status information & plot
+  funargs <- mti_funargs()
+  metadata(D)$results %<>%
+    mti_generate_result(
+      funargs = funargs,
+      logtxt = sprintf("sample boxplot, aes: %s", mti_dots_to_str(...)),
+      output = list(p)
+    )
+
+  # return
+  D
+
+
+}

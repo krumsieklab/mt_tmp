@@ -2,40 +2,37 @@
 % Please edit documentation in R/mt_stats_univ_cor.R
 \name{mt_stats_univ_cor}
 \alias{mt_stats_univ_cor}
-\title{Computes correlation to a given phenotype.
-If present, NAs will be omitted.}
+\title{Computes correlation to a given phenotype}
 \usage{
-mt_stats_univ_cor(D, method, var, stat_name, sample_filter, exact_flag = NULL)
+mt_stats_univ_cor(D, method, in_col, stat_name, sample_filter, exact = NULL)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{method}{string with the correlation method to use. Can be any among "pearson", "kendall", "spearman".}
+\item{method}{Correlation method to use. Can be any among "pearson", "kendall", "spearman".}
 
-\item{var}{string name of the colData variable to use for the correlation calculation. If method="kendall", class(D[[var]]) needs to be numeric.}
+\item{in_col}{Name of the colData column to use for the correlation calculation. If method="kendall", class(D[[in_col]]) needs
+to be numeric.}
 
-\item{stat_name}{name under which this comparison will be stored, must be unique to all other statistical results}
+\item{stat_name}{Name under which this comparison will be stored, must be unique to all other statistical results.}
 
-\item{sample_filter}{optional sample filter condition}
+\item{sample_filter}{OPTIONAL. Sample filter condition.}
 
-\item{exact_flag}{optional to set the exact flag in cor.test function}
+\item{exact}{OPTIONAL. Set the exact flag in cor.test function.}
 }
 \value{
-original SummarizedExperiment as in input
-
-$output: list of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names
+$results$output: list of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names
 }
 \description{
-Computes correlation to a given phenotype.
-If present, NAs will be omitted.
+{ADD DESCRIPTION}. If present, NAs will be omitted.
 }
 \examples{
 \dontrun{... \%>\%
-  mt_stats_univ_cor(var = "Stage", sample_filter = (GROUP \%in\% "Tumor"), name = "tau", method = "tau") \%>\%
+  mt_stats_univ_cor(in_col = "Stage", sample_filter = (GROUP \%in\% "Tumor"), name = "tau", method = "tau") \%>\%
 ...
 }
 
 }
 \author{
-EB, RB (modified on 2020-07-13)
+EB, RB
 }

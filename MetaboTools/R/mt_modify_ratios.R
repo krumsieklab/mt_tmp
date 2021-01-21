@@ -1,14 +1,16 @@
-#' Generate metabolite ratios.
+#' Generate metabolite ratios
 #'
 #' Transforms the dataset into a new dataset where each 'metabolite' represents a ratio of two metabolites. Warning: For a dataset
-#' with originally p metabolites, this will result in p*(p-1) new variables. (e.g. 500 metabolits becomes 249500 ratios).
+#' with originally p metabolites, this will result in p*(p-1) new variables (e.g. 500 metabolits becomes 249500 ratios).
 #'
+#' @description
 #' mt_post_pgain provides a special operation on a ratio data matrix for better interpretation of the resulting p-values.
 #'
-#' @param D SummarizedExperiment object
-#' @param nbr_stat_name Name of previous network generation call (e.g. \link{mt_stats_multiv_net_GeneNet}). Default: None, i.e. no network-based ratios
-#' @param nbr_edge_filter Filter criterion for edge selection, e.g. "p.adj < 0.05", as a term.
-#' @param nbr_neighborhood Neighborhood degree to use (e.g. first neighbors, second neighbors), default: 1
+#' @param D \code{SummarizedExperiment} object.
+#' @param stat_name Name of previous network generation call (e.g. \link{mt_stats_multiv_net_GeneNet}). Default: None, i.e. no
+#'    network-based ratios.
+#' @param edge_filter Filter criterion for edge selection, e.g. "p.adj < 0.05", as a term.
+#' @param neighborhood Neighborhood degree to use (e.g. first neighbors, second neighbors). Default: 1.
 
 #'
 #' @examples
@@ -16,20 +18,13 @@
 #' ... %>%  mt_modify_ratios() %>% ... # proceed with statistical analysis
 #' }
 #'
-#' @return SummarizedExperiment containing pairwise ratios from all variables of input
+#' @return assay: Pairwise ratios from all variables of input.
+#' @return rowData: Pairwise ratios from all variables of input.
 #'
-#' @author Jonas Zierer, JK
-#'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
+#' @author JZ, JK
 #'
 #' @export
-mt_modify_ratios <- function(
-    D,
-    nbr_stat_name,
-    nbr_edge_filter,
-    nbr_neighborhood = 1
-){
+mt_modify_ratios <- function(D, stat_name, edge_filter, neighborhood = 1){
 
     stopifnot("SummarizedExperiment" %in% class(D))
 
@@ -79,13 +74,13 @@ mt_modify_ratios <- function(
         stop("something went wrong. check data!")
 
     ## FILTER BY NETWORK-BASED RATIOS (NBRs)?
-    if (!missing(nbr_stat_name)) {
+    if (!missing(stat_name)) {
         # verify that arguments are given
-        if (missing(nbr_edge_filter)) stop("If nbr_stat_name is given, nbr_edge_filter must be supplied.")
+        if (missing(edge_filter)) stop("If stat_name is given, edge_filter must be supplied.")
         # retrieve statistics object
-        res <- D %>% MetaboTools:::mtm_get_stat_by_name(nbr_stat_name)
+        res <- D %>% MetaboTools:::mti_get_stat_by_name(stat_name)
         # extract metabolite pairs according to formula, only keep metabolite names
-        mpairs <- res %>% dplyr::filter(!!dplyr::enquo(nbr_edge_filter)) %>% dplyr::select(var1,var2)
+        mpairs <- res %>% dplyr::filter(!!dplyr::enquo(edge_filter)) %>% dplyr::select(var1,var2)
         # initialize adjacency matrix
         A <- matrix(0, nrow=nrow(D), ncol=nrow(D))
         colnames(A) <- rownames(A) <- rownames(D)
@@ -96,7 +91,7 @@ mt_modify_ratios <- function(
         diag(A) <- 1
         # get k-neighborhood (A^k matrix multiplication),
         # found this trick on StackExchange, repeated application of %*%, also works with 1
-        N <- Reduce("%*%", replicate(nbr_neighborhood, A, FALSE)) > 0
+        N <- Reduce("%*%", replicate(neighborhood, A, FALSE)) > 0
         # convert back to pairs
         mneighborpairs <- apply(which(N, arr.ind = T), 2, function(i){colnames(A)[i]}) %>%
             #  build string names as M1_M2

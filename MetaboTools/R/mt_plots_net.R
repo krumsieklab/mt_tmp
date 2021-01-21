@@ -4,9 +4,9 @@
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param stat_name name of the test to take correlations from
-#' @param corr_filter filter for correlation values to plot
+#' @param cor_filter filter for correlation values to plot
 #' @param node_coloring name of the test to use for node coloring
-#' @param save.html filename of visnetwork html file. If empty, no html saved
+#' @param save_html filename of visnetwork html file. If empty, no html saved
 #' @param height optional size in pixel of the plotting window size. Default 500px.
 #'
 #' @return assay: not altered
@@ -15,7 +15,7 @@
 #' @examples
 #' \dontrun{#' # in the context of a SE pipeline
 #' ... %>% mt_plots_net(statsname = "xxx") %>% ...    # standard call
-#' ... %>% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's", save.html="Network.html", height=800) %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
+#' ... %>% mt_plots_net(statsname = "xxx", cor_filter = p.adj < 0.5, node_coloring="Li's", save_html="Network.html", height=800) %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
 #'}
 #'
 #' @author EB
@@ -31,9 +31,9 @@
 mt_plots_net <- function(
   D,                               # SummarizedExperiment input
   stat_name,                        # name of the correlation matrix to plot
-  corr_filter = p.value < 0.05,    # filter
+  cor_filter = p.value < 0.05,    # filter
   node_coloring,                   # name of the statistical test to use for node coloring
-  save.html,                       # filename of visnetwork html
+  save_html,                       # filename of visnetwork html
   height = 500                     # size of plotting window
 ){
 
@@ -70,11 +70,11 @@ mt_plots_net <- function(
   } else nodes$node_color <- rep("lightblue",times=length(nodes$ids))
 
   ## apply filter on correlations
-  if(!missing(corr_filter)){
+  if(!missing(cor_filter)){
     mti_logstatus("filter correlations")
-    corr_filter_q <- dplyr::enquo(corr_filter)
+    cor_filter_q <- dplyr::enquo(cor_filter)
     data_plot <- data_plot %>%
-      dplyr::filter(!!corr_filter_q)
+      dplyr::filter(!!cor_filter_q)
   }
 
   ## define edge attributes
@@ -132,12 +132,12 @@ mt_plots_net <- function(
     theme(legend.position = "bottom")
 
 
-  # if save.html given, save visnetwork to html
-  if (!missing(save.html)) {
+  # if save_html given, save visnetwork to html
+  if (!missing(save_html)) {
     # due to odd visSave path handling behavior, we need to export to a tmp file first and the move to final location
     tmpfile = sprintf("tmp_%s.html", uuid::UUIDgenerate())
     visNetwork::visSave(graph = p_vis, file = tmpfile)
-    file.rename(tmpfile, save.html)
+    file.rename(tmpfile, save_html)
   }
 
   ## add status information & plot

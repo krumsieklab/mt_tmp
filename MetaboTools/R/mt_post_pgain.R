@@ -9,11 +9,11 @@
 #'
 #' See also: https://pubmed.ncbi.nlm.nih.gov/22672667/
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param stat_name name of the statistical comparison
-#' @param p_col name of p-value column to compute p-gain from
+#' @param D \code{SummarizedExperiment} input.
+#' @param stat_name Name of the statistical comparison.
+#' @param p_col Name of p-value column to compute p-gain from. Default: p.value.
 #'
-#' @return $result: statistical object
+#' @return $results[[stat_name]]$output: pgain column added to statistical table
 #'
 #' @examples
 #' \dontrun{# add p-gains to the result table of the statistical comparison called "comparison1"
@@ -24,9 +24,8 @@
 #' @author JZ
 #'
 #' @export
-mt_post_pgain <- function(D,
-                             stat_name,
-                             p_col = p.value){
+mt_post_pgain <- function(D, stat_name, p_col = p.value){
+
     p_col <- dplyr::enquo(p_col)
 
     ## are these ratio results?
@@ -68,8 +67,7 @@ mt_post_pgain <- function(D,
     metadata(D)$results %<>%
                   mti_generate_result(
                       funargs = funargs,
-                      logtxt = sprintf("Calculate p-gains for '%s'", stat_name),
-                      output = NULL
+                      logtxt = sprintf("Calculate p-gains for '%s'", stat_name)
                   )
     ## RETURN
     D

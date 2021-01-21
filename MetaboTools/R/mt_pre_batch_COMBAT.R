@@ -1,28 +1,21 @@
-#' COMBAT batch correction.
+#' ComBat batch correction
 #'
 #' Performs batch correction via COMBAT method from \code{sva} package. Function will check that data is logged. If data is not logged,
 #' this function will log the data, run ComBat, and exponentiate the data before returning it into the assay data frame.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param batches sample annotation (colData) column name that contains batch assignment
+#' @param D \code{SummarizedExperiment} input.
+#' @param batches Sample annotation (colData) column name that contains batch assignment.
 #'
-#' @return assay: batch-corrected version
+#' @return assay: Batch-corrected version.
 #'
 #' @examples
-#' \dontrun{... %>% mt_pre_batch_COMBAT(batches="BATCH") %>% ...
+#' \dontrun{... %>% mt_pre_batch_ComBat(batches="BATCH") %>% ...
 #' }
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_pre_batch_COMBAT = function(
-  D,       # SummarizedExperiment input
-  batches  # sample annotation column that contains batch info
-) {
+mt_pre_batch_ComBat = function(D, batches) {
 
   # validate and extract arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -30,7 +23,7 @@ mt_pre_batch_COMBAT = function(
 
   # crash if there are any missing values
   if (any(is.na(X))) {
-    stop("COMBAT batch correction cannot work with missing/NA values.")
+    stop("ComBat batch correction cannot work with missing/NA values.")
   }
 
   # check if data is logged, if not log the data
@@ -66,7 +59,7 @@ mt_pre_batch_COMBAT = function(
   metadata(D)$results %<>%
     mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("COMBAT batch correction, variable: '%s'",batches)
+      logtxt = sprintf("ComBat batch correction, variable: '%s'",batches)
     )
 
   # if data was logged above, exponentiate it before returning

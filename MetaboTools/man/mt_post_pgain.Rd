@@ -7,14 +7,14 @@
 mt_post_pgain(D, stat_name, p_col = p.value)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{stat_name}{name of the statistical comparison}
+\item{stat_name}{Name of the statistical comparison.}
 
-\item{p_col}{name of p-value column to compute p-gain from}
+\item{p_col}{Name of p-value column to compute p-gain from. Default: p.value.}
 }
 \value{
-$result: statistical object
+$results[[stat_name]]$output: pgain column added to statistical table
 }
 \description{
 This is a specialized post-analysis function for ratio-based datasets (see mt_modify_ratios). A "p-gain" is defined

@@ -6,31 +6,34 @@
 \usage{
 mt_reporting_html(
   D,
-  outfile,
+  file,
   title = "RMD output",
-  output.calls = F,
-  number.sections = F,
-  start.after = NA,
-  use.plotly = F,
-  keep.tmp = F
+  output_calls = F,
+  number_sections = F,
+  start_after = NA,
+  use_plotly = F,
+  keep_tmp = F
 )
 }
 \arguments{
-\item{D}{Summarized experiment input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{outfile}{# output HTML file name}
+\item{file}{Output HTML filename.}
 
-\item{title}{Title of RMD document}
+\item{title}{Title of RMD document. Default: 'RMD output'.}
 
-\item{output.calls}{Output detailed info on function calls? default: F (passed through to mt_reporting_generateMD)}
+\item{output_calls}{Output detailed info on function calls? Default: F.}
 
-\item{number.sections}{Number sections and sub-sections? (default: F)}
+\item{number_sections}{Number sections and sub-sections? Default: F.}
 
-\item{start.after}{UUID of pipeline step AFTER which to start (default: none, i.e. output entire pipeline) (passed through to mt_reporting_generateMD)}
+\item{start_after}{UUID of pipeline step AFTER which to start. Default: NA, i.e. output entire pipeline. (passed through to mt_reporting_generateMD)}
 
-\item{use.plotly}{Output interactive plotly plots? (experimental)}
+\item{use_plotly}{Output interactive plotly plots? Default: F. (experimental)}
 
-\item{keep.tmp}{Keep temporary files? (default: No). Can be used to manually edit RMD afterwards.}
+\item{keep_tmp}{Keep temporary files? Can be used to manually edit RMD afterwards. Default: F.}
+}
+\value{
+Does not change the \code{SummarizedExperiment} object.
 }
 \description{
 Shortcut for mt_reporting_generateMD with subsequent knitting and clean-up.

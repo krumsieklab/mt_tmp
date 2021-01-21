@@ -2,28 +2,29 @@
 % Please edit documentation in R/mt_stats_univ_missingness.R
 \name{mt_stats_univ_missingness}
 \alias{mt_stats_univ_missingness}
-\title{Perform missingness significance analysis.}
+\title{Perform missingness significance analysis}
 \usage{
-mt_stats_univ_missingness(D, comp_col, stat_name, sample_filter)
+mt_stats_univ_missingness(D, in_col, stat_name, sample_filter)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{comp_col}{sample annotation (colData) column to compare against}
+\item{in_col}{Sample annotation (colData) column to compare against.}
 
-\item{stat_name}{name of comparison for later reference}
+\item{stat_name}{Name of comparison for later reference.}
 
-\item{sample_filter}{sample filter term to restrict to.}
+\item{sample_filter}{Sample filter term to restrict to.}
 }
 \value{
 $result: statistics object
 }
 \description{
-This function will determine if NAs significantly accumulate in one of the sample groups. It is recommended that this function is run without prior missing value filtering.
+This function will determine if NAs significantly accumulate in one of the sample groups. It is recommended that this function
+is run without prior missing value filtering.
 }
 \examples{
 \dontrun{# run on sample field 'Group', name output stats object 'miss'
-... \%>\% mt_stats_univ_missingness(comp_col = 'Group', stat_name='miss') \%>\% ...
+... \%>\% mt_stats_univ_missingness(in_col = 'Group', stat_name='miss') \%>\% ...
 }
 
 }

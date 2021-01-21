@@ -2,16 +2,16 @@
 % Please edit documentation in R/mt_pre_trans_relative.R
 \name{mt_pre_trans_relative}
 \alias{mt_pre_trans_relative}
-\title{Scale each sample relative to the mean of a given group of samples.}
+\title{Scale each sample relative to the mean of a given group of samples}
 \usage{
 mt_pre_trans_relative(D, ref_samples, is_logged)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{ref_samples}{expression filtering reference samples from colData}
+\item{ref_samples}{Expression filtering reference samples from colData.}
 
-\item{is_logged}{data logged?}
+\item{is_logged}{Is the data logged?}
 }
 \value{
 assay: relatively scaled data

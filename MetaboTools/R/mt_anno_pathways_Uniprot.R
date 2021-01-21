@@ -1,36 +1,29 @@
-#' Add pathway information.
+#' Add pathway information
 #'
-#' Modified from mt_anno_pathways_HMDB.
-#'  Adds custom pathways to the already existing SummarizedExperiment
-#'  data taken from KEGGREST.
+#' Modified from mt_anno_pathways_HMDB. Adds custom pathways to the already existing SummarizedExperiment data taken from KEGGREST.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param in_col column to use for pathway fetching. The selected column must contain protein uniprot identifier
-#' @param out_col new column name for rowData to output pathway information to
-#' @param export_raw_db OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
+#' @param D \code{SummarizedExperiment} input.
+#' @param in_col Column to use for pathway fetching. The selected column must contain protein Uniprot identifier.
+#' @param out_col A new column name for D to output pathway information to.
+#' @param raw_db_outfile OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a
+#'    .xlsx extension.
 #'
-#' @return rowData: new pathway annotation for proteins
-#' @return $result$pathways: a dataframe of pathway information
+#' @return rowData: New pathway annotation column for proteins.
+#' @return $results$pathways: A dataframe of pathway information.
 #'
 #' @examples
 #' # annotate proteins using kegg
 #' \dontrun{... %>%
-#'   mt_anno_pathways_Uniprot(in_col = "Uniprot_ID", out_col = "kegg_db") %>%
+#'   mt_anno_pathways_uniprot(in_col = "Uniprot_ID", out_col = "kegg_db") %>%
 #' ...}
 #'
-#' @author Richa Batra
+#' @author RB
 #'
 #' @importFrom data.table :=
 #'
 #' @export
+mt_anno_pathways_uniprot <- function(D, in_col, out_col, raw_db_outfile) {
 
-# main
-mt_anno_pathways_Uniprot <- function(
-  D,                  # SummarizedExperiment input
-  in_col,             # column to use for pathway fetching. The selected column must contain protin uniprot identifier
-  out_col,            # a new column name for D to output pathway information to
-  export_raw_db       # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
-) {
   # check arguments
   stopifnot("SummarizedExperiment" %in% class(D))
 
@@ -108,8 +101,8 @@ mt_anno_pathways_Uniprot <- function(
   pwdb_summary %<>% dplyr::rename(ID=path_id) # must be ID else the mt_anno_pathways_remove_redundant
   metadata(D)$pathways[[out_col]] <- pwdb_summary
 
-  if(!missing(export_raw_db)) {
-    openxlsx::write.xlsx(pwdb, export_raw_db)
+  if(!missing(raw_db_outfile)) {
+    openxlsx::write.xlsx(pwdb, raw_db_outfile)
   }
 
 

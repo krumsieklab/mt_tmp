@@ -1,43 +1,40 @@
-#' Add pathway information.
+#' Add pathway information
 #'
-#' Adds custom pathways to the already existing SummarizedExperiment
-#'  data structure using the HMDB .xml file.
+#' Adds custom pathways to the already existing SummarizedExperiment data structure using the HMDB .xml file.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param in_col rowData column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
-#' @param out_col new column name for rowData to output pathway information to
-#' @param pwdb_name Name of the pathway database to use. Can use either SMP or KEGG for this argument
-#' @param db_dir Name of the directory where the parsed HMDB files are stored
-#' @param db_file File name of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds
-#' @param export_raw_db OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
+#' @param D \code{SummarizedExperiment} input.
+#' @param in_col rowData column to use for pathway fetching. The selected column must contain metabolite
+#'    identifiers (e.g. HMBD, KEGG, ChEBI, etc).
+#' @param out_col Name for rowData to output pathway information to.
+#' @param pwdb_name Name of the pathway database to use. Can use either SMP or KEGG for this argument. Default: "SMP".
+#' @param db_dir Name of the directory where the parsed HMDB files are stored.
+#' @param db_file File name of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds.
+#' @param raw_db_outfile OPTIONAL. Name of file to export the pathway database to. Must be a string containing the path name with a
+#'    .xlsx extension.
 #'
-#' @return rowData: new pathway annotation column added
-#' @return $result$pathways: a dataframe of pathway information
+#' @return rowData: New pathway annotation column added.
+#' @return $results$pathways: A dataframe of pathway information.
 #'
 #' @examples
 #' # annotate metabolites using smp_db
 #' \dontrun{... %>%
-#'   mt_anno_pathways_HMDB(in_col = "HMDb_ID", out_col = "smp_db",
+#'   mt_anno_pathways_hmdb(in_col = "HMDb_ID", out_col = "smp_db",
 #'                         pwdb_name = "SMP",
 #'                         db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) %>%
 #' ...}
 #'
-#' @author Parviz Gomari
+#' @author PG
 #'
 #' @importFrom data.table :=
 #'
 #' @export
-
-# main
-mt_anno_pathways_HMDB <- function(
-  D,                  # SummarizedExperiment input
-  in_col,             # column to use for pathway fetching. The selected column must contain metabolite identifiers (e.g. HMBD, KEGG, ChEBI, etc)
-  out_col,            # a new column name for D to output pathway information to
-  pwdb_name = "SMP",  # the name of the pathway database to use. Can use either SMP or KEGG for this argument
-  db_dir = system.file("extdata", "precalc/hmdb/", package = "MetaboTools") ,   # name of the directory where the parsed HMDB files are stored, default is in precalculated data directory
-  db_file,        # filename of the parsed HMDB file to use. Must be in the format: hmdb_preprocessed_{version_number}.rds
-  export_raw_db       # OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a .xlsx extension.
-) {
+mt_anno_pathways_hmdb <- function(D,
+                                  in_col,
+                                  out_col,
+                                  pwdb_name = "SMP",
+                                  db_dir = system.file("extdata", "precalc/hmdb/", package = "MetaboTools") ,
+                                  db_file,
+                                  raw_db_outfile) {
 
   # check arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -147,8 +144,8 @@ mt_anno_pathways_HMDB <- function(
     pwdb_summary
 
 
-  if(!missing(export_raw_db)) {
-    openxlsx::write.xlsx(pwdb, export_raw_db)
+  if(!missing(raw_db_outfile)) {
+    openxlsx::write.xlsx(pwdb, raw_db_outfile)
   }
 
 

@@ -7,20 +7,21 @@
 mt_stats_univ_matrixeqtl(D, formula, stat_name, sample_filter)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{formula}{right-hand side of formula to be put into glm function.}
+\item{formula}{Right-hand side of formula to be put into glm function.}
 
-\item{stat_name}{name under which this comparison will be stored, must be unique to all other statistical results}
+\item{stat_name}{Name under which this comparison will be stored, must be unique to all other statistical results.}
 
-\item{sample_filter}{term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison}
+\item{sample_filter}{Term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants
+to run a two-group comparison}
 }
 \value{
-$result: statistics object
+$results$output: statistics object
 }
 \description{
 Substantially fasters than regular lm as implemented in mt_stats_univ_lm.
-Only supports standard linear models of the form: outcome ~ metabolite + [covariates]
+Only supports standard linear models of the form: outcome ~ metabolite + [covariates].
 }
 \examples{
 \donttest{# run lm with no confounders, "Group" as outcome

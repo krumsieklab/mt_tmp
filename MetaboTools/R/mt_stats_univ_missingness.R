@@ -1,41 +1,34 @@
-#' Perform missingness significance analysis.
+#' Perform missingness significance analysis
 #'
-#' This function will determine if NAs significantly accumulate in one of the sample groups. It is recommended that this function is run without prior missing value filtering.
+#' This function will determine if NAs significantly accumulate in one of the sample groups. It is recommended that this function
+#' is run without prior missing value filtering.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param comp_col sample annotation (colData) column to compare against
-#' @param stat_name name of comparison for later reference
-#' @param sample_filter sample filter term to restrict to.
+#' @param D \code{SummarizedExperiment} input.
+#' @param in_col Sample annotation (colData) column to compare against.
+#' @param stat_name Name of comparison for later reference.
+#' @param sample_filter Sample filter term to restrict to.
 #'
-#' @return $result: statistics object
+#' @return $results$output: Statistics object.
 #'
 #' @examples
 #' \dontrun{# run on sample field 'Group', name output stats object 'miss'
-#' ... %>% mt_stats_univ_missingness(comp_col = 'Group', stat_name='miss') %>% ...
+#' ... %>% mt_stats_univ_missingness(in_col = 'Group', stat_name='miss') %>% ...
 #' }
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_stats_univ_missingness <- function(
-  D,      # SummarizedExperiment input
-  comp_col,   # sample annotation (colData) column to compare against
-  stat_name,    # name of comparison
-  sample_filter
-) {
+mt_stats_univ_missingness <- function(D, in_col, stat_name, sample_filter) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
-  stopifnot(length(comp_col)==1)
+  stopifnot(length(in_col)==1)
 
   # merge data with sample info
   Ds <- D
 
   ## FILTER SAMPLES
+  Ds <- D
   if(!missing(sample_filter)) {
 
     filter_q <- dplyr::enquo(sample_filter)
@@ -49,10 +42,10 @@ mt_stats_univ_missingness <- function(
   }
 
   # get variable to compare to
-  if (!(comp_col %in% colnames(colData(Ds)))) stop(sprintf("'%s' not found in sample annotations.", comp_col))
+  if (!(in_col %in% colnames(colData(Ds)))) stop(sprintf("'%s' not found in sample annotations.", in_col))
   fixorder = function(x){o= unique(as.character(x)); gdata::reorder.factor(x, new.order=o)}
-  vc = fixorder(as.factor(colData(Ds)[[comp_col]]))
-  if (length(levels(vc))<2) stop(sprintf("'%s' has less than 2 factor levels",comp_col))
+  vc = fixorder(as.factor(colData(Ds)[[in_col]]))
+  if (length(levels(vc))<2) stop(sprintf("'%s' has less than 2 factor levels",in_col))
 
 
 
@@ -95,12 +88,12 @@ mt_stats_univ_missingness <- function(
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("missingness analysis with variable %s", as.character(comp_col)),
+      logtxt = sprintf("missingness analysis with variable %s", as.character(in_col)),
       output = list(
         table   = res,
         name    = stat_name,
         samples.used = samples.used,
-        outcome = comp_col
+        outcome = in_col
       )
     )
 

@@ -3,12 +3,14 @@
 #' This function scales each metabolite by subtracting its mean and dividing by its standard deviation.
 #' Both steps are optional. This function is the direct equivalent of R's scale() function.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param center T/F, mean-center data? default: T
-#' @param scale T/F, scale data to sd 1? default: T
-#' @param ref_samples term which samples to use for center and scale calculcation
+#' {ADD DESCRIPTION}
 #'
-#' @return assay: scaled data
+#' @param D \code{SummarizedExperiment} input.
+#' @param center Mean-center data? Default: T.
+#' @param scale Scale data to sd 1? Default: T.
+#' @param ref_samples Term which samples to use for center and scale calculcation.
+#'
+#' @return assay: Scaled data.
 #'
 #' @examples
 #' \dontrun{# in the context of a SE pipeline
@@ -18,17 +20,8 @@
 #'
 #' @author JK
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_pre_trans_scale <- function(
-  D,        # SummarizedExperiment input
-  center=T, # mean 0?
-  scale=T,   # SD 1?
-  ref_samples #
-) {
+mt_pre_trans_scale <- function(D, center=T, scale=T, ref_samples) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

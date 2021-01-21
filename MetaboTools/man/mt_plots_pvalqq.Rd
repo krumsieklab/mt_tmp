@@ -9,16 +9,16 @@ mt_plots_pvalqq(D, stat_name)
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{comp}{Name of the statistical result.}
+\item{stat_name}{Name of the statistical result.}
 }
 \value{
-$result: plot, p-value histogram
+$result: plot, p-value qq plot
 }
 \description{
 QQ plot against uniform distribution.
 }
 \examples{
-\dontrun{... \%>\% mt_plots_pvalhist(statnames='comp') \%>\% ...  # for one
+\dontrun{... \%>\% mt_plots_pvalqq(stat_name='comp') \%>\% ...  # for one
 }
 
 }

@@ -1,30 +1,23 @@
-#' Store heading that will be added to report later.
+#' Store regular text for html report
 #'
-#' Will be used when calling \code{mt_reporting_generateMD}.
+#' Will be used when calling \code{mt_reporting_html}.
 #'
-#' @param D  \code{SummarizedExperiment} input
-#' @param text Heading text
+#' @param D  \code{SummarizedExperiment} input.
+#' @param text Regular text.
 #'
-#' @return $result: stores info about heading
+#' @return $results$output: Stores text.
 #'
 #' @examples
 #' \dontrun{... %>%
 #' # add first and second level of heading
-#' mt_reporting_text("Preprocessing") %>%
+#' mt_reporting_heading("Preprocessing") %>%
 #' mt_reporting_text("Data were first filtered for missing values, then normalized and log-transformed") %>%
 #' ...}
 #'
 #' @author EB
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_reporting_text <- function(
-  D,
-  text
-) {
+mt_reporting_text <- function(D, text){
 
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))

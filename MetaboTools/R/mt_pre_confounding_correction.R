@@ -1,37 +1,25 @@
 #' Confounding correction
 #'
-#' \code{mt_pre_confounding_correction} returns the corrected data
+#' Each metabolite is corrected by lm with the confounding variables and residuals are returned in lieu of uncorrected
+#' metabolites expressions.
 #'
-#' each metabolits is corrected by lm with the confounding variables and residuals are returned
-#' in lieu of uncorrected metabolites expressions.
+#' @param D \code{SummarizedExperiment} object.
+#' @param formula Formula including column names from sample annotation, i.e, ~batch+age.
+#' @param strata Strata classes for stratified confounding correction, should be a column from colData(D).
+#' @param scale_data Should data be scaled after correction? Default: F.
 #'
-#' @param D SummarizedExperiment object
-#' @param formula formula uncluding column names from sample annotation, i.e, ~batch+age
-#' @param strata strata classes for stratified confounding correction, should be a column from colData(D)
-#' @param scale should data be scaled after correaction
-#'
-#' @return corrected data together bit lm.fit pvalue per metabolites to show confounding affect on them
+#' @return assay: Corrected data.
+#' @return $results$output: The lm.fit pvalue per metabolites to show confounding affect on them.
 #'
 #' @examples
-#'
 #'  \dontrun{# not run
 #'  #... %>% mt_pre_confounding_correction( formula = ~batch + age, strata = "RUN_DAY" )
 #'  }
 #'
-#'
-#' @author mubu
-#'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
+#' @author MB
 #'
 #' @export
-
-mt_pre_confounding_correction <- function(
-  D,         # SummarizedExperiment input
-  formula,  # sample annotation column that contains batch info
-  strata = NULL, # strata for stratified correction
-  scale = F
-) {
+mt_pre_confounding_correction <- function(D, formula, strata = NULL, scale_data = F) {
 
   # validate and extract arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -74,7 +62,7 @@ mt_pre_confounding_correction <- function(
     # model pvalues
     p.lms = sapply(pocs, fpv)
     list(rh=rh, p.lms=p.lms)
-  }) #residuals(%>% scale %>% t
+  }) #residuals(%>% scale_data %>% t
 
   # # overall effect of covariates to each variable as lm pvalue
   # p.lms  <- sapply(lm.fits, function(fit){
@@ -95,6 +83,9 @@ mt_pre_confounding_correction <- function(
   colnames(Xh) <- colnames(X)
   rownames(Xh) <- rownames(X)
 
+  # replace original assay with corrected verison
+  assay(D) = Xh
+
   # add status information
   funargs <- mti_funargs()
   metadata(D)$results %<>%
@@ -108,7 +99,6 @@ mt_pre_confounding_correction <- function(
     )
 
   # return
-  assay(D) = Xh
   D
 
 }

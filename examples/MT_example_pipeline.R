@@ -12,6 +12,7 @@
 
 library(MetaboTools)
 library(tidyverse)
+library(pathview)
 
 purrr::zap()
 
@@ -27,9 +28,9 @@ D <-
   #     mt_files_load_UCD, mt_files_load_WCM, mt_files_load_nightingale, mt_files_load_metabolon_new_format()
   mt_files_data_xls(file=file_data, sheet="data", samples_in_row=T, ID_col="sample") %>%
   # load metabolite (rowData) annotations
-  mt_files_anno_xls(file=file_data, sheet="metinfo",anno_type="metabolites", anno_ID="name", data_ID="name") %>%
+  mt_anno_files_xls(file=file_data, sheet="metinfo",anno_type="metabolites", anno_ID="name", data_ID="name") %>%
   # load clinical (colData) annotations
-  mt_files_anno_xls(file=file_data, sheet="clin", anno_type="samples", anno_ID="sample", data_ID="sample") %>%
+  mt_anno_files_xls(file=file_data, sheet="clin", anno_type="samples", anno_ID="sample", data_ID="sample") %>%
   # # log assay dimensions and number of columns for both metabolite and clincial annotations
   mt_logging_datasetinfo() %>%
   # start timing
@@ -39,6 +40,9 @@ D <-
 #   - mt_settings - set global settings for MetaboTools pipeline
 #   - mt_flag_logged - for flagging a loaded dataset as already log transformed
 
+##############################################################################################################################
+# PART 2 - DATA CLEANING
+##############################################################################################################################
 
 # PART 2 - DATA CLEANING ----------------------------------------------------
 
@@ -122,12 +126,16 @@ D <- D %>%
   mt_plots_sampleboxplot(color=Diagnosis, plottitle = "After imputation", logged = T) %>%
   # outlier detection (univariate)
   #   related function: mt_pre_outliercorrection
+  # KELSEY: talk to Richa & Annalise
   mt_pre_outlier(method="univariate") %>%
+  # correct metabolite abundances for Age
+  #   alternative function: mt_pre_confounding_correction_stepwise_aic
+  #mt_pre_confounding_correction(formula = ~ Age) %>%
   # print infos about dataset
   mt_logging_datasetinfo() %>%
   # write preprocessed data to Excel file
   #   other writing functions: mt_files_write_SE (write SummarizedExerpiment object)
-  mt_files_write_xls(file = "PreprocessedData.xlsx") %>%
+  mt_write_files_xls(file = "/Users/kelsey/Desktop/PreprocessedData.xlsx") %>%
   {.}
 
 # Additional pre-processing functions
@@ -209,7 +217,7 @@ D1 <- D1 %>%
   # add stats logging
   mt_logging_statsinfo(stat_name = "Age met", stat_filter = p.adj < 0.05) %>%
   # write statistical results to file
-  mt_files_write_stats(file = "AgeAnalysis.xlsx", metname = "BOCHEMICAL") %>%
+  mt_write_files_stats(file = "AgeAnalysis.xlsx", metname = "BOCHEMICAL") %>%
   # pvalue histogram
   mt_plots_pvalhist(stat_names = "Age met") %>%
   # volcano plot as overview of results
@@ -243,7 +251,7 @@ D1 <- D1 %>%
   # add stats logging
   mt_logging_statsinfo(stat_name = "Diagnosis met", stat_filter = p.adj < 0.05) %>%
   # write statistical results to file
-  mt_files_write_stats(file = "DiagnosisAnalysis.xlsx") %>%
+  mt_write_files_stats(file = "DiagnosisAnalysis.xlsx") %>%
   # pvalue histogram
   mt_plots_pvalhist(stat_names = "Diagnosis met") %>%
   # volcano plot as overview of results

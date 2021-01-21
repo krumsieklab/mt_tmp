@@ -9,7 +9,7 @@ library(MetaboTools)
 
 D <-
   # load data
-  mt_files_load_metabolon(file = codes.makepath("Mt/sampledata.xlsx"), sheet = "OrigScale") %>%
+  mt_load_files_metabolon(file = codes.makepath("Mt/sampledata.xlsx"), sheet = "OrigScale") %>%
   # timing start
   mt_logging_tic() %>%
 
