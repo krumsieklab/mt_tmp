@@ -1,22 +1,19 @@
 #' Averages duplicate samples
 #'
-#' @return D with duplicate samples combined
-#' {ADD DESCRIPTION}
+#' Averages values of samples (columns) with same values in specified colData column.
 #'
-#' @examples
-#' \dontrun{... %>% mt_modify_averagesample(group_by = "RID") %>% ...}
 #' @param D \code{SummarizedExperiment} input.
 #' @param group_col Name of colData column (sample annotation) by which duplicates can be identified.
 #'
 #' @return assay: duplicate samples (columns) combined
 #'
 #' @examples
-#' \dontrun{... %>% mt_modify_avg_sample(group_col = "RID") %>% ...}
+#' \dontrun{... %>% mt_modify_avg_samples(group_col = "RID") %>% ...}
 #'
 #' @author AS
 #'
 #' @export
-mt_modify_avg_sample <- function(D, group_col) {
+mt_modify_avg_samples <- function(D, group_col) {
 
   stopifnot("SummarizedExperiment" %in% class(D))
   if(missing(group_col))

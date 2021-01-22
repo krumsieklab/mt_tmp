@@ -12,7 +12,7 @@
 #' @examples
 #'  \dontrun{... %>%
 #'  # ensure factor for casecontrol variable
-#'  mt_anno_applytoanno(
+#'  mt_anno_apply(
 #'    anno_type='samples',
 #'    col_name='casecontrol',
 #'    fun=as.factor) %>%
@@ -21,7 +21,7 @@
 #' @author JK
 #'
 #' @export
-mt_anno_applytoanno <- function(D, anno_type, col_name, fun) {
+mt_anno_apply <- function(D, anno_type, col_name, fun) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

@@ -9,8 +9,6 @@
 #'
 #' @return $result: statistics object
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #' @import survival
 #' @import MatrixEQTL
 #'
@@ -27,14 +25,11 @@
 #' @author RB
 #'
 #' @export
-
-mt_stats_univ_cs <- function(
-  D,              # SummarizedExperiment input
-  y,        # name of the column in colData to compare with metabolite
-  patient_id, # name of the column in colData having patient_ID
-  stat_name,      # name of comparison,
-  sample_filter
-) {
+mt_stats_univ_cs <- function(D,
+                             y,
+                             patient_id,
+                             stat_name,
+                             sample_filter) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

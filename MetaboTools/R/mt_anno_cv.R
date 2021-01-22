@@ -1,6 +1,5 @@
 #' Calculate coefficient of variation (CV)
 #'
-#' @author Annalise Schweickart, RB (updated on 2020-09-12)
 #' {ADD DESCRIPTION}
 #'
 #' @param D \code{SummarizedExperiment} input.

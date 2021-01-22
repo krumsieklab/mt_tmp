@@ -13,19 +13,12 @@
 #'
 #' @author RB
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
-#'
 #' @export
-
-mt_pre_impute_min <- function(
-  D,      # SummarizedExperiment input
-  verbose=F
-) {
+mt_pre_impute_min <- function(D, verbose=F) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
-  
+
   my_min <- function(x) {
     if(all(is.na(x))){
       return(NA)
@@ -33,7 +26,7 @@ mt_pre_impute_min <- function(
       return(min(x, na.rm=T))
     }
   }
-  
+
   df <- D %>% assay() %>%  data.frame()
   incom.obs <- which(apply(df,2,function(x) any(is.na(x))))
   if(verbose)message(paste0("Number of imcomplete observations: ", length(incom.obs)))

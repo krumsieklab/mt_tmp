@@ -23,13 +23,25 @@
 #' @return if plot_type = "box", $result: plot, box plot
 #' @return if plot_type = "scatter", $result: plot, scatter plot
 #'
+#' @examples
+#' \dontrun{# boxplots as overview of results with a result already in 'comp'
+#' # color by "Group" variable in colData
+#' mt_plots_box_scatter(x                  = Group,
+#'                      stat_name          = "comp",
+#'                      plot_type          = "box",
+#'                      correct_confounder = ~BATCH_MOCK,
+#'                      metab_filter       = p.value<0.01,
+#'                      metab_sort         = p.value,
+#'                      annotation         = "{sprintf('P-value: %.1e', p.value)}\nStatistic: {sprintf('%.2f', statistic)}",
+#'                     ) %>%
+#'                  ...
+#'  }
+#'
 #' @author JZ, KC
 #'
 #' @import ggplot2
 #'
 #' @export
-
-
 mt_plots_box_scatter <- function(D,
                                  x = "x",
                                  stat_name,

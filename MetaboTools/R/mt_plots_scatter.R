@@ -22,7 +22,7 @@
 #' @examples
 #' \dontrun{# scatter plots as overview of results with a result already in 'comp'
 #' # color by "age" variable in colData
-#' mt_plots_boxplot(x                  = age,
+#' mt_plots_scatter(x                  = age,
 #'                  stat_name           = "comp",
 #'                  correct_confounder = ~BATCH_MOCK,
 #'                  metab_filter       = p.value<0.01,
@@ -36,11 +36,8 @@
 #' @author JK
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
-
 mt_plots_scatter <- function(D,
                              x = "x",
                              stat_name,

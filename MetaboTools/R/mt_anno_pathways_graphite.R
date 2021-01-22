@@ -20,11 +20,11 @@
 #' @examples
 #' # annotate metabolites using the humancyc database from the graphite package
 #' \dontrun{... %>%
-#'     mt_add_pathways(in_col = "KEGG",
-#'                     out_col = "humancyc_db",
-#'                     pwdb_species = "hsapiens",
-#'                     pwdb_name = "humancyc",
-#'                     n_cores = 5) %>%
+#'     mt_anno_pathways_graphite(in_col = "KEGG",
+#'                               out_col = "humancyc_db",
+#'                               pwdb_species = "hsapiens",
+#'                               pwdb_name = "humancyc",
+#'                               n_cores = 5) %>%
 #' ...}
 #'
 #' @author PG

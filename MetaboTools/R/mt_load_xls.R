@@ -17,7 +17,7 @@
 #' # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
 #' \dontrun{D <-
 #'   # load raw data
-#'   mt_load_data_xls(file=file, sheet="data", samples_in_rows=T, id_col="SAMPLE_NAME") %>%
+#'   mt_load_xls(file=file, sheet="data", samples_in_rows=T, id_col="SAMPLE_NAME") %>%
 #'   # sample annotations from metabolomics run
 #'   mt_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_id = "SAMPLE_NAME") %>%
 #'   # sample annotations from clinical table
@@ -29,12 +29,12 @@
 #' @author JK
 #'
 #' @export
-mt_load_data_xls <- function(D,
-                             file,
-                             sheet,
-                             samples_in_rows = T,
-                             id_col,
-                             zero_to_na=F) {
+mt_load_xls <- function(D,
+                        file,
+                        sheet,
+                        samples_in_rows = T,
+                        id_col,
+                        zero_to_na=F) {
 
   # initialize result list
   result=list()

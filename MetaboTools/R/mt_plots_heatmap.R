@@ -19,7 +19,7 @@
 #'
 #'  @return object \code{SummarizedExperiment}, see \code{metabotools} conventions for the details
 #'
-#' @author mubu
+#' @author MB
 #'
 #' @examples
 #' \dontrun{D %>%
@@ -31,12 +31,9 @@
 #'  }
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
 #' @import pheatmap
-#' @import SummarizedExperiment
 #'
 #' @export
-
 mt_plots_heatmap <- function(D,
                               scale_data=F,
                               sym_zero=F,

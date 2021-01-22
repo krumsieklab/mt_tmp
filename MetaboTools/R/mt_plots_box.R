@@ -35,14 +35,11 @@
 #'                  ...
 #'  }
 #'
-#' @author Jonas Zierer
+#' @author JZ
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
-
 mt_plots_box <- function(D,
                          x = "x",
                          stat_name,

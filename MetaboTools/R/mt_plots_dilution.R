@@ -8,7 +8,7 @@
 #' \item requires exactly one previous quotient normalization call in the pipeline
 #' }
 #'
-#' @param D \code{SummarizedExperiment} input
+#' @param D \code{SummarizedExperiment} input.
 #' @param in_col name of colData colum  (sample annotation) to correlation dilution factors with
 #' @param box_plot  produce boxplot (TRUE, default), or beeswarm plot (FALSE) .... only relevant for factor comparison
 #' @param ggadd further elements/functions to add (+) to the ggplot object
@@ -22,17 +22,12 @@
 #' @author JK
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
-
-mt_plots_dilution <- function(
-  D,       # SummarizedExperiment input
-  in_col,    # sample annotation column to compare with
-  box_plot=T,  #
-  ggadd=NULL
-) {
+mt_plots_dilution <- function(D,
+                              in_col,
+                              box_plot=T,
+                              ggadd=NULL) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

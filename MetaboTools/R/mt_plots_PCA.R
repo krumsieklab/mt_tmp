@@ -29,26 +29,21 @@
 #' @author JK, BGP
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
-
-mt_plots_pca <- function(
-  D,
-  title="PCA",
-  scale_data=F,
-  PC1=1,
-  PC2=2,
-  data_type='scores',
-  label_col='',
-  text_repel=T,
-  ellipse=NA,
-  exp_var_plot=F,
-  store_matrices=F,
-  ggadd=NULL,
-  ...
-) {
+mt_plots_pca <- function(D,
+                         title="PCA",
+                         scale_data=F,
+                         PC1=1,
+                         PC2=2,
+                         data_type='scores',
+                         label_col='',
+                         text_repel=T,
+                         ellipse=NA,
+                         exp_var_plot=F,
+                         store_matrices=F,
+                         ggadd=NULL,
+                         ...) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

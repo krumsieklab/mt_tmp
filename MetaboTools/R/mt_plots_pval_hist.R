@@ -15,15 +15,9 @@
 #' @author JK
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
-
-mt_plots_pval_hist <- function(
-  D,
-  stat_list=NULL
-) {
+mt_plots_pval_hist <- function(D, stat_list=NULL) {
 
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))

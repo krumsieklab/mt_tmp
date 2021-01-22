@@ -20,7 +20,7 @@
 #' \dontrun{... %>%
 #'   mt_anno_pathways_hmdb(in_col = "HMDb_ID", out_col = "smp_db",
 #'                         pwdb_name = "SMP",
-#'                         db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) %>%
+#'                         db_dir = system.file("extdata", "precalc/hmdb/", package = "MetaboTools")) %>%
 #' ...}
 #'
 #' @author PG

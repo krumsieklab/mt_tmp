@@ -23,22 +23,17 @@
 #' @author JK
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
-
-mt_plots_umap <- function(
-  D,
-  title="UMAP",
-  scale_data=F,
-  label_col='',
-  text_repel=T,
-  store_matrices=F,
-  ggadd=NULL,
-  n_neighbors=15,
-  ...
-) {
+mt_plots_umap <- function(D,
+                          title="UMAP",
+                          scale_data=F,
+                          label_col='',
+                          text_repel=T,
+                          store_matrices=F,
+                          ggadd=NULL,
+                          n_neighbors=15,
+                          ...) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

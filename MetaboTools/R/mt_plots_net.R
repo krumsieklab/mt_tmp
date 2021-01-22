@@ -14,28 +14,23 @@
 #'
 #' @examples
 #' \dontrun{#' # in the context of a SE pipeline
-#' ... %>% mt_plots_net(statsname = "xxx") %>% ...    # standard call
-#' ... %>% mt_plots_net(statsname = "xxx", cor_filter = p.adj < 0.5, node_coloring="Li's", save_html="Network.html", height=800) %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
+#' ... %>% mt_plots_net(stat_name = "xxx") %>% ...    # standard call
+#' ... %>% mt_plots_net(stat_name = "xxx", cor_filter = p.adj < 0.5, node_coloring="Li's", save_html="Network.html", height=800) %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
 #'}
 #'
 #' @author EB
 #'
 #' @importFrom ggnetwork theme_blank geom_nodetext geom_nodes geom_edges
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
 #' @import network
-#' @import SummarizedExperiment
 #'
 #' @export
-
-mt_plots_net <- function(
-  D,                               # SummarizedExperiment input
-  stat_name,                        # name of the correlation matrix to plot
-  cor_filter = p.value < 0.05,    # filter
-  node_coloring,                   # name of the statistical test to use for node coloring
-  save_html,                       # filename of visnetwork html
-  height = 500                     # size of plotting window
-){
+mt_plots_net <- function(D,
+                        stat_name,
+                        cor_filter = p.value < 0.05,
+                        node_coloring,
+                        save_html,
+                        height = 500) {
 
   ## check input
   stopifnot("SummarizedExperiment" %in% class(D))

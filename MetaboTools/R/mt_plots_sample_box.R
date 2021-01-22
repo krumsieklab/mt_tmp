@@ -20,20 +20,15 @@
 #' @author JK
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
-
-mt_plots_sample_box <- function(
-  D,         # SummarizedExperiment input
-  title="Sample boxplot",
-  legend=T,  # keep legend?  [could be removed]
-  ylab = "Metabolite concentrations",  # y axis label
-  plot_logged=F,  # plot logged
-  ggadd=NULL,   # further elements/functions to add (+) to the ggplot object
-  ...        # additional arguments directly passed to aes() of ggplot
-) {
+mt_plots_sample_box <- function(D,
+                                title="Sample boxplot",
+                                legend=T,
+                                ylab = "Metabolite concentrations",
+                                plot_logged=F,
+                                ggadd=NULL,
+                                ...) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

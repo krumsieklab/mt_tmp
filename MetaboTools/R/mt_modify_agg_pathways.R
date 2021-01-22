@@ -16,18 +16,18 @@
 #' @return rowData: removes original rowData, since now the "metabolites" are pathways
 #'
 #' @examples
-#' \dontrun{%>% mt_modify_agg_pw(pw_col="SUB_PATHWAY", method="aggmean") %>%  # subpathways from metabolon
+#' \dontrun{%>% mt_modify_agg_pathways(pw_col="SUB_PATHWAY", method="aggmean") %>%  # subpathways from metabolon
 #'
 #' # add KEGG pathways and use those
 #' %>%
 #'   mt_anno_pathways_hmdb(in_col = "HMDB", out_col = "kegg_db", pwdb_name = "KEGG", db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) %>%
 #'   mt_anno_pathways_remove_redundant(met_ID_col = "HMDB", pw_col = "kegg_db") %>%
-#'   mt_modify_agg_pw(pw_col="kegg_db", method="aggmean") %>%}
+#'   mt_modify_agg_pathways(pw_col="kegg_db", method="aggmean") %>%}
 #'
 #' @author JK
 #'
 #' @export
-mt_modify_agg_pw <- function(D, pw_col, method) {
+mt_modify_agg_pathways <- function(D, pw_col, method) {
 
   # remove all NAs from a vector
   # alternatively, replaces NAs with a value

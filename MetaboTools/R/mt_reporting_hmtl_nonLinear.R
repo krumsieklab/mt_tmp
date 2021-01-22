@@ -6,7 +6,7 @@
 #' Will generate RMD markdown document that can be adapted and then knitted to HTML.
 #'
 #' @param D_list A list of \code{SummarizedExperiment} objects.
-#' @param outfile Output HTML filename.
+#' @param file Output HTML filename.
 #' @param title Title of RMD document. Default: 'Non-Linear RMD output'.
 #' @param output_calls Output detailed info on function calls? Default: F.
 #' @param keep_tmp Keep temporary files? Can be used to manually edit RMD afterwards. Default: F.
@@ -17,7 +17,7 @@
 #'
 #' @export
 mt_reporting_html_nonlinear <- function(D_list,
-                                        outfile,
+                                        file,
                                         title = 'Non-Linear RMD output',
                                         output_calls=F,
                                         keep_tmp=F) {
@@ -29,9 +29,9 @@ mt_reporting_html_nonlinear <- function(D_list,
   if(any(check_SE==FALSE)){
     stop("Argument D_list must be a list of SummarizedExperiment objects.")
   }
-  ## outfile
-  if(missing(outfile)){
-    stop("Argument outfile must be provided.")
+  ## file
+  if(missing(file)){
+    stop("Argument file must be provided.")
   }
 
 
@@ -51,7 +51,7 @@ mt_reporting_html_nonlinear <- function(D_list,
   rdsfile <-  sprintf("tmp_%s.rds", ustr)
   # generate RMD
   res %>% mt_reporting_generateMD_nonLinear(
-    outfile = rmdfile,
+    file = rmdfile,
     read_from = rdsfile,
     title = title,
     output_calls = output_calls)
@@ -60,7 +60,7 @@ mt_reporting_html_nonlinear <- function(D_list,
   # knit
   rmarkdown::render(rmdfile)
   # rename to correct name
-  file.rename(paste0(tools::file_path_sans_ext(rmdfile),'.html'), outfile)
+  file.rename(paste0(tools::file_path_sans_ext(rmdfile),'.html'), file)
   # clean up
   if (!keep_tmp) {
     file.remove(rmdfile)

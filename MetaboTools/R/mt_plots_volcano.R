@@ -21,14 +21,11 @@
 #'  colour       = p.value < 0.05) %>%
 #'  ...}
 #'
-#' @author Jonas Zierer, Jan Krumsiek
+#' @author JZ, JK
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
-
 mt_plots_volcano <- function(D,
                              x = fc,
                              stat_name,

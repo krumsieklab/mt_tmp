@@ -24,22 +24,17 @@
 #' @author JK
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
-
-mt_plots_missingness <- function(
-  D,         # SummarizedExperiment input
-  met_max=NA, # which % to mark on the y axis,
-  samp_max=NA, # which % to mark on the y axis,
-  plot_mets = T,    # show metabolite missingness plot?
-  plot_samples = F, # show sample missingness plot?
-  sec_axis_mets = F,
-  sec_axis_samples = F,
-  sample_labels=NA, # which column from colData to use as sample labels?
-  plot_data = T     # show entire data missingess plot?
-) {
+mt_plots_missingness <- function(D,
+                                 met_max=NA,
+                                 samp_max=NA,
+                                 plot_mets = T,
+                                 plot_samples = F,
+                                 sec_axis_mets = F,
+                                 sec_axis_samples = F,
+                                 sample_labels=NA,
+                                 plot_data = T) {
 
   # helper function
   missingness <- function(X)apply(is.na(X),2,sum)/dim(X)[1]

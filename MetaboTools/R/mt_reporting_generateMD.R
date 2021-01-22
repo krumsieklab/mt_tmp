@@ -5,7 +5,7 @@
 #' Will generate RMD markdown document that can be adapted and then knitted to HTML.
 #'
 #' @param D \code{SummarizedExperiment} input
-#' @param outfile File to be generated
+#' @param file File to be generated
 #' @param readfrom Name of R data file data will be loaded and is supposed to contain SummarizedExperiment "D". Will not actually be loaded in this function, but while knitting the RMD later.
 #' @param title Title of RMD document
 #' @param firstheading Name of first heading
@@ -25,7 +25,7 @@
 
 mt_reporting_generateMD <- function(
   D,
-  outfile = 'MT.RMD',
+  file = 'MT.RMD',
   readfrom = 'mt.rds',
   title = 'RMD output',
   firstheading='Output',
@@ -48,7 +48,7 @@ mt_reporting_generateMD <- function(
 
 
   #### initialize output file
-  h <- file(outfile, open='wt')
+  h <- file(file, open='wt')
 
   #### markdown header and first heading
   out(glue::glue('

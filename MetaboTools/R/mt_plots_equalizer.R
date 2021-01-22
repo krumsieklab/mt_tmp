@@ -18,35 +18,29 @@
 #' \dontrun{# super-pathway / sub-pathway equalizer
 #' # sub-pathway analysis must already be stored in D_sub, and this is part of the super-pathway pipeline, with a result already in 'comp'
 #'  ... %>%
-#'  mt_plots_equalizer(
-#'   comp1='comp',
-#'   D2=D_sub,
-#'   comp2=='comp',
-#'   legend_fine="sub pathway",
-#'   legend_coarse='super pathway',
-#'   vertline_fine = p.adj < 0.1,
-#'   vertline_coarse = p.adj < 0.1) %>%
-#' ...}
+#'  mt_plots_equalizer(comp1='comp',
+#'                     D2=D_sub,
+#'                     comp2=='comp',
+#'                     legend_fine="sub pathway",
+#'                     legend_coarse='super pathway',
+#'                     vertline_fine = p.adj < 0.1,
+#'                     vertline_coarse = p.adj < 0.1) %>%
+#'  ...}
 #'
 #' @author JK, MB
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @export
-
-mt_plots_equalizer <- function(
-  D1,       # SummarizedExperiment input 1, the coarse one
-  comp1,    # name of first comparison output to take arguments from, the coarse one [first one has to be the less granular one (e.g. D1 super, D2 sub)]
-  D2,       # SummarizedExperiment input 2, the fine one
-  comp2,    # name of second comparison output to take arguments from, the fine one
-  legend_fine, # fine label to be plotted
-  legend_coarse = NULL, # coarse legend to be plotted
-  vertline_fine = p.adj < 0.05, # filter expression where to draw the red, dashed line, for fine
-  vertline_coarse = p.adj < 0.05, # filter expression where to draw the red, dashed line, for coarse
-  colors = c("#9494FF","red") # colors for sub and super pathways
-) {
+mt_plots_equalizer <- function(D1,
+                               comp1,
+                               D2,
+                               comp2,
+                               legend_fine,
+                               legend_coarse = NULL,
+                               vertline_fine = p.adj < 0.05,
+                               vertline_coarse = p.adj < 0.05,
+                               colors = c("#9494FF","red")) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D1))

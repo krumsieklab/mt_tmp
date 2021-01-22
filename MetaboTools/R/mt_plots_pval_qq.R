@@ -12,17 +12,11 @@
 #' }
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #'
 #' @author JK
 #'
 #' @export
-
-mt_plots_pval_qq <- function(
-  D,
-  stat_name
-) {
+mt_plots_pval_qq <- function(D, stat_name) {
 
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))

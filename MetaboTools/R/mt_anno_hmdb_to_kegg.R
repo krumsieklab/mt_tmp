@@ -19,13 +19,13 @@
 #'   # metabolite annotations
 #'   mt_files_anno_xls(file=file, sheet="metinfo", annosfor="metabolites", IDanno="BIOCHEMICAL", IDdata = "name") %>%
 #'   # add KEGG identifiers
-#'   mt_anno_metabolites_HMDB2KEGG(in_col="HMDb_id", out_col="KEGG") %>%
+#'   mt_anno_hmdb_to_kegg(in_col="HMDb_id", out_col="KEGG") %>%
 #'   ...}
 #'
 #' @author EB
 #'
 #' @export
-mt_anno_hmdbtokegg <- function(D, in_col, out_col = "KEGG") {
+mt_anno_hmdb_to_kegg <- function(D, in_col, out_col = "KEGG") {
 
   ## check input
   stopifnot("SummarizedExperiment" %in% class(D))

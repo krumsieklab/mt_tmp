@@ -1,34 +1,32 @@
-#' mt_pre_nist_based_correction
+#' mt_pre_reference_correction
 #'
 #' Correct by NIST
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param qc_samples Logical expression. Can use fields from \code{colData()}
 #' @param plate_col name of the colData column representing plate number
-#' 
+#'
 #' @return D QCed
 #' @examples
-#' \dontrun{... %>% mt_pre_nist_based_correction(qc_samples=Sample.Identification==102, 
+#' \dontrun{... %>% mt_pre_reference_correction(qc_samples=Sample.Identification==102,
 #' plate_col='Plate.Bar.Code') %>% ...}
 #'
 #' @author RB
 #'
-#' @importFrom magrittr %>% %<>%
-#' @import SummarizedExperiment
 #' @export
-mt_pre_nist_based_correction <- function(D, qc_samples, plate_col){
-  
+mt_pre_reference_correction <- function(D, qc_samples, plate_col){
+
   stopifnot("SummarizedExperiment" %in% class(D))
   if(missing(qc_samples)) stop("qc_samples can't be empty!")
   if(missing(plate_col)) stop("plate_col can't be empty!")
-  
+
   ## APPLY FILTER TO ROW DATA
   qc_samples_q <- dplyr::enquo(qc_samples)
   cd <- colData(D) %>%
     data.frame(row.names = 1:ncol(D)) %>%
     tibble::rownames_to_column("colnames") %>%
     dplyr::filter(!!qc_samples_q)
-  
+
   ## QC and non-QC part
   D1 <- D[, as.numeric(as.matrix(cd$colnames))]
   D <- D[, -as.numeric(as.matrix(cd$colnames))]
@@ -39,13 +37,13 @@ mt_pre_nist_based_correction <- function(D, qc_samples, plate_col){
   # average across all plates per metabolite
   qc_avg <- colMeans(D1 %>% assay() %>% t() %>% data.frame(), na.rm = TRUE)
   # average per plate divided by average across all plates
-  qc_val <- dplyr::bind_cols(D1 %>% assay() %>% t() %>% data.frame(), 
-                    D1 %>% colData() %>% data.frame() %>% select(!!plate_col)) %>% 
-            dplyr::group_by(!!as.name(plate_col)) %>% 
-            dplyr::summarise_at(vars(-starts_with(!!plate_col)), my_mean) %>% 
+  qc_val <- dplyr::bind_cols(D1 %>% assay() %>% t() %>% data.frame(),
+                    D1 %>% colData() %>% data.frame() %>% select(!!plate_col)) %>%
+            dplyr::group_by(!!as.name(plate_col)) %>%
+            dplyr::summarise_at(vars(-starts_with(!!plate_col)), my_mean) %>%
             ungroup() %>% data.frame()
   row_names <- qc_val %>% pull(!!plate_col)
-  qc_val <- apply((qc_val %>% select(-!!plate_col)), 1, FUN=function(x) x/ qc_avg) %>% 
+  qc_val <- apply((qc_val %>% select(-!!plate_col)), 1, FUN=function(x) x/ qc_avg) %>%
     t() %>% data.frame() %>% summarise_all(replace_nan)
   rownames(qc_val) <- row_names
   ## Correct the data using qc values

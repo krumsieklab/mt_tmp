@@ -49,9 +49,7 @@
 #' @author Elisa Benedetti
 #'
 #' @import ggplot2
-#' @importFrom magrittr %>% %<>%
 #' @import pathview
-#' @import SummarizedExperiment
 #'
 #' @export
 mt_plots_pathview <- function(D,

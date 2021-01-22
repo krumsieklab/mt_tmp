@@ -19,14 +19,13 @@
 #' @return results$output: heatmap of statistical results
 #'
 #' @examples
-#' \dontrun{D <- D %>% mt_plots_pheatmap_multstats(met_anno = "SUPER_PATHWAY", cluster_cols = T, cluster_rows = T)}
+#' \dontrun{D <- D %>% mt_plots_multstats_heatmap(met_anno = "SUPER_PATHWAY", cluster_cols = T, cluster_rows = T)}
 #'
 #' @author KC
 #'
 #' @import ggplot2
 #'
 #' @export
-
 mt_plots_multstats_heatmap <- function(D,
                                        stat_list=NA,
                                        cutoff,

@@ -5,7 +5,7 @@
 #' Will generate RMD markdown document that can be adapted and then knitted to HTML.
 #'
 #' @param res An object of class MTResultCollector.
-#' @param outfile Name of the file to be generated. Should end in .RMD (default "MT_NL.RMD")
+#' @param file Name of the file to be generated. Should end in .RMD (default "MT_NL.RMD")
 #' @param read_from Name of the R data file (.rds) from which the MTResultCollector data will be read when rendering R Markdown (default: "mt_nl.rds")
 #' @param title Title of RMD document (default: "RMD Output")
 #' @param first_heading Name of the first heading (default: "Output")
@@ -17,7 +17,7 @@
 #'
 #' @noRd
 mt_reporting_generateMD_nonLinear <- function(res,
-                                              outfile = "MT_NL.RMD",
+                                              file = "MT_NL.RMD",
                                               read_from = "mt_nl.rds",
                                               title = "RMD Output",
                                               first_heading = "Output",
@@ -31,10 +31,10 @@ mt_reporting_generateMD_nonLinear <- function(res,
     stop("The argument res should be an object of class MTResultCollector.")
   }
 
-  ## outfile
-  stopifnot(is.character(outfile))
-  if(!endsWith(outfile, ".RMD")){
-    stop("The argument outfile must end with extension .RMD")
+  ## file
+  stopifnot(is.character(file))
+  if(!endsWith(file, ".RMD")){
+    stop("The argument file must end with extension .RMD")
   }
 
   ## read_from
@@ -87,7 +87,7 @@ mt_reporting_generateMD_nonLinear <- function(res,
 
 
   # initialize output file
-  h <- file(outfile, open='wt')
+  h <- file(file, open='wt')
 
 
   # markdown header and first heading

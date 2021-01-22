@@ -27,12 +27,12 @@
 #' @examples
 #' \dontrun{# annotate metabolites using the SMP column of the pathway database flat file
 #' ... %>%
-#'       mt_anno_pathways_from_file(in_col = "HMDb_ID",
-#'                                  out_col = "janpw",
-#'                                  file = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
-#'                                  met_id = "HMDB_id",
-#'                                  pw_id = "SMP",
-#'                                  pw_name = "pathway_name") %>%
+#'       mt_anno_pathways_xls(in_col = "HMDb_ID",
+#'                            out_col = "janpw",
+#'                            file = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
+#'                            met_id = "HMDB_id",
+#'                            pw_id = "SMP",
+#'                            pw_name = "pathway_name") %>%
 #' ...}
 #'
 #' @author PG
