@@ -5,12 +5,12 @@ Maplet is an R package for statistical data analysis with a special focus on met
 ## Installation
 The latest stable version of Maplet can be easily installed using the following command:
 ```{r}
-devtools::install_github(repo="krumsieklab/mt@v1.0.0", subdir="Maplet")
+devtools::install_github(repo="krumsieklab/maplet@v1.0.0", subdir="Maplet")
 ```
 
 To install from the latest commit:
 ```{r}
-devtools::install_github(repo="krumsieklab/mt", subdir="Maplet")
+devtools::install_github(repo="krumsieklab/maplet", subdir="Maplet")
 ```
 
 **Note:** Maplet is in active development. Any commit without a release tag is not guaranteed to be stable. 
