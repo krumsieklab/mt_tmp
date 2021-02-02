@@ -131,7 +131,7 @@ load_multiple_sheet_format <- function(file,
 
   # set info flags
   result$info$file <- file
-  result$info$raw_sheet <- raw_sheet
+  result$info$data_sheet <- data_sheet
   result$info$met_sheet <- met_sheet
   result$info$met_qc_sheet <- met_qc_sheet
   result$info$sample_qc_sheet <- sample_qc_sheet
