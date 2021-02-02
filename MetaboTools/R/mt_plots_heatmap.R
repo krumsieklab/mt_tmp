@@ -94,7 +94,7 @@ mt_plots_heatmap <- function(D,
   # symmetric around zero?
   if (sym_zero) {
     cap <- max(abs(aa$mat)) # from -cap to +cap
-    cs = length(color) # number of color steps
+    cs = length(aa$color) # number of color steps
     aa$breaks = seq(-cap, cap, 2*cap/cs) # technical stuff
   }
 
