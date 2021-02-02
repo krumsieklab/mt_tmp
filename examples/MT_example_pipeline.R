@@ -12,6 +12,7 @@
 
 library(MetaboTools)
 library(tidyverse)
+library(pathview)
 
 purrr::zap()
 
@@ -98,19 +99,19 @@ D <- D %>%
                     normalization, log transform the data, impute missing data using knn, plot sample boxplot after imputation,
                     detect outliers, log dataset info, write pre-processed data to file.") %>%
   # plot sample boxplots
-  mt_plots_sample_box(color=Diagnosis, title = "Original", plot_logged = T) %>%
+  mt_plots_sample_boxplot(color=Diagnosis, title = "Original", plot_logged = T) %>%
   # apply batch correction
   #   alternative batch correction function: mt_pre_batch_COMBAT
   mt_pre_batch_median(batches = "BOX.NUMBER") %>%
   # plot sample boxplots after batch correction
-  mt_plots_sample_box(color=Diagnosis, title = "After batch correction", plot_logged = T) %>%
+  mt_plots_sample_boxplot(color=Diagnosis, title = "After batch correction", plot_logged = T) %>%
   # normalize abundances using probabilistic quotient
   #   alternative normalization function: mt_pre_norm_external
   mt_pre_norm_quot(met_max = 0.2, ref_samples = Diagnosis==0) %>%
   # show dilution plot
-  mt_plots_dilution(in_col="Diagnosis") %>%
+  mt_plots_dilution_factor(in_col="Diagnosis") %>%
   # plot sample boxplots after normalization
-  mt_plots_sample_box(color=Diagnosis, title = "After normalization", plot_logged = T) %>%
+  mt_plots_sample_boxplot(color=Diagnosis, title = "After normalization", plot_logged = T) %>%
   # log transform
   #   other data transformation functions: mt_pre_trans_exp, mt_pre_trans_relative, mt_pre_trans_scale
   mt_pre_trans_log() %>%
@@ -118,15 +119,15 @@ D <- D %>%
   #   alternative imputation functions: mt_pre_impute_min
   mt_pre_impute_knn() %>%
   # plot sample boxplot after imputation
-  mt_plots_sample_box(color=Diagnosis, title = "After imputation", plot_logged = T) %>%
+  mt_plots_sample_boxplot(color=Diagnosis, title = "After imputation", plot_logged = T) %>%
   # outlier detection (univariate)
   #   related function: mt_pre_outlier_to_na
   mt_pre_outlier_detection(method="univariate") %>%
   # print infos about dataset
   mt_reporting_data() %>%
   # write preprocessed data to Excel file
-  #   other writing functions: mt_write_SE_rds (save SummarizedExerpiment object)
-  mt_write_SE_xls(file = "/Users/kelsey/Desktop/PreprocessedData.xlsx") %>%
+  #   other writing functions: mt_write_se_rds (save SummarizedExerpiment object)
+  mt_write_se_xls(file = "/Users/kelsey/Desktop/PreprocessedData.xlsx") %>%
   {.}
 
 # Additional pre-processing functions
@@ -236,7 +237,7 @@ D1 <- D1 %>%
   mt_stats_univ_lm(formula = ~ Diagnosis,
                    stat_name = "Diagnosis met") %>%
   # add fold change
-  mt_post_fc(stat_name = "Diagnosis met") %>%
+  mt_post_fold_change(stat_name = "Diagnosis met") %>%
   # add multiple testing correction
   mt_post_multtest(stat_name = "Diagnosis met", method = "BH") %>%
   # add stats logging
@@ -269,14 +270,14 @@ D1 <- D1 %>%
   # heading for html file
   mt_reporting_heading(heading = "Barplot", lvl = 2) %>%
   # create statsbarplots
-  mt_plots_stats_bar(stat_list = c("Age met", "Diagnosis met"),
+  mt_plots_stats_pathway_bar(stat_list = c("Age met", "Diagnosis met"),
                      metab_filter = p.adj < 0.05,
                      group_col = "SUB_PATHWAY",
                      color_col = "SUPER_PATHWAY",
                      y_scale = "count",
                      sort = T,
                      assoc_sign = "statistic") %>%
-  mt_plots_stats_bar(stat_list = c("Age met", "Diagnosis met"),
+  mt_plots_stats_pathway_bar(stat_list = c("Age met", "Diagnosis met"),
                      metab_filter = p.adj < 0.05,
                      group_col = "SUB_PATHWAY",
                      color_col = "SUPER_PATHWAY",
@@ -334,7 +335,7 @@ D1 <- D1 %>%
   # heading for html file
   mt_reporting_heading(heading = "Partial Correlation Network", lvl = 2) %>%
   # compute partial correlation matrix
-  mt_stats_multiv_GeneNet(stat_name = "GGM") %>%
+  mt_stats_net_genenet(stat_name = "GGM") %>%
   # add multiple testing correction
   mt_post_multtest(stat_name = "GGM", method = "BH") %>%
   # plot network and color according to age analysis
@@ -390,7 +391,7 @@ D2 <- D2 %>%
   mt_stats_univ_lm(formula = ~ Diagnosis,
                    stat_name = "Diagnosis pw") %>%
   # add fold change
-  mt_post_fc(stat_name = "Diagnosis pw") %>%
+  mt_post_fold_change(stat_name = "Diagnosis pw") %>%
   # add multiple testing correction
   mt_post_multtest(stat_name = "Diagnosis pw", method = "BH") %>%
   # add stats logging
@@ -472,7 +473,7 @@ D3 <- D3 %>%
   mt_stats_univ_lm(formula = ~ Diagnosis,
                    stat_name = "Diagnosis sub pw") %>%
   # add fold change
-  mt_post_fc(stat_name = "Diagnosis sub pw") %>%
+  mt_post_fold_change(stat_name = "Diagnosis sub pw") %>%
   # add multiple testing correction
   mt_post_multtest(stat_name = "Diagnosis sub pw", method = "BH") %>%
   # add stats logging
@@ -561,7 +562,7 @@ D4 <- D4 %>%
   mt_stats_univ_lm(formula = ~ Diagnosis,
                    stat_name = "Diagnosis super pw") %>%
   # add fold change
-  mt_post_fc(stat_name = "Diagnosis super pw") %>%
+  mt_post_fold_change(stat_name = "Diagnosis super pw") %>%
   # add multiple testing correction
   mt_post_multtest(stat_name = "Diagnosis super pw", method = "BH") %>%
   # add stats logging
@@ -621,18 +622,18 @@ D4 <- D4 %>% mt_plots_equalizer(comp1 = "Age super pw",
 D1 %>% mt_reporting_html(file = "Example_Pipeline_Metabolite_Analysis.html",
                          title = "Example Pipeline - Statistical Analysis")
 # pathway analysis html report
-D2 %>% mt_reporting_html(outfile = "Example_Pipeline_Pathway_Analysis.html",
+D2 %>% mt_reporting_html(file = "Example_Pipeline_Pathway_Analysis.html",
                          title = "Example Pipeline - Pathway Aggregation Analysis")
 
 # sub-pathway analysis html report
-D3 %>% mt_reporting_html(outfile = "Example_Pipeline_Sub_Pathway_Analysis.html",
+D3 %>% mt_reporting_html(file = "Example_Pipeline_Sub_Pathway_Analysis.html",
                          title = "Example Pipeline - Sub Pathway Aggregation Analysis")
 
 # super-pathway analysis html report
-D4 %>% mt_reporting_html(outfile = "Example_Pipeline_Super_Pathway_Analysis.html",
+D4 %>% mt_reporting_html(file = "Example_Pipeline_Super_Pathway_Analysis.html",
                          title = "Example Pipeline - Super Pathway Aggregation Analysis",
-                         start.after = "Beginning of Super PW Age Analysis")
+                         start_after = "Beginning of Super PW Age Analysis")
 
 # create a combined report with both analsyses
-mt_reporting_html_nonLinear(pipelines = list(D1, D2, D3, D4), outfile = "ExamplePipeline_CombinedReport.hmtl",
+mt_reporting_html_nonlinear(D_list = list(D1, D2, D3, D4), file = "ExamplePipeline_CombinedReport.hmtl",
                             title = "Combined Report")

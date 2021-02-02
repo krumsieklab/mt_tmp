@@ -32,7 +32,7 @@ D_pre <-
     n_cores     = 1
   ) %>%
   # add fold changes to result tables
-  mt_post_fc(stat_name = "comp") %>%
+  mt_post_fold_change(stat_name = "comp") %>%
   # add multiple testing correction
   mt_post_multtest(stat_name = "comp", method = "BH")
 

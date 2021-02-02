@@ -18,7 +18,7 @@
 #' # filter to groups "Li_2" and "Li_5"
 #' # name the comparison "Li's"
 #' ... %>%
-#'  mt_stats_univ_MatrixEQTL(
+#'  mt_stats_univ_lm_matrixeqtl(
 #'    formula      = ~ Group,
 #'    sample_filter = (Group %in% c("Li_2","Li_5")),
 #'    stat_name         = "Li's"
@@ -28,7 +28,7 @@
 #' @author JK
 #'
 #' @export
-mt_stats_univ_MatrixEQTL <- function(D, formula, stat_name, sample_filter) {
+mt_stats_univ_lm_matrixeqtl <- function(D, formula, stat_name, sample_filter) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

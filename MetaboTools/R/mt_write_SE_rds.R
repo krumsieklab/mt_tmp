@@ -9,13 +9,13 @@
 #'
 #' @examples
 #' \dontrun{#
-#' ... %>% mt_write_SE_rds(file="out.RDS") %>% ...
+#' ... %>% mt_write_se_rds(file="out.RDS") %>% ...
 #' ...}
 #'
 #' @author JK
 #'
 #' @export
-mt_write_SE_rds <- function(D, file) {
+mt_write_se_rds <- function(D, file) {
 
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))

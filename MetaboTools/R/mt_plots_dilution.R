@@ -18,7 +18,7 @@
 #' @return $result$output: plot, comparison with dilution factors
 #'
 #' @examples
-#' \dontrun{%>% mt_plots_dilution(in_col="group") %>% # compare with 'group' sample annotation
+#' \dontrun{%>% mt_plots_dilution_factor(in_col="group") %>% # compare with 'group' sample annotation
 #' }
 #'
 #' @author JK
@@ -26,7 +26,7 @@
 #' @import ggplot2
 #'
 #' @export
-mt_plots_dilution <- function(D,
+mt_plots_dilution_factor <- function(D,
                               in_col,
                               box_plot=T,
                               ggadd=NULL) {

@@ -17,13 +17,13 @@
 #'
 #' @examples
 #' \dontrun{# at the end of a pipeline
-#' ... %>% mt_other_strip_results(strip="plots")
+#' ... %>% mt_other_remove_results(strip="plots")
 #' ...}
 #'
 #' @author JK
 #'
 #' @export
-mt_other_strip_results <- function(D, strip="all") {
+mt_other_remove_results <- function(D, strip="all") {
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
   stopifnot(strip %in% c("all", "plots"))

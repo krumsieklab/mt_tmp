@@ -9,13 +9,13 @@
 #' @return assay: Batch-corrected version.
 #'
 #' @examples
-#' \dontrun{... %>% mt_pre_batch_ComBat(batches="BATCH") %>% ...
+#' \dontrun{... %>% mt_pre_batch_combat(batches="BATCH") %>% ...
 #' }
 #'
 #' @author JK
 #'
 #' @export
-mt_pre_batch_ComBat = function(D, batches) {
+mt_pre_batch_combat = function(D, batches) {
 
   # validate and extract arguments
   stopifnot("SummarizedExperiment" %in% class(D))

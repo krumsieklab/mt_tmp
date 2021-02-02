@@ -14,7 +14,7 @@ D <-
   mt_reporting_heading(heading = "Preprocessing") %>%
   mt_reporting_heading(heading = "Part 1", lvl=2) %>%
   # sample boxplot
-  mt_plots_sample_box() %>%
+  mt_plots_sample_boxplot() %>%
   # missingness plot
   mt_plots_missingness() %>%
   # filter metabolites with >20% missing values, then samples with >10% missing values
@@ -27,8 +27,8 @@ D <-
   # quotient normalization
   mt_pre_norm_quot() %>%
   # check if there is any correlation between normalization factors and outcomes (bad sign if so)
-  mt_plots_dilution(in_col="num1") %>%
-  mt_plots_dilution(in_col="Group") %>%
+  mt_plots_dilution_factor(in_col="num1") %>%
+  mt_plots_dilution_factor(in_col="Group") %>%
   # logging
   mt_pre_trans_log() %>%
   # KNN imputation
@@ -38,7 +38,7 @@ D <-
 
   # Modify data frame to represent metabolites as ratios ---------
   # GGM
-  mt_stats_multiv_GeneNet(stat_name ="GGM") %>%
+  mt_stats_net_genenet(stat_name ="GGM") %>%
   mt_post_multtest(stat_name = "GGM", method="fdr") %>%
   mt_modify_ratios(stat_name = "GGM", edge_filter = p.adj<0.5, neighborhood = 2) %>% # liberal cutoff because this is a mock dataset
 
@@ -52,7 +52,7 @@ D <-
     n_cores     = 1
   ) %>%
   # add fold changes to result tables
-  mt_post_fc(stat_name = "comp") %>%
+  mt_post_fold_change(stat_name = "comp") %>%
   # add multiple testing correction
   mt_post_multtest(stat_name = "comp", method = "BH") %>%
   # p-value histogram

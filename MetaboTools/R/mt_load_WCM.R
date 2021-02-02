@@ -12,14 +12,14 @@
 #' @examples
 #' \dontrun{D <-
 #'   # load data in WCM format
-#'   mt_load_WCM(file='DM369_Metabolites separated by nucleotides 12_6_18_altered.xlsx',
+#'   mt_load_wcm(file='DM369_Metabolites separated by nucleotides 12_6_18_altered.xlsx',
 #'                     sheet='peakHeight_metabolite_intensiti') %>%
 #'   ...}
 #'
 #' @author JK
 #'
 #' @export
-mt_load_WCM <- function(D, file, sheet, zero_to_na=T){
+mt_load_wcm <- function(D, file, sheet, zero_to_na=T){
 
   # initialize outer result list
   result <- list()

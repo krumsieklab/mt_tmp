@@ -22,7 +22,7 @@
 #' @examples
 #' \dontrun{# Barplot as overview of results with a result already in 'comp'
 #' ... %>%
-#' mt_plots_stats_bar(stat_list     = "comp",
+#' mt_plots_stats_pathway_bar(stat_list     = "comp",
 #'  metab_filter = p.adj < 0.05,
 #'  group_col    = "SUB_PATHWAY",
 #'  color_col      = "SUPER_PATHWAYdevtools::install(codes.makepath("MT/MetaboTools"))",
@@ -40,7 +40,7 @@
 #'
 #' @export
 
-mt_plots_stats_bar <- function(D,
+mt_plots_stats_pathway_bar <- function(D,
                                stat_list,
                                metab_filter = p.value < 1,
                                group_col = "SUB_PATHWAY",

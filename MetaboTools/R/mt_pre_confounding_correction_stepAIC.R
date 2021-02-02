@@ -11,14 +11,14 @@
 #' @return $results$output: Returns data.frame with the metabolite, its covars and the fit pval and rsq values.
 #'
 #' @examples
-#'  \dontrun{#... %>% mt_pre_confounding_correction_stepAIC(cols_to_correct = c(1, 4, 5), n_cores = 10)
+#'  \dontrun{#... %>% mt_pre_confounding_correction_stepaic(cols_to_correct = c(1, 4, 5), n_cores = 10)
 #'  }
 #'
 #'
 #' @author AS, RB
 #'
 #' @export
-mt_pre_confounding_correction_stepAIC <- function(D, cols_to_correct, n_cores = 1) {
+mt_pre_confounding_correction_stepaic <- function(D, cols_to_correct, n_cores = 1) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

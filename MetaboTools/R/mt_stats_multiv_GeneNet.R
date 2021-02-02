@@ -11,13 +11,13 @@
 #'
 #' @examples
 #' \dontrun{... %>%
-#'   mt_stats_multiv_GeneNet(stat_name ="pcor") %>%
+#'   mt_stats_net_genenet(stat_name ="pcor") %>%
 #' ...}
 #'
 #' @author EB
 #'
 #' @export
-mt_stats_multiv_GeneNet = function(D, stat_name, sample_filter) {
+mt_stats_net_genenet = function(D, stat_name, sample_filter) {
 
   # validate and extract arguments
   stopifnot("SummarizedExperiment" %in% class(D))

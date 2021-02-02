@@ -12,13 +12,13 @@
 #' @examples
 #' \dontrun{# add fold-changes to the result table of the statistical comparison called "comparison1", after correcting for variable "age"
 #' ... %>%
-#'  mt_post_fc(stat_name="comparison1") %>% ...}
+#'  mt_post_fold_change(stat_name="comparison1") %>% ...}
 #'
 #'
 #' @author JZ
 #'
 #' @export
-mt_post_fc <- function(D,
+mt_post_fold_change <- function(D,
                        stat_name,
                        fun = function(x){mean(x,na.rm=T)}){
 

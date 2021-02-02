@@ -17,7 +17,7 @@ D <-
   mt_reporting_text("Users can reorder specific sample annotations using the function mt_modify_sampleanno_reorder. Annotations remain
                     in this new order for the remainder of the pipeline.") %>%
   # sample boxplot
-  mt_plots_sample_box(color=Group) %>%
+  mt_plots_sample_boxplot(color=Group) %>%
   # filter metabolites with >20% missing values, then samples with >10% missing values
   mt_pre_filter_missingness(met_max=0.2) %>%
   mt_pre_filter_missingness(sample_max=0.1) %>%
@@ -27,14 +27,14 @@ D <-
   mt_reporting_heading(heading = "Part 2", lvl=2) %>%
   # quotient normalization
   mt_pre_norm_quot() %>%
-  mt_plots_dilution(in_col="Group") %>%
+  mt_plots_dilution_factor(in_col="Group") %>%
 
   # Reorder groups ---------
   mt_anno_reorder_sample(col_name = "Group", new_order = c("Vehicle", "treatment1", "treatment2")) %>%
   # dilution plot after reordering
-  mt_plots_dilution(in_col = "Group") %>%
+  mt_plots_dilution_factor(in_col = "Group") %>%
   # final sample boxplot (with reodering)
-  mt_plots_sample_box(color=Group, plottitle = 'final')
+  mt_plots_sample_boxplot(color=Group, plottitle = 'final')
 
 
 # Generate HTML Report ---------

@@ -8,12 +8,12 @@
 #' @return Does not change the \code{SummarizedExperiment} object.
 #'
 #' @examples
-#' \dontrun{%>% mt_write_SE_xls(file = "out.xlsx") %>%}
+#' \dontrun{%>% mt_write_se_xls(file = "out.xlsx") %>%}
 #'
 #' @author JK
 #'
 #' @export
-mt_write_SE_xls <- function(D, file) {
+mt_write_se_xls <- function(D, file) {
 
   # verify that input is a SummarizedExperiment
   stopifnot("SummarizedExperiment" %in% class(D))
