@@ -9,18 +9,17 @@ mt_anno_missingness(D, anno_type, out_col = "missingness")
 \arguments{
 \item{D}{\code{SummarizedExperiment} input.}
 
-\item{anno_type}{Either "samples" (colData) or "metabolites" (rowData) to add missingness column to.}
+\item{anno_type}{Either "samples" (colData) or "metabolites" (rowData).}
 
-\item{out_col}{Name of new missingness column. Default="missingness".}
+\item{out_col}{Name of new missingness column. Default: "missingness".}
 }
 \value{
-rowData or colData: new missingness annotation column added
+rowData or colData: New annotation column added.
 }
 \description{
 Adds a rowData or colData column representing the missingness of metabolites or samples, respectively.
 }
 \examples{
-# example of how to run function
 \dontrun{
 # load data
 mt_load_metabolon(file=file, sheet="data") \%>\%

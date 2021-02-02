@@ -8,14 +8,14 @@ file_data <- system.file("extdata", "example_data/sampledata.xlsx", package = "M
 
 # Preprocess dataset ------------------------------------------------------
 D_pre <-
-  mt_files_load_metabolon(file=file_data, sheet="OrigScale") %>%
-  mt_anno_pathways_HMDB(in_col = "HMDb_ID",
+  mt_load_metabolon_v1(file=file_data, sheet="OrigScale") %>%
+  mt_anno_pathways_hmdb(in_col = "HMDb_ID",
                         out_col = "kegg_db",
                         pwdb_name = "KEGG",
                         db_dir = data.makepath("MT_precalc/hmdb/")) %>%
-  mt_anno_pathways_remove_redundant(met_ID = "HMDb_ID", pw_ID = "kegg_db") %>%
-  mt_pre_filtermiss(met_max=0.2) %>%
-  mt_pre_filtermiss(sample_max=0.1) %>%
+  mt_anno_pathways_remove_redundant(met_id = "HMDb_ID", pw_id = "kegg_db") %>%
+  mt_pre_filter_missingness(met_max=0.2) %>%
+  mt_pre_filter_missingness(sample_max=0.1) %>%
   # batch correction by variable BATCH_MOCK
   mt_pre_batch_median(batches = "BATCH_MOCK") %>%
   # quotient normalization
@@ -32,9 +32,9 @@ D_pre <-
     n_cores     = 1
   ) %>%
   # add fold changes to result tables
-  mt_post_addFC(stat_name = "comp") %>%
+  mt_post_fc(stat_name = "comp") %>%
   # add multiple testing correction
-  mt_post_multTest(stat_name = "comp", method = "BH")
+  mt_post_multtest(stat_name = "comp", method = "BH")
 
 
 

@@ -24,7 +24,7 @@ Add metabolite fold-changes to statistical results table.
 \examples{
 \dontrun{# add fold-changes to the result table of the statistical comparison called "comparison1", after correcting for variable "age"
 ... \%>\%
- mt_post_addFC(stat_name="comparison1") \%>\% ...}
+ mt_post_fc(stat_name="comparison1") \%>\% ...}
 
 
 }

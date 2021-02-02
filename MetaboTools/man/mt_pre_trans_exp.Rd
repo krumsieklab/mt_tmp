@@ -7,12 +7,12 @@
 mt_pre_trans_exp(D, base = 2)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{base}{operation: base^x for every data point}
+\item{base}{Operation: base^x for every data point. Default: 2.}
 }
 \value{
-assay: exponentiated data
+assay: Exponentiated data.
 }
 \description{
 Transform the the entire dataset base^x.

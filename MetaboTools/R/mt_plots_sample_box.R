@@ -1,16 +1,16 @@
-#' Boxplot of samples.
+#' Box Plot of samples
 #'
-#' Can be colored by factor.
+#' Create a box plot of the samples. Can be colored by factor.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param title title of boxplot, default "Sample boxplot"
-#' @param legend show legend? default: T
-#' @param ylab y axis label, default: "Metabolite concentrations"
-#' @param plot_logged show plot logged? default: F. note: plot will still be logged if data have been logged before in pipeline.
-#' @param ggadd further elements/functions to add (+) to the ggplot object
-#' @param ...  additional arguments directly passed to aes() of ggplot
+#' @param D \code{SummarizedExperiment} input.
+#' @param title title of box plot. Default: "Sample boxplot".
+#' @param legend show legend? Default: T.
+#' @param ylabel y axis label. Default: "Metabolite concentrations".
+#' @param plot_logged Show plot logged? Note: plot will still be logged if data have been logged before in pipeline. Default: F.
+#' @param ggadd Further elements/functions to add (+) to the ggplot object. Default: NULL.
+#' @param ...  Additional arguments directly passed to aes() of ggplot.
 #'
-#' @return $result: plot, sample boxplot
+#' @return $results$output: plot, sample box plot
 #'
 #' @examples
 #' \dontrun{## sample boxplot, color by colData 'group' variable, with specific title, on log scale,
@@ -25,7 +25,7 @@
 mt_plots_sample_box <- function(D,
                                 title="Sample boxplot",
                                 legend=T,
-                                ylab = "Metabolite concentrations",
+                                ylabel = "Metabolite concentrations",
                                 plot_logged=F,
                                 ggadd=NULL,
                                 ...) {
@@ -37,7 +37,7 @@ mt_plots_sample_box <- function(D,
   Dplot = D
   if (plot_logged) {
     assay(Dplot) <- log2(assay(Dplot))
-    ylab = sprintf("%s [log2]", ylab)
+    ylabel = sprintf("%s [log2]", ylabel)
   }
 
   # merge with sample annotations, only keep the ones that were actually used
@@ -49,7 +49,7 @@ mt_plots_sample_box <- function(D,
   p <- df %>%  tidyr::gather(metab, value, dplyr::one_of(rownames(Dplot))) %>%
     ggplot(aes(x = merge.primary, y = value, ...)) +
     geom_boxplot() +
-    ylab(ylab) +
+    ylab(ylabel) +
     ggtitle(title) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
   # todo add rowname

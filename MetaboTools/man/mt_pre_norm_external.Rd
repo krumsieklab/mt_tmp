@@ -9,17 +9,17 @@ mt_pre_norm_external(D, col_name)
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{col_name}{Numeric column in \code{colData} (samples) to normalize by}
+\item{col_name}{Numeric-value column in colData (samples) to normalize by.}
 }
 \value{
-assay: normalized version
+assay: Normalized version.
 }
 \description{
 Normalize by a column in colData, e.g. sample weight, DNA content, protein content (BRADFORD) etc.
 }
 \examples{
 \dontrun{#' # in the context of a SE pipeline
-... \%>\% mt_pre_norm_quot(col_name='DNA') \%>\% ...    # normalize by values in column DNA
+... \%>\% mt_pre_norm_external(col_name='DNA') \%>\% ...    # normalize by values in column DNA
 }
 
 }

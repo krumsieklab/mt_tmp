@@ -1,5 +1,6 @@
 #' Remove metadata results from SummarizedExperiment
 #'
+#' @description
 #' Removes either the entire result list or all plots from the metadata of a SummarizedExperiment.
 #' Can be used to obtain a more lightweight object for further processing.
 #'

@@ -4,6 +4,7 @@
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param verbose T/F, whether to output intermediate steps, default: F
+#'
 #' @return assay: imputed data
 #'
 #' @examples

@@ -10,7 +10,7 @@ mt_pre_zero_to_na(D)
 \item{D}{\code{SummarizedExperiment} input.}
 }
 \value{
-assay: zeros replaced by NA
+assay: Zeros replaced by NA.
 }
 \description{
 Every 0 value in the dataset is replaced by an NA. Used for platforms that represent missing/sub-LOD values as zeros.

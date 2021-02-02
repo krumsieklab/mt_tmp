@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_plots_volcano.R
 \name{mt_plots_volcano}
 \alias{mt_plots_volcano}
-\title{mt_plots_volcano}
+\title{Creates a volcano plot}
 \usage{
 mt_plots_volcano(
   D,
@@ -17,27 +17,29 @@ mt_plots_volcano(
 )
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{x}{what value shall be plotted on x (default: fc)}
+\item{x}{What value shall be plotted on x. Default: fc.}
 
-\item{stat_name}{name of the statistics object to plot}
+\item{stat_name}{Name of the statistics object to plot.}
 
-\item{metab_filter}{if given, filter will be applied to data and remaining varaibles will be labelled in plot}
+\item{metab_filter}{If given, filter will be applied to data and remaining varaibles will be labelled in plot}
 
-\item{vline}{where to draw vertical line (for fold-change), has to be single value. default: none}
+\item{xlabel}{Label for the x-axis. Default: gsub("~","",as.character(x)).}
 
-\item{hline}{where to draw horizontal line (for p-values), has to be an expression such as 'p.adj < 0.1'. default: none}
+\item{vline}{Where to draw vertical line (for fold-change), has to be single value. Default: NA.}
 
-\item{ggadd}{further elements/functions to add (+) to the ggplot object}
+\item{hline}{Where to draw horizontal line (for p-values), has to be an expression such as 'p.adj < 0.1'.}
 
-\item{...}{additional expression directly passed to aes() of ggplot, can refer to colData}
+\item{ggadd}{Further elements/functions to add (+) to the ggplot object. Default: NULL.}
+
+\item{...}{Additional expression directly passed to aes() of ggplot, can refer to colData.}
 }
 \value{
-$result: plot, volcano
+$result$output: plot, volcano
 }
 \description{
-Creates a volcano plot
+{ADD DESCRIPTION}
 }
 \examples{
 \dontrun{# Volcano plot as overview of results with a result already in 'comp'
@@ -49,5 +51,5 @@ mt_plots_volcano(stat_name     = "comp",
 
 }
 \author{
-Jonas Zierer, Jan Krumsiek
+JZ, JK
 }

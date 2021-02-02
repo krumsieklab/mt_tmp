@@ -10,10 +10,10 @@
 #' each metabolite pathway pair should appear in a separate row.
 #'
 #' @param D \code{SummarizedExperiment} input.
+#' @param file Path where the pathway annotation flat file is stored.
 #' @param in_col rowData column to use for pathway fetching. The selected column must contain metabolite
 #'    identifiers (e.g. HMBD, KEGG, ChEBI, etc).
 #' @param out_col New column name for rowData to output pathway information to.
-#' @param file Path where the pathway annotation flat file is stored.
 #' @param sheet Sheet name or number to read in flat file.
 #' @param met_id Name of flat file column containing metabolite IDs.
 #' @param pw_id Name of flat file colname containing pathway IDs.
@@ -27,9 +27,9 @@
 #' @examples
 #' \dontrun{# annotate metabolites using the SMP column of the pathway database flat file
 #' ... %>%
-#'       mt_anno_pathways_xls(in_col = "HMDb_ID",
+#'       mt_anno_pathways_xls(file = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
+#'                            in_col = "HMDb_ID",
 #'                            out_col = "janpw",
-#'                            file = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
 #'                            met_id = "HMDB_id",
 #'                            pw_id = "SMP",
 #'                            pw_name = "pathway_name") %>%
@@ -41,9 +41,9 @@
 #'
 #' @export
 mt_anno_pathways_xls <- function(D,
+                                 file,
                                  in_col,
                                  out_col,
-                                 file,
                                  sheet,
                                  met_id,
                                  pw_id,

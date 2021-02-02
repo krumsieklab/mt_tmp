@@ -4,7 +4,7 @@
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param in_col Column to use for pathway fetching. The selected column must contain protein Uniprot identifier.
-#' @param out_col A new column name for D to output pathway information to.
+#' @param out_col A new column name for rowData to output pathway information to.
 #' @param raw_db_outfile OPTIONAL. Export the pathway database to a directory. Must be a string containing the path name with a
 #'    .xlsx extension.
 #'

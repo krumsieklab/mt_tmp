@@ -3,8 +3,6 @@
 #' This function scales each metabolite by subtracting its mean and dividing by its standard deviation.
 #' Both steps are optional. This function is the direct equivalent of R's scale() function.
 #'
-#' {ADD DESCRIPTION}
-#'
 #' @param D \code{SummarizedExperiment} input.
 #' @param center Mean-center data? Default: T.
 #' @param scale Scale data to sd 1? Default: T.

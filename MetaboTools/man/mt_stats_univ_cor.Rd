@@ -4,31 +4,31 @@
 \alias{mt_stats_univ_cor}
 \title{Computes correlation to a given phenotype}
 \usage{
-mt_stats_univ_cor(D, method, in_col, stat_name, sample_filter, exact = NULL)
+mt_stats_univ_cor(D, stat_name, var, method, sample_filter, exact = NULL)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input.}
 
-\item{method}{Correlation method to use. Can be any among "pearson", "kendall", "spearman".}
+\item{stat_name}{Name under which this comparison will be stored, must be unique to all other statistical results.}
 
-\item{in_col}{Name of the colData column to use for the correlation calculation. If method="kendall", class(D[[in_col]]) needs
+\item{var}{Name of the colData variable to use for the correlation calculation. If method="kendall", class(D[[var]]) needs
 to be numeric.}
 
-\item{stat_name}{Name under which this comparison will be stored, must be unique to all other statistical results.}
+\item{method}{Correlation method to use. Can be any among "pearson", "kendall", "spearman".}
 
 \item{sample_filter}{OPTIONAL. Sample filter condition.}
 
 \item{exact}{OPTIONAL. Set the exact flag in cor.test function.}
 }
 \value{
-$results$output: list of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names
+$results$output: List of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names.
 }
 \description{
 {ADD DESCRIPTION}. If present, NAs will be omitted.
 }
 \examples{
 \dontrun{... \%>\%
-  mt_stats_univ_cor(in_col = "Stage", sample_filter = (GROUP \%in\% "Tumor"), name = "tau", method = "tau") \%>\%
+  mt_stats_univ_cor(var = "Stage", sample_filter = (GROUP \%in\% "Tumor"), name = "tau", method = "tau") \%>\%
 ...
 }
 

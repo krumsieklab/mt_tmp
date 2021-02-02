@@ -1,13 +1,14 @@
 #' Composite score models
-#' Only support specific composite score association analysis in our COVID project
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param y name of the column in colData to compare with metabolite
-#' @param patient_id name of the column in colData having patient_ID
-#' @param stat_name name under which this comparison will be stored, must be unique to all other statistical results
-#' @param sample_filter term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison
+#' Only support specific composite score association analysis in our COVID project.
 #'
-#' @return $result: statistics object
+#' @param D \code{SummarizedExperiment} input.
+#' @param outcome_col Name of the column in colData to compare with metabolite.
+#' @param id_col Name of the column in colData having patient_ID.
+#' @param stat_name Name under which this comparison will be stored, must be unique to all other statistical results.
+#' @param sample_filter Term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison.
+#'
+#' @return $result$output: statistics object
 #'
 #' @import survival
 #' @import MatrixEQTL
@@ -15,8 +16,8 @@
 #' @examples
 #' \donttest{
 #'  mt_stats_univ_cs(
-#'    y     = Group,
-#'    patient_id = Subject_ID,
+#'    outcome_col     = Group,
+#'    id_col = Subject_ID,
 #'    stat_name         = "composite_score",
 #'    sample_filter = (Group %in% c("grp1","grp2")),
 #'  ) %>% ...
@@ -26,8 +27,8 @@
 #'
 #' @export
 mt_stats_univ_cs <- function(D,
-                             y,
-                             patient_id,
+                             outcome_col,
+                             id_col,
                              stat_name,
                              sample_filter) {
 
@@ -53,7 +54,7 @@ mt_stats_univ_cs <- function(D,
   }
   # check that outcome is either binary or numerical and run test accordingly
   mets <- rownames(D)
-  outvec <- Ds[[y]]
+  outvec <- Ds[[outcome_col]]
   cl <- outvec %>% class()
 
   if (("character" %in% cl) || ("factor" %in% cl)) {
@@ -63,7 +64,7 @@ mt_stats_univ_cs <- function(D,
     # run concordance
     # we want to model metabolite ~ outcome
     cstest <- lapply(mets, function(x){
-      co <- survival::concordance(Ds[[y]] ~ Ds[[x]] + cluster(Ds[[patient_id]]))
+      co <- survival::concordance(Ds[[outcome_col]] ~ Ds[[x]] + cluster(Ds[[id_col]]))
       z <- (co$concordance-0.5)/sqrt(co$var)
       p <- -expm1(pnorm(abs(z),lower.tail = T,log.p = T ))
       stat <- unname(co$concordance)
@@ -73,7 +74,7 @@ mt_stats_univ_cs <- function(D,
   }
 
   # add columns with metabolite names and y variable
-  cstest %<>% mutate(var=mets, term=y)
+  cstest %<>% mutate(var=mets, term=outcome_col)
   # reorder columns
   cstest %<>% select(var, term, estimate, statistic, p.value)
   # rearrange back to original metabolite order
@@ -81,22 +82,22 @@ mt_stats_univ_cs <- function(D,
   stopifnot(!any(is.na(o))) # sanity check
   cstest <- cstest[o,]
   # make sure that NAs in the outcome are set to FALSE in the list of used samples
-  samples.used[is.na(Ds[[y]])] <- F
+  samples.used[is.na(Ds[[outcome_col]])] <- F
 
   ## add status information & results
   funargs <- MetaboTools:::mti_funargs()
   metadata(D)$results %<>%
     MetaboTools:::mti_generate_result(
       funargs = funargs,
-      logtxt = sprintf("Composite score analysis, %s", y),
+      logtxt = sprintf("Composite score analysis, %s", outcome_col),
       output = list(
         table = cstest,
-        #formula = as.formula(glue::glue("~ {y}")),
+        #formula = as.formula(glue::glue("~ {outcome_col}")),
         name    = stat_name,
         groups = outgroups,
         #lstobj = NULL,
         samples.used = samples.used,
-        outcome = y
+        outcome = outcome_col
       )
     )
 

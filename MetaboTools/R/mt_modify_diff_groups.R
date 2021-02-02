@@ -1,7 +1,8 @@
 #' Generate a new data matrix that is one group minus a second group (e.g. difference between two timepoints)
 #'
 #' Takes the name of a sample factor variable (from colData), and two factor levels. Creates a new data matrix that
-#' is made of the second minus the first levels. Will only produce results for cases where both {FINISH DESCRIPTION}.
+#' is made of the second minus the first levels. Will only produce results for cases where both data points were present in the
+#' dataset.
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param id_col Name of colData column representing sample ID variable  (e.g. patient ID).
@@ -9,20 +10,15 @@
 #' @param grp1 Group level 1 (e.g. "day1").
 #' @param grp2 Group level 2 (e.g. "day2").
 #'
-#' @return {ADD RETURN VALUE}
+#' @return assay: Replacement containing difference of the two groups.
+#' @return colData: Replacement containing only those samples from grp1.
 #'
-#' @examples
-#' {ADD EXAMPLE}
-#'
-#' @author JK
-#'
-#' #'
 #' @examples
 #' \dontrun{# Generate new dataset as differences between day2 and day1
 #' ... %>%  mt_modify_diffgroups(idvar = "patientID", groupvar = "timepoint", grp1 = "day1", grp2 = "day2")  %>% ... # proceed with statistical analysis
 #' }
 #'
-#' @return SummarizedExperiment with new assay containing difference of two groups.
+#' @author JK
 #'
 #' @export
 mt_modify_diff_groups <- function(D, id_col, group_col, grp1, grp2) {

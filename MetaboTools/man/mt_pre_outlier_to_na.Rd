@@ -17,7 +17,8 @@ mt_pre_outlier_to_na(
 \arguments{
 \item{D}{\code{SummarizedExperiment} input.}
 
-\item{thresh}{Number of standard deviations or m/n units to use as threshold to define the outlier, if not provided, default is correction by sample size. This parameter is only used if sample_num_correction is False}
+\item{thresh}{Number of standard deviations or m/n units to use as threshold to define the outlier, if not provided, default is
+correction by sample size. This parameter is only used if sample_num_correction is False.}
 
 \item{sample_num_correction}{Whether number of outliers should depend on number of samples or hard sd cutoff. If true, thresh is ignored}
 
@@ -31,7 +32,7 @@ mt_pre_outlier_to_na(
 assay: NA values where outliers used to be
 }
 \description{
-Uses univariate approach
+Uses univariate approach {ADD AN EXPLANATION OF WHAT FUNCTION DOES}
 }
 \examples{
 \dontrun{... \%>\%

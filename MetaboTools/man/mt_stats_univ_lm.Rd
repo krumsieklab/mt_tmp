@@ -7,28 +7,29 @@
 mt_stats_univ_lm(D, formula, stat_name, sample_filter, n_cores = 1)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{formula}{left-hand side of formula to be put into glm function.}
+\item{formula}{Left-hand side of formula to be put into glm function.}
 
-\item{stat_name}{name under which this comparison will be stored, must be unique to all other statistical results}
+\item{stat_name}{Name under which this comparison will be stored, must be unique to all other statistical results.}
 
-\item{sample_filter}{term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison}
+\item{sample_filter}{Term which samples to filter to first (e.g. used if the data contains >2 groups but the user wants to
+run a two-group comparison).}
 
-\item{n_cores}{number of cores to use for mclapply... default: 1. More than one core will not work on Windows platforms.}
+\item{n_cores}{Number of cores to use for mclapply. More than one core will not work on Windows platforms. Default: 1.}
 }
 \value{
-$result$output: statistics object
+$result$output: Statistics object.
 }
 \description{
-Computes univariate GLM for each metabolite.
-}
-\details{
 \enumerate{
   \item Will treat the first term of the formula as outcome.
   \item If outcome has >2 factors, will perform ANOVA.
-  \item If random effect term is contained, will used lmer function. (can also be used for paired analysis, e.g. before/after)
+  \item If random effect term is contained, will used lmer function (can also be used for paired analysis, e.g. before/after).
 }
+}
+\details{
+Computes univariate GLM for each metabolite.
 }
 \examples{
 \donttest{# run lm with no confounders, "Group" as outcome

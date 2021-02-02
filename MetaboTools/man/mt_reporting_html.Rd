@@ -26,9 +26,9 @@ mt_reporting_html(
 
 \item{number_sections}{Number sections and sub-sections? Default: F.}
 
-\item{start_after}{UUID of pipeline step AFTER which to start. Default: NA, i.e. output entire pipeline. (passed through to mt_reporting_generateMD)}
+\item{start_after}{UUID of pipeline step AFTER which to start. Default: NA, i.e. output entire pipeline.}
 
-\item{use_plotly}{Output interactive plotly plots? Default: F. (experimental)}
+\item{use_plotly}{EXPERIMENTAL. Output interactive plotly plots? Default: F.}
 
 \item{keep_tmp}{Keep temporary files? Can be used to manually edit RMD afterwards. Default: F.}
 }
@@ -36,7 +36,9 @@ mt_reporting_html(
 Does not change the \code{SummarizedExperiment} object.
 }
 \description{
-Shortcut for mt_reporting_generateMD with subsequent knitting and clean-up.
+Generates a fully automated report version of an entire (linear) pipeline.
+
+Will generate RMD markdown document that can be adapted and then knitted to HTML.
 }
 \author{
 JK

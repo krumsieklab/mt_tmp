@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_anno_icc.R
 \name{mt_anno_icc}
 \alias{mt_anno_icc}
-\title{Calculate ICC - intraclass correlation}
+\title{Calculate intraclass correlation (ICC)}
 \usage{
 mt_anno_icc(D, qc_samples, out_col, id_col, icc_lmer = F)
 }

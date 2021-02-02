@@ -1,21 +1,23 @@
-#' mt_plots_stats_bar
-#'
 #' Creates a bar plot
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param stat_list list of names of the statistics objects to be used for filtering
-#' @param metab_filter filter will be applied to data and remaining variables will be used to create plot
-#' @param group_col rowData variable used to aggregate variables.
-#' @param color_col optional rowData variable used to color barplot. Default NULL.
-#' @param y_scale plot percentage or frequency of variables. Values c("fraction","count"). Default "fraction".
-#' @param sort sort pathways in plot according to y_scale. Default FALSE.
-#' @param assoc_sign optional parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_list.
-#' @param add_empty boolean, if TRUE adds also empty pathways to the barplot.
-#' @param output.file optional Excel filename to save data to
-#' @param ggadd further elements/functions to add (+) to the ggplot object
-#' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
+#' {ADD DESCRIPTION}
 #'
-#' @return $result: plot, barplot
+#' @param D \code{SummarizedExperiment} input.
+#' @param stat_list List of names of the statistics objects to be used for filtering
+#' @param metab_filter Filter will be applied to data and remaining variables will be used to create plot
+#' @param group_col The rowData variable used to aggregate variables.
+#' @param color_col OPTIONAL. A rowData variable used to color barplot. Default NULL.
+#' @param y_scale Plot percentage or frequency of variables. Values c("fraction","count"). Default "fraction".
+#' @param sort Sort pathways in plot according to y_scale. Default FALSE.
+#' @param assoc_sign OPTIONAL. Parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_list.
+#' @param add_empty BOOLEAN. If TRUE adds also empty pathways to the barplot.
+#' @param keep_unmapped
+#' @param output_file OPTIONAL. Excel filename to save data to
+#' @param ggadd Further elements/functions to add (+) to the ggplot object.
+#' @param ... Additional expression directly passed to aes() of ggplot, can refer to colData.
+#'
+#' @return $result$output: plot, barplot
+#' @return $result$output2: {ADD RESULT}
 #'
 #' @examples
 #' \dontrun{# Barplot as overview of results with a result already in 'comp'
@@ -33,26 +35,24 @@
 #' @import ggplot2
 #' @import dplyr
 #' @import tidyr
-#' @import magrittr
 #' @import openxlsx
-#' @import SummarizedExperiment
 #' @importFrom tidyselect any_of
 #'
 #' @export
 
 mt_plots_stats_bar <- function(D,
-                                  stat_list,
-                                  metab_filter = p.value < 1,
-                                  group_col = "SUB_PATHWAY",
-                                  color_col = NULL,
-                                  ggadd = NULL,
-                                  y_scale = "fraction",
-                                  sort = FALSE,
-                                  assoc_sign,
-                                  add_empty = FALSE,
-                                  keep.unmapped = FALSE,
-                                  output.file = NULL,
-                                  ...){
+                               stat_list,
+                               metab_filter = p.value < 1,
+                               group_col = "SUB_PATHWAY",
+                               color_col = NULL,
+                               y_scale = "fraction",
+                               sort = FALSE,
+                               assoc_sign,
+                               add_empty = FALSE,
+                               keep_unmapped = FALSE,
+                               output_file = NULL,
+                               ggadd = NULL,
+                               ...){
 
   ## check input
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -71,19 +71,19 @@ mt_plots_stats_bar <- function(D,
     as.data.frame() %>%
     dplyr::mutate(var = rownames(D))
   # set the nulls to unknown
-  if(keep.unmapped){
-    rd[[aggregate]][which(rd[[aggregate]]=="NULL")] <- "Unmapped"
+  if(keep_unmapped){
+    rd[[group_col]][which(rd[[group_col]]=="NULL")] <- "Unmapped"
   } else{
-    rd <- rd[which(rd[[aggregate]]!="NULL"), ]
+    rd <- rd[which(rd[[group_col]]!="NULL"), ]
   }
-  perc <- rd[[aggregate]] %>%
+  perc <- rd[[group_col]] %>%
     unlist %>% table(exclude = NULL) %>% as.data.frame()
   colnames(perc) <- c("name","count")
 
   flag_filter <- ifelse((!missing(metab_filter)), T,F)
   flag_sign <- ifelse((!missing(assoc_sign)), T,F)
 
-  data_plot <- lapply(stat_list %>% {names(.)=.;.}, function(ss){
+  data <- lapply(stat_list %>% {names(.)=.;.}, function(ss){
     ## subselect variables
     if(flag_filter) {
       metab_filter_q <- dplyr::enquo(metab_filter)
@@ -168,10 +168,10 @@ mt_plots_stats_bar <- function(D,
         dplyr::rename(color=sym(color_col))
 
       # create annotation data
-      anno <- data.frame(name = rep(rd$name, times=sapply(rd[[aggregate]], length) %>% as.vector()),
-                                 var = rep(rd$var, times=sapply(rd[[aggregate]], length) %>% as.vector()),
-                                 pathway = unlist(rd[[aggregate]]),
-                                 color = ifelse(!is.null(colorby), rep(rd[[colorby]], times=sapply(rd[[aggregate]], length) %>% as.vector()),"pathway")) %>%
+      anno <- data.frame(name = rep(rd$name, times=sapply(rd[[group_col]], length) %>% as.vector()),
+                                 var = rep(rd$var, times=sapply(rd[[group_col]], length) %>% as.vector()),
+                                 pathway = unlist(rd[[group_col]]),
+                                 color = ifelse(!is.null(color_col), rep(rd[[color_col]], times=sapply(rd[[group_col]], length) %>% as.vector()),"pathway")) %>%
         dplyr::left_join(MetaboTools::mtm_get_stat_by_name(D=D,name=ss) , by="var") %>%
         dplyr::select(-var)
 
@@ -182,9 +182,9 @@ mt_plots_stats_bar <- function(D,
         if (group_col %in% names(x$pathways)) {
           # add pathway names to dataframe
           data_plot %<>%
-            dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("name"="ID"))
+            dplyr::left_join(x$pathways[[group_col]][,c("ID","pathway_name")], by=c("name"="ID"))
           anno %<>%
-            dplyr::left_join(x$pathways[[aggregate]][,c("ID","pathway_name")], by=c("pathway"="ID")) %>%
+            dplyr::left_join(x$pathways[[group_col]][,c("ID","pathway_name")], by=c("pathway"="ID")) %>%
             dplyr::select(name,pathway,pathway_name,color,everything())
 
           # set Unknown pathway names to Unknown
@@ -249,20 +249,20 @@ mt_plots_stats_bar <- function(D,
 
     ## CREATE PLOT
     p <- ggplot(data_plot, aes(label)) +
-      (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "positive"), aes(y = !!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)}) +
-      (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "negative"), aes(y = -!!sym(yscale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)} else{geom_bar(aes(x=label, y=!!sym(yscale), fill=color), stat = "identity", color="black", size=0.4)}) +
-      (if(yscale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s", gsub("~", "", rlang::expr_text(dplyr::enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
-      (if(yscale=="count" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-max(data_plot$count, na.rm = T)*1.7, max(data_plot$count, na.rm = T)*1.7))}) +
-      (if(yscale=="count" & !("association" %in% colnames(data_plot))) {expand_limits(y=c(0, max(data_plot$count, na.rm = T)*1.7))}) +
-      (if(yscale=="fraction" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-1, 1))}) +
+      (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "positive"), aes(y = !!sym(y_scale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)}) +
+      (if("association" %in% colnames(data_plot)) {geom_bar(data = subset(data_plot, association == "negative"), aes(y = -!!sym(y_scale), fill = color), stat = "identity", position = "dodge", color="black", size=0.4)} else{geom_bar(aes(x=label, y=!!sym(y_scale), fill=color), stat = "identity", color="black", size=0.4)}) +
+      (if(y_scale=="fraction") {ggtitle(sprintf("Fraction of pathway affected, %s", gsub("~", "", rlang::expr_text(dplyr::enquo(metab_filter)))))}else{ggtitle(sprintf("Number of hits per pathway, %s", gsub("~", "", rlang::expr_text(enquo(metab_filter)))))}) +
+      (if(y_scale=="count" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-max(data_plot$count, na.rm = T)*1.7, max(data_plot$count, na.rm = T)*1.7))}) +
+      (if(y_scale=="count" & !("association" %in% colnames(data_plot))) {expand_limits(y=c(0, max(data_plot$count, na.rm = T)*1.7))}) +
+      (if(y_scale=="fraction" & "association" %in% colnames(data_plot)) {expand_limits(y=c(-1, 1))}) +
       geom_hline(yintercept = 0,colour = "black", size=0.4) +
       labs(x="",fill = color_col) +
       theme(plot.title = element_text(hjust = 0.4)) +
       scale_x_discrete(limits = rev(levels(data_plot$label)))
 
     # add phenotype labels to x axis
-    if("association" %in% colnames(data_plot) & length(stat_name)==1){
-      d <- MetaboTools::mtm_get_stat_by_name(D, stat_name, fullstruct=T)
+    if("association" %in% colnames(data_plot) & length(stat_list)==1){
+      d <- MetaboTools::mtm_get_stat_by_name(D, stat_list, fullstruct=T)
       if ("groups" %in% names(d) && length(d$groups)==2) {
         # get breaks
         ggbld <- ggplot2::ggplot_build(p)
@@ -313,19 +313,19 @@ mt_plots_stats_bar <- function(D,
 
   }
 
-  if(!is.null(output.file)){
+  if(!is.null(output_file)){
     if(exists("data_plot")){
       wb = openxlsx::createWorkbook()
       sheet = openxlsx::addWorksheet(wb, "Parameters")
-      if(is.null(colorby)){colorby <- 'none'}
-      openxlsx::writeData(wb, sheet=sheet, list(comparisons = stat_name, metab_filter = gsub("~", "", rlang::expr_text(enquo(metab_filter))), aggregate = aggregate, coloredby = colorby))
+      if(is.null(color_col)){color_col <- 'none'}
+      openxlsx::writeData(wb, sheet=sheet, list(comparisons = stat_list, metab_filter = gsub("~", "", rlang::expr_text(enquo(metab_filter))), group_col = group_col, coloredby = color_col))
       sheet = openxlsx::addWorksheet(wb, "AggregatedPathways")
       openxlsx::writeData(wb, sheet=sheet, data_plot, rowNames = F, colNames = T)
       sheet = openxlsx::addWorksheet(wb, "IndividualResults")
       openxlsx::writeData(wb, sheet=sheet, anno, rowNames = F, colNames = T)
-      openxlsx::saveWorkbook(wb, output.file, overwrite = T)
+      openxlsx::saveWorkbook(wb, output_file, overwrite = T)
     } else {
-      warning("mt_plots_statsbarplot: No significant results. output.file ignored.")
+      warning("mt_plots_statsbarplot: No significant results. output_file ignored.")
     }
   }
 

@@ -2,19 +2,19 @@
 % Please edit documentation in R/mt_modify_filter.R
 \name{mt_modify_filter_samples}
 \alias{mt_modify_filter_samples}
-\title{Filter samples.}
+\title{Filter samples}
 \usage{
 mt_modify_filter_samples(D, filter)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{filter}{Logical expression. Can use fields from \code{colData()}.}
+\item{filter}{Logical expression. Can use columns from colData.}
 }
 \value{
-assay: filtered data matrix with removed samples
+assay: Filtered samples (columns) removed.
 
-colData: filtered down
+colData: Filtered samples removed.
 }
 \description{
 Filters samples according to an expression. Expression can access entries of colData.

@@ -2,19 +2,19 @@
 #'
 #' Generate a heatamp for a list of statistical results using \code{pheatmap::pheatmap}.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param stat_list List of stat names to plot; default NA (for all stat objects in D)
-#' @param color_signif Boolean. Color only significant values? default: F
-#' @param cutoff p.adj value significance cutoff
-#' @param met_anno rowData() column name to use as column annotation
-#' @param signif_mark Marker used to indicate significant p-values; default "•"
-#' @param show_mark show significance marker? default: T
-#' @param mark_size size of the marker
-#' @param cluster_rows cluster by rows? default: F
-#' @param cluster_cols cluster by cols? default: F
-#' @param filter_signif show only metabolites significant in one or more results? default: T
-#' @param show_colnames should column (metabolite) labels be included in the plot? default: F
-#' @param main main title of pheatmap. default: "Stat Results Overview"
+#' @param D \code{SummarizedExperiment} input.
+#' @param stat_list List of stat names to plot. Default: NA (for all stat objects in D).
+#' @param cutoff The p.adj value significance cutoff.
+#' @param met_anno The rowData() column name to use as column annotation.
+#' @param signif_mark Marker used to indicate significant p-values. Default: "•".
+#' @param mark_size Size of the marker. Default: 20.
+#' @param show_mark Show significance marker? Default: T.
+#' @param color_signif Boolean. Color only significant values? Default: F.
+#' @param filter_signif Show only metabolites significant in one or more results? Default: F.
+#' @param cluster_rows Cluster by rows? Default: F.
+#' @param cluster_cols Cluster by cols? Default: F.
+#' @param show_colnames Should column (metabolite) labels be included in the plot? Default: F.
+#' @param main Main title of pheatmap. Default: "Stat Results Overview".
 #'
 #' @return results$output: heatmap of statistical results
 #'

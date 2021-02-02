@@ -1,20 +1,22 @@
-#' Visualize missing value structure of dataset.
+#' Visualize missing value structure of dataset
 #'
 #' Creates two kinds of plots:
-#' 1. missing value matrix view (samples and metabolites)
-#' 2. sorted missing value % plot (samples and/or metabolites)
+#' \enumerate{
+#'   \item{missing value matrix view (samples and metabolites)}
+#'   \item{sorted missing value % plot (samples and/or metabolites)}
+#' }
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param met_max Which metabolite missingness to mark on the y axis (default: NA = no line)
-#' @param samp_max Which sample missingness to mark on the y axis (default: NA = no line)
-#' @param plot_mets show metabolite missingness plot? (default: T)
-#' @param plot_samples show sample missingness plot? (default: F)
-#' @param sec_axis_mets add second axis to metabolite missingness plot? (default: F)
-#' @param sec_axis_samples add second axis to sample missingness plot? (default: F)
-#' @param sample_labels which column from colData to use as sample labels? (default: NA)
-#' @param plot_data show entire data missingness plot? (default: T)
+#' @param D \code{SummarizedExperiment} input.
+#' @param met_max Which metabolite missingness to mark on the y axis. Default: NA (no line).
+#' @param samp_max Which sample missingness to mark on the y axis. Default: NA (no line).
+#' @param plot_mets Show metabolite missingness plot? Default: T.
+#' @param plot_samples Show sample missingness plot? Default: F.
+#' @param sec_axis_mets Add second axis to metabolite missingness plot? Default: F.
+#' @param sec_axis_samples Add second axis to sample missingness plot? Default: F.
+#' @param sample_labels Which column from colData to use as sample labels? Default: NA.
+#' @param plot_data Show entire data missingness plot? Default: T.
 #'
-#' @return $result: plot, two plots
+#' @return $result$output: plot, two plots
 #'
 #' @examples
 #' \dontrun{%>%  mt_plots_missingness() %>% # without horizontal line

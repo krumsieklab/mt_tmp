@@ -1,5 +1,6 @@
 #' Generate metabolite ratios
 #'
+#' @description
 #' Transforms the dataset into a new dataset where each 'metabolite' represents a ratio of two metabolites. Warning: For a dataset
 #' with originally p metabolites, this will result in p*(p-1) new variables (e.g. 500 metabolits becomes 249500 ratios).
 #'
@@ -7,8 +8,8 @@
 #' mt_post_pgain provides a special operation on a ratio data matrix for better interpretation of the resulting p-values.
 #'
 #' @param D \code{SummarizedExperiment} object.
-#' @param stat_name Name of previous network generation call (e.g. \link{mt_stats_multiv_net_GeneNet}). Default: None, i.e. no
-#'    network-based ratios.
+#' @param stat_name Name of previous network generation call (e.g. \link{mt_stats_multiv_net_GeneNet}). Default: None (i.e. no
+#'    network-based ratios).
 #' @param edge_filter Filter criterion for edge selection, e.g. "p.adj < 0.05", as a term.
 #' @param neighborhood Neighborhood degree to use (e.g. first neighbors, second neighbors). Default: 1.
 
@@ -60,8 +61,9 @@ mt_modify_ratios <- function(D, stat_name, edge_filter, neighborhood = 1){
                       name1 = name,
                       name2 = NA)
     rd <- dplyr::bind_rows(rd, rd_new) %>%
-        dplyr::select(rownames, m1, m2, name1, name2, dplyr::everything()) %>%
-        tibble::column_to_rownames("rownames")
+        dplyr::select(rownames, m1, m2, name1, name2, dplyr::everything())
+    rownames(rd) <- NULL
+    rd %<>% tibble::column_to_rownames("rownames")
 
     ## COMBINE RATIOS TO SINGLE MATRIX
     as_ratio <- as_ratio %>%
@@ -78,7 +80,7 @@ mt_modify_ratios <- function(D, stat_name, edge_filter, neighborhood = 1){
         # verify that arguments are given
         if (missing(edge_filter)) stop("If stat_name is given, edge_filter must be supplied.")
         # retrieve statistics object
-        res <- D %>% MetaboTools:::mti_get_stat_by_name(stat_name)
+        res <- D %>% MetaboTools::mtm_get_stat_by_name(stat_name)
         # extract metabolite pairs according to formula, only keep metabolite names
         mpairs <- res %>% dplyr::filter(!!dplyr::enquo(edge_filter)) %>% dplyr::select(var1,var2)
         # initialize adjacency matrix

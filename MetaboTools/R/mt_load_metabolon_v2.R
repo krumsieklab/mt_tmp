@@ -1,14 +1,15 @@
 #' Load NEW Metabolon-format data
 #'
-#' For Metabolon-format version used after {DATE}. Loads data from a NEW Metabolon-format Excel file. Needs to be in the original "Client
+#' For Metabolon-format version used after 2020-10-29. Loads data from a NEW Metabolon-format Excel file. Needs to be in the original "Client
 #' Data Table" new format that they deliver.
 #'
+#' @param D \code{SummarizedExperiment} input. Missing if first step in pipeline.
 #' @param file Name of input Excel file.
 #' @param data_sheet Name of sheet with raw data.
 #' @param met_sheet Name of sheet with metabolite info.
 #' @param sample_sheet Name of sheet with sample info.
 #'
-#' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry.
+#' @return If first step in pipeline, creates \code{SummarizedExperiment} object. Populates empty assay, colData, and rowData data frames.
 #'
 #' @examples
 #' \dontrun{D <-
@@ -20,7 +21,28 @@
 #' @author RB
 #'
 #' @export
-mt_load_metabolon_v2 <- function(file, data_sheet, met_sheet, sample_sheet) {
+mt_load_metabolon_v2 <- function(D, file, data_sheet, met_sheet, sample_sheet) {
+
+  # initialize outer result list
+  result <- list()
+
+  # validate arguments
+  if (missing(file)) stop("file must be provided")
+  if (missing(sheet_list)) stop("sheet must be provided")
+
+  # save input information
+  result$info$file <- file
+  result$info$sheet <- paste(sheet_list, collapse = ", ")
+
+  # get metadata from D if present
+  if(!missing(D)){
+    # validate SE
+    if ("SummarizedExperiment" %in% class(D) == F) stop("D is not of class SummarizedExperiment")
+    if (length(assays(D))!=0) stop("Passed SummarizedExperiment assay must be empty!")
+
+    # get metadata
+    result$meta <- metadata(D)
+  }
 
   cols2discard <- c('PARENT_SAMPLE_NAME', 'SAMPLE_TYPE', 'CLIENT_IDENTIFIER',
                     'MATRIX_DESIGNATION')
@@ -29,7 +51,6 @@ mt_load_metabolon_v2 <- function(file, data_sheet, met_sheet, sample_sheet) {
   met_info = readxl::read_excel(path=file, sheet=met_sheet, col_names = T)
   sample_info = readxl::read_excel(path=file, sheet=sample_sheet, col_names = T)
 
-  result=list()
   result$data <- raw %>% select(-all_of(cols2discard))
   result$metinfo <- met_info[match(names(result$data), met_info$CHEM_ID), ]
   result$sampleinfo <- sample_info[match(raw$PARENT_SAMPLE_NAME, sample_info$PARENT_SAMPLE_NAME), ]
@@ -65,6 +86,10 @@ mt_load_metabolon_v2 <- function(file, data_sheet, met_sheet, sample_sheet) {
                        colData  = result$sampleinfo,
                        rowData  = result$metinfo,
                        metadata = list(sessionInfo=utils::sessionInfo(), parseInfo=result$info))
+
+  # add original metadata if exists
+  if (!is.null(result$meta$results)) metadata(D)$results <- result$meta$results
+  if (!is.null(result$meta$settings)) metadata(D)$settings <- result$meta$settings
 
   # ensure colnames and rownames exist
   if (is.null(colnames(D))) colnames(D) <- 1:ncol(D)

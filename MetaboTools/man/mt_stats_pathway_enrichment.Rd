@@ -4,14 +4,14 @@
 \alias{mt_stats_pathway_enrichment}
 \title{Pathway enrichment script using statistical analysis results from metabotools pipeline}
 \usage{
-mt_stats_pathway_enrichment(D, pw_col, stat_name, cutoff = 0.05)
+mt_stats_pathway_enrichment(D, stat_name, pw_col, cutoff = 0.05)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input.}
 
-\item{pw_col}{Column containing pathways IDs.}
-
 \item{stat_name}{Name of statistical analysis to use with mti_get_stat_by_name().}
+
+\item{pw_col}{Column containing pathways IDs.}
 
 \item{cutoff}{Cutoff to use for assigning whether a metabolite/gene is significant. Used in Fisher's exact test. Default: 0.05.}
 }

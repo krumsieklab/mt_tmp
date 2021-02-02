@@ -1,18 +1,19 @@
-#' 'Equalizer' plots.
+#' 'Equalizer' plots
 #'
 #' Creates a nested plot based on metabolite annotations, e.g. of super-/ and sub-pathways, or of sub-pathways and metabolites.
 #'
-#' @param D1 \code{SummarizedExperiment} input 1, the coarse one
-#' @param comp1  name of first comparison output to take arguments from, the coarse one [first one has to be the less granular one (e.g. D1 super, D2 sub)]
-#' @param D2 \code{SummarizedExperiment} input 2, the fine one
-#' @param comp2 name of second comparison output to take arguments from, the fine one
-#' @param legend_fine fine legend to be plotted
-#' @param legend_coarse coarse legend to be plotted
-#' @param vertline_fine filter expression where to draw the red, dashed line, for fine. default: 0.05
-#' @param vertline_coarse filter expression where to draw the red, dashed line, for coarse. default: 0.05
-#' @param colors colors for fine and coarse, default: c("#9494FF","red") (light blue and red)
+#' @param D1 \code{SummarizedExperiment} input 1, the coarse one.
+#' @param comp1  Name of first comparison output to take arguments from, the coarse one [first one has to be the less
+#'    granular one (e.g. D1 super, D2 sub)].
+#' @param D2 \code{SummarizedExperiment} input 2, the fine one.
+#' @param comp2 Name of second comparison output to take arguments from, the fine one.
+#' @param legend_fine Fine legend to be plotted.
+#' @param legend_coarse Coarse legend to be plotted. Default: NULL.
+#' @param vertline_fine Filter expression where to draw the red, dashed line, for fine. Default: 0.05.
+#' @param vertline_coarse Filter expression where to draw the red, dashed line, for coarse. Default: 0.05.
+#' @param colors Colors for fine and coarse. Default: c("#9494FF","red") (light blue and red).
 #'
-#' @return $result: plot, equalizer
+#' @return $result$output: plot, equalizer
 #'
 #' @examples
 #' \dontrun{# super-pathway / sub-pathway equalizer

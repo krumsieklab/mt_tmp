@@ -11,14 +11,16 @@ mt_other_strip_results(D, strip = "all")
 
 \item{strip}{What to remove. Has to be "all" or "plots". Default: "all".}
 }
+\value{
+$results: Either all plots removed or all results entries removed.
+}
 \description{
+Removes either the entire result list or all plots from the metadata of a SummarizedExperiment.
+Can be used to obtain a more lightweight object for further processing.
+
 strip=="all" will only leave a single result in the object, the one from this function.
 
 strip=="plots" will set all ggplot objects to NULL, still allowing HTML reports to be generated.
-}
-\details{
-Removes either the entire result list or all plots from the metadata of a SummarizedExperiment.
-Can be used to obtain a more lightweight object for further processing.
 }
 \examples{
 \dontrun{# at the end of a pipeline

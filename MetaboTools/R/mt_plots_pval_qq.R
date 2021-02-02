@@ -2,10 +2,10 @@
 #'
 #' QQ plot against uniform distribution.
 #'
-#' @param D \code{SummarizedExperiment} input
+#' @param D \code{SummarizedExperiment} input.
 #' @param stat_name Name of the statistical result.
 #'
-#' @return $result: plot, p-value qq plot
+#' @return $result$output: plot, p-value qq plot
 #'
 #' @examples
 #' \dontrun{... %>% mt_plots_pval_qq(stat_name='comp') %>% ...  # for one

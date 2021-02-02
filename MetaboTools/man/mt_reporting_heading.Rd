@@ -16,10 +16,10 @@ mt_reporting_heading(D, heading, lvl = 1)
 \value{
 If first step in pipeline, creates \code{SummarizedExperiment} object.
 
-$result$output: stores info about heading
+$result$output: Stores info about heading.
 }
 \description{
-Will be used when calling \code{mt_reporting_generateMD}.
+Store heading text and level to be used when calling \code{mt_reporting_html}.
 }
 \examples{
 \dontrun{... \%>\%

@@ -16,7 +16,7 @@ mt_pre_trans_scale(D, center = T, scale = T, ref_samples)
 \item{ref_samples}{Term which samples to use for center and scale calculcation.}
 }
 \value{
-assay: scaled data
+assay: Scaled data.
 }
 \description{
 This function scales each metabolite by subtracting its mean and dividing by its standard deviation.

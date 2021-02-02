@@ -2,13 +2,14 @@
 #'
 #' Loads data from a Nightingale format Excel file.
 #'
+#' @param D \code{SummarizedExperiment} input. Missing if first step in pipeline.
 #' @param file Name of input excel file.
-#' @param format_type OPTIONAL. Type of nightingale format: "single_sheet" or "multiple_sheets". Default: "multiple_sheets".
-#' @param data_sheet OPTIONAL. If format_type is multiple sheets, name of sheet with data.
-#' @param met_sheet OPTIONAL. Name of sheet with biomarker information. Default: "Biomarker annotations".
-#' @param met_qc_sheet OPTIONAL. Name of sheet with biomarker qc tags. Default: "Tags per biomarker".
-#' @param sample_qc_sheet OPTIONAL. Name of sheet with sample qc tags. Default: "Quality control tags and notes".
-#' @param sample_id OPTIONAL. Name of the column with sample id.
+#' @param format_type Type of nightingale format: "single_sheet" or "multiple_sheets". Default: "multiple_sheets".
+#' @param data_sheet If format_type is multiple sheets, name of sheet with data.
+#' @param met_sheet If format type is multiple sheets, name of sheet with biomarker information. Default: "Biomarker annotations".
+#' @param met_qc_sheet If format type is multiple sheets, name of sheet with biomarker qc tags. Default: "Tags per biomarker".
+#' @param sample_qc_sheet If format type is multiple sheets, name of sheet with sample qc tags. Default: "Quality control tags and notes".
+#' @param sample_id OPTIONAL. Name of the column with sample IDs.
 #'
 #' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry.
 #'
@@ -21,13 +22,27 @@
 #' @author RB
 #'
 #' @export
-mt_load_nightingale <- function(file,
+mt_load_nightingale <- function(D,
+                                file,
                                 data_sheet,
-                                sample_id,
                                 format_type = 'multiple_sheets',
                                 met_sheet = 'Biomarker annotations',
                                 met_qc_sheet = 'Tags per biomarker',
-                                sample_qc_sheet = 'Quality control tags and notes') {
+                                sample_qc_sheet = 'Quality control tags and notes',
+                                sample_id) {
+
+  # initialize outer result list
+  result <- list()
+
+  # get metadata from D if present
+  if(!missing(D)){
+    # validate SE
+    if ("SummarizedExperiment" %in% class(D) == F) stop("D is not of class SummarizedExperiment")
+    if (length(assays(D))!=0) stop("Passed SummarizedExperiment assay must be empty!")
+
+    # get metadata
+    result$meta <- metadata(D)
+  }
 
   if(format_type=='multiple_sheets'){
     if(missing(data_sheet)){data_sheet <- 'Results'}
@@ -35,11 +50,17 @@ mt_load_nightingale <- function(file,
     D <- load_multiple_sheet_format(file=file,
                                     data_sheet=data_sheet, met_sheet=met_sheet,
                                     met_qc_sheet=met_qc_sheet, sample_qc_sheet=sample_qc_sheet, sample_id=sample_id)
+    # add original metadata if exists
+    if (!is.null(result$meta$results)) metadata(D)$results <- result$meta$results
+    if (!is.null(result$meta$settings)) metadata(D)$settings <- result$meta$settings
   } else if (format_type=='single_sheet') {
     if(missing(data_sheet)){stop('data_sheet should be provided for single_sheet format!')}
     if(missing(sample_id)){sample_id <- 'sampleid'}
     D <- load_single_sheet_format(file=file,
                                     data_sheet=data_sheet, sample_id=sample_id)
+    # add original metadata if exists
+    if (!is.null(result$meta$results)) metadata(D)$results <- result$meta$results
+    if (!is.null(result$meta$settings)) metadata(D)$settings <- result$meta$settings
 
   } else {stop(sprintf('Unknown format type, %s!', format_type))}
 

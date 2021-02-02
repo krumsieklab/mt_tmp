@@ -1,23 +1,23 @@
-#' 2D PCA of samples.
+#' 2D PCA of samples
 #'
-#' Can be colored by any variable in colData.
+#' Create PCA plot of samples. Can be colored by any variable in colData.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param title Title of the plot, default: "PCA"
-#' @param scale_data  scale data before plotting? (mean 0, std 1), default: FALSE
-#' @param PC1 first PC to plot, default is 1 (PC1)
-#' @param PC2 second PC to plot, default is 2 (PC2)
-#' @param data_type Data of type 'scores' or 'loadings'
-#' @param label_col field to label. default: none
-#' @param text_repel try to avoid all text overlaps when labeling? default:T
-#' @param ellipse confidence interval for ellipse. default: none (no ellipse)
-#' @param exp_var_plot add explained variance plot? default: F
-#' @param store_matrices store scores and loadings matrices in result structure? default: F
-#' @param ggadd further elements/functions to add (+) to the ggplot object
-#' @param ... # additional expression directly passed to aes() of ggplot, can refer to colData
+#' @param D \code{SummarizedExperiment} input.
+#' @param title Title of the plot. Default: "PCA".
+#' @param scale_data  Scale data before plotting? Scale to mean 0, std 1. Default: F.
+#' @param PC1 First PC to plot. Default: 1 (PC1).
+#' @param PC2 Second PC to plot. Default: 2 (PC2).
+#' @param data_type Data of type 'scores' or 'loadings'. Default: 'scores'.
+#' @param label_col Field to label. Default: ''.
+#' @param text_repel Try to avoid all text overlaps when labeling? Default:T.
+#' @param ellipse Confidence interval for ellipse. Default: NA (no ellipse).
+#' @param exp_var_plot Add explained variance plot? Default: F.
+#' @param store_matrices Store scores and loadings matrices in result structure? Default: F.
+#' @param ggadd Further elements/functions to add (+) to the ggplot object. Default: NULL.
+#' @param ... Additional expression directly passed to aes() of ggplot, can refer to colData.
 #'
-#' @return result output: plot(s)
-#' @return result output2: scores and loadings matrix
+#' @return results$output: plot(s)
+#' @return results$output2: scores and loadings matrix
 #
 #' @examples
 #' \dontrun{## PCA on scale_data, color and shape by "Group" variable in colData

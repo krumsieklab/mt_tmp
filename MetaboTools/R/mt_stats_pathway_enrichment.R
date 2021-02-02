@@ -1,14 +1,18 @@
 #' Pathway enrichment script using statistical analysis results from metabotools pipeline
 #'
+#' @description
 #' This script runs a pathway enrichment analysis using Fisher's exact test from statistics
 #' calculated by mt_stats_univ_lm().
 #'
+#' @description
 #' Implemented approaches:
-#' 1. Fisher's exact test.
+#' \enumerate{
+#'    \item{Fisher's exact test.}
+#' }
 #'
 #' @param D \code{SummarizedExperiment} input.
-#' @param pw_col Column containing pathways IDs.
 #' @param stat_name Name of statistical analysis to use with mti_get_stat_by_name().
+#' @param pw_col Column containing pathways IDs.
 #' @param cutoff Cutoff to use for assigning whether a metabolite/gene is significant. Used in Fisher's exact test. Default: 0.05.
 #'
 #' @return $results$pathways$enrichment_results: a dataframe containing the pathway enrichment results
@@ -24,7 +28,7 @@
 #' @author PG
 #'
 #' @export
-mt_stats_pathway_enrichment <- function(D, pw_col, stat_name, cutoff = 0.05) {
+mt_stats_pathway_enrichment <- function(D, stat_name, pw_col, cutoff = 0.05) {
 
   stopifnot("SummarizedExperiment" %in% class(D))
 

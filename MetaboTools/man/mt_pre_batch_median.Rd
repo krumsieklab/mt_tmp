@@ -2,19 +2,19 @@
 % Please edit documentation in R/mt_pre_batch_median.R
 \name{mt_pre_batch_median}
 \alias{mt_pre_batch_median}
-\title{Median batch correction.}
+\title{Median batch correction}
 \usage{
 mt_pre_batch_median(D, batches, ref_samples)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{batches}{sample annotation (colData) column name that contains batch assignment}
+\item{batches}{Sample annotation (colData) column name that contains batch assignment.}
 
-\item{ref_samples}{expression to filter out reference samples to use from colData}
+\item{ref_samples}{Expression to filter out reference samples to use from colData.}
 }
 \value{
-assay: batch-corrected version
+assay: Batch-corrected version.
 }
 \description{
 Same approach that Metabolon uses for runday correction. Works for both logged and non-logged data. Subtracts (logged) or

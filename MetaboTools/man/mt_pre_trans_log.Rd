@@ -7,12 +7,12 @@
 mt_pre_trans_log(D, base = 2)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{base}{operation: log(x)/log(base) for every data point}
+\item{base}{Operation: log(x)/log(base) for every data point. Default: 2.}
 }
 \value{
-assay: logged data
+assay: Logged data.
 }
 \description{
 Transform the entire dataset log_based(x), i.e. log(x)/log(base).

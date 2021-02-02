@@ -2,14 +2,14 @@
 % Please edit documentation in R/mt_anno_cv.R
 \name{mt_anno_cv}
 \alias{mt_anno_cv}
-\title{Calculate CV - coefficient of variation}
+\title{Calculate coefficient of variation (CV)}
 \usage{
 mt_anno_cv(D, qc_samples, out_col, replicates = F, id_col = NULL)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{qc_samples}{Logical expression. Can use fields from colData.}
+\item{qc_samples}{Logical expression. Can use columns from colData.}
 
 \item{out_col}{Name of new rowData column to store the cv values.}
 
@@ -18,7 +18,7 @@ mt_anno_cv(D, qc_samples, out_col, replicates = F, id_col = NULL)
 \item{id_col}{OPTIONAL. If replicates is T, it is the name of the column in colData containing sample IDs.}
 }
 \value{
-rowData: new column added
+rowData: New annotation column added.
 }
 \description{
 {ADD DESCRIPTION}

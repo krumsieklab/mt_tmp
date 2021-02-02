@@ -62,8 +62,6 @@ mt_reporting_tic <- function(D) {
 #' @export
 mt_reporting_toc <- function(D) {
 
-  # TODO: tictoc needs to be imported here or use ::
-
   # validate argument
   stopifnot("SummarizedExperiment" %in% class(D))
 

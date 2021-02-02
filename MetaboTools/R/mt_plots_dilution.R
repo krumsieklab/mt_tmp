@@ -1,7 +1,9 @@
 #' Plot dilution factors
 #'
+#' @description
 #' Correlate variable with dilution factors from quotient normalization.
 #'
+#' @description
 #' \itemize{
 #' \item for factors: will produce boxplot
 #' \item for quantitative variable: will produce scatter plot
@@ -9,11 +11,11 @@
 #' }
 #'
 #' @param D \code{SummarizedExperiment} input.
-#' @param in_col name of colData colum  (sample annotation) to correlation dilution factors with
-#' @param box_plot  produce boxplot (TRUE, default), or beeswarm plot (FALSE) .... only relevant for factor comparison
-#' @param ggadd further elements/functions to add (+) to the ggplot object
+#' @param in_col Name of colData column (sample annotation) to correlation dilution factors with.
+#' @param box_plot  Produce boxplot (TRUE), or beeswarm plot (FALSE). Only relevant for factor comparison. Default: T.
+#' @param ggadd Further elements / functions to add (+) to the ggplot object.
 #'
-#' @return $result: plot, comparison with dilution factors
+#' @return $result$output: plot, comparison with dilution factors
 #'
 #' @examples
 #' \dontrun{%>% mt_plots_dilution(in_col="group") %>% # compare with 'group' sample annotation

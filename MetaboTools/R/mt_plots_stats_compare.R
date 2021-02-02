@@ -2,20 +2,21 @@
 #'
 #' Produces a plot that compares the directed -log10 p-values between two previously executed stats.
 #'
-#' @param D1 first SE dataset to compare; the one in the pipeline
-#' @param stat1 name of statistical comparison in first dataset
-#' @param filter1 filter term, defining which metabolites to label from first comparison (can use elements of stats table)
-#' @param D2 second SE dataset, if not given, will be the same as the first
-#' @param stat2 name of statistical comparison in second dataset
-#' @param filter2 filter term, defining which metabolites to label from second comparison (can use elements of stats table)
-#' @param filter_op  if AND -> two colors, one for those where both stats match the criterion, and one where they don't
-#'                  if OR -> three colors, a third one where only one stat matches the criterion
-#' @param plot_title optional param for plot title
-#' @param label_col optional argument on which column in the statistical results df to use for labeling points
-#' @param point_size size of the points on the ggplot
-#' @param return_plot_only return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.
-#' @param export_file WHAT DOES THIS DO?
-#' @param use_estimate use estimate for comparison, instead of statistic; default: F
+#' @param D1 First SE dataset to compare; the one in the pipeline.
+#' @param stat1 Name of statistical comparison in first dataset.
+#' @param filter1 Filter term, defining which metabolites to label from first comparison (can use elements of stats table).
+#' @param D2 Second SE dataset, if not given, will be the same as the first.
+#' @param stat2 Name of statistical comparison in second dataset.
+#' @param filter2 Filter term, defining which metabolites to label from second comparison (can use elements of stats table).
+#' @param filter_op  If AND -> two colors, one for those where both stats match the criterion, and one where they don't.
+#'                  If OR -> three colors, a third one where only one stat matches the criterion. Default: "AND".
+#' @param title OPTIONAL. Param for plot title.
+#' @param label_col OPTIONAL. Argument on which column in the statistical results df to use for labeling points. Default: "name".
+#' @param point_size Size of the points on the ggplot. Default: 1.5.
+#' @param return_plot_only Return only the plot object. WARNING: setting this to true makes the function non-MT
+#'    pipeline compatible. Default: F.
+#' @param data_file Name of Excel file to output statistical comparison data to. Default: NULL.
+#' @param use_estimate Use estimate for comparison, instead of statistic. Default: F.
 #'
 #' @return $result: plot, p-value histogram
 #'
@@ -57,11 +58,11 @@ mt_plots_stats_compare <- function(D1,
                                    stat2,
                                    filter2,
                                    filter_op="AND",
-                                   plot_title = "",
+                                   title = "",
                                    label_col = "name",
                                    point_size = 1.5,
                                    return_plot_only=F,
-                                   export_file = NULL,
+                                   data_file = NULL,
                                    use_estimate = F) {
 
   ## check input
@@ -128,16 +129,16 @@ mt_plots_stats_compare <- function(D1,
     ggrepel::geom_text_repel(data=dplyr::filter(st, filtered>0), ggplot2::aes_string(label=label_col), size=3, colour = "black") +
     ggplot2::xlab(xlabel) + ggplot2::ylab(ylabel)
 
-  if (plot_title != "") {
-    p <- p + ggplot2::ggtitle(plot_title)
+  if (title != "") {
+    p <- p + ggplot2::ggtitle(title)
 
   }
 
   ## export to file?
-  if (!is.null(export_file)) {
+  if (!is.null(data_file)) {
     # can't handle list columns, drop those
     keep = !sapply(st, is.list)
-    openxlsx::write.xlsx(x=st[,keep], file=export_file, asTable=F)
+    openxlsx::write.xlsx(x=st[,keep], file=data_file, asTable=F)
   }
 
   if (!return_plot_only) {

@@ -16,7 +16,7 @@ mt_stats_univ_missingness(D, in_col, stat_name, sample_filter)
 \item{sample_filter}{Sample filter term to restrict to.}
 }
 \value{
-$result: statistics object
+$results$output: Statistics object.
 }
 \description{
 This function will determine if NAs significantly accumulate in one of the sample groups. It is recommended that this function

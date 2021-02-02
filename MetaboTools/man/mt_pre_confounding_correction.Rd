@@ -16,16 +16,15 @@ mt_pre_confounding_correction(D, formula, strata = NULL, scale_data = F)
 \item{scale_data}{Should data be scaled after correction? Default: F.}
 }
 \value{
-assay: corrected data
+assay: Corrected data.
 
-$results$output: lm.fit pvalue per metabolites to show confounding affect on them
+$results$output: The lm.fit pvalue per metabolites to show confounding affect on them.
 }
 \description{
 Each metabolite is corrected by lm with the confounding variables and residuals are returned in lieu of uncorrected
 metabolites expressions.
 }
 \examples{
-
  \dontrun{# not run
  #... \%>\% mt_pre_confounding_correction( formula = ~batch + age, strata = "RUN_DAY" )
  }

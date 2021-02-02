@@ -3,7 +3,7 @@
 #' Filters metabolites according to an expression. Expression can access entries of rowData.
 #'
 #' @param D \code{SummarizedExperiment} input.
-#' @param filter Logical expression. Can use colums from rowData.
+#' @param filter Logical expression. Can use columns from rowData.
 #'
 #' @return assay: Filtered metabolites (rows) removed.
 #' @return rowData: Filtered metabolites removed.

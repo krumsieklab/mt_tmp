@@ -1,6 +1,6 @@
 #' Calculate intraclass correlation (ICC)
 #'
-#' {ADD DESCRIPTION}
+#' Uses QC samples to calculate intraclass correlation (ICC) and add values as new column to rowData.
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param qc_samples Logical expression. Can use fields from colData.

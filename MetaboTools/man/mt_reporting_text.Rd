@@ -12,10 +12,10 @@ mt_reporting_text(D, text)
 \item{text}{Regular text.}
 }
 \value{
-$results$output: stores text
+$results$output: Stores text.
 }
 \description{
-Will be used when calling \code{mt_reporting_html}.
+Adds regular text to html report. Will be used when calling \code{mt_reporting_html}.
 }
 \examples{
 \dontrun{... \%>\%

@@ -1,11 +1,11 @@
-#' Generate p-value histogram.
+#' Generate p-value histogram
 #'
-#' Either for a given list of statistical results, or all.
+#' Generates a p-value histogram, either for a given list of statistical results or for all statistical results.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param stat_list Name of the statistical results. If not given, will generate histogram for all.
+#' @param D \code{SummarizedExperiment} input.
+#' @param stat_list Name of the statistical results. If not given, will generate histogram for all. Default: NULL.
 #'
-#' @return $result: plot, p-value histogram
+#' @return $result$output: plot, p-value histogram
 #'
 #' @examples
 #' \dontrun{... %>% mt_plots_pval_hist() %>% ...                  # for all

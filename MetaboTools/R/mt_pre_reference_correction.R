@@ -1,12 +1,13 @@
-#' mt_pre_reference_correction
-#'
 #' Correct by NIST
+#'
+#' {ADD DESCRIPTION}
 #'
 #' @param D \code{SummarizedExperiment} input
 #' @param qc_samples Logical expression. Can use fields from \code{colData()}
 #' @param plate_col name of the colData column representing plate number
 #'
 #' @return D QCed
+#'
 #' @examples
 #' \dontrun{... %>% mt_pre_reference_correction(qc_samples=Sample.Identification==102,
 #' plate_col='Plate.Bar.Code') %>% ...}

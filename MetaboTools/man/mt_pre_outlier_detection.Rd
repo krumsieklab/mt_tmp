@@ -7,7 +7,7 @@
 mt_pre_outlier_detection(D, method = "univariate", reduce_dim = F, ...)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input.}
+\item{D}{\code{SummarizedExperiment} input}
 
 \item{method}{Can be either "univariate", "leverage" or "mahalanobis"}
 
@@ -20,9 +20,9 @@ mt_pre_outlier_detection(D, method = "univariate", reduce_dim = F, ...)
 \item{pval}{numeric between 0 and 1. For the mahalanobis method, quantile of the chi-squared distribution to use as threshold to define a sample an outlier. Default value 0.01.}
 }
 \value{
-colData: new columns including a binary vector and a numeric score vector
+colData: New columns including a binary vector and a numeric score vector.
 
-$results$output: returns the specific parameters used to determine outliers for the method selected
+$results$output: Returns the specific parameters used to determine outliers for the method selected.
 }
 \description{
 Uses either univariate or multivariate (leverage, mahalanobis) approaches, won't do both in one call. 

@@ -14,9 +14,9 @@ mt_plots_scatter(
   annotation = "{sprintf('P-value: \%.1e', p.value)}",
   rows,
   cols,
-  fitline = T,
-  fitline_se = T,
-  full.info = F,
+  fit_line = T,
+  fit_line_se = T,
+  full_info = F,
   ggadd = NULL,
   ...
 )
@@ -38,11 +38,11 @@ mt_plots_scatter(
 
 \item{cols}{number columns of boxplots in $result}
 
-\item{fitline}{add fit line? (default: T)}
+\item{fit_line}{add fit line? (default: T)}
 
-\item{fitline_se}{add standard error range? (default: T)}
+\item{fit_line_se}{add standard error range? (default: T)}
 
-\item{full.info}{add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F}
+\item{full_info}{add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F}
 
 \item{ggadd}{further elements/functions to add (+) to the ggplot object}
 
@@ -57,7 +57,7 @@ Creates one scatter plot per metabolite based on given sample annotations
 \examples{
 \dontrun{# scatter plots as overview of results with a result already in 'comp'
 # color by "age" variable in colData
-mt_plots_boxplot(x                  = age,
+mt_plots_scatter(x                  = age,
                  stat_name           = "comp",
                  correct_confounder = ~BATCH_MOCK,
                  metab_filter       = p.value<0.01,

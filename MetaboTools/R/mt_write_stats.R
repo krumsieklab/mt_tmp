@@ -4,9 +4,9 @@
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param file Output filename to write to.
-#' @param stat_names Names of one or more statistical comparison to be written out. If NULL, will export all.
+#' @param stat_list Names of one or more statistical comparison to be written out. If NULL, will export all.
 #' @param sort_by_p Automatically sort by p-values? Default: F.
-#' @param met_name OPTIONAL. Name of rowdata column to include in the output.
+#' @param met_col OPTIONAL. Name of rowdata column to include in the output.
 #'
 #' @return Does not change the \code{SummarizedExperiment} object.
 #'
@@ -14,12 +14,12 @@
 #' \dontrun{# Write out all results
 #' ... %>% mt_write_stats(file="results.xlsx") %>%
 #' # Write out specific result]
-#' ... %>% mt_write_stats(file="results.xlsx", stat_names="comp1") %>%}
+#' ... %>% mt_write_stats(file="results.xlsx", stat_list="comp1") %>%}
 #'
 #' @author JK, RB
 #'
 #' @export
-mt_write_stats <- function(D, file, stat_names=NULL, sort_by_p=F, met_name=NULL) {
+mt_write_stats <- function(D, file, stat_list=NULL, sort_by_p=F, met_col=NULL) {
 
   # verify input arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -30,12 +30,12 @@ mt_write_stats <- function(D, file, stat_names=NULL, sort_by_p=F, met_name=NULL)
   allcomps <- S %>% purrr::map("output") %>% purrr::map("name") %>% unlist()
 
   # restrict to one or output all?
-  if (!is.null(stat_names)) {
+  if (!is.null(stat_list)) {
     # find the ones to filter to
-    m <- match(stat_names, allcomps)
+    m <- match(stat_list, allcomps)
     # throw error if any are not found
     if (any(is.na(m))) {
-      stop(sprintf("Cannot find the following stats entries to export: %s", paste0(stat_names[is.na(m)], collapse = ", ")))
+      stop(sprintf("Cannot find the following stats entries to export: %s", paste0(stat_list[is.na(m)], collapse = ", ")))
     }
     # subset
     S <- S[m]
@@ -46,10 +46,10 @@ mt_write_stats <- function(D, file, stat_names=NULL, sort_by_p=F, met_name=NULL)
   for (i in 1:length(S)) {
     # add to workbook
     df <- S[[i]]$output$table
-    # if met_name is provided and it matches a column in row data add it to the output
+    # if met_col is provided and it matches a column in row data add it to the output
     # else just silently skip this step
-    if(is.null(met_name)==F && is.na(match(met_name, names(rowData(D))))==F){
-        df <- cbind.data.frame(df, met_name=unlist(data.frame(rowData(D))[met_name]))
+    if(is.null(met_col)==F && is.na(match(met_col, names(rowData(D))))==F){
+        df <- cbind.data.frame(df, met_col=unlist(data.frame(rowData(D))[met_col]))
     }
     # sort?
     if (sort_by_p) {

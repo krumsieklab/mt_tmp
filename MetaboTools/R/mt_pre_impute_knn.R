@@ -1,5 +1,6 @@
-#' Impute using kNN method
+#' Impute using KNN method
 #'
+#' @description
 #' Default settings are from the winning approach of our paper.
 #' https://link.springer.com/article/10.1007%2Fs11306-018-1420-2
 #'
@@ -8,7 +9,7 @@
 #
 #' @param D \code{SummarizedExperiment} input.
 #' @param method Specific KNN method to use. Default: "knn.obs.euc.sel" (recommendation: do not touch).
-#' @param K Number of nearest neighbors to consider. Default: 10 (recommendation: do not touch).
+#' @param K Number of nearest neighbors to consider. Recommend not changing this parameter. Default: 10 (recommendation: do not touch).
 #' @param verbose Output intermediate steps? Default: F.
 #' @param use_multicore Use multicore KNN imputation method? Default: F.
 #' @param n_cores If use_multicore==T, number of cores to use for imputation. Default: 5.

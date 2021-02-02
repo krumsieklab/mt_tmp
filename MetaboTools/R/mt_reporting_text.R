@@ -1,6 +1,6 @@
 #' Store regular text for html report
 #'
-#' Will be used when calling \code{mt_reporting_html}.
+#' Adds regular text to html report. Will be used when calling \code{mt_reporting_html}.
 #'
 #' @param D  \code{SummarizedExperiment} input.
 #' @param text Regular text.

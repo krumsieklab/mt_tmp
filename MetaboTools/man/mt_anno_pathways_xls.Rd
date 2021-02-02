@@ -19,8 +19,8 @@ mt_anno_pathways_xls(
 \arguments{
 \item{D}{\code{SummarizedExperiment} input.}
 
-\item{in_col}{\code{rowData} column to use for pathway fetching. The selected column must contain metabolite
-identifiers (e.g. HMBD, KEGG, ChEBI, etc)}
+\item{in_col}{rowData column to use for pathway fetching. The selected column must contain metabolite
+identifiers (e.g. HMBD, KEGG, ChEBI, etc).}
 
 \item{out_col}{New column name for rowData to output pathway information to.}
 
@@ -28,19 +28,19 @@ identifiers (e.g. HMBD, KEGG, ChEBI, etc)}
 
 \item{sheet}{Sheet name or number to read in flat file.}
 
-\item{met_id}{Flat file colname. This column should contain metabolite IDs.}
+\item{met_id}{Name of flat file column containing metabolite IDs.}
 
-\item{pw_id}{Flat file colname. This column should contain pathway IDs.}
+\item{pw_id}{Name of flat file colname containing pathway IDs.}
 
-\item{pw_name}{Flat file colname. This column should contain pathway names.}
+\item{pw_name}{Name of flat file colname containing pathway names.}
 
 \item{raw_db_outfile}{OPTIONAL. Name of file to export the pathway database to. Must be a string containing the path name with a
 .xlsx extension.}
 }
 \value{
-rowData: new pathway annotation column added
+rowData: New pathway annotation column added.
 
-$results$pathways: a dataframe of pathway information
+$results$pathways: A dataframe of pathway information.
 }
 \description{
 Adds custom pathways to the already existing SummarizedExperiment data structure using a flat file.
@@ -55,12 +55,12 @@ each metabolite pathway pair should appear in a separate row.
 \examples{
 \dontrun{# annotate metabolites using the SMP column of the pathway database flat file
 ... \%>\%
-      mt_anno_pathways_from_file(in_col = "HMDb_ID",
-                                 out_col = "janpw",
-                                 file = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
-                                 met_id = "HMDB_id",
-                                 pw_id = "SMP",
-                                 pw_name = "pathway_name") \%>\%
+      mt_anno_pathways_xls(in_col = "HMDb_ID",
+                           out_col = "janpw",
+                           file = codes.makepath("packages/metabotools_external/hmdb/hmdb_preprocessed_4.0.csv"),
+                           met_id = "HMDB_id",
+                           pw_id = "SMP",
+                           pw_name = "pathway_name") \%>\%
 ...}
 
 }

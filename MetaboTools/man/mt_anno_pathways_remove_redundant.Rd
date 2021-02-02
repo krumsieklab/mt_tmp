@@ -7,18 +7,17 @@
 mt_anno_pathways_remove_redundant(D, met_id, pw_id)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{met_id}{Column containing metabolite IDs}
+\item{met_id}{Column containing metabolite IDs.}
 
-\item{pw_id}{Column containing pathways IDs}
+\item{pw_id}{Column containing pathways IDs.}
 }
 \value{
 rowData: Redundant pathway annotation from SE pw_id column filtered.
 }
 \description{
-Remove identical pathways from an existing SummarizedExperiment
- data structure that has a column of pathway annotations.
+Remove identical pathways from an existing SummarizedExperiment data structure that has a column of pathway annotations.
 }
 \examples{
 # first annotate metabolites using smp_db and then remove redundant pathways

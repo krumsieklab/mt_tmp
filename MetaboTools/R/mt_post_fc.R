@@ -4,7 +4,8 @@
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param stat_name Name of the statistical comparison.
-#' @param fun Function with respect to which fold changes are computed (e.g. difference of the log means or median).
+#' @param fun Function with respect to which fold changes are computed (e.g. difference of the log means or median). Default:
+#'    function(x){mean(x,na.rm=T)}.
 #'
 #' @return $results[[stat_name]]$output: fc column added to statistical table
 #'
@@ -22,8 +23,8 @@ mt_post_fc <- function(D,
                        fun = function(x){mean(x,na.rm=T)}){
 
   ## FOLDCHANGE FUNCTION (CONSIDER PREVIOUS LOG)
-  if ((length(MetaboTools:::mtm_res_get_path(D, c("pre","trans","log"))) != 1) &&
-      (length(MetaboTools:::mtm_res_get_path(D, c("flag","logged"))) != 1))
+  if ((length(MetaboTools::mtm_res_get_path(D, c("pre","trans","log"))) != 1) &&
+      (length(MetaboTools::mtm_res_get_path(D, c("flag","logged"))) != 1))
     stop("fold-changes can only be calculated for log-scale data")
 
   ## stat

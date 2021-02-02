@@ -1,12 +1,12 @@
 #' Calculate coefficient of variation (CV)
 #'
-#' {ADD DESCRIPTION}
+#' Use QC samples to calculate coefficient of variation (CV) and add values as new column to rowData.
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param qc_samples Logical expression. Can use columns from colData.
 #' @param out_col Name of new rowData column to store the cv values.
 #' @param replicates OPTIONAL. Flag to indicate if the selected samples are replicates. Default: F.
-#' @param id_col OPTIONAL. If replicates is T, it is the name of the column in colData containing sample IDs.
+#' @param id_col OPTIONAL. If replicates is T, it is the name of the column in colData containing sample IDs. Default: NULL.
 #'
 #' @return rowData: New annotation column added.
 #'

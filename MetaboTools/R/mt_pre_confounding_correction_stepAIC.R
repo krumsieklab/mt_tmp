@@ -4,32 +4,32 @@
 #' in lieu of uncorrected metabolites expressions.
 #'
 #' @param D \code{SummarizedExperiment} input.
-#' @param cols_to_cor Vector of column numbers from colData to correct for.
+#' @param cols_to_correct Vector of column numbers from colData to correct for.
 #' @param n_cores Number of cores to use in parallelization. Default: 1.
 #'
 #' @return assay: Corrected data.
 #' @return $results$output: Returns data.frame with the metabolite, its covars and the fit pval and rsq values.
 #'
 #' @examples
-#'  \dontrun{#... %>% mt_pre_confounding_correction_stepAIC(cols_to_cor = c(1, 4, 5), n_cores = 10)
+#'  \dontrun{#... %>% mt_pre_confounding_correction_stepAIC(cols_to_correct = c(1, 4, 5), n_cores = 10)
 #'  }
 #'
 #'
 #' @author AS, RB
 #'
 #' @export
-mt_pre_confounding_correction_stepAIC <- function(D, cols_to_cor, n_cores = 1) {
+mt_pre_confounding_correction_stepAIC <- function(D, cols_to_correct, n_cores = 1) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
-  stopifnot(is.numeric(cols_to_cor))
+  stopifnot(is.numeric(cols_to_correct))
 
   ####### there should be atleast one covariate information per sample
   Y <- D %>% colData() %>% data.frame()
   # names of covariates
-  col_names <- names(Y)[cols_to_cor]
+  col_names <- names(Y)[cols_to_correct]
   # which samples have atleast one non NA covariate information ?
-  non_na <- apply(Y [, cols_to_cor], 1, FUN=function(x)
+  non_na <- apply(Y [, cols_to_correct], 1, FUN=function(x)
     length(which(is.na(x)))!=length(x)) %>% which()
   # how many have no covariate information at all?
   rem <- nrow(Y) - length(non_na)
@@ -38,7 +38,7 @@ mt_pre_confounding_correction_stepAIC <- function(D, cols_to_cor, n_cores = 1) {
   #######  exclude the covariates with constant values for all patients
   noNA <- function(x){x <- x[!is.na(x) & x!="NA" & x!=""];x}
   cols_to_exclude <- NULL
-  for (cols in (cols_to_cor)) {
+  for (cols in (cols_to_correct)) {
     # just one factor represented?
     if (D %>% colData() %>% as_tibble() %>% .[[cols]] %>% unique() %>% noNA() %>% length() <= 1) {
       cols_to_exclude <- c(cols_to_exclude, cols)
@@ -46,12 +46,12 @@ mt_pre_confounding_correction_stepAIC <- function(D, cols_to_cor, n_cores = 1) {
   }
   # remove the col number of covariates to exclude
   if(length(cols_to_exclude)>0){
-    cols_to_cor <- cols_to_cor[which(cols_to_cor%in%cols_to_exclude==F)]
+    cols_to_correct <- cols_to_correct[which(cols_to_correct%in%cols_to_exclude==F)]
     cols_to_exclude <- toString(cols_to_exclude)
     warning(sprintf("Covariates in column numbers %s with constant values were removed from correction!", cols_to_exclude))
   }
 
-  if(length(cols_to_cor)<1) stop("No covariates left to correct for!")
+  if(length(cols_to_correct)<1) stop("No covariates left to correct for!")
 
 
   ####### subset the input based on missing covariate info
@@ -59,7 +59,7 @@ mt_pre_confounding_correction_stepAIC <- function(D, cols_to_cor, n_cores = 1) {
     D <- D [, non_na]
     X <- t(assay(D))
     # bind covariate columns with metabolites for modelling
-    model_data <- cbind.data.frame(X, colData(D)[, cols_to_cor])
+    model_data <- cbind.data.frame(X, colData(D)[, cols_to_correct])
   } else stop("No samples with any covariate info!")
 
   ####### loop over metabolites

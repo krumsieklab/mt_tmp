@@ -2,42 +2,42 @@
 % Please edit documentation in R/mt_plots_net.R
 \name{mt_plots_net}
 \alias{mt_plots_net}
-\title{mt_plots_net}
+\title{Creates a network object}
 \usage{
 mt_plots_net(
   D,
   stat_name,
-  corr_filter = p.value < 0.05,
+  cor_filter = p.value < 0.05,
   node_coloring,
-  save.html,
+  html_file,
   height = 500
 )
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{stat_name}{name of the test to take correlations from}
+\item{stat_name}{Name of the test to take correlations from.}
 
-\item{corr_filter}{filter for correlation values to plot}
+\item{cor_filter}{Filter for correlation values to plot. Default: p.value < 0.05.}
 
-\item{node_coloring}{name of the test to use for node coloring}
+\item{node_coloring}{Name of the test to use for node coloring.}
 
-\item{save.html}{filename of visnetwork html file. If empty, no html saved}
+\item{html_file}{Name of visnetwork html file. If empty, no html saved.}
 
-\item{height}{optional size in pixel of the plotting window size. Default 500px.}
+\item{height}{OPTIONAL. Size in pixel of the plotting window size. Default: 500.}
 }
 \value{
-assay: not altered
+$result$output: network ggplot + visnetwork plot
 
-$result: network ggplot + visnetwork plot
+$result$output2: {ADD OUTPUT}
 }
 \description{
-Creates a network object
+{ADD DESCRIPTION}
 }
 \examples{
 \dontrun{#' # in the context of a SE pipeline
-... \%>\% mt_plots_net(statsname = "xxx") \%>\% ...    # standard call
-... \%>\% mt_plots_net(statsname = "xxx", corr_filter = p.adj < 0.5, node_coloring="Li's", save.html="Network.html", height=800) \%>\% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
+... \%>\% mt_plots_net(stat_name = "xxx") \%>\% ...    # standard call
+... \%>\% mt_plots_net(stat_name = "xxx", cor_filter = p.adj < 0.5, node_coloring="Li's", html_file="Network.html", height=800) \%>\% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
 }
 
 }

@@ -1,21 +1,21 @@
-#' mt_plots_net
-#'
 #' Creates a network object
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param stat_name name of the test to take correlations from
-#' @param cor_filter filter for correlation values to plot
-#' @param node_coloring name of the test to use for node coloring
-#' @param save_html filename of visnetwork html file. If empty, no html saved
-#' @param height optional size in pixel of the plotting window size. Default 500px.
+#' Creates a network visualization object using the visNetwork package.
 #'
-#' @return assay: not altered
-#' @return $result: network ggplot + visnetwork plot
+#' @param D \code{SummarizedExperiment} input.
+#' @param stat_name Name of the test to take correlations from.
+#' @param cor_filter Filter for correlation values to plot. Default: p.value < 0.05.
+#' @param node_coloring Name of the test to use for node coloring.
+#' @param html_file Name of visnetwork html file. If empty, no html saved.
+#' @param height OPTIONAL. Size in pixel of the plotting window size. Default: 500.
+#'
+#' @return $result$output: network ggplot
+#' @return $result$output2: visnetwork plot
 #'
 #' @examples
 #' \dontrun{#' # in the context of a SE pipeline
 #' ... %>% mt_plots_net(stat_name = "xxx") %>% ...    # standard call
-#' ... %>% mt_plots_net(stat_name = "xxx", cor_filter = p.adj < 0.5, node_coloring="Li's", save_html="Network.html", height=800) %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
+#' ... %>% mt_plots_net(stat_name = "xxx", cor_filter = p.adj < 0.5, node_coloring="Li's", html_file="Network.html", height=800) %>% ...    # filters only significant correlations and colors the nodes according to the results in the indicated test, saves visnetwork to file
 #'}
 #'
 #' @author EB
@@ -29,7 +29,7 @@ mt_plots_net <- function(D,
                         stat_name,
                         cor_filter = p.value < 0.05,
                         node_coloring,
-                        save_html,
+                        html_file,
                         height = 500) {
 
   ## check input
@@ -127,12 +127,12 @@ mt_plots_net <- function(D,
     theme(legend.position = "bottom")
 
 
-  # if save_html given, save visnetwork to html
-  if (!missing(save_html)) {
+  # if html_file given, save visnetwork to html
+  if (!missing(html_file)) {
     # due to odd visSave path handling behavior, we need to export to a tmp file first and the move to final location
     tmpfile = sprintf("tmp_%s.html", uuid::UUIDgenerate())
     visNetwork::visSave(graph = p_vis, file = tmpfile)
-    file.rename(tmpfile, save_html)
+    file.rename(tmpfile, html_file)
   }
 
   ## add status information & plot

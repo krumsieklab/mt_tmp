@@ -2,17 +2,16 @@
 % Please edit documentation in R/mt_stats_univ_cs.R
 \name{mt_stats_univ_cs}
 \alias{mt_stats_univ_cs}
-\title{Composite score models
-Only support specific composite score association analysis in our COVID project}
+\title{Composite score models}
 \usage{
-mt_stats_univ_cs(D, y, patient_id, stat_name, sample_filter)
+mt_stats_univ_cs(D, outcome_col, id_col, stat_name, sample_filter)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input}
 
-\item{y}{name of the column in colData to compare with metabolite}
+\item{outcome_col}{name of the column in colData to compare with metabolite}
 
-\item{patient_id}{name of the column in colData having patient_ID}
+\item{id_col}{name of the column in colData having patient_ID}
 
 \item{stat_name}{name under which this comparison will be stored, must be unique to all other statistical results}
 
@@ -22,14 +21,13 @@ mt_stats_univ_cs(D, y, patient_id, stat_name, sample_filter)
 $result: statistics object
 }
 \description{
-Composite score models
-Only support specific composite score association analysis in our COVID project
+Only support specific composite score association analysis in our COVID project.
 }
 \examples{
 \donttest{
  mt_stats_univ_cs(
-   y     = Group,
-   patient_id = Subject_ID,
+   outcome_col     = Group,
+   id_col = Subject_ID,
    stat_name         = "composite_score",
    sample_filter = (Group \%in\% c("grp1","grp2")),
  ) \%>\% ...

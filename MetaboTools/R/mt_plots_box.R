@@ -1,28 +1,29 @@
-#' Plot Boxplots
+#' Plot Box Plots
 #'
 #' Creates one boxplot plot per metabolite based on given sample annotations.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param x what phenotype (from colData(D)) should be used on x axis, default "x"
-#' @param stat_name index of the entry in metadata(D)$results that contains statistic object
-#' @param correct_confounder confounders to adjust for before plotting, formula notation
-#' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
-#' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
-#' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}"
-#' @param text_size text size of the annotations
-#' @param jitter whether to add jitter to boxplot,  default T
-#' @param rows number rows of boxplots in $result
-#' @param cols number columns of boxplots in $result
-#' @param restrict_to_used_samples whether to filter to the samples that were used in the statistical test, default: T
-#' @param full_info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
-#' @param manual_ylab manual ylabel (default: none)
-#' @param ggadd further elements/functions to add (+) to the ggplot object
-#' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
+#' @param D \code{SummarizedExperiment} input.
+#' @param x What phenotype (from colData) should be used on x axis. Default: "x".
+#' @param stat_name Index of the entry in metadata(D)$results that contains statistic object.
+#' @param correct_confounder Confounders to adjust for before plotting, formula notation.
+#' @param metab_filter If given, filter will be applied to data and remaining variables will be labeled in plot. Default p.value<0.05.
+#' @param metab_sort If given, arrange will be applied to data variables will be sorted. Default: p.value.
+#' @param annotation If given adds annotation to plot. Default = "{sprintf('P-value: %.1e', p.value)}".
+#' @param text_size Text size of the annotations. Default: 3.88.
+#' @param jitter Whether to add jitter to boxplot. Default T.
+#' @param rows Number rows of boxplots in $result.
+#' @param cols Number columns of boxplots in $result.
+#' @param restrict_to_used_samples Whether to filter to the samples that were used in the statistical test. Default: T.
+#' @param full_info Add full information of all sample annotations and statistics results to plottable data.frame? makes
+#'    plotting more flexible but can render SE objects huge. Default: F.
+#' @param manual_ylabel Manual ylabel. Default: NULL.
+#' @param ggadd Further elements / functions to add (+) to the ggplot object.
+#' @param ... Additional expression directly passed to aes() of ggplot, can refer to colData.
 #'
-#' @return  $result: plot, boxplot
+#' @return  $result$output: plot, boxplot
 #'
 #' @examples
-#' \dontrun{# boxplots as overview of results with a result already in 'comp'
+#' \dontrun{# box plots as overview of results with a result already in 'comp'
 #' # color by "Group" variable in colData
 #' mt_plots_box(x                  = Group,
 #'                  stat_name           = "comp",
@@ -53,9 +54,11 @@ mt_plots_box <- function(D,
                          cols,
                          restrict_to_used_samples=T,
                          full_info=F,
-                         manual_ylab=NULL,
+                         manual_ylabel=NULL,
                          ggadd        = NULL,
                          ...){
+
+  .Deprecated("mt_plots_box_scatter")
 
   stopifnot("SummarizedExperiment" %in% class(D))
   x <- dplyr::enquo(x)
@@ -159,8 +162,8 @@ mt_plots_box <- function(D,
   }
 
   ## add ylabel
-  if (!is.null(manual_ylab)) {
-    p <- p + ylab(manual_ylab)
+  if (!is.null(manual_ylabel)) {
+    p <- p + ylab(manual_ylabel)
   } else {
     # add label if this is logged data
     r <- Ds %>% mtm_res_get_path(c("pre","trans","log"))

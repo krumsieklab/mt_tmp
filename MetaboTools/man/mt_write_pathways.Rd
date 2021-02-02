@@ -17,15 +17,15 @@ mt_write_pathways(D, pw_col, file)
 Does not change the \code{SummarizedExperiment} object.
 }
 \description{
-Creates an Excel file that contains detailed metabolite-to-pathway mapping information. Writes out 4 different forms of the mapping information.
-Also includes information about which pathways are redundant, i.e. contain the same set of metabolites.
+Creates an Excel file that contains detailed metabolite-to-pathway mapping information. Writes out 4 different forms of the mapping
+information. Also includes information about which pathways are redundant, i.e. contain the same set of metabolites.
 }
 \examples{
 \dontrun{... \%>\%
-mt_add_pathways(in_col = "KEGG",
-                out_col = "kegg_db",
-                pw_species = "hsapiens",
-                pw_name = "kegg") \%>\%
+mt_anno_pathways_graphite(in_col = "KEGG",
+                          out_col = "kegg_db",
+                          pwdb_species = "hsapiens",
+                          pwdb_name = "kegg") \%>\%
 mt_anno_pathways_remove_redundant(met_ID_col = "KEGG", pw_col = "kegg_db") \%>\%
 mt_write_pathways(pw_col='kegg_db', file='pwannos.xlsx')}
 

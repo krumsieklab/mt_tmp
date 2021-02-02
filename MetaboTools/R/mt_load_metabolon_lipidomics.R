@@ -1,6 +1,5 @@
 #' Load Metabolon-format lipidomics data
 #'
-#' @return Produces an initial SummarizedExperiment, with assay, colData, rowData, and metadata with first entry
 #' Loads lipidomics data from a Metabolon-format Excel file. Needs to be in the original "Client Data Table" format that they deliver.
 #'
 #' @param D \code{SummarizedExperiment} input. Missing if first step in pipeline.

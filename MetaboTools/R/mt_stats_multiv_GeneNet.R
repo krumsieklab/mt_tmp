@@ -1,7 +1,7 @@
 #' Computes partial correlation matrix using the GeneNet estimator
 #'
 #' Implementation according to Schäfer and Strimmer, 2006\cr
-#' https://www.ncbi.nlm.nih.gov/pubmed/16646851
+#' \href{https://www.ncbi.nlm.nih.gov/pubmed/16646851}{https://www.ncbi.nlm.nih.gov/pubmed/16646851},
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param stat_name Name of the correlation matrix.

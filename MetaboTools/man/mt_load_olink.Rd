@@ -29,7 +29,7 @@ Uses Olink's R code read_NPX taken from https://github.com/Olink-Proteomics/Olin
 \examples{
 \dontrun{D <-
   # load data
-  mt_load_files_olink(codes.makepath("mt/olink_sampledata.xlsx")) \%>\%
+  mt_load_olink(file=codes.makepath("mt/olink_sampledata.xlsx")) \%>\%
   ...}
 
 }

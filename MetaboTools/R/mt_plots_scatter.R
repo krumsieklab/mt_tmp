@@ -1,23 +1,25 @@
 #' Scatter plots
 #'
-#' Creates one scatter plot per metabolite based on given sample annotations
+#' Creates one scatter plot per metabolite based on given sample annotations.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param x what phenotype (from colData(D)) should be used on x axis, default "x"
-#' @param stat_name index of the entry in metadata(D)$results that contains statistic object
-#' @param correct_confounder confounders to adjust for before plotting, formula notation
-#' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
-#' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
-#' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}"
-#' @param rows number rows of boxplots in $result
-#' @param cols number columns of boxplots in $result
-#' @param fit_line add fit line? (default: T)
-#' @param fit_line_se add standard error range? (default: T)
-#' @param full_info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
-#' @param ggadd further elements/functions to add (+) to the ggplot object
-#' @param ... additional ggplot parameters
+#' @param D \code{SummarizedExperiment} input.
+#' @param x What phenotype (from colData(D)) should be used on x axis. Default "x".
+#' @param stat_name Index of the entry in metadata(D)$results that contains statistic object.
+#' @param correct_confounder Confounders to adjust for before plotting, formula notation.
+#' @param metab_filter If given, filter will be applied to data and remaining variables will be labeled in plot.
+#'    Default: p.value<0.05.
+#' @param metab_sort If given, arrange will be applied to data variables will be sorted. Default: p.value/
+#' @param annotation If given adds annotation to plot. Default = "{sprintf('P-value: %.1e', p.value)}".
+#' @param rows Number rows of boxplots in $result.
+#' @param cols Number columns of boxplots in $result.
+#' @param fit_line Add fit line? Default: T.
+#' @param fit_line_se Add standard error range? Default: T.
+#' @param full_info Add full information of all sample annotations and statistics results to plottable data.frame? Makes
+#'    plotting more flexible but can render SE objects huge. Default: F.
+#' @param ggadd Further elements/functions to add (+) to the ggplot object.
+#' @param ... Additional ggplot parameters.
 #'
-#' @return  $result: plot, scatter plot
+#' @return  $result$output: plot, scatter plot
 #'
 #' @examples
 #' \dontrun{# scatter plots as overview of results with a result already in 'comp'
@@ -53,6 +55,7 @@ mt_plots_scatter <- function(D,
                              ggadd        = NULL,
                              ...){
 
+  .Deprecated("mt_plots_box_scatter")
 
   stopifnot("SummarizedExperiment" %in% class(D))
   x <- dplyr::enquo(x)

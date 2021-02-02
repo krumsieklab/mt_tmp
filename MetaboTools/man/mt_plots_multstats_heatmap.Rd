@@ -7,7 +7,7 @@
 mt_plots_multstats_heatmap(
   D,
   stat_list = NA,
-  color_cutoff,
+  cutoff,
   met_anno,
   signif_mark = "•",
   mark_size = 20,
@@ -21,31 +21,31 @@ mt_plots_multstats_heatmap(
 )
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{stat_list}{List of stat names to plot; default NA (for all stat objects in D)}
+\item{stat_list}{List of stat names to plot. Default: NA (for all stat objects in D).}
 
-\item{color_cutoff}{p.adj value significance cutoff}
+\item{cutoff}{The p.adj value significance cutoff.}
 
-\item{met_anno}{rowData() column name to use as column annotation}
+\item{met_anno}{The rowData() column name to use as column annotation.}
 
-\item{signif_mark}{Marker used to indicate significant p-values; default "•"}
+\item{signif_mark}{Marker used to indicate significant p-values. Default: "•".}
 
-\item{mark_size}{size of the marker}
+\item{mark_size}{Size of the marker. Default: 20.}
 
-\item{show_mark}{show significance marker? default: T}
+\item{show_mark}{Show significance marker? Default: T.}
 
-\item{color_signif}{Boolean. Color only significant values? default: F}
+\item{color_signif}{Boolean. Color only significant values? Default: F.}
 
-\item{filter_signif}{show only metabolites significant in one or more results? default: T}
+\item{filter_signif}{Show only metabolites significant in one or more results? Default: F.}
 
-\item{cluster_rows}{cluster by rows? default: F}
+\item{cluster_rows}{Cluster by rows? Default: F.}
 
-\item{cluster_cols}{cluster by cols? default: F}
+\item{cluster_cols}{Cluster by cols? Default: F.}
 
-\item{show_colnames}{should column (metabolite) labels be included in the plot? default: F}
+\item{show_colnames}{Should column (metabolite) labels be included in the plot? Default: F.}
 
-\item{main}{main title of pheatmap. default: "Stat Results Overview"}
+\item{main}{Main title of pheatmap. Default: "Stat Results Overview".}
 }
 \value{
 results$output: heatmap of statistical results
@@ -54,7 +54,7 @@ results$output: heatmap of statistical results
 Generate a heatamp for a list of statistical results using \code{pheatmap::pheatmap}.
 }
 \examples{
-\dontrun{D <- D \%>\% mt_plots_pheatmap_multstats(met_anno = "SUPER_PATHWAY", cluster_cols = T, cluster_rows = T)}
+\dontrun{D <- D \%>\% mt_plots_multstats_heatmap(met_anno = "SUPER_PATHWAY", cluster_cols = T, cluster_rows = T)}
 
 }
 \author{

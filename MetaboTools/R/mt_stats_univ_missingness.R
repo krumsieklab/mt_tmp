@@ -28,7 +28,6 @@ mt_stats_univ_missingness <- function(D, in_col, stat_name, sample_filter) {
   Ds <- D
 
   ## FILTER SAMPLES
-  Ds <- D
   if(!missing(sample_filter)) {
 
     filter_q <- dplyr::enquo(sample_filter)

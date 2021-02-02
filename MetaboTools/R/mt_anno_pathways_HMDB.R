@@ -3,7 +3,7 @@
 #' Adds custom pathways to the already existing SummarizedExperiment data structure using the HMDB .xml file.
 #'
 #' @param D \code{SummarizedExperiment} input.
-#' @param in_col rowData column to use for pathway fetching. The selected column must contain metabolite
+#' @param in_col The rowData column to use for pathway fetching. The selected column must contain metabolite
 #'    identifiers (e.g. HMBD, KEGG, ChEBI, etc).
 #' @param out_col Name for rowData to output pathway information to.
 #' @param pwdb_name Name of the pathway database to use. Can use either SMP or KEGG for this argument. Default: "SMP".

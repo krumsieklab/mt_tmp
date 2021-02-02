@@ -19,7 +19,8 @@ mt_load_metabolon_v1(D, file, sheet, copy_nan_sheet = "")
 If first step in pipeline, creates \code{SummarizedExperiment} object. Populates empty assay, colData, and rowData data frames.
 }
 \description{
-Loads data from a Metabolon-format Excel file. Needs to be in the original "Client Data Table" format that they deliver.
+For Metabolon-format version used prior to {DATE}. Loads data from a Metabolon-format Excel file. Needs to be in the original "Client
+Data Table" format that they deliver.
 }
 \examples{
 \dontrun{D <-

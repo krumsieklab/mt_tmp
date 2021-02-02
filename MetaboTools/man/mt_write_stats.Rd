@@ -4,18 +4,18 @@
 \alias{mt_write_stats}
 \title{Export statistical results from pipeline into an Excel file}
 \usage{
-mt_write_stats(D, file, stat_names = NULL, sort_by_p = F, met_name = NULL)
+mt_write_stats(D, file, stat_list = NULL, sort_by_p = F, met_col = NULL)
 }
 \arguments{
 \item{D}{\code{SummarizedExperiment} input.}
 
 \item{file}{Output filename to write to.}
 
-\item{stat_names}{Names of one or more statistical comparison to be written out. If NULL, will export all.}
+\item{stat_list}{Names of one or more statistical comparison to be written out. If NULL, will export all.}
 
-\item{sort_by_p}{Automatically sort by p-values? Default: False.}
+\item{sort_by_p}{Automatically sort by p-values? Default: F.}
 
-\item{met_name}{OPTIONAL. Name of rowdata column to include in the output.}
+\item{met_col}{OPTIONAL. Name of rowdata column to include in the output.}
 }
 \value{
 Does not change the \code{SummarizedExperiment} object.
@@ -27,7 +27,7 @@ Writes out the statistics data frame with p-values, adjusted p-values, fold chan
 \dontrun{# Write out all results
 ... \%>\% mt_write_stats(file="results.xlsx") \%>\%
 # Write out specific result]
-... \%>\% mt_write_stats(file="results.xlsx", stat_names="comp1") \%>\%}
+... \%>\% mt_write_stats(file="results.xlsx", stat_list="comp1") \%>\%}
 
 }
 \author{

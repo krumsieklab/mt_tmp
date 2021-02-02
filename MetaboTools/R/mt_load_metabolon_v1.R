@@ -1,6 +1,6 @@
-#' Load Metabolon-format data
+#' Load Old Metabolon-format data
 #'
-#' For Metabolon-format version used prior to {DATE}. Loads data from a Metabolon-format Excel file. Needs to be in the original "Client
+#' For Metabolon-format version used prior to 2020-10-29. Loads data from a Metabolon-format Excel file. Needs to be in the original "Client
 #' Data Table" format that they deliver.
 #'
 #' @param D \code{SummarizedExperiment} input. Missing if first step in pipeline.

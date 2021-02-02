@@ -2,26 +2,27 @@
 #'
 #' Creates one box plot or scatter plot per metabolite based on given sample annotations.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param x what phenotype (from colData(D)) should be used on x axis, default "x"
-#' @param plot_type "box" or "scatter"
-#' @param stat_name index of the entry in metadata(D)$results that contains statistic object
-#' @param correct_confounder confounders to adjust for before plotting, formula notation
-#' @param metab_filter if given, filter will be applied to data and remaining variables will be labelled in plot, default p.value<0.05
-#' @param metab_sort if given, arrange will be applied to data variables will be sorted, default p.value
-#' @param annotation if given adds annotation to plot, default = "{sprintf('P-value: %.1e', p.value)}"
-#' @param full_info add full information of all sample annotations and statistics results to plottable data.frame? makes plotting more flexible but can render SE objects huge. default: F
-#' @param text_size text size of the annotations
-#' @param jitter add geom_jitter ("jitter") or geom_beeswarm ("beeswarm") to boxplot, exclude if NULL;  default "beeswarm"
-#' @param restrict_to_used_samples whether to filter to the samples that were used in the statistical test, default: T
-#' @param manual_ylab manual ylabel (default: none)
-#' @param fit_line add fit line? (default: T)
-#' @param fit_line_se add standard error range? (default: T)
-#' @param ggadd further elements/functions to add (+) to the ggplot object
-#' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
+#' @param D \code{SummarizedExperiment} input.
+#' @param x What phenotype (from colData) should be used on x axis. Default: "x".
+#' @param plot_type Either "box" or "scatter".
+#' @param stat_name Index of the entry in metadata(D)$results that contains statistic object.
+#' @param correct_confounder Confounders to adjust for before plotting, formula notation.
+#' @param metab_filter If given, filter will be applied to data and remaining variables will be labeled in plot. Default: p.value<0.05.
+#' @param metab_sort If given, arrange will be applied to data variables will be sorted. Default: p.value.
+#' @param annotation If given adds annotation to plot. Default: "{sprintf('P-value: %.1e', p.value)}".
+#' @param full_info Add full information of all sample annotations and statistics results to plot table data.frame?
+#'    Makes plotting more flexible but can render SE objects huge. Default: F
+#' @param text_size Text size of the annotations. Default: 3.88.
+#' @param jitter Add geom_jitter ("jitter") or geom_beeswarm ("beeswarm") to boxplot. Exclude if NULL.  Default: "beeswarm".
+#' @param restrict_to_used_samples Whether to filter to the samples that were used in the statistical test. Default: T.
+#' @param manual_ylabel Manual ylabel. Default: NULL.
+#' @param fit_line Add fit line? Default: T.
+#' @param fit_line_se Add standard error range? Default: T.
+#' @param ggadd Further elements/functions to add (+) to the ggplot object. Default: NULL.
+#' @param ... Additional expression directly passed to aes() of ggplot, can refer to colData.
 #'
-#' @return if plot_type = "box", $result: plot, box plot
-#' @return if plot_type = "scatter", $result: plot, scatter plot
+#' @return if plot_type = "box", $result$output: plot, box plot
+#' @return if plot_type = "scatter", $result$output: plot, scatter plot
 #'
 #' @examples
 #' \dontrun{# boxplots as overview of results with a result already in 'comp'
@@ -54,7 +55,7 @@ mt_plots_box_scatter <- function(D,
                                  text_size = 3.88,
                                  jitter = "beeswarm",
                                  restrict_to_used_samples = T,
-                                 manual_ylab=NULL,
+                                 manual_ylabel=NULL,
                                  fit_line = T,
                                  fit_line_se = T,
                                  ggadd = NULL,
@@ -79,7 +80,7 @@ mt_plots_box_scatter <- function(D,
 
   ## stat
   if(!missing(stat_name)){
-    stat <- MetaboTools:::mtm_get_stat_by_name(Ds, stat_name) %>%
+    stat <- MetaboTools::mtm_get_stat_by_name(Ds, stat_name) %>%
       dplyr::inner_join(rd, by = "var")
   }else{
     stat <- rd
@@ -202,11 +203,11 @@ mt_plots_box_scatter <- function(D,
   ### BOX PLOT SPECIFIC
   if(plot_type=="box"){
     ## add ylabel
-    if (!is.null(manual_ylab)) {
-      p <- p + ylab(manual_ylab)
+    if (!is.null(manual_ylabel)) {
+      p <- p + ylab(manual_ylabel)
     } else {
       # add label if this is logged data
-      r <- Ds %>% MetaboTools:::mtm_res_get_path(c("pre","trans","log"))
+      r <- Ds %>% MetaboTools::mtm_res_get_path(c("pre","trans","log"))
       if (length(r)>0) {
         p <- p + ylab(r[[1]]$logtxt) # log text contains e.g. "log2"
       }

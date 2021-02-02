@@ -8,19 +8,19 @@ mt_pre_filter_missingness(
   D,
   met_max = NA,
   sample_max = NA,
-  met_grp = NA,
+  group_col = NA,
   report_filtered = F,
   report_sample_col = ""
 )
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{met_max}{Maximum fraction of missing metabolites (between 0 and 1.0)}
+\item{met_max}{Maximum fraction of missing metabolites (between 0 and 1.0).}
 
-\item{sample_max}{Maximum fraction of missing samples (between 0 and 1.0)}
+\item{sample_max}{Maximum fraction of missing samples (between 0 and 1.0).}
 
-\item{met_grp}{Name of of a colData sample annotation column; met_max will be applied to each group separately,
+\item{group_col}{Name of of a colData sample annotation column; met_max will be applied to each group separately,
 metabolite must have at most met_max in any of the groups.}
 
 \item{report_filtered}{Write list of filtered metabolites into the status log text? Default: F.}
@@ -29,12 +29,12 @@ metabolite must have at most met_max in any of the groups.}
 output into the status log.}
 }
 \value{
-SE rows or columns will be filtered.
+assay: Rows or columns will be filtered.
 
-$output: logical vector of kept metabolites/samples
+$results$output: Logical vector of kept metabolites/samples.
 }
 \description{
-Filters either samples or metabolites, won't do both in one call.
+Filters either samples or metabolites by fraction of missing values. Won't do both in one call.
 }
 \examples{
 \dontrun{# first remove samples with >10\% missingness, then metabolites with >20\% missingness

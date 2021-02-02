@@ -1,16 +1,17 @@
-#' 2D UMAP of samples.
+#' 2D UMAP of samples
 #'
-#' Can be colored by any variable in colData.
+#' Create a umap plot of samples. Can be colored by any variable in colData.
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param title Title of the plot, default: "UMAP"
-#' @param scale_data  scale data before plotting? (mean 0, std 1), default: FALSE
-#' @param label_col field to label. default: none
-#' @param text_repel try to avoid all text overlaps when labeling? default:T
-#' @param store_matrices store scores in result structure? default: F
-#' @param n_neighbors ADD DESCRIPTION
-#' @param ggadd further elements/functions to add (+) to the ggplot object
-#' @param ... # additional expression directly passed to aes() of ggplot, can refer to colData
+#' @param D \code{SummarizedExperiment} input.
+#' @param title Title of the plot. Default: "UMAP".
+#' @param scale_data  Scale data before plotting? Mean 0, std 1. Default: F.
+#' @param label_col Field to label. Default: ''.
+#' @param text_repel Try to avoid all text overlaps when labeling? Default:T
+#' @param store_matrices Store scores in result structure? Default: F
+#' @param n_neighbors The size of the local neighborhood UMAP will look at when attempting to learn the meanifold structure
+#'    of the data. Default: 15.
+#' @param ggadd Further elements/functions to add (+) to the ggplot object. Default: NULL.
+#' @param ... Additional expression directly passed to aes() of ggplot. Can refer to colData.
 #'
 #' @return result output: plot(s)
 #' @return result output2: scores and loadings matrix
@@ -31,8 +32,8 @@ mt_plots_umap <- function(D,
                           label_col='',
                           text_repel=T,
                           store_matrices=F,
-                          ggadd=NULL,
                           n_neighbors=15,
+                          ggadd=NULL,
                           ...) {
 
   # validate arguments

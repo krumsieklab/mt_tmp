@@ -1,5 +1,6 @@
 #' Load Olink-format data
 #'
+#' @description
 #' Loads data from an Olink-format Excel file.
 #' Uses Olink's R code read_NPX taken from https://github.com/Olink-Proteomics/OlinkRPackage/tree/master/OlinkAnalyze.
 #'

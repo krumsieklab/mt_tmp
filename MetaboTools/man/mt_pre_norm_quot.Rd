@@ -15,18 +15,18 @@ mt_pre_norm_quot(
 \arguments{
 \item{D}{\code{SummarizedExperiment} input.}
 
-\item{vars}{index vector of variables to be used, default: all}
+\item{vars}{Index vector of variables to be used. Default: all.}
 
-\item{na_err}{T/F, throw error for NA's or just ignore?}
+\item{na_err}{T/F, throw error for NA's or just ignore? Default: F.}
 
 \item{ref_samples}{Expression filtering reference samples from colData.}
 
 \item{met_max}{Maximum fraction of missingness to select metabolites to be used in the reference. Default: 1 (i.e. all metabolites).}
 }
 \value{
-assay: quotient-normalized version
+assay: Quotient-normalized version.
 
-$result: dilution factors
+$results$output: List of dilution factors.
 }
 \description{
 Implementation according to Dieterle et al., 2006\cr

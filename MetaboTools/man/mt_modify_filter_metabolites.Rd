@@ -7,14 +7,14 @@
 mt_modify_filter_metabolites(D, filter)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{filter}{Logical expression. Can use fields from \code{rowData()}.}
+\item{filter}{Logical expression. Can use columns from rowData.}
 }
 \value{
-assay: filtered data matrix with removed metabolites
+assay: Filtered metabolites (rows) removed.
 
-rowData: filtered down
+rowData: Filtered metabolites removed.
 }
 \description{
 Filters metabolites according to an expression. Expression can access entries of rowData.

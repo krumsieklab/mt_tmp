@@ -20,15 +20,15 @@ mt_stats_univ_wilcox(
 
 \item{stat_name}{Name under which this comparison will be stored, must be unique to all other statistical results}
 
-\item{sample_filter}{Term which samples to filter to first... e.g. used if the data contains >2 groups but the user
-wants to run a two-group comparison.}
+\item{sample_filter}{Term which samples to filter to first (e.g. used if the data contains >2 groups but the user
+wants to run a two-group comparison).}
 
 \item{paired}{OPTIONAL. Set the paired flag in wilcox.test function, would be applied for numeric in_col. Default: F.}
 
 \item{exact}{OPTIONAL. Set the exact flag in wilcox.test function. Default: NULL.}
 }
 \value{
-$result: statistics object
+$results$output: Statistics object.
 }
 \description{
 {ADD DESCRIPTION}

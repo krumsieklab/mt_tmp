@@ -5,7 +5,7 @@
 #' @param D \code{SummarizedExperiment} input.
 #' @param met_max Maximum fraction of missing metabolites (between 0 and 1.0).
 #' @param sample_max Maximum fraction of missing samples (between 0 and 1.0).
-#' @param met_grp Name of of a colData sample annotation column; met_max will be applied to each group separately,
+#' @param group_col Name of of a colData sample annotation column; met_max will be applied to each group separately,
 #'    metabolite must have at most met_max in any of the groups.
 #' @param report_filtered Write list of filtered metabolites into the status log text? Default: F.
 #' @param report_sample_col Required if report_filtered=T for sample filtering. Specifies which column of colData() to
@@ -27,7 +27,7 @@
 mt_pre_filter_missingness <- function(D,
                                       met_max=NA,
                                       sample_max=NA,
-                                      met_grp = NA,
+                                      group_col = NA,
                                       report_filtered = F,
                                       report_sample_col='') {
 
@@ -43,7 +43,7 @@ mt_pre_filter_missingness <- function(D,
     NA.mat = is.na(assay(D))
     # metabolite
     lst_filtered = c()
-    if(is.na(met_grp)){ # if group met_max
+    if(is.na(group_col)){ # if group met_max
       na.stat = rowSums(NA.mat)
       metKeep = na.stat/ncol(D) <= met_max
       # store list of filtered
@@ -52,10 +52,10 @@ mt_pre_filter_missingness <- function(D,
       D=D[metKeep,]
       na.stat[metKeep]
     }else{
-      stopifnot(met_grp %in% (colData(D) %>% colnames))
-      xmet_grp = colData(D)[,met_grp]
-      na.stat = xmet_grp %>% unique %>% {. = as.character(.); names(.) = .; .} %>%
-        sapply(function(x) rowSums(NA.mat[, xmet_grp == x])/sum(xmet_grp == x))
+      stopifnot(group_col %in% (colData(D) %>% colnames))
+      xgroup_col = colData(D)[,group_col]
+      na.stat = xgroup_col %>% unique %>% {. = as.character(.); names(.) = .; .} %>%
+        sapply(function(x) rowSums(NA.mat[, xgroup_col == x])/sum(xgroup_col == x))
       metKeep = rowSums( na.stat <= met_max ) == ncol(na.stat)
       # store list of filtered
       lst_filtered = D %>% rowData() %>% .$name %>% .[!metKeep]

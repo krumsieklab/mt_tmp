@@ -12,7 +12,7 @@ mt_anno_xls(
   anno_id,
   data_id = anno_id,
   no_map_err = F,
-  col_names = NA
+  sample_names_col = NA
 )
 }
 \arguments{
@@ -20,27 +20,26 @@ mt_anno_xls(
 
 \item{file}{Name of input Excel file.}
 
-\item{sheet}{Name or number of sheet}
+\item{sheet}{Name or number of sheet.}
 
-\item{anno_type}{Either "samples" or "metabolites".}
+\item{anno_type}{Either "samples" (colData) or "metabolites" (rowData).}
 
 \item{anno_id}{Column in annotation file that contains ID information for mapping.}
 
-\item{data_id}{Column in existing data that contains ID information for mapping.}
+\item{data_id}{Column in existing data that contains ID information for mapping. Default: Equal to anno_id.}
 
 \item{no_map_err}{Throw error (T) or warning (F) if something does not map. Default: F.}
 
-\item{col_names}{Take column from new annotation file and overwite colnames (i.e. sample names) of SE (default: none).}
+\item{sample_names_col}{OPTIONAL. Name of column from new annotation file to use to overwrite colnames (i.e. sample names) of SE. Default: none.}
 }
 \value{
-rowData or colData: new annotation columns added
+rowData or colData: New annotation columns added.
 }
 \description{
 Loads annotations and merges them into current SummarizedExperiment.
 Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
 Can load annotations for both metabolites (rowData) and samples (colData).
-}
-\details{
+
 If annotation fields are already existing, this function will fill up any NAs with the values from the new file.
 Existing values are not overwritten.
 }
@@ -49,13 +48,13 @@ Existing values are not overwritten.
   # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
   D <-
   # load raw data
-  mt_files_data_xls(file=file, sheet="data", samplesInRows=T, ID="SAMPLE_NAME") \%>\%
+  mt_load_xls(file=file, sheet="data", samples_in_rows=T, id_col="SAMPLE_NAME") \%>\%
   # sample annotations from metabolomics run
-  mt_anno_files_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_id = "SAMPLE_NAME") \%>\%
+  mt_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_id = "SAMPLE_NAME") \%>\%
   # sample annotations from clinical table
-  mt_anno_files_xls(file=file, sheet="clinicals", anno_type="samples", anno_id="SAMPLE_NAME") \%>\%
+  mt_anno_xls(file=file, sheet="clinicals", anno_type="samples", anno_id="SAMPLE_NAME") \%>\%
   # metabolite annotations`
-  mt_anno_files_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_id="BIOCHEMICAL", data_id = "name") \%>\%
+  mt_anno_xls(file=file, sheet="metinfo", anno_type="metabolites", anno_id="BIOCHEMICAL", data_id = "name") \%>\%
   ...}
 
 }

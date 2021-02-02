@@ -12,6 +12,8 @@
 #'
 #' @author RB
 #'
+#' @import dplyr
+#'
 #' @export
 mt_modify_avg_metabolites <- function(D, group_col) {
 
@@ -24,10 +26,10 @@ mt_modify_avg_metabolites <- function(D, group_col) {
 
   # mean per metabolite by group_col column in rowData
   X <- dplyr::bind_cols(D %>% assay() %>% data.frame(), D %>% rowData() %>% data.frame() %>%
-                          select(!!as.name(group_col))) %>%
+                          dplyr::select(!!as.name(group_col))) %>%
     dplyr::group_by(!!as.name(group_col)) %>%
-    dplyr::summarise_at(vars(-group_cols()), mean) %>% # mean per metabolite
-    ungroup()
+    dplyr::summarise_at(dplyr::vars(-group_cols()), mean) %>% # mean per metabolite
+    dplyr::ungroup()
 
   # identify the unique rows
   unique_rows <- D %>% rowData() %>% data.frame() %>% dplyr::group_by(!!as.name(group_col)) %>%
@@ -37,7 +39,7 @@ mt_modify_avg_metabolites <- function(D, group_col) {
   D <- D[unique_rows, ]
 
   # replace assay data with means
-  assay(D) <- X[match(rowData(D)[[group_col]], X[[group_col]]), ] %>% select(-!!as.name(group_col))
+  assay(D, withDimnames = F) <- X[match(rowData(D)[[group_col]], X[[group_col]]), ] %>% select(-!!as.name(group_col))
 
   ## add status information
   funargs <- mti_funargs()
@@ -48,6 +50,6 @@ mt_modify_avg_metabolites <- function(D, group_col) {
     )
 
   ##return
-
   D
+
 }

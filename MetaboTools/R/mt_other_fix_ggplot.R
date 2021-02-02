@@ -4,7 +4,7 @@
 #'
 #' @param D \code{SummarizedExperiment} input.
 #'
-#' @return $results[["plots"]]$ouput: Convert ggplot env object to image.
+#' @return $results[["plots"]]$output: Convert ggplot env object to image.
 #'
 #' @examples
 #' # example of how to run function

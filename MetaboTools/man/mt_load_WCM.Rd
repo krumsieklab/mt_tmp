@@ -24,9 +24,8 @@ Loads data from a WCM core format file (as they send it).
 \examples{
 \dontrun{D <-
   # load data in WCM format
-  mt_load_files_WCM(
-    file='DM369_Metabolites separated by nucleotides 12_6_18_altered.xlsx',
-    sheet='peakHeight_metabolite_intensiti') \%>\%
+  mt_load_WCM(file='DM369_Metabolites separated by nucleotides 12_6_18_altered.xlsx',
+                    sheet='peakHeight_metabolite_intensiti') \%>\%
   ...}
 
 }

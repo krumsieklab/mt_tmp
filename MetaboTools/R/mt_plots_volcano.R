@@ -1,17 +1,18 @@
-#' mt_plots_volcano
-#'
 #' Creates a volcano plot
 #'
-#' @param D \code{SummarizedExperiment} input
-#' @param x what value shall be plotted on x (default: fc)
-#' @param stat_name name of the statistics object to plot
-#' @param metab_filter if given, filter will be applied to data and remaining varaibles will be labelled in plot
-#' @param ggadd further elements/functions to add (+) to the ggplot object
-#' @param vline where to draw vertical line (for fold-change), has to be single value. default: none
-#' @param hline where to draw horizontal line (for p-values), has to be an expression such as 'p.adj < 0.1'. default: none
-#' @param ... additional expression directly passed to aes() of ggplot, can refer to colData
+#' {ADD DESCRIPTION}
 #'
-#' @return $result: plot, volcano
+#' @param D \code{SummarizedExperiment} input.
+#' @param x What value shall be plotted on x. Default: fc.
+#' @param stat_name Name of the statistics object to plot.
+#' @param metab_filter If given, filter will be applied to data and remaining varaibles will be labelled in plot
+#' @param xlabel Label for the x-axis. Default: gsub("~","",as.character(x)).
+#' @param vline Where to draw vertical line (for fold-change), has to be single value. Default: NA.
+#' @param hline Where to draw horizontal line (for p-values), has to be an expression such as 'p.adj < 0.1'.
+#' @param ggadd Further elements/functions to add (+) to the ggplot object. Default: NULL.
+#' @param ... Additional expression directly passed to aes() of ggplot, can refer to colData.
+#'
+#' @return $result$output: plot, volcano
 #'
 #' @examples
 #' \dontrun{# Volcano plot as overview of results with a result already in 'comp'

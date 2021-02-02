@@ -14,7 +14,7 @@ colData(D_ex1)$Sample_ID %>% duplicated() %>% sum()
 
 # use MetaboTools to average + combine samples
 D_ex1 <- D_ex1 %>%
-  mt_modify_averagesample(group_by = "Sample_ID")
+  mt_modify_avg_samples(group_col = "Sample_ID")
 
 # 95 unique samples and 100 metabolites
 D_ex1 %>% assay() %>% as.data.frame() %>% dim()
@@ -32,7 +32,7 @@ rowData(D_ex2)$COMP_ID %>% duplicated() %>% sum()
 
 # use MetaboTools to average + combine metabolites
 D_ex2 <- D_ex2 %>%
-  mt_modify_averagemetabolite(avg_by = "COMP_ID")
+  mt_modify_avg_metabolites(group_col = "COMP_ID")
 
 # 47 unique metabolites and 50 samples
 D_ex2 %>% assay() %>% as.data.frame() %>% dim()

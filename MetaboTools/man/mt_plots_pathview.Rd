@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_plots_pathview.R
 \name{mt_plots_pathview}
 \alias{mt_plots_pathview}
-\title{mt_plots_pathview}
+\title{Creates KEGG pathways visualization}
 \usage{
 mt_plots_pathview(
   D,
@@ -96,7 +96,7 @@ mt_plots_pathview(
 $result: pathview images
 }
 \description{
-Creates KEGG pathways visualization
+{ADD DESCRIPTION}
 }
 \examples{
 \dontrun{# plot all pathways with at least one significant metabolite from the statistical comparison "comp" in them

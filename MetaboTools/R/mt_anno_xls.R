@@ -1,5 +1,6 @@
 #' Load annotations from Excel file
 #'
+#' @description
 #' Loads annotations and merges them into current SummarizedExperiment.
 #' Performs "left-joins", i.e. leaves the original SE unchanged and just adds information where it can be mapped.
 #' Can load annotations for both metabolites (rowData) and samples (colData).
@@ -15,7 +16,7 @@
 #' @param anno_id Column in annotation file that contains ID information for mapping.
 #' @param data_id Column in existing data that contains ID information for mapping. Default: Equal to anno_id.
 #' @param no_map_err Throw error (T) or warning (F) if something does not map. Default: F.
-#' @param col_names Take column from new annotation file and overwite colnames (i.e. sample names) of SE. Default: none.
+#' @param sample_names_col OPTIONAL. Name of column from new annotation file to use to overwrite colnames (i.e. sample names) of SE. Default: none.
 #'
 #' @return rowData or colData: New annotation columns added.
 #'
@@ -24,7 +25,7 @@
 #'   # Load data, two sheets with sample annotations, and one sheet with metabolite annotations from the same file
 #'   D <-
 #'   # load raw data
-#'   mt_load_data_xls(file=file, sheet="data", samples_in_rows=T, id_col="SAMPLE_NAME") %>%
+#'   mt_load_xls(file=file, sheet="data", samples_in_rows=T, id_col="SAMPLE_NAME") %>%
 #'   # sample annotations from metabolomics run
 #'   mt_anno_xls(file=file, sheet="sampleinfo", anno_type="samples", anno_id = "SAMPLE_NAME") %>%
 #'   # sample annotations from clinical table
@@ -43,7 +44,7 @@ mt_anno_xls <-function(D,
                        anno_id,
                        data_id = anno_id,
                        no_map_err = F,
-                       col_names = NA) {
+                       sample_names_col = NA) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))
@@ -77,10 +78,10 @@ mt_anno_xls <-function(D,
     rownames(newdf) <- colnames(D)
     colData(D) <- DataFrame(newdf)
 
-    # col_names?
-    if (!is.na(col_names)) {
+    # sample_names_col?
+    if (!is.na(sample_names_col)) {
       # copy field, set colnames
-      cn = newdf[[col_names]]
+      cn = newdf[[sample_names_col]]
       colnames(D) = cn
     }
 
@@ -105,9 +106,9 @@ mt_anno_xls <-function(D,
     rownames(newdf) <- rownames(D)
     rowData(D) <- DataFrame(newdf)
 
-    # col_names?
-    if (!is.na(col_names)) {
-      stop("col_names cannot be used for metabolite annotations")
+    # sample_names_col?
+    if (!is.na(sample_names_col)) {
+      stop("sample_names_col cannot be used for metabolite annotations")
     }
 
   } else

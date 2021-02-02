@@ -1,23 +1,26 @@
 #' Heatmap plot by pheatmap::pheatmap
 #'
-#' all \code{pheatmap::pheatmap} arguments can be passed
-#' \code{\href{https://github.com/raivokolde/pheatmap}{https://github.com/raivokolde/pheatmap}}
+#' @description
+#' Creates a heatmap using the function \code{pheatmap] from the \code{pheatmap] package. All \code{pheatmap::pheatmap}
+#' arguments can be passed \code{\href{https://github.com/raivokolde/pheatmap}{https://github.com/raivokolde/pheatmap}}.
 #'
-#' @param D summarized experiment object
-#' @param scale_data scaling the data, TRUE by default
-#' @param sym_zero make color scale symmetric around 0? (should only be used for scaled data), default: F
-#' @param fun function to transform/scale \code{t(assay(D))}, ie \code{mat = fun(t(assay(D)))} will be plotted
+#' @param D \code{SummarizedExperiment} object.
+#' @param scale_data Scaling the data. Default: T.
+#' @param sym_zero Make color scale symmetric around 0? (should only be used for scaled data). Default: F.
+#' @param fun Function to transform/scale \code{t(assay(D))}, ie \code{mat = fun(t(assay(D)))} will be plotted.
 #' @param silent Don't draw the table? A pheatmap argument, MetaboTools uses a different default. Default: T.
-#' @param return_gg should pheatmap object be converted to gg object, TRUE for default.
-#' @param gg_scale scaling of plot to be converted to gg object
-#' @param gg_ymin
-#' @param gg_xmin
-#' @param gg_xmax
-#' @param gg_ymax
-#' @param ggadd  further elements/functions to add (+) to the ggplot object
-#' @param \dots  see \code{pheatmap::pheatmap} for pheatmap arguments
+#' @param return_gg Should pheatmap object be converted to gg object. Default: T.
+#' @param gg_scale Scaling of plot to be converted to gg object.
+#' @param annotation_col Data frame that specifies the annotations shown on the top of the heatmap.
+#' @param annotation_row Data frame that specifices the annotations shown on the left side of the heatmap.
+#' @param gg_ymin Minimum coordinate for ggplot y-axis.
+#' @param gg_xmin Minimum coordinate for ggplot x-axis.
+#' @param gg_xmax Maximum coordinate for ggplot x-axis.
+#' @param gg_ymax Maximum coordinate for ggplot y-axis.
+#' @param ggadd  Further elements/functions to add (+) to the ggplot object.
+#' @param \dots  See \code{pheatmap::pheatmap} for pheatmap arguments.
 #'
-#'  @return object \code{SummarizedExperiment}, see \code{metabotools} conventions for the details
+#' @return $results$output: plot, heatmap
 #'
 #' @author MB
 #'
@@ -35,18 +38,20 @@
 #'
 #' @export
 mt_plots_heatmap <- function(D,
-                              scale_data=F,
-                              sym_zero=F,
-                              fun = function(x){ if(scale_data) return(scale(x)); x},
-                              silent = TRUE,
-                              ggadd=NULL,
-                              return_gg = T,
-                              gg_scale = 1,
-                              gg_ymin = 1 - gg_scale,
-                              gg_xmin = 1 - gg_scale,
-                              gg_xmax = gg_scale,
-                              gg_ymax = gg_scale,
-                              ...){
+                             scale_data=F,
+                             sym_zero=F,
+                             fun = function(x){ if(scale_data) return(scale(x)); x},
+                             silent = TRUE,
+                             return_gg = T,
+                             annotation_col,
+                             annotation_row,
+                             gg_scale = 1,
+                             gg_ymin = 1 - gg_scale,
+                             gg_xmin = 1 - gg_scale,
+                             gg_xmax = gg_scale,
+                             gg_ymax = gg_scale,
+                             ggadd=NULL,
+                             ...){
 
   # upon Jan's comment annotation_col and annotation_row are swapped for compatibility with SummarizedExperiment
 

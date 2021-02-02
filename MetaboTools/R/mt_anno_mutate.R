@@ -1,13 +1,14 @@
 #' Create new variable by expression
 #'
-#' Creates a new variable using dplyr's mutate() mechanism. Formula can use any column in the respective colData/rowData.
+#' Creates a new variable using dplyr's mutate() mechanism. Formula can use any column in the respective colData/rowData. Can create
+#' a new annotation column or replace an existing one (if col_name and term arguments refer to same column).
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param anno_type Either "samples" (colData) or "metabolites" (rowData).
-#' @param col_name Name of new annotation column to store result of expression.
+#' @param col_name Name of new (or existing) annotation column to store result of expression.
 #' @param term Mutate term to forward to \code{dplyr::mutate()}.
 #'
-#' @return colData or rowData: New annotation column added.
+#' @return colData or rowData: New (or existing) annotation column added (or replaced).
 #'
 #' @examples
 #' \dontrun{# Convert numeric sample annotation field 'num' to factor

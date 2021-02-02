@@ -60,7 +60,7 @@ mtm_res_get_plots_entries <- function(D){mtm_res_get_path(D,"plots")}
 #' @return list if stats results
 #'
 #' @author JK
-#' @noRd
+#' @export
 mtm_res_get_stats_entries <- function(D){mtm_res_get_path(D,"stats")}
 
 #' Return stats output by name

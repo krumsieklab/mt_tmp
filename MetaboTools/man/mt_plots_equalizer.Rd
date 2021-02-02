@@ -2,41 +2,42 @@
 % Please edit documentation in R/mt_plots_equalizer.R
 \name{mt_plots_equalizer}
 \alias{mt_plots_equalizer}
-\title{'Equalizer' plots.}
+\title{'Equalizer' plots}
 \usage{
 mt_plots_equalizer(
   D1,
   comp1,
   D2,
   comp2,
-  legend.fine,
-  legend.coarse = NULL,
-  vertline.fine = p.adj < 0.05,
-  vertline.coarse = p.adj < 0.05,
-  clrs = c("#9494FF", "red")
+  legend_fine,
+  legend_coarse = NULL,
+  vertline_fine = p.adj < 0.05,
+  vertline_coarse = p.adj < 0.05,
+  colors = c("#9494FF", "red")
 )
 }
 \arguments{
-\item{D1}{\code{SummarizedExperiment} input 1, the coarse one}
+\item{D1}{\code{SummarizedExperiment} input 1, the coarse one.}
 
-\item{comp1}{name of first comparison output to take arguments from, the coarse one [first one has to be the less granular one (e.g. D1 super, D2 sub)]}
+\item{comp1}{Name of first comparison output to take arguments from, the coarse one [first one has to be the less
+granular one (e.g. D1 super, D2 sub)].}
 
-\item{D2}{\code{SummarizedExperiment} input 2, the fine one}
+\item{D2}{\code{SummarizedExperiment} input 2, the fine one.}
 
-\item{comp2}{name of second comparison output to take arguments from, the fine one}
+\item{comp2}{Name of second comparison output to take arguments from, the fine one.}
 
-\item{legend.fine}{fine legend to be plotted}
+\item{legend_fine}{Fine legend to be plotted.}
 
-\item{legend.coarse}{coarse legend to be plotted}
+\item{legend_coarse}{Coarse legend to be plotted. Default: NULL.}
 
-\item{vertline.fine}{filter expression where to draw the red, dashed line, for fine. default: 0.05}
+\item{vertline_fine}{Filter expression where to draw the red, dashed line, for fine. Default: 0.05.}
 
-\item{vertline.coarse}{filter expression where to draw the red, dashed line, for coarse. default: 0.05}
+\item{vertline_coarse}{Filter expression where to draw the red, dashed line, for coarse. Default: 0.05.}
 
-\item{clrs}{colors for fine and coarse, default: c("#9494FF","red") (light blue and red)}
+\item{colors}{Colors for fine and coarse. Default: c("#9494FF","red") (light blue and red).}
 }
 \value{
-$result: plot, equalizer
+$result$output: plot, equalizer
 }
 \description{
 Creates a nested plot based on metabolite annotations, e.g. of super-/ and sub-pathways, or of sub-pathways and metabolites.
@@ -45,15 +46,14 @@ Creates a nested plot based on metabolite annotations, e.g. of super-/ and sub-p
 \dontrun{# super-pathway / sub-pathway equalizer
 # sub-pathway analysis must already be stored in D_sub, and this is part of the super-pathway pipeline, with a result already in 'comp'
  ... \%>\%
- mt_plots_equalizer(
-  comp1='comp',
-  D2=D_sub,
-  comp2=='comp',
-  legend.fine="sub pathway",
-  legend.coarse='super pathway',
-  vertline.fine = p.adj < 0.1,
-  vertline.coarse = p.adj < 0.1) \%>\%
-...}
+ mt_plots_equalizer(comp1='comp',
+                    D2=D_sub,
+                    comp2=='comp',
+                    legend_fine="sub pathway",
+                    legend_coarse='super pathway',
+                    vertline_fine = p.adj < 0.1,
+                    vertline_coarse = p.adj < 0.1) \%>\%
+ ...}
 
 }
 \author{
