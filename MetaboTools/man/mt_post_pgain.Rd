@@ -20,12 +20,11 @@ $results[[stat_name]]$output: pgain column added to statistical table
 This is a specialized post-analysis function for ratio-based datasets (see mt_modify_ratios). A "p-gain" is defined
 as the factor of p-value decrease of a ratio, compared to the better of the p-values of the two single metabolites. It
 quantifies the amount of signal gained by working with the ratio.
-}
-\details{
+
 For example, if metabolite A's association p-value is p=1e-5, metabolite B has p=1e-7, and the ratio has p=1e-9,
 then pgain=min(1e-5, 1e-7)/1e-9 = 1e2 = 100.
 
-See also: https://pubmed.ncbi.nlm.nih.gov/22672667/
+See also: \href{https://pubmed.ncbi.nlm.nih.gov/22672667/}{https://pubmed.ncbi.nlm.nih.gov/22672667/}.
 }
 \examples{
 \dontrun{# add p-gains to the result table of the statistical comparison called "comparison1"

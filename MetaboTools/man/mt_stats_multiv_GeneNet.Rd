@@ -18,7 +18,7 @@ $results$output: List of pairwise partial correlation coefficients and pvalues, 
 }
 \description{
 Implementation according to Schäfer and Strimmer, 2006\cr
-https://www.ncbi.nlm.nih.gov/pubmed/16646851
+\href{https://www.ncbi.nlm.nih.gov/pubmed/16646851}{https://www.ncbi.nlm.nih.gov/pubmed/16646851},
 }
 \examples{
 \dontrun{... \%>\%

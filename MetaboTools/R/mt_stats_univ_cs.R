@@ -1,6 +1,6 @@
 #' Composite score models
 #'
-#' Only support specific composite score association analysis in our COVID project.
+#' {ADD DESCRIPTION}
 #'
 #' @param D \code{SummarizedExperiment} input.
 #' @param outcome_col Name of the column in colData to compare with metabolite.

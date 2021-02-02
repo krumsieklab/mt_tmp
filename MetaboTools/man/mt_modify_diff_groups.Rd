@@ -18,7 +18,9 @@ mt_modify_diff_groups(D, id_col, group_col, grp1, grp2)
 \item{grp2}{Group level 2 (e.g. "day2").}
 }
 \value{
-SummarizedExperiment with new assay containing difference of two groups.
+assay: Replacement containing difference of the two groups.
+
+colData: Replacement containing only those samples from grp1.
 }
 \description{
 Takes the name of a sample factor variable (from colData), and two factor levels. Creates a new data matrix that

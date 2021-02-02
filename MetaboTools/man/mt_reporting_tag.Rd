@@ -22,8 +22,6 @@ start from.
 # add a tag to a section of the pipeline
 \dontrun{}
 
-# begin html report after tag
-
 }
 \author{
 KC

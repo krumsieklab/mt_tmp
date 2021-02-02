@@ -22,5 +22,5 @@ Exports the current SummarizedExperiment (not the metadata) to an Excel file.
 
 }
 \author{
-JK, BGP
+JK
 }

@@ -21,32 +21,33 @@ mt_plots_stats_compare(
 )
 }
 \arguments{
-\item{D1}{first SE dataset to compare; the one in the pipeline}
+\item{D1}{First SE dataset to compare; the one in the pipeline.}
 
-\item{stat1}{name of statistical comparison in first dataset}
+\item{stat1}{Name of statistical comparison in first dataset.}
 
-\item{filter1}{filter term, defining which metabolites to label from first comparison (can use elements of stats table)}
+\item{filter1}{Filter term, defining which metabolites to label from first comparison (can use elements of stats table).}
 
-\item{D2}{second SE dataset, if not given, will be the same as the first}
+\item{D2}{Second SE dataset, if not given, will be the same as the first.}
 
-\item{stat2}{name of statistical comparison in second dataset}
+\item{stat2}{Name of statistical comparison in second dataset.}
 
-\item{filter2}{filter term, defining which metabolites to label from second comparison (can use elements of stats table)}
+\item{filter2}{Filter term, defining which metabolites to label from second comparison (can use elements of stats table).}
 
-\item{filter_op}{if AND -> two colors, one for those where both stats match the criterion, and one where they don't
-if OR -> three colors, a third one where only one stat matches the criterion}
+\item{filter_op}{If AND -> two colors, one for those where both stats match the criterion, and one where they don't.
+If OR -> three colors, a third one where only one stat matches the criterion. Default: "AND".}
 
-\item{title}{optional param for plot title}
+\item{title}{OPTIONAL. Param for plot title.}
 
-\item{label_col}{optional argument on which column in the statistical results df to use for labeling points}
+\item{label_col}{OPTIONAL. Argument on which column in the statistical results df to use for labeling points. Default: "name".}
 
-\item{point_size}{size of the points on the ggplot}
+\item{point_size}{Size of the points on the ggplot. Default: 1.5.}
 
-\item{return_plot_only}{return only the plot object. WARNING: setting this to true makes the function non-MT pipeline compatible.}
+\item{return_plot_only}{Return only the plot object. WARNING: setting this to true makes the function non-MT
+pipeline compatible. Default: F.}
 
-\item{data_file}{WHAT DOES THIS DO?}
+\item{data_file}{Name of Excel file to output statistical comparison data to. Default: NULL.}
 
-\item{use_estimate}{use estimate for comparison, instead of statistic; default: F}
+\item{use_estimate}{Use estimate for comparison, instead of statistic. Default: F.}
 }
 \value{
 $result: plot, p-value histogram

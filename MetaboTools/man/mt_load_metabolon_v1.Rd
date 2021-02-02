@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_load_metabolon_v1.R
 \name{mt_load_metabolon_v1}
 \alias{mt_load_metabolon_v1}
-\title{Load Metabolon-format data}
+\title{Load Old Metabolon-format data}
 \usage{
 mt_load_metabolon_v1(D, file, sheet, copy_nan_sheet = "")
 }
@@ -19,7 +19,7 @@ mt_load_metabolon_v1(D, file, sheet, copy_nan_sheet = "")
 If first step in pipeline, creates \code{SummarizedExperiment} object. Populates empty assay, colData, and rowData data frames.
 }
 \description{
-For Metabolon-format version used prior to {DATE}. Loads data from a Metabolon-format Excel file. Needs to be in the original "Client
+For Metabolon-format version used prior to 2020-10-29. Loads data from a Metabolon-format Excel file. Needs to be in the original "Client
 Data Table" format that they deliver.
 }
 \examples{

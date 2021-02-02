@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' \dontrun{## sample boxplot, color by colData 'group' variable, with specific title, on log scale,
-#' ... %>% mt_plots_sample_box(color=group, title='after quotient normalization', plot_logged=T) %>% ...
+#' ... %>% mt_plots_sample_boxplot(color=group, title='after quotient normalization', plot_logged=T) %>% ...
 #' }
 #'
 #' @author JK
@@ -22,13 +22,13 @@
 #' @import ggplot2
 #'
 #' @export
-mt_plots_sample_box <- function(D,
-                                title="Sample boxplot",
-                                legend=T,
-                                ylabel = "Metabolite concentrations",
-                                plot_logged=F,
-                                ggadd=NULL,
-                                ...) {
+mt_plots_sample_boxplot <- function(D,
+                                    title="Sample boxplot",
+                                    legend=T,
+                                    ylabel = "Metabolite concentrations",
+                                    plot_logged=F,
+                                    ggadd=NULL,
+                                    ...) {
 
   # validate arguments
   stopifnot("SummarizedExperiment" %in% class(D))

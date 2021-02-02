@@ -21,7 +21,7 @@ mt_load_metabolon_v2(D, file, data_sheet, met_sheet, sample_sheet)
 If first step in pipeline, creates \code{SummarizedExperiment} object. Populates empty assay, colData, and rowData data frames.
 }
 \description{
-For Metabolon-format version used after {DATE}. Loads data from a NEW Metabolon-format Excel file. Needs to be in the original "Client
+For Metabolon-format version used after 2020-10-29. Loads data from a NEW Metabolon-format Excel file. Needs to be in the original "Client
 Data Table" new format that they deliver.
 }
 \examples{

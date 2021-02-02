@@ -18,13 +18,13 @@ to be numeric.}
 
 \item{sample_filter}{OPTIONAL. Sample filter condition.}
 
-\item{exact}{OPTIONAL. Set the exact flag in cor.test function.}
+\item{exact}{OPTIONAL. Set the exact flag in cor.test function. Default: NULL.}
 }
 \value{
 $results$output: List of Kendall's correlation coefficients and pvalues, as well as the corresponding variable names.
 }
 \description{
-{ADD DESCRIPTION}. If present, NAs will be omitted.
+Test for association between paired samples. If present, NAs will be omitted.
 }
 \examples{
 \dontrun{... \%>\%

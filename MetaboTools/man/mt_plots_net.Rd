@@ -27,12 +27,12 @@ mt_plots_net(
 \item{height}{OPTIONAL. Size in pixel of the plotting window size. Default: 500.}
 }
 \value{
-$result$output: network ggplot + visnetwork plot
+$result$output: network ggplot
 
-$result$output2: {ADD OUTPUT}
+$result$output2: visnetwork plot
 }
 \description{
-{ADD DESCRIPTION}
+Creates a network visualization object using the visNetwork package.
 }
 \examples{
 \dontrun{#' # in the context of a SE pipeline

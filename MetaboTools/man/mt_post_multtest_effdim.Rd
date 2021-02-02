@@ -11,7 +11,7 @@ mt_post_multtest_effdim(D, stat_name, p_col = p.value)
 
 \item{stat_name}{Name of the statistical comparison to adjust.}
 
-\item{p_col}{Name of p-value column in statisitcal table. Default: p.value.}
+\item{p_col}{Name of p-value column in statistical table. Default: p.value.}
 }
 \value{
 $results[[stat_name]]$output: p.adj column added to statistical table
@@ -19,7 +19,7 @@ $results[[stat_name]]$output: p.adj column added to statistical table
 \description{
 Adjust output of statistical test using the method described in Li J, Ji L (2005) Adjusting multiple testing in
 multilocus analyses using the eigenvalues of a correlation matrix. Heredity 95:221-227
-\href{https://www.ncbi.nlm.nih.gov/pubmed/16077740}{https://www.ncbi.nlm.nih.gov/pubmed/16077740}
+\href{https://www.ncbi.nlm.nih.gov/pubmed/16077740}{https://www.ncbi.nlm.nih.gov/pubmed/16077740}.
 }
 \examples{
 \dontrun{# correct the statistical comparison "comp" using effective dimension method

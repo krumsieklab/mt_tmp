@@ -7,21 +7,21 @@
 mt_stats_univ_cs(D, outcome_col, id_col, stat_name, sample_filter)
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{outcome_col}{name of the column in colData to compare with metabolite}
+\item{outcome_col}{Name of the column in colData to compare with metabolite.}
 
-\item{id_col}{name of the column in colData having patient_ID}
+\item{id_col}{Name of the column in colData having patient_ID.}
 
-\item{stat_name}{name under which this comparison will be stored, must be unique to all other statistical results}
+\item{stat_name}{Name under which this comparison will be stored, must be unique to all other statistical results.}
 
-\item{sample_filter}{term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison}
+\item{sample_filter}{Term which samples to filter to first... e.g. used if the data contains >2 groups but the user wants to run a two-group comparison.}
 }
 \value{
-$result: statistics object
+$result$output: statistics object
 }
 \description{
-Only support specific composite score association analysis in our COVID project.
+{ADD DESCRIPTION}
 }
 \examples{
 \donttest{

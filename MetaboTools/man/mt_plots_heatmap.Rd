@@ -51,9 +51,10 @@ mt_plots_heatmap(
 
 \item{ggadd}{Further elements/functions to add (+) to the ggplot object.}
 
-\item{\dots}{See \code{pheatmap::pheatmap} for pheatmap arguments.
-
- @return $results$output: plot, heatmap}
+\item{\dots}{See \code{pheatmap::pheatmap} for pheatmap arguments.}
+}
+\value{
+$results$output: plot, heatmap
 }
 \description{
 

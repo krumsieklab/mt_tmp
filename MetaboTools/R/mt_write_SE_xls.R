@@ -10,7 +10,7 @@
 #' @examples
 #' \dontrun{%>% mt_write_SE_xls(file = "out.xlsx") %>%}
 #'
-#' @author JK, BGP
+#' @author JK
 #'
 #' @export
 mt_write_SE_xls <- function(D, file) {

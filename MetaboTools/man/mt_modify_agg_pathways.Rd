@@ -23,8 +23,10 @@ Takes a pathway annotation column of the metabolites (rowData) and builds one re
 Also works for overlapping pathway annotations (i.e. where each metabolite can have >1 pathway).
 
 Implemented approaches:
-1. Eigenmetabolite/eigengene/eigenvalue PCA based approach. Data matrix cannot have NAs.
-2. Mean value. Will NOT scale() data before. Data matrix can have NAs.
+\enumerate{
+  \item{Eigenmetabolite/eigengene/eigenvalue PCA based approach. Data matrix cannot have NAs.}
+  \item{Mean value. Will NOT scale() data before. Data matrix can have NAs.}
+}
 }
 \examples{
 \dontrun{\%>\% mt_modify_agg_pathways(pw_col="SUB_PATHWAY", method="aggmean") \%>\%  # subpathways from metabolon
@@ -32,7 +34,7 @@ Implemented approaches:
 # add KEGG pathways and use those
 \%>\%
   mt_anno_pathways_hmdb(in_col = "HMDB", out_col = "kegg_db", pwdb_name = "KEGG", db_dir = codes.makepath("snippets/packages/metabotools_external/hmdb")) \%>\%
-  mt_anno_pathways_remove_redundant(met_ID_col = "HMDB", pw_col = "kegg_db") \%>\%
+  mt_anno_pathways_remove_redundant(met_id = "HMDB", pw_id = "kegg_db") \%>\%
   mt_modify_agg_pathways(pw_col="kegg_db", method="aggmean") \%>\%}
 
 }

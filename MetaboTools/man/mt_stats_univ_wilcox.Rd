@@ -31,7 +31,7 @@ wants to run a two-group comparison).}
 $results$output: Statistics object.
 }
 \description{
-{ADD DESCRIPTION}
+Perform Wilcoxon test.
 }
 \examples{
 \donttest{# run lm with no confounders, "Group" as outcome

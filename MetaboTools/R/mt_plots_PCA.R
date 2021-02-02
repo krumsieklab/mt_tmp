@@ -26,7 +26,7 @@
 #' mt_plots_pca(title="PCA scores", data_type = 'scores', scale_data=F, PC1=1, PC2=2, ellipse=0.95, exp_var_plot=T, ggadd = theme_bw() + theme(plot.title=element_text(hjust=0.5)))
 #' }
 #'
-#' @author JK, BGP
+#' @author JK
 #'
 #' @import ggplot2
 #'

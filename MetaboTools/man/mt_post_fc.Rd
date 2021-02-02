@@ -13,7 +13,8 @@ mt_post_fc(D, stat_name, fun = function(x) {
 
 \item{stat_name}{Name of the statistical comparison.}
 
-\item{fun}{Function with respect to which fold changes are computed (e.g. difference of the log means or median).}
+\item{fun}{Function with respect to which fold changes are computed (e.g. difference of the log means or median). Default:
+function(x){mean(x,na.rm=T)}.}
 }
 \value{
 $results[[stat_name]]$output: fc column added to statistical table

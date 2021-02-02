@@ -11,7 +11,7 @@
 #' @return rowData: New annotation column added.
 #'
 #' @examples
-#' \dontrun{... %>% mt_anno_icc(qc_samples= (RID%in%RID[duplicated(RID)]),
+#' \dontrun{... %>% mt_pre_icc(qc_samples= (RID%in%RID[duplicated(RID)]),
 #' out_col = "Dup_icc", id_col='RID') %>% ...}
 #'
 #' @author RB
@@ -20,7 +20,7 @@
 #' @importFrom utils stack
 #'
 #' @export
-mt_anno_icc <- function(D, qc_samples, out_col, id_col, icc_lmer=F){
+mt_pre_icc <- function(D, qc_samples, out_col, id_col, icc_lmer=F){
 
   stopifnot("SummarizedExperiment" %in% class(D))
   if(missing(qc_samples)) stop("qc_samples can't be empty!")

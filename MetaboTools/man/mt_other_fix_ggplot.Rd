@@ -10,7 +10,7 @@ mt_other_fix_ggplot(D)
 \item{D}{\code{SummarizedExperiment} input.}
 }
 \value{
-$results[["plots"]]$ouput: Convert ggplot env object to image.
+$results[["plots"]]$output: Convert ggplot env object to image.
 }
 \description{
 Convert all plots saved as large ggplot env objects to images.

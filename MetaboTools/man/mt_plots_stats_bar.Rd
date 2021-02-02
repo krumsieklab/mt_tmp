@@ -2,7 +2,7 @@
 % Please edit documentation in R/mt_plots_stats_bar.R
 \name{mt_plots_stats_bar}
 \alias{mt_plots_stats_bar}
-\title{mt_plots_stats_bar}
+\title{Creates a bar plot}
 \usage{
 mt_plots_stats_bar(
   D,
@@ -21,35 +21,37 @@ mt_plots_stats_bar(
 )
 }
 \arguments{
-\item{D}{\code{SummarizedExperiment} input}
+\item{D}{\code{SummarizedExperiment} input.}
 
-\item{stat_list}{list of names of the statistics objects to be used for filtering}
+\item{stat_list}{List of names of the statistics objects to be used for filtering}
 
-\item{metab_filter}{filter will be applied to data and remaining variables will be used to create plot}
+\item{metab_filter}{Filter will be applied to data and remaining variables will be used to create plot}
 
-\item{group_col}{rowData variable used to aggregate variables.}
+\item{group_col}{The rowData variable used to aggregate variables.}
 
-\item{color_col}{optional rowData variable used to color barplot. Default NULL.}
+\item{color_col}{OPTIONAL. A rowData variable used to color barplot. Default NULL.}
 
-\item{y_scale}{plot percentage or frequency of variables. Values c("fraction","count"). Default "fraction".}
+\item{y_scale}{Plot percentage or frequency of variables. Values c("fraction","count"). Default "fraction".}
 
-\item{sort}{sort pathways in plot according to y_scale. Default FALSE.}
+\item{sort}{Sort pathways in plot according to y_scale. Default FALSE.}
 
-\item{assoc_sign}{optional parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_list.}
+\item{assoc_sign}{OPTIONAL. Parameter to discriminate between positive and negative associations. Needs to be the name of a column in the statistical results indicated by stat_list.}
 
-\item{add_empty}{boolean, if TRUE adds also empty pathways to the barplot.}
+\item{add_empty}{BOOLEAN. If TRUE adds also empty pathways to the barplot.}
 
-\item{output_file}{optional Excel filename to save data to}
+\item{output_file}{OPTIONAL. Excel filename to save data to}
 
-\item{ggadd}{further elements/functions to add (+) to the ggplot object}
+\item{ggadd}{Further elements/functions to add (+) to the ggplot object.}
 
-\item{...}{additional expression directly passed to aes() of ggplot, can refer to colData}
+\item{...}{Additional expression directly passed to aes() of ggplot, can refer to colData.}
 }
 \value{
-$result: plot, barplot
+$result$output: plot, barplot
+
+$result$output2: {ADD RESULT}
 }
 \description{
-Creates a bar plot
+{ADD DESCRIPTION}
 }
 \examples{
 \dontrun{# Barplot as overview of results with a result already in 'comp'

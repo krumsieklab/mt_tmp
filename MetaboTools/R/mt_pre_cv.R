@@ -11,12 +11,12 @@
 #' @return rowData: New annotation column added.
 #'
 #' @examples
-#' \dontrun{... %>% mt_anno_cv(qc_samples=="PQC", out_col = "PQC_cv") %>% ...}
+#' \dontrun{... %>% mt_pre_cv(qc_samples=="PQC", out_col = "PQC_cv") %>% ...}
 #'
 #' @author AS, RB
 #'
 #' @export
-mt_anno_cv <- function(D, qc_samples, out_col, replicates=F, id_col=NULL){
+mt_pre_cv <- function(D, qc_samples, out_col, replicates=F, id_col=NULL){
 
   stopifnot("SummarizedExperiment" %in% class(D))
 

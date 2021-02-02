@@ -21,10 +21,11 @@ $results$pathways$enrichment_results: a dataframe containing the pathway enrichm
 \description{
 This script runs a pathway enrichment analysis using Fisher's exact test from statistics
 calculated by mt_stats_univ_lm().
-}
-\details{
+
 Implemented approaches:
-1. Fisher's exact test.
+\enumerate{
+   \item{Fisher's exact test.}
+}
 }
 \examples{
 \dontrun{\%>\% mt_stats_pathway_enrichment("kegg_db",
